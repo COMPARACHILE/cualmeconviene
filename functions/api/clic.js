@@ -2,8 +2,9 @@
 // No guarda IP, cookies ni nada que identifique a la persona.
 // Necesita una base D1 enlazada al proyecto de Pages con el nombre de variable DB (ver CONTADOR.md).
 
-const TIENDAS = new Set(['falabella', 'paris', 'ripley', 'pcfactory']);
-const ID_OK = /^[a-z]{1,4}\d{1,5}$/;
+const TIENDAS = new Set(['falabella', 'paris', 'ripley', 'pcfactory', 'entel', 'movistar', 'claro', 'wom']);
+// Notebooks: a12 · Celulares: c-s26u, c-r-ip15
+const ID_OK = /^(?:[a-z]{1,4}\d{1,5}|c-[a-zA-Z0-9-]{2,12})$/;
 
 function hoyChile() {
   // Fecha local de Chile en formato AAAA-MM-DD
