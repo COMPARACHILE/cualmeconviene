@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Compara celulares en Falabella, Paris, Ripley, PCFactory, Entel, Movistar, Claro y WOM: precios, reacondicionados y benchmarks para elegir cuál te conviene.">
+<title>Celulares · ¿Cuál me conviene?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: tienda. Barra de aviso, cabecera fija con buscador, portada con atajos por uso y la mayor diferencia de precio, luego filtros a la izquierda y grilla de productos. Lo más fuerte de la página es el precio y la tienda más barata de cada tarjeta. */
+:root {
+  --bg: #F3F5FA;
+  --surface: #FFFFFF;
+  --surface-2: #ECEFF7;
+  --ink: #10152B;
+  --muted: #566082;
+  --line: #DADFEE;
+  --accent: #2E57FF;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E2E8FF;
+  --deal: #0B7F57;
+  --deal-soft: #D9F5E8;
+  --sale: #FFD84D;
+  --sale-ink: #2A2100;
+  --gold: #F5B301;
+  --gold-ink: #3A2800;
+  --warn: #7A4A00;
+  --warn-soft: #FBEBCF;
+  --nav-bg: #0D1330;
+  --nav-fg: #F2F5FF;
+  --nav-muted: #A5AFD6;
+  --f-display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --f-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'DM Sans', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A0E1F; --surface: #131A33; --surface-2: #1B2345; --ink: #EAEEFF; --muted: #9DA6CC; --line: #29325E;
+    --accent: #7F99FF; --accent-ink: #0A1030; --accent-soft: #1F2B6B; --deal: #4BE0A0; --deal-soft: #0F3B2B;
+    --warn: #F2C46B; --warn-soft: #3A2E12; --nav-bg: #070A18;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A0E1F; --surface: #131A33; --surface-2: #1B2345; --ink: #EAEEFF; --muted: #9DA6CC; --line: #29325E;
+  --accent: #7F99FF; --accent-ink: #0A1030; --accent-soft: #1F2B6B; --deal: #4BE0A0; --deal-soft: #0F3B2B;
+  --warn: #F2C46B; --warn-soft: #3A2E12; --nav-bg: #070A18;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; padding-block: 0 40px; padding-inline: 16px; }
+h1, h2, h3, p, ul, dl, dd { margin: 0; padding: 0; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; }
+ul { list-style: none; }
+button { font: inherit; color: inherit; }
+a { color: inherit; }
+.full { margin-inline: -16px; padding-inline: 16px; }
+.in { max-width: 1240px; margin-inline: auto; }
+
+/* Barra de aviso y cabecera */
+.promo { background: var(--sale); color: var(--sale-ink); font-size: 13px; font-weight: 600; padding-block: 7px; text-align: center; }
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--nav-bg); color: var(--nav-fg); padding-block: 12px; }
+.topIn { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.logo { font-family: var(--f-display); font-weight: 800; font-size: 1.45rem; letter-spacing: -.02em; white-space: nowrap; text-decoration: none; }
+.logo span { color: var(--sale); }
+.search { flex: 1 1 260px; min-width: 0; position: relative; }
+.search input { width: 100%; font: inherit; font-size: 15px; border: 0; border-radius: 10px; padding: 11px 14px 11px 40px; background: #fff; color: #10152B; }
+.search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; stroke: #566082; fill: none; stroke-width: 2; }
+.search input:focus-visible { outline: 3px solid var(--sale); outline-offset: 1px; }
+.sugg { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 40; background: #fff; color: #10152B; border-radius: 12px; box-shadow: 0 14px 40px rgba(8,12,40,.35); padding: 6px; max-height: min(70vh, 460px); overflow-y: auto; }
+.sugg .sg { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; width: 100%; text-align: left; background: transparent; border: 0; border-radius: 8px; padding: 9px 10px; cursor: pointer; color: inherit; }
+.sugg .sg:hover, .sugg .sg.act { background: #EEF1FB; }
+.sugg .sgN { font-weight: 700; font-size: 14px; line-height: 1.25; }
+.sugg .sgS { grid-column: 1; font-size: 12.5px; color: #566082; }
+.sugg .sgP { grid-row: 1 / span 2; grid-column: 2; text-align: right; font-weight: 800; font-size: 15px; }
+.sugg .sgP small { display: block; font-weight: 600; font-size: 11.5px; color: #566082; }
+.sugg .sgH { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #566082; padding: 8px 10px 4px; }
+.sugg .sgAll { display: block; color: #1B2A78; font-weight: 700; font-size: 14px; border-top: 1px solid #E3E7F2; border-radius: 0 0 8px 8px; margin-top: 4px; }
+.sugg .sgB { display: inline-flex; width: auto; margin: 2px 4px 4px 6px; border: 1px solid #D5DBEC; border-radius: 999px; padding: 6px 12px; font-weight: 600; font-size: 13.5px; }
+.sugg .sgNone { padding: 12px 10px; font-size: 14px; color: #566082; }
+.chip span small { opacity: .65; font-weight: 600; margin-left: 4px; }
+.nav { display: flex; gap: 6px; }
+.nav button { background: transparent; border: 0; color: var(--nav-muted); font-weight: 600; font-size: 14px; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.nav button:hover { color: var(--nav-fg); background: rgba(255,255,255,.08); }
+.nav button:focus-visible { outline: 2px solid var(--sale); }
+@media (max-width: 640px) { .nav { display: none; } .top { position: static; } }
+
+/* Portada */
+.hero { background: linear-gradient(120deg, #0D1330 0%, #1B2A78 100%); color: var(--nav-fg); padding-block: 34px 36px; }
+.heroIn { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: stretch; }
+@media (min-width: 900px) { .heroIn { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 40px; } }
+.hero h1 { font-size: clamp(2.1rem, 5.6vw, 3.6rem); font-weight: 800; line-height: 1.02; letter-spacing: -.03em; max-width: 16ch; }
+.hero .lead { color: var(--nav-muted); max-width: 50ch; margin-top: 14px; font-size: 16px; }
+.uses { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 22px; max-width: 520px; }
+@media (min-width: 520px) { .uses { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.use { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); color: var(--nav-fg); border-radius: 12px; padding: 12px 10px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 6px; }
+.use:hover { background: rgba(255,255,255,.18); }
+.use:focus-visible { outline: 3px solid var(--sale); outline-offset: 2px; }
+.use svg { width: 24px; height: 24px; stroke: var(--sale); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.use b { font-size: 14px; font-weight: 700; line-height: 1.2; }
+.deal { background: var(--surface); color: var(--ink); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.t4head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.t4head h2 { font-size: 1.15rem; font-weight: 800; }
+.t4nav { display: flex; gap: 6px; }
+.t4nav button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer; }
+.t4nav button:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.t4nav button:focus-visible, .t4tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.t4tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.t4tabs button { font-size: 12.5px; font-weight: 700; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); border-radius: 999px; padding: 5px 11px; cursor: pointer; }
+.t4tabs button[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--gold-ink); }
+.t4track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; gap: 0; }
+.t4track::-webkit-scrollbar { display: none; }
+.t4s { flex: 0 0 100%; scroll-snap-align: start; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; min-width: 0; }
+@media (min-width: 520px) { .t4s { grid-template-columns: 150px minmax(0, 1fr); gap: 4px 16px; align-items: center; } .t4s .t4art { grid-row: 1 / span 4; } }
+.t4art svg { display: block; width: 100%; max-width: 190px; height: auto; margin-inline: auto; background: var(--surface-2); border-radius: 12px; padding: 6px; }
+.medal { display: inline-flex; align-items: center; gap: 7px; align-self: flex-start; background: var(--gold); color: var(--gold-ink); font-weight: 800; font-size: 12.5px; border-radius: 999px; padding: 4px 11px 4px 5px; }
+.medal svg { width: 20px; height: 20px; flex: none; }
+.t4s h3 { font-size: 1.1rem; font-weight: 700; line-height: 1.2; }
+.t4s .t4price { font-family: var(--f-display); font-weight: 800; font-size: 2.2rem; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+.t4s .t4at { font-size: 13.5px; font-weight: 700; color: var(--deal); display: flex; align-items: center; gap: 6px; }
+.t4s .t4others { font-size: 12.5px; color: var(--muted); }
+.cta { justify-self: start; font-weight: 700; font-size: 14px; background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px; padding: 9px 16px; cursor: pointer; }
+.cta:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.pickBar { display: flex; align-items: center; gap: 8px; background: var(--sale); color: #2A1A00; font-weight: 800; font-size: 13px; padding: 6px 12px 6px 8px; }
+.pickBar svg { width: 30px; height: 30px; flex: none; background: #fff; border-radius: 50%; padding: 2px; }
+.pickBar small { font-weight: 600; font-size: 12px; opacity: .85; margin-left: auto; text-align: right; }
+.p.pick { border: 2px solid var(--sale); box-shadow: 0 6px 22px rgba(0,0,0,.14); }
+.pumaTag { display: inline-flex; align-items: center; gap: 7px; align-self: flex-start; background: var(--sale); color: #2A1A00; font-weight: 800; font-size: 12.5px; border-radius: 999px; padding: 3px 11px 3px 3px; }
+.pumaTag svg { width: 24px; height: 24px; flex: none; background: #fff; border-radius: 50%; padding: 1px; }
+.award { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; background: var(--gold); color: var(--gold-ink); font-weight: 800; font-size: 12px; border-radius: 999px; padding: 3px 10px 3px 4px; }
+.award svg { width: 18px; height: 18px; flex: none; }
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 28px; border-top: 1px solid rgba(255,255,255,.2); }
+.step { text-align: left; background: transparent; border: 0; color: var(--nav-fg); padding: 14px 12px 4px 0; cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.step b { font-size: 12.5px; font-weight: 700; color: var(--sale); }
+.step span { font-size: 14.5px; font-weight: 600; }
+.step:focus-visible { outline: 2px solid var(--sale); outline-offset: 2px; }
+@media (max-width: 560px) { .step span { font-size: 13px; } }
+.seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 3px; gap: 3px; }
+.seg button { font-weight: 700; font-size: 14px; border: 0; background: transparent; color: var(--muted); padding: 10px; border-radius: 9px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.modeHint { font-size: 13px; color: var(--muted); margin-top: -8px; }
+.adv { display: flex; flex-direction: column; gap: 18px; border-top: 1px solid var(--line); padding-top: 16px; }
+[hidden] { display: none !important; }
+#compara { scroll-margin-top: 150px; }
+body[data-mode="adv"] { --accent: #4A3FD3; --accent-ink: #FFFFFF; --accent-soft: #E2DFFA; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body[data-mode="adv"] { --accent: #A89FFF; --accent-ink: #14102F; --accent-soft: #2A2560; } }
+:root[data-theme="dark"] body[data-mode="adv"] { --accent: #A89FFF; --accent-ink: #14102F; --accent-soft: #2A2560; }
+.shopHead { padding-top: 28px; }
+
+/* Tienda */
+.shop { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding-block: 16px 8px; }
+@media (min-width: 960px) { .shop { grid-template-columns: 290px minmax(0, 1fr); gap: 28px; align-items: start; } }
+.filt { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+@media (min-width: 960px) { .filt { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 76px); max-height: calc(100dvh - 92px); overflow-y: auto; } }
+
+.ghost:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+legend, .lab { font-weight: 700; font-size: 14px; padding: 0; margin-bottom: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip { position: relative; display: inline-flex; }
+.chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.chip span { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 6px 12px; font-size: 13.5px; font-weight: 500; }
+.chip input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.band { display: flex; align-items: center; gap: 10px; padding: 6px 4px; font-size: 14px; cursor: pointer; border-radius: 8px; }
+.band:hover { background: var(--surface-2); }
+.band input { accent-color: var(--accent); width: 17px; height: 17px; margin: 0; flex: none; }
+.band em { margin-left: auto; font-style: normal; font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stepper { display: flex; align-items: center; gap: 8px; }
+.stepper button { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); font-size: 20px; line-height: 1; font-weight: 700; cursor: pointer; }
+.stepper button:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.stepper button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stepper input[type=range] { margin: 0; flex: 1; min-width: 0; }
+#budgetOut { font-family: var(--f-display); font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; }
+.rangeRow { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+output { font-weight: 700; font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 6px 0 0; }
+.switch { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; cursor: pointer; font-weight: 600; }
+.switch input { accent-color: var(--accent); width: 18px; height: 18px; margin: 1px 0 0; flex: none; }
+.switch small { display: block; color: var(--muted); font-size: 12.5px; font-weight: 400; }
+details.more > summary { font-weight: 700; font-size: 14px; cursor: pointer; padding: 2px 0; }
+details.more[open] > summary { margin-bottom: 12px; }
+.advgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field > label { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+select { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px; width: 100%; min-width: 0; }
+.ghost { font-size: 13.5px; font-weight: 700; color: var(--accent); background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; cursor: pointer; align-self: flex-start; }
+
+.results { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between; }
+.count { font-size: 14px; color: var(--muted); }
+.count b { color: var(--ink); font-family: var(--f-display); font-size: 1.15rem; }
+.sortBox { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--muted); }
+.sortBox select { width: auto; }
+#hint { display: flex; flex-direction: column; gap: 8px; }
+.hint { background: var(--warn-soft); color: var(--warn); border-radius: 12px; padding: 11px 14px; font-size: 14px; }
+.hint.info { background: var(--accent-soft); color: var(--ink); }
+.empty { border: 2px dashed var(--line); border-radius: 16px; padding: 24px 18px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.empty h3 { font-size: 1.2rem; }
+.empty p { color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.more { align-self: center; font-weight: 700; background: var(--surface); border: 2px solid var(--accent); color: var(--accent); border-radius: 12px; padding: 12px 26px; cursor: pointer; }
+.more:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Tarjeta de producto */
+.p { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.pv { position: relative; background: var(--surface-2); padding: 18px 18px 8px; }
+.pv svg { display: block; width: 100%; height: auto; max-width: 240px; margin-inline: auto; }
+.badges { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; gap: 6px; flex-wrap: wrap; pointer-events: none; }
+.bd { font-size: 11.5px; font-weight: 700; border-radius: 6px; padding: 3px 8px; background: var(--surface); color: var(--ink); }
+.bd.cat { background: var(--ink); color: var(--bg); }
+.bd.fit { background: var(--accent); color: var(--accent-ink); }
+.pb { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.brand { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.p h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.22; letter-spacing: -.01em; }
+.spec { font-size: 13px; color: var(--muted); }
+.priceRow { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+.from { font-size: 13px; color: var(--muted); }
+.price { font-family: var(--f-display); font-weight: 800; font-size: 2rem; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+.at { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--deal); }
+.save { align-self: flex-start; background: var(--deal-soft); color: var(--deal); font-size: 12.5px; font-weight: 700; border-radius: 6px; padding: 3px 9px; }
+.save.solo { background: var(--surface-2); color: var(--muted); font-weight: 600; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; border: 1px solid rgba(0,0,0,.15); }
+.offers { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.offer { display: grid; grid-template-columns: auto max-content minmax(0, 1fr); gap: 4px 10px; align-items: center; padding: 9px 12px; text-decoration: none; background: var(--surface); }
+.offer + .offer { border-top: 1px solid var(--line); }
+.offer:hover { background: var(--surface-2); }
+.offer:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.offer.best { background: var(--deal-soft); box-shadow: inset 4px 0 0 var(--deal); }
+.oname { font-weight: 700; font-size: 14px; min-width: 0; }
+.oname small { display: block; font-weight: 400; color: var(--muted); font-size: 11.5px; line-height: 1.3; overflow-wrap: anywhere; }
+.best .oname small { color: var(--ink); opacity: .75; }
+.badge { display: block; width: fit-content; font-size: 10.5px; font-weight: 800; background: var(--deal); color: var(--surface); border-radius: 5px; padding: 1px 6px; margin: 2px 0 0; white-space: nowrap; }
+.oprice { font-family: var(--f-display); font-weight: 700; font-size: 1.05rem; font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+.best .oprice { color: var(--deal); font-size: 1.1rem; font-weight: 800; }
+.ast { text-decoration: none; color: var(--deal); font-weight: 800; margin-left: 1px; cursor: help; }
+.astnote { font-size: 12.5px; color: var(--muted); margin: 6px 0 0; }
+.cpu { background: var(--surface-2); border-radius: 10px; padding: 9px 11px; display: flex; flex-direction: column; gap: 5px; }
+.cpuT { font-size: 12.5px; color: var(--ink); line-height: 1.3; margin: 0; }
+.cpuS { font-size: 12px; color: var(--muted); margin: 0; }
+.pw { height: 7px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.pw i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+.pw.est i { background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 9px); opacity: .55; }
+.diff { display: block; font-family: var(--f-body); font-size: 11.5px; font-weight: 600; color: var(--muted); }
+.why { display: flex; flex-direction: column; gap: 3px; font-size: 13px; color: var(--muted); }
+.why li { padding-left: 14px; position: relative; }
+.why li::before { content: ""; position: absolute; left: 0; top: .6em; width: 6px; height: 2px; background: var(--accent); }
+.seen { font-size: 11.5px; color: var(--muted); margin-top: auto; }
+
+/* Guía */
+.guide { padding-block: 36px 8px; display: flex; flex-direction: column; gap: 16px; }
+h2.sec { font-size: clamp(1.4rem, 3.6vw, 1.9rem); font-weight: 800; letter-spacing: -.02em; }
+.secHead { display: flex; flex-direction: column; gap: 4px; }
+.secHead p { color: var(--muted); max-width: 62ch; }
+.eyebrow { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.note { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); margin-top: 28px; padding-top: 16px; display: flex; flex-direction: column; gap: 8px; max-width: 90ch; }
+.note a { color: var(--accent); }
+.legal { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 16px; }
+.legal summary { font-weight: 700; color: var(--ink); cursor: pointer; }
+.legalBody { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.legalBody h3 { font-size: 1rem; font-weight: 800; margin-top: 6px; color: var(--ink); }
+.legalBody strong { color: var(--ink); }
+@media (prefers-reduced-motion: no-preference) {
+  .use, .chip span, .offer, .cta { transition: background-color .15s ease, border-color .15s ease; }
+}
+/* Conoce tu notebook */
+.learn { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 18px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+@media (min-width: 900px) { .learn { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 36px; align-items: center; padding: 26px; } }
+.figure { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.figure svg { width: 100%; height: auto; max-width: 600px; margin-inline: auto; display: block; }
+.shell { fill: var(--surface-2); stroke: var(--line); stroke-width: 1.5; }
+.lid { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+.deco { fill: none; stroke: var(--line); stroke-width: 1.5; }
+.part { cursor: pointer; }
+.part rect.box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+.part:hover rect.box, .part:focus-visible rect.box { stroke: var(--accent); }
+.part:focus-visible { outline: none; }
+.part:focus-visible rect.box { stroke-width: 3; }
+.part.on rect.box { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2.5; }
+.part .chipline { fill: none; stroke: var(--line); stroke-width: 1.5; }
+.part.on .chipline { stroke: var(--accent); }
+.lbl { font-family: var(--f-body); font-weight: 500; font-size: 13px; fill: var(--ink); text-anchor: middle; pointer-events: none; }
+.lbl.small { font-size: 10.5px; fill: var(--muted); }
+.figcap { font-family: var(--f-body); font-size: 11.5px; color: var(--muted); text-align: center; }
+.info { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.info h3 { font-size: 1.5rem; font-weight: 700; font-stretch: 108%; }
+.levelText { background: var(--surface-2); border-radius: 12px; padding: 12px 14px; font-size: 14.5px; }
+.levelText strong { display: block; margin-bottom: 2px; }
+.tip { color: var(--muted); font-size: 13.5px; }
+.matters { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); }
+.matters span { border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; color: var(--ink); font-size: 12.5px; }
+.lvl { font: inherit; font-size: 13.5px; font-weight: 500; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.lvl[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.lvl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+
+/* Inicio estilo comparador: cabecera con menú de categorías, banner con el puma, filas de ofertas */
+:root { --puma: #D08E4A; --puma-soft: #F6E3C6; --puma-ink: #3A2416; }
+.logo { display: inline-flex; align-items: center; gap: 10px; }
+.logo em { font-style: normal; color: var(--sale); }
+.logoMark { width: 40px; height: 40px; flex: none; }
+.menu { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.12); }
+.menu::-webkit-scrollbar { display: none; }
+.menu button, .menu .soon { flex: none; background: transparent; border: 0; color: var(--nav-fg); font-weight: 600; font-size: 13.5px; padding: 7px 12px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+.menu button:hover { background: rgba(255,255,255,.1); }
+.menu button:focus-visible { outline: 2px solid var(--sale); }
+.menu .soon { color: var(--nav-muted); cursor: default; }
+.menu .mlink { flex: none; color: var(--nav-fg); font-weight: 600; font-size: 13.5px; padding: 7px 12px; border-radius: 8px; text-decoration: none; white-space: nowrap; }
+.menu .mlink:hover { background: rgba(255,255,255,.1); }
+.menu .mlink:focus-visible { outline: 2px solid var(--sale); }
+.menu .mlink small { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; background: var(--sale); color: var(--sale-ink); border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
+.menu .soon small { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; background: rgba(255,255,255,.12); border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
+@media (max-width: 640px) { .logoMark { width: 34px; height: 34px; } }
+
+.hero { padding-block: 26px 30px; }
+.banner { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; align-items: end; min-width: 0; }
+@media (min-width: 560px) { .banner { grid-template-columns: 200px minmax(0, 1fr); gap: 20px; } }
+.mascot { width: 100%; max-width: 200px; height: auto; display: block; justify-self: center; }
+@media (max-width: 559px) { .mascot { max-width: 140px; } }
+.bannerTxt { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.bubble { position: relative; align-self: flex-start; background: var(--puma-soft); color: var(--puma-ink); font-weight: 600; font-size: 14px; border-radius: 14px; padding: 9px 14px; max-width: 34ch; }
+.bubble::before { content: ""; position: absolute; left: -8px; bottom: 12px; border: 8px solid transparent; border-right-color: var(--puma-soft); border-left: 0; }
+@media (max-width: 559px) { .bubble::before { left: 22px; bottom: auto; top: -8px; border: 8px solid transparent; border-bottom-color: var(--puma-soft); border-top: 0; } }
+.hero h1 { font-size: clamp(1.9rem, 4.6vw, 3rem); }
+.hero .lead { margin-top: 0; }
+.heroBtns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.cta.big { background: var(--sale); color: var(--sale-ink); padding: 11px 18px; font-size: 15px; }
+.cta.alt { background: transparent; color: var(--nav-fg); border: 1px solid rgba(255,255,255,.35); padding: 10px 18px; font-size: 15px; }
+.cta.alt:hover { background: rgba(255,255,255,.1); }
+.mascot .eyes { transform-origin: 60px 58px; animation: blink 5s infinite; }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+.mascot .glass { transform-origin: 150px 210px; animation: peek 6s ease-in-out infinite; }
+@keyframes peek { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-6deg); } }
+@media (prefers-reduced-motion: reduce) { .mascot .eyes, .mascot .glass { animation: none; } }
+
+.home { padding-top: 30px; display: flex; flex-direction: column; gap: 14px; }
+.rowHead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.rowHead h2 { font-size: 1.45rem; font-weight: 800; letter-spacing: -.02em; }
+.rowHead p { color: var(--muted); font-size: 14px; }
+.catGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (min-width: 700px) { .catGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .catGrid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.catT { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; cursor: pointer; min-width: 0; color: var(--ink); }
+.catT:hover { border-color: var(--accent); }
+.catT:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.catT .ci { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; margin-bottom: 4px; }
+.catT .ci svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.catT b { font-size: 14.5px; line-height: 1.2; }
+.catT span { font-size: 12.5px; color: var(--muted); }
+.catT strong { font-family: var(--f-display); font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x proximity; }
+@media (min-width: 1100px) { .strip { grid-auto-columns: calc((100% - 60px) / 6); } }
+.mini { scroll-snap-align: start; display: flex; flex-direction: column; gap: 6px; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px 12px; cursor: pointer; color: var(--ink); min-width: 0; }
+.mini:hover { border-color: var(--accent); }
+.mini:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.mini svg { width: 100%; height: auto; background: var(--surface-2); border-radius: 10px; }
+.mini h3 { font-family: var(--f-body); font-size: 13.5px; font-weight: 700; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mini .mp { font-family: var(--f-display); font-weight: 800; font-size: 1.35rem; letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1; }
+.mini .ms { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.mini .sv { align-self: flex-start; font-size: 12px; font-weight: 700; color: var(--deal); background: var(--deal-soft); border-radius: 6px; padding: 2px 7px; }
+.catChip { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; background: var(--accent-soft); color: var(--ink); border: 0; border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.catChip:focus-visible { outline: 2px solid var(--accent); }
+.heroBtns .cta { background: transparent; color: var(--nav-fg); border: 1px solid rgba(255,255,255,.4); padding: 10px 18px; font-size: 15px; }
+.heroBtns .cta:hover { background: rgba(255,255,255,.1); }
+.heroBtns .cta.on { background: var(--sale); color: var(--sale-ink); border-color: var(--sale); }
+.heroBtns .cta.on:hover { background: var(--sale); }
+
+/* Sección celulares */
+.menu .mlink { flex: none; color: var(--nav-fg); font-weight: 600; font-size: 13.5px; padding: 7px 12px; border-radius: 8px; text-decoration: none; white-space: nowrap; }
+.menu .mlink:hover { background: rgba(255,255,255,.1); }
+.menu .mlink:focus-visible { outline: 2px solid var(--sale); }
+.menu button.on { background: rgba(255,255,255,.14); }
+.seg3 { grid-template-columns: repeat(3, 1fr); }
+.seg3 button { padding: 9px 4px; font-size: 13.5px; }
+.bd.ref { background: var(--sale); color: var(--sale-ink); }
+.bd.g4 { background: var(--surface); color: var(--muted); }
+.refNote { background: var(--warn-soft); color: var(--warn); font-size: 12.5px; font-weight: 600; border-radius: 8px; padding: 6px 10px; }
+.chan { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.bm { background: var(--surface-2); border-radius: 10px; padding: 9px 11px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 10px; align-items: center; font-size: 12.5px; }
+.bm b { font-weight: 700; color: var(--ink); white-space: nowrap; }
+.bm span { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.bm .pw { height: 6px; }
+.bm .pw.alt i { background: var(--deal); }
+.bm small { grid-column: 1 / -1; color: var(--muted); font-size: 11.5px; }
+.cmpBox { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+.cmpBox input { accent-color: var(--accent); width: 17px; height: 17px; margin: 0; }
+.pickCard { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+@media (min-width: 520px) { .pickCard { grid-template-columns: 120px minmax(0, 1fr); gap: 4px 16px; align-items: center; } .pickCard .pa { grid-row: 1 / span 5; } }
+.pickCard .pa svg { display: block; width: 100%; max-width: 120px; margin-inline: auto; background: var(--surface-2); border-radius: 12px; padding: 8px; height: auto; }
+.pickCard h3 { font-size: 1.1rem; font-weight: 700; line-height: 1.2; }
+.pickCard .t4price { font-family: var(--f-display); font-weight: 800; font-size: 2.1rem; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+.pickCard .t4at { font-size: 13.5px; font-weight: 700; color: var(--deal); display: flex; align-items: center; gap: 6px; }
+.pickCard .why { margin-top: 2px; }
+/* Bandeja de comparación */
+.tray { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--nav-bg); color: var(--nav-fg); padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -8px 30px rgba(0,0,0,.25); }
+.trayIn { max-width: 1240px; margin-inline: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.trayItems { display: flex; gap: 6px; flex-wrap: wrap; flex: 1 1 200px; min-width: 0; }
+.trayItems button { background: rgba(255,255,255,.12); border: 0; color: var(--nav-fg); border-radius: 999px; padding: 5px 11px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.trayX { color: var(--nav-fg); border-color: rgba(255,255,255,.35); }
+body.hasTray { padding-bottom: 96px; }
+/* Tabla comparativa */
+.cmpWrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+.cmp { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 520px; }
+.cmp th, .cmp td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+.cmp thead th { font-family: var(--f-display); font-size: 1rem; background: var(--surface-2); }
+.cmp tbody th { font-weight: 600; color: var(--muted); font-size: 13px; white-space: nowrap; }
+.cmp td.win { color: var(--deal); font-weight: 800; }
+.cmp td a { color: var(--accent); font-weight: 700; }
+.cmp tr:last-child th, .cmp tr:last-child td { border-bottom: 0; }
+/* Benchmarks */
+.benchCtl { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.benchCtl .seg { min-width: min(100%, 380px); }
+.benchList { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 8px 14px; display: flex; flex-direction: column; }
+.br { display: grid; grid-template-columns: 26px minmax(0, 1.2fr) minmax(0, 1.4fr) auto; gap: 4px 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+.br:last-child { border-bottom: 0; }
+.br .rk { font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
+.br .nm { min-width: 0; }
+.br .nm b { display: block; font-weight: 700; line-height: 1.25; }
+.br .nm small { color: var(--muted); font-size: 12px; }
+.br .pw { height: 9px; }
+.br .pw.ios i { background: #8A94B8; }
+.br .val { font-variant-numeric: tabular-nums; font-weight: 700; text-align: right; white-space: nowrap; }
+.br .val small { display: block; font-weight: 500; color: var(--muted); font-size: 11.5px; }
+@media (max-width: 600px) { .br { grid-template-columns: 22px minmax(0, 1fr) auto; } .br .pw { grid-column: 2 / -1; grid-row: 2; } }
+.offer { grid-template-columns: auto minmax(0, 1fr) max-content; }
+.oname .chan { margin-left: 2px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="pumaHead" viewBox="0 0 120 120">
+      <circle cx="28" cy="30" r="17" fill="#B9773A"/><circle cx="92" cy="30" r="17" fill="#B9773A"/>
+      <circle cx="29" cy="32" r="9" fill="#5A3420"/><circle cx="91" cy="32" r="9" fill="#5A3420"/>
+      <path d="M60 22c26 0 46 16 46 42 0 26-20 46-46 46S14 90 14 64c0-26 20-42 46-42z" fill="#D08E4A"/>
+      <path d="M60 30c-6 0-10 4-10 9 4-2 7-3 10-3s6 1 10 3c0-5-4-9-10-9z" fill="#B9773A"/>
+      <path d="M22 74c6 18 20 30 38 30s32-12 38-30c-8 6-16 7-22 4-4 6-10 8-16 8s-12-2-16-8c-6 3-14 2-22-4z" fill="#F6E3C6"/>
+      <path d="M45 66c-4 6-6 12-6 18M75 66c4 6 6 12 6 18" stroke="#5A3420" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <g class="eyes"><ellipse cx="44" cy="58" rx="6.5" ry="7.5" fill="#1E1410"/><ellipse cx="76" cy="58" rx="6.5" ry="7.5" fill="#1E1410"/>
+      <circle cx="46" cy="55" r="2.2" fill="#fff"/><circle cx="78" cy="55" r="2.2" fill="#fff"/></g>
+      <path d="M52 72h16c0 5-4 9-8 9s-8-4-8-9z" fill="#7A3B2E"/>
+      <path d="M60 81v6M60 87c-3 4-8 4-10 1M60 87c3 4 8 4 10 1" stroke="#5A3420" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M34 82h-12M34 87l-11 3M86 82h12M86 87l11 3" stroke="#B9773A" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+<div class="promo full">Precios de celulares revisados en tiendas y operadoras de Chile · 14-10-2026</div>
+<header class="top full">
+  <div class="in topIn">
+    <a class="logo" href="/" aria-label="¿Cuál me conviene? Inicio"><svg class="logoMark" aria-hidden="true"><use href="#pumaHead"/></svg><span>¿Cuál me <em>conviene?</em></span></a>
+    <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Busca un celular (ej. Galaxy A57, iPhone 17, Redmi)" autocomplete="off" aria-label="Buscar celular"></label>
+    <nav class="nav" aria-label="Secciones"><button type="button" data-go="tienda">Comparar precios</button><button type="button" data-go="bench">Benchmarks</button></nav>
+  </div>
+  <nav class="menu in" aria-label="Categorías">
+    <a class="mlink" href="/">Notebooks</a>
+    <button type="button" class="on" data-quick="all" aria-current="page">Todos los celulares</button>
+    <button type="button" data-quick="entrada">Hasta $250.000</button>
+    <button type="button" data-quick="media">Gama media</button>
+    <button type="button" data-quick="alta">Gama alta</button>
+    <button type="button" data-quick="ref">Reacondicionados</button>
+    <span class="soon" aria-disabled="true">Tablets <small>pronto</small></span>
+    <span class="soon" aria-disabled="true">Televisores <small>pronto</small></span>
+  </nav>
+</header>
+
+<section class="hero full"><div class="in heroIn">
+  <div class="banner">
+    <svg class="mascot" viewBox="0 0 240 250" role="img" aria-label="El puma mascota del sitio, con un celular">
+      <path d="M58 226c-30-4-46-26-40-50 4-14 16-18 20-10-8 4-10 14-6 24 6 14 22 20 34 18z" fill="#B9773A"/>
+      <path d="M52 250c0-58 28-92 68-92s68 34 68 92z" fill="#D08E4A"/>
+      <path d="M96 250c0-40 10-66 24-66s24 26 24 66z" fill="#F6E3C6"/>
+      <use href="#pumaHead" x="40" y="22" width="160" height="160"/>
+      <g class="glass">
+        <rect x="160" y="128" width="46" height="84" rx="9" fill="#10152B" stroke="#3A2416" stroke-width="5"/>
+        <rect x="166" y="138" width="34" height="62" rx="4" fill="#7DD3FC"/>
+        <path d="M172 186l8-10 6 6 8-14" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <ellipse cx="160" cy="200" rx="15" ry="12" fill="#D08E4A"/>
+      </g>
+    </svg>
+    <div class="bannerTxt">
+      <p class="bubble">Ahora también reviso <b>celulares</b>: tiendas y operadoras.</p>
+      <h1>El mismo celular en tiendas y operadoras. Compra donde sale más barato.</h1>
+      <p class="lead" id="lead"></p>
+      <div class="heroBtns"><button type="button" class="cta on" data-go="tienda">Comparar precios</button><button type="button" class="cta" data-go="bench">Ver benchmarks</button></div>
+    </div>
+  </div>
+  <div class="deal" aria-label="Mejor calidad-precio por presupuesto">
+    <div class="t4head"><h2>Mejor calidad-precio</h2></div>
+    <div class="t4tabs" id="pickTabs" role="group" aria-label="Elegir presupuesto"></div>
+    <div id="pickBox"></div>
+  </div>
+</div></section>
+
+<div class="in">
+  <section class="home" aria-labelledby="svTitle">
+    <div class="rowHead"><h2 id="svTitle">Donde más ahorras eligiendo dónde comprar</h2><p>Diferencia entre el precio más alto y el más bajo del mismo celular.</p></div>
+    <div class="strip" id="stripSave"></div>
+  </section>
+
+  <main id="tienda" class="shop">
+    <form class="filt" id="panel" onsubmit="return false">
+      <fieldset>
+        <legend>Mi precio máximo</legend>
+        <div class="rangeRow"><output id="budgetOut" for="budget"></output></div>
+        <div class="stepper">
+          <button type="button" id="bMinus" aria-label="Bajar $10.000">&minus;</button>
+          <input type="range" id="budget" min="100000" max="1900000" step="10000" value="1900000" aria-label="Precio máximo">
+          <button type="button" id="bPlus" aria-label="Subir $10.000">+</button>
+        </div>
+        <p class="modeHint" style="margin:0"><b id="budgetCount"></b></p>
+      </fieldset>
+      <fieldset>
+        <legend>Estado del equipo</legend>
+        <div class="seg seg3" role="group" aria-label="Estado">
+          <button type="button" data-cond="all" aria-pressed="true">Todos</button>
+          <button type="button" data-cond="new" aria-pressed="false">Nuevos</button>
+          <button type="button" data-cond="ref" aria-pressed="false">Reacond.</button>
+        </div>
+        <p class="modeHint" style="margin:0">Los reacondicionados y seminuevos son equipos usados revisados. Siempre van marcados.</p>
+      </fieldset>
+      <fieldset>
+        <legend>¿Qué te importa más?</legend>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" name="uso" value="juegos"><span>Juegos y potencia</span></label>
+          <label class="chip"><input type="checkbox" name="uso" value="bateria"><span>Batería grande</span></label>
+          <label class="chip"><input type="checkbox" name="uso" value="pantalla"><span>Pantalla grande</span></label>
+          <label class="chip"><input type="checkbox" name="uso" value="compacto"><span>Compacto</span></label>
+          <label class="chip"><input type="checkbox" name="uso" value="5g"><span>Con 5G</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Dónde comprar</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="canal" value="all" checked><span>Todas</span></label>
+          <label class="chip"><input type="radio" name="canal" value="tienda"><span>Tiendas</span></label>
+          <label class="chip"><input type="radio" name="canal" value="oper"><span>Operadoras</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Marca</legend>
+        <div class="chips" id="brandChips"></div>
+      </fieldset>
+      <button type="button" class="ghost" id="resetAll">Quitar todos los filtros</button>
+    </form>
+
+    <section class="results" id="compara" aria-live="polite">
+      <div class="bar">
+        <p class="count" id="count"></p>
+        <label class="sortBox">Ordenar por <select id="sortF"><option value="pasc" selected>Menor precio</option><option value="pdesc">Mayor precio</option><option value="pot">Más potencia (Geekbench)</option><option value="ppp">Mejor potencia por precio</option></select></label>
+      </div>
+      <p class="astnote"><b>*</b> Precio pagando con la tarjeta de la tienda o con transferencia. Sin ese medio de pago puede ser más alto.</p>
+      <div id="list" class="grid"></div>
+      <button type="button" class="more" id="moreBtn" hidden></button>
+    </section>
+  </main>
+
+  <section id="comparar" class="guide" aria-labelledby="cmpTitle" hidden>
+    <div class="secHead"><h2 class="sec" id="cmpTitle">Comparación lado a lado</h2>
+    <p>En verde, el mejor valor de cada fila.</p></div>
+    <div class="cmpWrap" id="cmpTable"></div>
+  </section>
+
+  <section id="bench" class="guide" aria-labelledby="bTitle">
+    <div class="secHead"><h2 class="sec" id="bTitle">Benchmarks: ¿cuál rinde más?</h2>
+    <p>Geekbench 6 mide el procesador y se puede comparar entre iPhone y Android. AnTuTu 11 suma procesador, gráficos y memoria; sirve para comparar Android entre sí, pero en iPhone da cifras más bajas por cómo mide, así que no lo uses para comparar iPhone contra Android.</p></div>
+    <div class="benchCtl">
+      <div class="seg" role="group" aria-label="Medida">
+        <button type="button" data-bm="gbm" aria-pressed="true">Geekbench 6 multinúcleo</button>
+        <button type="button" data-bm="ant" aria-pressed="false">AnTuTu 11</button>
+      </div>
+      <label class="switch"><input type="checkbox" id="bRef" checked> Incluir reacondicionados</label>
+    </div>
+    <div class="benchList" id="benchList"></div>
+  </section>
+
+  <footer class="note">
+    <p><strong>Cómo leer los precios.</strong> Mostramos el precio más bajo que aparecía en la ficha de cada tienda u operadora el 14-10-2026, para el celular sin plan. Falabella y Paris tienen precios menores con su tarjeta (CMR y Tarjeta Cencosud Scotiabank) y PCFactory con transferencia o débito; los marcamos con asterisco. No incluimos Mercado Libre.</p>
+    <p><strong>Operadoras.</strong> En Entel usamos el "precio oferta online" del equipo solo. En Movistar y Claro, el precio del equipo liberado. En WOM, la modalidad Prepago (equipo liberado); el precio para quien renueva o se porta puede ser distinto. Las operadoras pueden pedir que seas cliente para algunas ofertas: confírmalo en la ficha.</p>
+    <p><strong>Reacondicionados y seminuevos.</strong> Son equipos usados que fueron revisados y se venden con garantía. Siempre aparecen con la etiqueta amarilla. Los de Movistar y Entel los vende la operadora; los de Ripley los venden tiendas externas (Reuse, Digitek, Renewed, Mobile Tech), y lo indicamos en cada oferta. Revisa el estado, la batería y la garantía antes de comprar.</p>
+    <p><strong>Capacidad.</strong> Cada tarjeta indica la memoria (GB) del equipo comparado. Cuando la operadora no la muestra en el listado, lo advertimos en la oferta: revisa la ficha.</p>
+    <p><strong>Benchmarks.</strong> AnTuTu 11 y Geekbench 6 (un núcleo y multinúcleo) tomados de nanoreview.net el 14-10-2026. Cuando no hay medición del modelo exacto usamos la de su procesador. Son pruebas de laboratorio: el rendimiento real cambia según la temperatura y la versión del sistema.</p>
+    <p>Aviso de afiliados: cuando los enlaces generen comisión, se indicará aquí. El precio para quien compra es el mismo.</p>
+    <details class="legal"><summary>Privacidad y términos de uso</summary>
+    <div class="legalBody">
+      <p>Esta sección de celulares sigue las mismas condiciones de privacidad y uso del sitio. Puedes leerlas completas al final de la <a href="/">página principal</a>. En resumen: no vendemos productos, los precios son referenciales y los fija cada tienda u operadora, no usamos cookies propias y medimos visitas con Cloudflare Web Analytics sin cookies. Contacto: <strong>adictosdigitalesla@gmail.com</strong>.</p>
+      <p>Los nombres de marcas, tiendas, operadoras y productos pertenecen a sus dueños y los usamos solo para identificar los equipos. Las ilustraciones son dibujos propios y no representan fielmente cada modelo.</p>
+    </div></details>
+  </footer>
+</div>
+
+<div class="tray" id="tray" hidden>
+  <div class="trayIn">
+    <div class="trayItems" id="trayItems"></div>
+    <button type="button" class="cta big" id="trayGo">Comparar</button>
+    <button type="button" class="ghost trayX" id="trayClear">Limpiar</button>
+  </div>
+</div>
+
+<script>
+/* Datos leídos de cada ficha el 14-10-2026. offers: s = tienda u operadora, p = precio más bajo de la ficha, c = exige medio de pago, note = condición, seller = vendedor si no es la tienda.
+   antutu = AnTuTu 11, gb6 = Geekbench 6 [un núcleo, multinúcleo] (nanoreview.net). refurb = reacondicionado o seminuevo. */
+const PHONES = [{"id":"ip18p","name":"iPhone 18 Pro","brand":"Apple","gb":256,"ram":12,"chip":"A20 Pro","size":6.3,"hz":120,"panel":"OLED","bat":4288,"chg":60,"cam":48,"year":2026,"antutu":3428810,"gb6":[4719,12677],"refurb":false,"cond":null,"offers":[{"s":"wom","p":1548000,"url":"https://store.wom.cl/equipos/A3714-256/Apple-iPhone-18-Pro-5G-256GB?sku=001.002.3024&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"},{"s":"entel","p":1549990,"url":"https://miportal.entel.cl/personas/celulares/iphone-18-pro/prod2780062","note":"Precio oferta online Entel (solo equipo)"},{"s":"falabella","p":1549990,"url":"https://www.falabella.com/falabella-cl/product/17776863/iphone-18-pro-256gb-black","note":"Precio Internet"},{"s":"paris","p":1549990,"url":"https://www.paris.cl/iphone-18-pro-256gb-negro-liberado-605571999.html","note":"Precio Internet"}]},{"id":"ip17pm","name":"iPhone 17 Pro Max","brand":"Apple","gb":256,"ram":12,"chip":"A19 Pro","size":6.9,"hz":120,"panel":"OLED","bat":null,"chg":null,"cam":48,"year":2025,"antutu":2538751,"gb6":[3970,10558],"refurb":false,"cond":null,"offers":[{"s":"falabella","p":1499990,"url":"https://www.falabella.com/falabella-cl/product/17564075/Apple-iPhone-17-Pro-Max","note":"Precio Internet"},{"s":"entel","p":1519990,"url":"https://miportal.entel.cl/personas/celulares/iphone-17-pro-max/prod2630051","note":"Precio oferta online Entel (solo equipo)"},{"s":"movistar","p":1529990,"url":"https://catalogo.movistar.cl/tienda/apple-iphone-17-pro-max-256gb-naranja-cosmico"},{"s":"wom","p":1548000,"url":"https://store.wom.cl/equipos/A3526/Apple-iPhone-17-Pro-Max-5G-256GB?sku=001.002.2869&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"},{"s":"claro","p":1549990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/iphone-17-pro-max-5g-256gb-deep-blue-70015477pre"}]},{"id":"ip17p","name":"iPhone 17 Pro","brand":"Apple","gb":256,"ram":12,"chip":"A19 Pro","size":6.3,"hz":120,"panel":"OLED","bat":null,"chg":null,"cam":48,"year":2025,"antutu":2538751,"gb6":[3970,10558],"refurb":false,"cond":null,"offers":[{"s":"falabella","p":1349990,"url":"https://www.falabella.com/falabella-cl/product/17564066/apple-iphone-17-pro","note":"Precio Internet"},{"s":"paris","p":1369990,"url":"https://www.paris.cl/iphone-17-pro-256gb-naranjo-liberado-278066999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1},{"s":"entel","p":1399990,"url":"https://miportal.entel.cl/personas/celulares/iphone-17-pro/prod2630050","note":"Precio oferta online Entel (solo equipo)"},{"s":"movistar","p":1419990,"url":"https://catalogo.movistar.cl/tienda/apple-iphone-17-pro-256gb-azul-profundo"},{"s":"claro","p":1429990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/iphone-17-pro-5g-256gb-deep-blue-70015444pre"}]},{"id":"ip17","name":"iPhone 17","brand":"Apple","gb":256,"ram":8,"chip":"A19","size":6.3,"hz":120,"panel":"OLED","bat":null,"chg":null,"cam":48,"year":2025,"antutu":2156126,"gb6":[3692,9454],"refurb":false,"cond":null,"offers":[{"s":"claro","p":999990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/iphone-17-5g-256gb-black-70015384pre"},{"s":"falabella","p":999990,"url":"https://www.falabella.com/falabella-cl/product/17564056/apple-iphone-17","note":"Precio Internet"},{"s":"entel","p":1019990,"url":"https://miportal.entel.cl/personas/celulares/iphone-17/prod2630049","note":"Precio oferta online Entel (solo equipo)"},{"s":"wom","p":1092000,"url":"https://store.wom.cl/equipos/A3520/Apple-iPhone-17-5G-256GB?sku=001.002.2850&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"}]},{"id":"ipair","name":"iPhone Air","brand":"Apple","gb":256,"ram":12,"chip":"A19 Pro","size":6.5,"hz":120,"panel":"OLED","bat":null,"chg":null,"cam":48,"year":2025,"antutu":2538751,"gb6":[3970,10558],"refurb":false,"cond":null,"offers":[{"s":"claro","p":1119990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/iphone-air-5g-256gb-light-gold-70015579pre","note":"Solo eSIM"},{"s":"falabella","p":1299990,"url":"https://www.falabella.com/falabella-cl/product/17564087/apple-iphone-air","note":"Precio Internet"}]},{"id":"ip17e","name":"iPhone 17e","brand":"Apple","gb":256,"ram":8,"chip":"A19","size":6.1,"hz":60,"panel":"OLED","bat":4005,"chg":25,"cam":48,"year":2026,"antutu":2272175,"gb6":[3595,9245],"refurb":false,"cond":null,"offers":[{"s":"claro","p":699990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/iphone-17e-5g-256gb-negro-70016713pre"},{"s":"falabella","p":699990,"url":"https://www.falabella.com/falabella-cl/product/17683635/apple-iphone-17e-256gb","note":"Precio Internet"},{"s":"entel","p":749990,"url":"https://miportal.entel.cl/personas/celulares/iphone-17e/prod2710072","note":"Precio oferta online Entel (solo equipo). Revisa la capacidad en la ficha"}]},{"id":"ip16e","name":"iPhone 16e","brand":"Apple","gb":128,"ram":8,"chip":"A18","size":6.1,"hz":60,"panel":"OLED","bat":null,"chg":null,"cam":48,"year":2025,"antutu":1972476,"gb6":[3431,8638],"refurb":false,"cond":null,"offers":[{"s":"entel","p":599990,"url":"https://miportal.entel.cl/personas/celulares/iphone-16e/prod2500058","note":"Precio oferta online Entel (solo equipo)"},{"s":"claro","p":616990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/iphone-16e-5g-128gb-negro-70013650pre"},{"s":"movistar","p":649990,"url":"https://catalogo.movistar.cl/tienda/apple-iphone-16e-128-gb-negro"}]},{"id":"ip16","name":"iPhone 16","brand":"Apple","gb":128,"ram":8,"chip":"A18","size":6.1,"hz":60,"panel":"OLED","bat":null,"chg":null,"cam":48,"year":2024,"antutu":1972476,"gb6":[3431,8638],"refurb":false,"cond":null,"offers":[{"s":"paris","p":799990,"url":"https://www.paris.cl/iphone-16-128gb-negro-liberado-837803999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1},{"s":"movistar","p":859990,"url":"https://catalogo.movistar.cl/tienda/apple-iphone-16-128gb-negro"},{"s":"falabella","p":879990,"url":"https://www.falabella.com/falabella-cl/product/prod121902204/apple-iphone-16","note":"Precio Internet"},{"s":"entel","p":899990,"url":"https://miportal.entel.cl/personas/celulares/iphone-16/prod2430067","note":"Precio oferta online Entel (solo equipo)"},{"s":"claro","p":919990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/iphone-16-5g-128gb-negro-70012935pre"}]},{"id":"ip15","name":"iPhone 15","brand":"Apple","gb":128,"ram":6,"chip":"A16 Bionic","size":6.1,"hz":60,"panel":"OLED","bat":null,"chg":null,"cam":48,"year":2023,"antutu":1626008,"gb6":[2631,6602],"refurb":false,"cond":null,"offers":[{"s":"ripley","p":649990,"url":"https://simple.ripley.cl/iphone-15-128-gb-12mp-61-2000398327893p","note":"Precio Internet"},{"s":"entel","p":759990,"url":"https://miportal.entel.cl/personas/celulares/iphone-15-128gb/prod2190068","note":"Precio oferta online Entel (solo equipo)"},{"s":"claro","p":775990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/iphone-15-128gb-negro-70011841pre"},{"s":"movistar","p":794990,"url":"https://catalogo.movistar.cl/tienda/apple-iphone-15-128gb-negro"},{"s":"falabella","p":799990,"url":"https://www.falabella.com/falabella-cl/product/prod94641548/apple-iphone-15","note":"Precio Internet"},{"s":"wom","p":873600,"url":"https://store.wom.cl/equipos/A3090-128GB/Apple-iPhone-15-5G-128GB?sku=001.002.2486&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"}]},{"id":"s26u","name":"Galaxy S26 Ultra","brand":"Samsung","gb":256,"ram":12,"chip":"Snapdragon 8 Elite Gen 5","size":6.9,"hz":120,"panel":"AMOLED","bat":5000,"chg":60,"cam":200,"year":2026,"antutu":3939244,"gb6":[3624,11049],"refurb":false,"cond":null,"offers":[{"s":"ripley","p":969990,"url":"https://simple.ripley.cl/galaxy-s26-ultra-256-gb-black-mpm10003208511","note":"Precio Internet","seller":"Samsung Chile (tienda oficial)"},{"s":"movistar","p":979990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-s26-ultra-5g-256gb-negro"},{"s":"entel","p":1049990,"url":"https://miportal.entel.cl/personas/celulares/galaxy-s26-ultra-5g/prod2710046","note":"Precio oferta online Entel (solo equipo). Revisa la capacidad en la ficha"},{"s":"falabella","p":1149990,"url":"https://www.falabella.com/falabella-cl/product/17667494/celular-samsung-galaxy-s26-ultra-256gb","note":"Con tarjeta CMR","c":1},{"s":"claro","p":1219990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-s26-ultra-256gb-negro-70016566pre"},{"s":"paris","p":1399990,"url":"https://www.paris.cl/smartphone-galaxy-s26-ultra-5g-256gb-69-cobalt-violet-394017999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1}]},{"id":"s26p","name":"Galaxy S26+","brand":"Samsung","gb":256,"ram":12,"chip":"Exynos 2600","size":6.7,"hz":120,"panel":"AMOLED","bat":4900,"chg":null,"cam":50,"year":2026,"antutu":3161126,"gb6":[3235,10904],"refurb":false,"cond":null,"offers":[{"s":"claro","p":839990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-s26-plus-256gb-negro-70016550pre"},{"s":"entel","p":849990,"url":"https://miportal.entel.cl/personas/celulares/galaxy-s26-plus-5g/prod2710045","note":"Precio oferta online Entel (solo equipo). Revisa la capacidad en la ficha"},{"s":"movistar","p":859990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-s26-plus-5g-256gb-negro"}]},{"id":"s26","name":"Galaxy S26","brand":"Samsung","gb":256,"ram":12,"chip":"Exynos 2600","size":6.3,"hz":120,"panel":"AMOLED","bat":null,"chg":null,"cam":50,"year":2026,"antutu":3161126,"gb6":[3235,10904],"refurb":false,"cond":null,"offers":[{"s":"entel","p":699990,"url":"https://miportal.entel.cl/personas/celulares/galaxy-s26-5g/prod2710044","note":"Precio oferta online Entel (solo equipo). Revisa la capacidad en la ficha"},{"s":"movistar","p":699990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-s26-5g-256gb-negro"},{"s":"ripley","p":699990,"url":"https://simple.ripley.cl/galaxy-s26-256-gb-sky-blue-mpm10003208546","note":"Precio Internet","seller":"Samsung Chile (tienda oficial)"},{"s":"claro","p":829990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-s26-256gb-negro-70016514pre"},{"s":"falabella","p":899990,"url":"https://www.falabella.com/falabella-cl/product/17667491/celular-samsung-galaxy-s26-256gb","note":"Con tarjeta CMR","c":1},{"s":"paris","p":899990,"url":"https://www.paris.cl/smartphone-galaxy-s26-5g-256gb-63-black-393981999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1}]},{"id":"s26fe","name":"Galaxy S26 FE","brand":"Samsung","gb":256,"ram":8,"chip":"Exynos 2500","size":6.7,"hz":120,"panel":"AMOLED","bat":4900,"chg":45,"cam":50,"year":2026,"antutu":2289696,"gb6":[2217,7699],"refurb":false,"cond":null,"offers":[{"s":"wom","p":715200,"url":"https://store.wom.cl/equipos/SM-S741B-256/Samsung-Galaxy-S26-FE-5G-256GB?sku=001.002.3023&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"},{"s":"falabella","p":719990,"url":"https://www.falabella.com/falabella-cl/product/17765907/celular-samsung-galaxy-s26-fe-256-gb","note":"Con tarjeta CMR","c":1},{"s":"claro","p":749990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-s26-fe-256gb-graphite-70017489pre"}]},{"id":"s25u","name":"Galaxy S25 Ultra","brand":"Samsung","gb":256,"ram":12,"chip":"Snapdragon 8 Elite","size":6.9,"hz":120,"panel":"AMOLED","bat":5000,"chg":45,"cam":200,"year":2025,"antutu":3126402,"gb6":[3013,9287],"refurb":false,"cond":null,"offers":[{"s":"ripley","p":849990,"url":"https://simple.ripley.cl/samsung-galaxy-s25-ultra-256g-negro-titanio-mpm10002111335","note":"Precio Internet","seller":"Samsung Chile (tienda oficial)"},{"s":"movistar","p":879990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-ultra-5g-256-gb-titanium-black"},{"s":"entel","p":929990,"url":"https://miportal.entel.cl/personas/celulares/galaxy-s25-ultra-5g/prod2480055","note":"Precio oferta online Entel (solo equipo). Revisa la capacidad en la ficha"},{"s":"falabella","p":949990,"url":"https://www.falabella.com/falabella-cl/product/prod129939632/celular-samsung-galaxy-s25-ultra-256gb","note":"Con tarjeta CMR","c":1},{"s":"wom","p":1080000,"url":"https://store.wom.cl/equipos/SM-S938B/Samsung-Galaxy-S25-Ultra-5G-256GB?sku=001.002.2777&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"},{"s":"claro","p":1089990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-s25-ultra-256gb-titanium-black-70013359pre"}]},{"id":"s25","name":"Galaxy S25","brand":"Samsung","gb":256,"ram":12,"chip":"Snapdragon 8 Elite","size":6.2,"hz":120,"panel":"AMOLED","bat":4000,"chg":25,"cam":50,"year":2025,"antutu":3126402,"gb6":[3013,9287],"refurb":false,"cond":null,"offers":[{"s":"paris","p":549990,"url":"https://www.paris.cl/smartphone-galaxy-s25-256gb-62-navy-liberado-924050999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1},{"s":"falabella","p":649990,"url":"https://www.falabella.com/falabella-cl/product/prod129935274/Celular-Samsung-Galaxy-S25-256GB","note":"Precio Internet"},{"s":"claro","p":719990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-s25-256gb-5g-navy-70013347pre"}]},{"id":"s25fe","name":"Galaxy S25 FE","brand":"Samsung","gb":256,"ram":8,"chip":"Exynos 2400","size":6.7,"hz":120,"panel":"AMOLED","bat":4900,"chg":45,"cam":50,"year":2025,"antutu":2046435,"gb6":[2115,6826],"refurb":false,"cond":null,"offers":[{"s":"movistar","p":529990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-s25-fe-5g-256gb-negro"},{"s":"falabella","p":529990,"url":"https://www.falabella.com/falabella-cl/product/17558931/Celular-Samsung-Galaxy-S25-FE-256GB-","note":"Con tarjeta CMR","c":1},{"s":"ripley","p":579990,"url":"https://simple.ripley.cl/samsung-galaxy-s25-fe-256-gb-negro-intenso-mpm10003004943","note":"Precio Internet","seller":"Samsung Chile (tienda oficial)"},{"s":"claro","p":659990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-s25-fe-256gb-5g-negro-70015290pre"}]},{"id":"zfold7","name":"Galaxy Z Fold7","brand":"Samsung","gb":256,"ram":12,"chip":"Snapdragon 8 Elite","size":8.0,"hz":120,"panel":"AMOLED plegable","bat":4400,"chg":25,"cam":200,"year":2025,"antutu":3126402,"gb6":[3013,9287],"refurb":false,"cond":null,"offers":[{"s":"claro","p":1679990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-z-fold-7-256gb-jet-black-70015154pre"},{"s":"entel","p":1799990,"url":"https://miportal.entel.cl/personas/celulares/galaxy-z-fold-7-5g-256gb/prod2620062","note":"Precio oferta online Entel (solo equipo)"}]},{"id":"a57","name":"Galaxy A57","brand":"Samsung","gb":256,"ram":8,"chip":"Exynos 1680","size":6.7,"hz":120,"panel":"AMOLED","bat":5000,"chg":45,"cam":50,"year":2026,"antutu":1390055,"gb6":[1382,4477],"refurb":false,"cond":null,"offers":[{"s":"ripley","p":379990,"url":"https://simple.ripley.cl/galaxy-a57-256gb-awesome-gray-mpm10003242728","note":"Precio Internet","seller":"Samsung Chile (tienda oficial)"},{"s":"falabella","p":459990,"url":"https://www.falabella.com/falabella-cl/product/17684254/celular-samsung-galaxy-a57-256gb","note":"Con tarjeta CMR","c":1},{"s":"claro","p":509990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-a57-5g-256gb-awesome-gray-70016652pre"}]},{"id":"a57b","name":"Galaxy A57","brand":"Samsung","gb":128,"ram":8,"chip":"Exynos 1680","size":6.7,"hz":120,"panel":"AMOLED","bat":5000,"chg":45,"cam":50,"year":2026,"antutu":1390055,"gb6":[1382,4477],"refurb":false,"cond":null,"offers":[{"s":"entel","p":379990,"url":"https://miportal.entel.cl/personas/celulares/galaxy-a57-5g/prod2710094","note":"Precio oferta online Entel (solo equipo)"},{"s":"movistar","p":389990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-a57-5g-128gb-gris"},{"s":"claro","p":399990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-a57-5g-128gb-awesome-gray-70016661pre"},{"s":"paris","p":429990,"url":"https://www.paris.cl/smartphone-galaxy-a57-5g-128gb-67-awesome-gray-liberado-424619999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1}]},{"id":"a37","name":"Galaxy A37","brand":"Samsung","gb":256,"ram":8,"chip":"Exynos 1480","size":6.7,"hz":120,"panel":"AMOLED","bat":5000,"chg":45,"cam":50,"year":2026,"antutu":1064079,"gb6":[1153,3457],"refurb":false,"cond":null,"offers":[{"s":"ripley","p":349990,"url":"https://simple.ripley.cl/galaxy-a37-256gb-awesome-charcoal-mpm10003242719","note":"Precio Internet","seller":"Samsung Chile (tienda oficial)"},{"s":"movistar","p":369990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-a37-5g-256gb-gris"},{"s":"claro","p":389990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-a37-5g-256gb-awesome-graygreen-70016699pre"},{"s":"falabella","p":409990,"url":"https://www.falabella.com/falabella-cl/product/17684249/celular-samsung-galaxy-a37-256gb","note":"Con tarjeta CMR","c":1}]},{"id":"a27","name":"Galaxy A27","brand":"Samsung","gb":128,"ram":6,"chip":"Snapdragon 6 Gen 3","size":6.7,"hz":120,"panel":"AMOLED","bat":5000,"chg":25,"cam":50,"year":2026,"antutu":903337,"gb6":[1002,2993],"refurb":false,"cond":null,"offers":[{"s":"entel","p":249990,"url":"https://miportal.entel.cl/personas/celulares/galaxy-a27-5g/prod2760044","note":"Precio oferta online Entel (solo equipo). Revisa la capacidad en la ficha"},{"s":"falabella","p":259990,"url":"https://www.falabella.com/falabella-cl/product/17743539/celular-samsung-galaxy-a27-5g-128-gb-awesome-black","note":"Con tarjeta CMR","c":1},{"s":"movistar","p":269990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-a27-5g-128gb-negro"},{"s":"ripley","p":274990,"url":"https://simple.ripley.cl/galaxy-a27-5g-128-gb-awesome-blue-mpm10003421441","note":"Precio Internet","seller":"Samsung Chile (tienda oficial)"},{"s":"claro","p":288990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-a27-128gb-5g-negro-70017177pre"}]},{"id":"a17","name":"Galaxy A17 5G","brand":"Samsung","gb":128,"ram":4,"chip":"Exynos 1330","size":6.7,"hz":90,"panel":"AMOLED","bat":5000,"chg":25,"cam":50,"year":2025,"antutu":632461,"gb6":[963,2193],"refurb":false,"cond":null,"offers":[{"s":"movistar","p":189990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-a17-5g-128gb-negro"},{"s":"entel","p":199990,"url":"https://miportal.entel.cl/personas/celulares/galaxy-a17-5g/prod2640057","note":"Precio oferta online Entel (solo equipo)"},{"s":"claro","p":209990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-a17-128gb-5g-negro-70015278pre"}]},{"id":"a07","name":"Galaxy A07 (4G)","brand":"Samsung","gb":128,"ram":4,"chip":"Helio G99","size":6.7,"hz":90,"panel":"LCD","bat":5000,"chg":25,"cam":50,"year":2025,"antutu":554590,"gb6":[727,2047],"refurb":false,"cond":null,"offers":[{"s":"claro","p":109990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/samsung-a07-128gb-4g-negro-70015266pre"},{"s":"entel","p":119990,"url":"https://miportal.entel.cl/personas/celulares/galaxy-a07-128gb/prod2710065","note":"Precio oferta online Entel (solo equipo)"},{"s":"falabella","p":129990,"url":"https://www.falabella.com/falabella-cl/product/17558926/Samsung%20Galaxy%20A07%20LTE%20128GB%20Negro","note":"Precio Internet"},{"s":"paris","p":129990,"url":"https://www.paris.cl/smartphone-galaxy-a07-lte-128gb-67-negro-liberado-260823999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1}]},{"id":"x17u","name":"Xiaomi 17 Ultra","brand":"Xiaomi","gb":512,"ram":16,"chip":"Snapdragon 8 Elite Gen 5","size":6.9,"hz":120,"panel":"AMOLED","bat":6000,"chg":90,"cam":50,"year":2026,"antutu":3667711,"gb6":[3711,11259],"refurb":false,"cond":null,"offers":[{"s":"movistar","p":1349990,"url":"https://catalogo.movistar.cl/tienda/xiaomi-17-ultra-512gb-negro-mas-photography-kit-mas-cargador-90w","note":"Incluye kit fotográfico y cargador"},{"s":"pcfactory","p":1369990,"url":"https://www.pcfactory.cl/producto/57370","note":"Con transferencia o débito","c":1},{"s":"entel","p":1399990,"url":"https://miportal.entel.cl/personas/celulares/17-ultra-5g-512gb/prod2710093","note":"Precio oferta online Entel (solo equipo)"},{"s":"falabella","p":1399990,"url":"https://www.falabella.com/falabella-cl/product/17687663/xiaomi-17-ultra-512gb-kit-camara","note":"Precio Internet. Incluye kit de cámara"},{"s":"claro","p":1569990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/xiaomi-17-ultra-512gb-5g-verde-kit-foto-cargador-70016751pre","note":"Incluye kit fotográfico y cargador"}]},{"id":"x17","name":"Xiaomi 17","brand":"Xiaomi","gb":512,"ram":12,"chip":"Snapdragon 8 Elite Gen 5","size":6.3,"hz":120,"panel":"AMOLED","bat":6330,"chg":100,"cam":50,"year":2025,"antutu":3404616,"gb6":[3583,10772],"refurb":false,"cond":null,"offers":[{"s":"falabella","p":899990,"url":"https://www.falabella.com/falabella-cl/product/17687661/xiaomi-17-512gb","note":"Precio Internet"},{"s":"pcfactory","p":939990,"url":"https://www.pcfactory.cl/producto/56825","note":"Con transferencia o débito","c":1},{"s":"movistar","p":999990,"url":"https://catalogo.movistar.cl/tienda/xiaomi-17-512gb-negro-mas-power-bank-cargador-90w","note":"Incluye batería externa y cargador"},{"s":"claro","p":1079990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/xiaomi-17-512gb-5g-negro-powerbank-cargador-70016614pre","note":"Incluye batería externa y cargador"}]},{"id":"x17tp","name":"Xiaomi 17T Pro","brand":"Xiaomi","gb":512,"ram":12,"chip":"Dimensity 9500","size":6.83,"hz":144,"panel":"AMOLED","bat":7000,"chg":100,"cam":50,"year":2026,"antutu":3323591,"gb6":[3334,10348],"refurb":false,"cond":null,"offers":[{"s":"entel","p":799990,"url":"https://miportal.entel.cl/personas/celulares/17t-pro-5g-512gb/prod2740049","note":"Precio oferta online Entel (solo equipo)"},{"s":"falabella","p":799990,"url":"https://www.falabella.com/falabella-cl/product/17731454/celular-xiaomi-17t-pro-512gb-negro","note":"Precio Internet"}]},{"id":"x17t","name":"Xiaomi 17T","brand":"Xiaomi","gb":256,"ram":12,"chip":"Dimensity 8500","size":6.59,"hz":120,"panel":"AMOLED","bat":6500,"chg":67,"cam":50,"year":2026,"antutu":2173332,"gb6":[1704,6686],"refurb":false,"cond":null,"offers":[{"s":"pcfactory","p":559990,"url":"https://www.pcfactory.cl/producto/56464","note":"Con transferencia o débito","c":1},{"s":"falabella","p":569990,"url":"https://www.falabella.com/falabella-cl/product/17740633/celular-xiaomi-17t-256gb","note":"Precio Internet"},{"s":"entel","p":599990,"url":"https://miportal.entel.cl/personas/celulares/17t-5g-256gb/prod2740044","note":"Precio oferta online Entel (solo equipo)"},{"s":"movistar","p":599990,"url":"https://catalogo.movistar.cl/tienda/xiaomi-17t-256gb-negro-mas-xiaomi-sound-outdoor","note":"Incluye parlante Xiaomi Sound Outdoor"},{"s":"wom","p":645600,"url":"https://store.wom.cl/equipos/2602DPT53G/Xiaomi-17T-5G-256GB?sku=001.002.2996&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"}]},{"id":"x15t","name":"Xiaomi 15T","brand":"Xiaomi","gb":512,"ram":12,"chip":"Dimensity 8400","size":6.83,"hz":120,"panel":"AMOLED","bat":5500,"chg":67,"cam":50,"year":2025,"antutu":1915524,"gb6":[1632,6505],"refurb":false,"cond":null,"offers":[{"s":"falabella","p":379990,"url":"https://www.falabella.com/falabella-cl/product/17582026/Celular-Xiaomi-15T-512GB-","note":"Precio Internet"},{"s":"entel","p":399990,"url":"https://miportal.entel.cl/personas/celulares/15t-5g-512gb/prod2630067","note":"Precio oferta online Entel (solo equipo)"}]},{"id":"rn17pm","name":"Redmi Note 17 Pro Max","brand":"Xiaomi","gb":256,"ram":8,"chip":"Snapdragon 6 Gen 5","size":6.83,"hz":120,"panel":"AMOLED","bat":10000,"chg":100,"cam":50,"year":2026,"antutu":1007140,"gb6":[1099,3481],"refurb":false,"cond":null,"offers":[{"s":"entel","p":429990,"url":"https://miportal.entel.cl/personas/celulares/redmi-note-17-pro-max-256gb-5g/prod2780055","note":"Precio oferta online Entel (solo equipo). Incluye audífonos"},{"s":"paris","p":429990,"url":"https://www.paris.cl/smartphone-redmi-note-17-pro-max-5g-256gb-683-negro-liberado-audifonos-bluetooth-562607999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1},{"s":"falabella","p":439990,"url":"https://www.falabella.com/falabella-cl/product/17767412/celular-redmi-note-17-pro-max-5g-256gb-negro","note":"Con tarjeta CMR","c":1},{"s":"pcfactory","p":449990,"url":"https://www.pcfactory.cl/producto/58042","note":"Con transferencia o débito","c":1},{"s":"ripley","p":459990,"url":"https://simple.ripley.cl/xiaomi-redmi-note-17-pro-max-5g-8gb-ram-256gb-rom-negro-mpm10003704302","note":"Precio Internet","seller":"Xiaomi (tienda oficial)"},{"s":"wom","p":506400,"url":"https://store.wom.cl/equipos/2609FRA74G/Xiaomi-Redmi-Note-17-Pro-max-5G-256GB-con-Redmi-Headphone-Neo?sku=001.002.3006&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"},{"s":"claro","p":509990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/xiaomi-redmi-note-17-pro-max-5g-negro-256gb-hp-neo-70017522pre","note":"Incluye audífonos"}]},{"id":"rn17p","name":"Redmi Note 17 Pro","brand":"Xiaomi","gb":256,"ram":8,"chip":"Snapdragon 6s Gen 4","size":6.83,"hz":120,"panel":"AMOLED","bat":9000,"chg":67,"cam":50,"year":2026,"antutu":876983,"gb6":[1011,2924],"refurb":false,"cond":null,"offers":[{"s":"entel","p":329990,"url":"https://miportal.entel.cl/personas/celulares/redmi-note-17-pro-5g-256gb-redmi-headphone-neo/prod2780049","note":"Precio oferta online Entel (solo equipo). Incluye audífonos"},{"s":"falabella","p":339990,"url":"https://www.falabella.com/falabella-cl/product/17767411/celular-redmi-note-17-pro-5g-256gb-negro","note":"Con tarjeta CMR","c":1},{"s":"paris","p":339990,"url":"https://www.paris.cl/smartphone-redmi-note-17-pro-5g-256gb-683-negro-liberado-audifonos-bluetooth-562602999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1},{"s":"ripley","p":359990,"url":"https://simple.ripley.cl/xiaomi-redmi-note-17-pro-5g-azul-6gb-ram-256gb-rom-mpm10003704155","note":"Precio Internet","seller":"Xiaomi (tienda oficial)"},{"s":"wom","p":396000,"url":"https://store.wom.cl/equipos/2607DRA18T/Xiaomi-Redmi-Note-17-Pro-5G-256GB-con-Redmi-Headphone-Neo?sku=001.002.3007&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"},{"s":"claro","p":399990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/xiaomi-redmi-note-17-pro-256gb-5g-negro-headphones-neo-70017864pre","note":"Incluye audífonos"},{"s":"pcfactory","p":399990,"url":"https://www.pcfactory.cl/producto/58044","note":"Con transferencia o débito","c":1}]},{"id":"rn17","name":"Redmi Note 17","brand":"Xiaomi","gb":128,"ram":6,"chip":"Snapdragon 4 Gen 4","size":7.0,"hz":120,"panel":"OLED","bat":8000,"chg":45,"cam":50,"year":2026,"antutu":593849,"gb6":[900,2178],"refurb":false,"cond":null,"offers":[{"s":"movistar","p":234990,"url":"https://catalogo.movistar.cl/tienda/xiaomi-redmi-note-17-5g-128gb-negro-redmi-buds-6-play","note":"Incluye audífonos Redmi Buds 6 Play"},{"s":"paris","p":239990,"url":"https://www.paris.cl/smartphone-redmi-note-17-5g-128gb-69-negro-liberado-audifonos-bluetooth-562600999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1},{"s":"falabella","p":249990,"url":"https://www.falabella.com/falabella-cl/product/17767409/celular-redmi-note-17-5g-128gb-negro","note":"Con tarjeta CMR","c":1},{"s":"pcfactory","p":279990,"url":"https://www.pcfactory.cl/producto/58046","note":"Con transferencia o débito","c":1}]},{"id":"rn15pp","name":"Redmi Note 15 Pro+","brand":"Xiaomi","gb":512,"ram":12,"chip":"Snapdragon 7s Gen 4","size":6.83,"hz":120,"panel":"AMOLED","bat":6500,"chg":null,"cam":200,"year":2026,"antutu":1041898,"gb6":[1223,3168],"refurb":false,"cond":null,"offers":[{"s":"falabella","p":379990,"url":"https://www.falabella.com/falabella-cl/product/17654071/Celular-Xiaomi-Redmi-Note-15-Pro-5G-512GB","note":"Precio Internet"},{"s":"entel","p":399990,"url":"https://miportal.entel.cl/personas/celulares/redmi-note-15-pro-plus-5g-512gb/prod2680071","note":"Precio oferta online Entel (solo equipo)"},{"s":"claro","p":419990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/xiaomi-redmi-note-15-pro-plus-512gb-marron-70016128pre"}]},{"id":"r17","name":"Redmi 17 5G","brand":"Xiaomi","gb":128,"ram":4,"chip":"Snapdragon 4 Gen 5","size":6.9,"hz":120,"panel":"LCD","bat":7500,"chg":45,"cam":50,"year":2026,"antutu":619773,"gb6":[973,2241],"refurb":false,"cond":null,"offers":[{"s":"entel","p":199990,"url":"https://miportal.entel.cl/personas/celulares/redmi-17-5g-128gb/prod2780044","note":"Precio oferta online Entel (solo equipo)"},{"s":"movistar","p":229990,"url":"https://catalogo.movistar.cl/tienda/xiaomi-redmi-17-5g-128gb-negro"},{"s":"pcfactory","p":229990,"url":"https://www.pcfactory.cl/producto/58048","note":"Con transferencia o débito","c":1}]},{"id":"r17c","name":"Redmi 17C 5G","brand":"Xiaomi","gb":128,"ram":4,"chip":"Dimensity 6300","size":6.9,"hz":120,"panel":"LCD","bat":6000,"chg":33,"cam":50,"year":2026,"antutu":531619,"gb6":[729,1692],"refurb":false,"cond":null,"offers":[{"s":"entel","p":169990,"url":"https://miportal.entel.cl/personas/celulares/redmi-17c-5g-128gb/prod2780045","note":"Precio oferta online Entel (solo equipo)"},{"s":"falabella","p":189990,"url":"https://www.falabella.com/falabella-cl/product/17757788/celular-redmi-17c-5g-128gb-negro","note":"Precio Internet"},{"s":"movistar","p":199990,"url":"https://catalogo.movistar.cl/tienda/xiaomi-redmi-17c-5g-128gb-negro"},{"s":"pcfactory","p":199990,"url":"https://www.pcfactory.cl/producto/58049","note":"Con transferencia o débito","c":1}]},{"id":"r15c","name":"Redmi 15C 5G","brand":"Xiaomi","gb":256,"ram":4,"chip":"Dimensity 6300","size":6.9,"hz":120,"panel":"LCD","bat":6000,"chg":33,"cam":50,"year":2025,"antutu":528398,"gb6":[771,1980],"refurb":false,"cond":null,"offers":[{"s":"claro","p":146990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/xiaomi-redmi-15c-256gb-5g-negro-70015345pre"},{"s":"paris","p":149990,"url":"https://www.paris.cl/smartphone-redmi-15c-5g-256gb-69-negro-liberado-305159999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1},{"s":"entel","p":159990,"url":"https://miportal.entel.cl/personas/celulares/redmi-15c-5g-256gb/prod2620051","note":"Precio oferta online Entel (solo equipo)"}]},{"id":"ra7p","name":"Redmi A7 Pro (4G)","brand":"Xiaomi","gb":128,"ram":4,"chip":"Unisoc T7250","size":6.9,"hz":120,"panel":"LCD","bat":6000,"chg":15,"cam":13,"year":2026,"antutu":341105,"gb6":[433,1422],"refurb":false,"cond":null,"offers":[{"s":"movistar","p":109990,"url":"https://catalogo.movistar.cl/tienda/xiaomi-redmi-a7-pro-4g-128gb-negro"},{"s":"entel","p":119990,"url":"https://miportal.entel.cl/personas/celulares/redmi-a7-pro-lte-128gb/prod2720045","note":"Precio oferta online Entel (solo equipo)"},{"s":"claro","p":119990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/xiaomi-redmi-a7-pro-4g-128gb-negro-70016839pre","note":"Incluye cargador"},{"s":"pcfactory","p":129990,"url":"https://www.pcfactory.cl/producto/57374","note":"Con transferencia o débito","c":1}]},{"id":"hm8p","name":"Honor Magic8 Pro","brand":"Honor","gb":512,"ram":12,"chip":"Snapdragon 8 Elite Gen 5","size":6.71,"hz":120,"panel":"OLED","bat":7200,"chg":120,"cam":50,"year":2025,"antutu":3966144,"gb6":[3568,10610],"refurb":false,"cond":null,"offers":[{"s":"entel","p":1099990,"url":"https://miportal.entel.cl/personas/celulares/honor-magic-8-pro-512gb/prod2680092","note":"Precio oferta online Entel (solo equipo)"},{"s":"movistar","p":1169990,"url":"https://catalogo.movistar.cl/tienda/honor-magic-8-pro-512gb-negro"},{"s":"claro","p":1337990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/honor-magic-8-pro-512gb-5g-sunrise-gold-70016198pre"}]},{"id":"hm8l","name":"Honor Magic8 Lite","brand":"Honor","gb":512,"ram":8,"chip":"Snapdragon 6 Gen 4","size":6.79,"hz":120,"panel":"AMOLED","bat":7500,"chg":null,"cam":108,"year":2025,"antutu":975254,"gb6":[1087,3148],"refurb":false,"cond":null,"offers":[{"s":"entel","p":399990,"url":"https://miportal.entel.cl/personas/celulares/honor-magic-8-lite-512gb/prod2680061","note":"Precio oferta online Entel (solo equipo)"},{"s":"movistar","p":399990,"url":"https://catalogo.movistar.cl/tienda/honor-magic-8-lite-512gb-negro"},{"s":"claro","p":449990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/honor-magic-8-lite-512gb-5g-negro-70015951pre"}]},{"id":"h600","name":"Honor 600","brand":"Honor","gb":512,"ram":8,"chip":"Snapdragon 7 Gen 4","size":6.57,"hz":120,"panel":"AMOLED","bat":7000,"chg":80,"cam":200,"year":2026,"antutu":1426281,"gb6":[1329,4105],"refurb":false,"cond":null,"offers":[{"s":"falabella","p":669990,"url":"https://www.falabella.com/falabella-cl/product/17719873/celular-honor-600-8-512gb-earbuds","note":"Con tarjeta CMR","c":1},{"s":"entel","p":699990,"url":"https://miportal.entel.cl/personas/celulares/honor-600-512gb-clip-2-pro/prod2750057","note":"Precio oferta online Entel (solo equipo). Incluye audífonos Clip 2 Pro"},{"s":"claro","p":749990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/honor-600-512gb-5g-negro-clip-2-70016942pre","note":"Incluye audífonos"}]},{"id":"h600e","name":"Honor 600e","brand":"Honor","gb":512,"ram":8,"chip":"Dimensity 7100","size":6.6,"hz":120,"panel":"AMOLED","bat":null,"chg":null,"cam":50,"year":2026,"antutu":785352,"gb6":[995,2925],"refurb":false,"cond":null,"offers":[{"s":"pcfactory","p":479990,"url":"https://www.pcfactory.cl/producto/57334","note":"Con transferencia o débito","c":1},{"s":"falabella","p":489990,"url":"https://www.falabella.com/falabella-cl/product/17719868/celular-honor-600e-8-512gb","note":"Precio Internet"},{"s":"entel","p":519990,"url":"https://miportal.entel.cl/personas/celulares/honor-600e-512gb-cargador-45w/prod2750061","note":"Precio oferta online Entel (solo equipo). Incluye cargador 45W"},{"s":"claro","p":599990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/honor-600e-512gb-5g-grey-70016903pre"}]},{"id":"h600el","name":"Honor 600 Elite","brand":"Honor","gb":256,"ram":8,"chip":"Snapdragon 4 Gen 4","size":6.87,"hz":120,"panel":"LCD","bat":null,"chg":null,"cam":108,"year":2026,"antutu":593849,"gb6":[952,2328],"refurb":false,"cond":null,"offers":[{"s":"pcfactory","p":399990,"url":"https://www.pcfactory.cl/producto/57205","note":"Con transferencia o débito","c":1},{"s":"falabella","p":429990,"url":"https://www.falabella.com/falabella-cl/product/17767585/celular-honor-600-elite-negro-8256gb-clip-2-pro","note":"Con tarjeta CMR","c":1},{"s":"wom","p":492000,"url":"https://store.wom.cl/equipos/MRK-NX3-600EliteBD/Honor-600-eLite-5G-256GB-con-Clip-2-Pro?sku=001.002.3020&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"},{"s":"claro","p":499990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/honor-600-elite-5g-256gb-negro-70017220pre"}]},{"id":"h600s","name":"Honor 600 Smart","brand":"Honor","gb":256,"ram":6,"chip":"Snapdragon 4 Gen 4","size":6.87,"hz":120,"panel":"LCD","bat":7700,"chg":45,"cam":50,"year":2026,"antutu":570353,"gb6":[927,2205],"refurb":false,"cond":null,"offers":[{"s":"pcfactory","p":329990,"url":"https://www.pcfactory.cl/producto/57203","note":"Con transferencia o débito","c":1},{"s":"falabella","p":359990,"url":"https://www.falabella.com/falabella-cl/product/17767581/celular-honor-600-smart-morado-6256gb","note":"Precio Internet"},{"s":"claro","p":419990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/honor-600-smart-256gb-5g-purpura-70017210pre"},{"s":"wom","p":469200,"url":"https://store.wom.cl/equipos/MRK-NX3-600Smart/Honor-600-Smart-5G-256GB?sku=001.002.3018&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"}]},{"id":"msig","name":"Motorola Signature","brand":"Motorola","gb":1024,"ram":16,"chip":"Snapdragon 8 Gen 5","size":6.8,"hz":165,"panel":"AMOLED","bat":null,"chg":null,"cam":50,"year":2026,"antutu":3057215,"gb6":[2833,9119],"refurb":false,"cond":null,"offers":[{"s":"claro","p":1049990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/motorola-signature-1tb-negro-70016628pre"},{"s":"entel","p":1099990,"url":"https://miportal.entel.cl/personas/celulares/motorola-signature/prod2690044","note":"Precio oferta online Entel (solo equipo)"}]},{"id":"me70","name":"Motorola Edge 70","brand":"Motorola","gb":512,"ram":12,"chip":"Snapdragon 7 Gen 4","size":6.7,"hz":120,"panel":"OLED","bat":4800,"chg":68,"cam":50,"year":2025,"antutu":1368100,"gb6":[1329,4219],"refurb":false,"cond":null,"offers":[{"s":"entel","p":429990,"url":"https://miportal.entel.cl/personas/celulares/motorola-edge-70-512gb/prod2680100","note":"Precio oferta online Entel (solo equipo)"},{"s":"falabella","p":449990,"url":"https://www.falabella.com/falabella-cl/product/17703317/celular-motorola-edge-70-12512gb","note":"Precio Internet"},{"s":"paris","p":529990,"url":"https://www.paris.cl/smartphone-edge-5g-70-512gb-667-verde-liberado-427926999.html","note":"Con Tarjeta Cencosud Scotiabank","c":1},{"s":"pcfactory","p":579990,"url":"https://www.pcfactory.cl/producto/56996","note":"Con transferencia o débito","c":1},{"s":"claro","p":619990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/motorola-edge-70-512gb-gris-70016436pre"}]},{"id":"me70f","name":"Motorola Edge 70 Fusion","brand":"Motorola","gb":256,"ram":8,"chip":"Snapdragon 7s Gen 3","size":6.78,"hz":144,"panel":"AMOLED","bat":7000,"chg":68,"cam":50,"year":2026,"antutu":1149292,"gb6":[1263,3421],"refurb":false,"cond":null,"offers":[{"s":"entel","p":349990,"url":"https://miportal.entel.cl/personas/celulares/motorola-edge-70-fusion-256gb/prod2710070","note":"Precio oferta online Entel (solo equipo)"},{"s":"movistar","p":349990,"url":"https://catalogo.movistar.cl/tienda/motorola-edge-70-5g-fusion-azul"},{"s":"falabella","p":359990,"url":"https://www.falabella.com/falabella-cl/product/17714325/celular-motorola-edge-70-fusion-256gb","note":"Precio Internet"},{"s":"claro","p":389990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/motorola-edge-70-fusion-256gb-azul-70016438pre"},{"s":"ripley","p":449990,"url":"https://simple.ripley.cl/motorola-edge-70-fusion-8256gb-mpm10003314781","note":"Precio Internet","seller":"Motorola (tienda oficial)"}]},{"id":"mg67","name":"Moto G67","brand":"Motorola","gb":256,"ram":4,"chip":"Dimensity 6400","size":6.78,"hz":120,"panel":"AMOLED","bat":5200,"chg":30,"cam":50,"year":2026,"antutu":581041,"gb6":[780,1999],"refurb":false,"cond":null,"offers":[{"s":"entel","p":249990,"url":"https://miportal.entel.cl/personas/celulares/moto-g67-5g-256gb/prod2730045","note":"Precio oferta online Entel (solo equipo)"},{"s":"pcfactory","p":259990,"url":"https://www.pcfactory.cl/producto/56515","note":"Con transferencia o débito","c":1},{"s":"ripley","p":269990,"url":"https://simple.ripley.cl/moto-g67-4256gb-mpm10003314763","note":"Precio Internet","seller":"Motorola (tienda oficial)"},{"s":"claro","p":279990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/motorola-g67-256gb-5g-gris-70016858pre"},{"s":"wom","p":283200,"url":"https://store.wom.cl/equipos/XT2621-1/Motorola-Moto-G67-5G-256GB?sku=001.002.3057&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"}]},{"id":"mg47","name":"Moto G47","brand":"Motorola","gb":128,"ram":8,"chip":"Dimensity 6300","size":6.67,"hz":120,"panel":"LCD","bat":5200,"chg":20,"cam":108,"year":2026,"antutu":596952,"gb6":[798,1301],"refurb":false,"cond":null,"offers":[{"s":"entel","p":219990,"url":"https://miportal.entel.cl/personas/celulares/moto-g47-5g-128gb/prod2760054","note":"Precio oferta online Entel (solo equipo)"},{"s":"pcfactory","p":219990,"url":"https://www.pcfactory.cl/producto/57349","note":"Con transferencia o débito","c":1},{"s":"wom","p":254400,"url":"https://store.wom.cl/equipos/XT2625-1/Motorola-Moto-G47-5G-128GB?sku=001.002.3055&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"}]},{"id":"mg06","name":"Moto G06 (4G)","brand":"Motorola","gb":128,"ram":4,"chip":"Helio G81","size":6.88,"hz":120,"panel":"LCD","bat":5200,"chg":null,"cam":50,"year":2025,"antutu":null,"gb6":null,"refurb":false,"cond":null,"offers":[{"s":"falabella","p":99990,"url":"https://www.falabella.com/falabella-cl/product/17632413/celular-motorola-g06-128gb","note":"Precio Internet"},{"s":"claro","p":109990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/motorola-g06-125gb-4g-azul-70015241pre"},{"s":"pcfactory","p":119990,"url":"https://www.pcfactory.cl/producto/55062","note":"Con transferencia o débito","c":1}]},{"id":"nn5gt","name":"ZTE Nubia Neo 5 GT","brand":"ZTE","gb":256,"ram":8,"chip":"Dimensity 7400","size":6.8,"hz":120,"panel":"AMOLED","bat":null,"chg":null,"cam":50,"year":2026,"antutu":953150,"gb6":[1061,3185],"refurb":false,"cond":null,"offers":[{"s":"movistar","p":279990,"url":"https://catalogo.movistar.cl/tienda/zte-nubia-neo-5-5g-256gb-negro-mas-gamepad","note":"Incluye gamepad. Revisa si es Neo 5 o Neo 5 GT en la ficha"},{"s":"pcfactory","p":349990,"url":"https://www.pcfactory.cl/producto/58040","note":"Con transferencia o débito","c":1},{"s":"falabella","p":359990,"url":"https://www.falabella.com/falabella-cl/product/17719865/zte-nubia-neo-5-gt-5g-8256gb-negro-bundle","note":"Precio Internet. Incluye accesorios"},{"s":"claro","p":375990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/zte-nubia-neo-5-gt-5g-256gb-negro-gpad-cable-70016816pre","note":"Incluye gamepad"},{"s":"wom","p":396000,"url":"https://store.wom.cl/equipos/Z2570N/ZTE-Nubia-Neo-5-GT-5G-256GB-con-Gamepad?sku=001.002.3001&modalidad-de-compra=prepago","note":"Modalidad Prepago (equipo liberado)"}]},{"id":"vv70","name":"Vivo V70","brand":"Vivo","gb":512,"ram":12,"chip":"Snapdragon 7 Gen 4","size":6.59,"hz":120,"panel":"AMOLED","bat":6500,"chg":90,"cam":50,"year":2026,"antutu":1410609,"gb6":[1279,4114],"refurb":false,"cond":null,"offers":[{"s":"falabella","p":649990,"url":"https://www.falabella.com/falabella-cl/product/17691613/celular-vivo-v70-512gb","note":"Precio Internet"},{"s":"claro","p":749990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/vivo-v70-512gb-5g-authentic-black-70016163pre"}]},{"id":"blA76","name":"ZTE Blade A76 5G","brand":"ZTE","gb":128,"ram":4,"chip":"Unisoc T760","size":6.8,"hz":90,"panel":"LCD","bat":5000,"chg":null,"cam":50,"year":2025,"antutu":628581,"gb6":[735,2318],"refurb":false,"cond":null,"offers":[{"s":"claro","p":104990,"url":"https://tienda.clarochile.cl/catalogo/equiposclaro/zte-blade-a76-128gb-5g-negro-70014777pre"},{"s":"pcfactory","p":109990,"url":"https://www.pcfactory.cl/producto/55290","note":"Con transferencia o débito","c":1},{"s":"movistar","p":119990,"url":"https://catalogo.movistar.cl/tienda/zte-blade-a76-5g-128gb-negro"}]},{"id":"r-ip16pm","name":"iPhone 16 Pro Max (reacondicionado)","brand":"Apple","gb":256,"ram":8,"chip":"A18 Pro","size":6.9,"hz":120,"panel":"OLED","bat":null,"chg":null,"cam":48,"year":2024,"antutu":1782199,"gb6":[3570,8923],"refurb":true,"cond":"Seminuevo","offers":[{"s":"movistar","p":829990,"url":"https://catalogo.movistar.cl/tienda/apple-iphone-16-pro-max-256-gb-titanio-del-desierto-mas-lamina-seminuevo","note":"Seminuevo vendido por la operadora. Revisa garantía y estado en la ficha"}]},{"id":"r-ip16p","name":"iPhone 16 Pro (reacondicionado)","brand":"Apple","gb":128,"ram":8,"chip":"A18 Pro","size":6.3,"hz":120,"panel":"OLED","bat":null,"chg":null,"cam":48,"year":2024,"antutu":1782199,"gb6":[3570,8923],"refurb":true,"cond":"Seminuevo","offers":[{"s":"movistar","p":729990,"url":"https://catalogo.movistar.cl/tienda/apple-iphone-16-pro-128-gb-titanio-negro-mas-lamina-seminuevo","note":"Seminuevo vendido por la operadora. Revisa garantía y estado en la ficha"}]},{"id":"r-ip16e","name":"iPhone 16e (reacondicionado)","brand":"Apple","gb":128,"ram":8,"chip":"A18","size":6.1,"hz":60,"panel":"OLED","bat":null,"chg":null,"cam":48,"year":2025,"antutu":1972476,"gb6":[3431,8638],"refurb":true,"cond":"Reacondicionado","offers":[{"s":"movistar","p":449990,"url":"https://catalogo.movistar.cl/tienda/apple-iphone-16e-128gb-blanco-mas-lamina-seminuevo","note":"Seminuevo vendido por la operadora. Revisa garantía y estado en la ficha"},{"s":"ripley","p":464990,"url":"https://simple.ripley.cl/apple-iphone-16e-128gb-negro-reacondicionado-mpm10003203904","note":"Precio Internet","seller":"Reuse (vendedor externo)"}]},{"id":"r-ip15","name":"iPhone 15 (reacondicionado)","brand":"Apple","gb":128,"ram":6,"chip":"A16 Bionic","size":6.1,"hz":60,"panel":"OLED","bat":null,"chg":null,"cam":48,"year":2023,"antutu":1626008,"gb6":[2631,6602],"refurb":true,"cond":"Reacondicionado","offers":[{"s":"movistar","p":499990,"url":"https://catalogo.movistar.cl/tienda/apple-iphone-15-128gb-negro-lamina-seminuevo","note":"Seminuevo vendido por la operadora. Revisa garantía y estado en la ficha"},{"s":"ripley","p":504990,"url":"https://simple.ripley.cl/iphone-15-128-gb-6-gb-ram-48-mp-61-5g-negro-reacondicionado-mpm10001587209","note":"Precio Internet","seller":"Vendedor externo"}]},{"id":"r-ip14","name":"iPhone 14 (reacondicionado)","brand":"Apple","gb":128,"ram":6,"chip":"A15 Bionic","size":6.1,"hz":60,"panel":"OLED","bat":null,"chg":null,"cam":12,"year":2022,"antutu":1413275,"gb6":[2315,5753],"refurb":true,"cond":"Reacondicionado","offers":[{"s":"ripley","p":389990,"url":"https://simple.ripley.cl/iphone-14-128-gb-negro-reacondicionado-mpm10003406796","note":"Precio Internet","seller":"Renewed (vendedor externo)"},{"s":"movistar","p":399990,"url":"https://catalogo.movistar.cl/tienda/apple-iphone-14-128gb-medianoche-lamina-seminuevo","note":"Seminuevo vendido por la operadora. Revisa garantía y estado en la ficha"}]},{"id":"r-ip13","name":"iPhone 13 (reacondicionado)","brand":"Apple","gb":128,"ram":4,"chip":"A15 Bionic","size":6.1,"hz":60,"panel":"OLED","bat":null,"chg":null,"cam":12,"year":2021,"antutu":1413275,"gb6":[2315,5753],"refurb":true,"cond":"Seminuevo","offers":[{"s":"movistar","p":349990,"url":"https://catalogo.movistar.cl/tienda/apple-iphone-13-128-gb-blanco-seminuevo","note":"Seminuevo vendido por la operadora. Revisa garantía y estado en la ficha"}]},{"id":"r-s25u","name":"Galaxy S25 Ultra (reacondicionado)","brand":"Samsung","gb":256,"ram":12,"chip":"Snapdragon 8 Elite","size":6.9,"hz":120,"panel":"AMOLED","bat":5000,"chg":null,"cam":200,"year":2025,"antutu":3126402,"gb6":[3013,9287],"refurb":true,"cond":"Reacondicionado","offers":[{"s":"movistar","p":549990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-s25-ultra-5g-256gb-azul-titanio-mas-lamina-seminuevo","note":"Seminuevo vendido por la operadora. Revisa garantía y estado en la ficha"},{"s":"ripley","p":749990,"url":"https://simple.ripley.cl/galaxy-s25-ultra-256gb-titanium-black-reacondicionado-mpm10003536796","note":"Precio Internet","seller":"Digitek (vendedor externo)"}]},{"id":"r-s25","name":"Galaxy S25 (reacondicionado)","brand":"Samsung","gb":256,"ram":12,"chip":"Snapdragon 8 Elite","size":6.2,"hz":120,"panel":"AMOLED","bat":4000,"chg":null,"cam":50,"year":2025,"antutu":3126402,"gb6":[3013,9287],"refurb":true,"cond":"Seminuevo","offers":[{"s":"movistar","p":529990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-s25-5g-256gb-navy-mas-lamina-seminuevo","note":"Seminuevo vendido por la operadora. Revisa garantía y estado en la ficha"}]},{"id":"r-s24","name":"Galaxy S24 (reacondicionado)","brand":"Samsung","gb":128,"ram":8,"chip":"Exynos 2400","size":6.2,"hz":120,"panel":"AMOLED","bat":4000,"chg":null,"cam":50,"year":2024,"antutu":2046435,"gb6":[2115,6826],"refurb":true,"cond":"Reacondicionado","offers":[{"s":"movistar","p":329990,"url":"https://catalogo.movistar.cl/tienda/samsung-galaxy-s24-128-gb-black-lamina-seminuevo","note":"Seminuevo vendido por la operadora. Revisa garantía y estado en la ficha"},{"s":"ripley","p":419990,"url":"https://simple.ripley.cl/samsung-galaxy-s24-5g-128gb-negro-reacondicionado-mpm10002173050","note":"Precio Internet","seller":"Mobile Tech (vendedor externo)"}]},{"id":"r-x15u","name":"Xiaomi 15 Ultra (reacondicionado)","brand":"Xiaomi","gb":512,"ram":16,"chip":"Snapdragon 8 Elite","size":6.73,"hz":120,"panel":"AMOLED","bat":5410,"chg":null,"cam":50,"year":2025,"antutu":3126402,"gb6":[3013,9287],"refurb":true,"cond":"Seminuevo","offers":[{"s":"movistar","p":749990,"url":"https://catalogo.movistar.cl/tienda/xiaomi-15-ultra-5g-512gb-plata-seminuevo","note":"Seminuevo vendido por la operadora. Revisa garantía y estado en la ficha"}]},{"id":"r-x15t","name":"Xiaomi 15T (reacondicionado)","brand":"Xiaomi","gb":512,"ram":12,"chip":"Dimensity 8400","size":6.83,"hz":120,"panel":"AMOLED","bat":5500,"chg":null,"cam":50,"year":2025,"antutu":1915524,"gb6":[1632,6505],"refurb":true,"cond":"Seminuevo","offers":[{"s":"entel","p":299990,"url":"https://miportal.entel.cl/personas/celulares/15t-5g-512gb-seminuevo/prod2750066","note":"Seminuevo Entel. Revisa garantía y estado en la ficha"}]}];
+
+const SEEN = '14-10-2026';
+const STORES = {
+  falabella: { name: 'Falabella', color: '#5FA21A', t: 'tienda' },
+  paris:     { name: 'Paris',     color: '#1B8FD6', t: 'tienda' },
+  ripley:    { name: 'Ripley',    color: '#7A3FA0', t: 'tienda' },
+  pcfactory: { name: 'PCFactory', color: '#E8590C', t: 'tienda' },
+  entel:     { name: 'Entel',     color: '#0047BB', t: 'oper' },
+  movistar:  { name: 'Movistar',  color: '#00A9E0', t: 'oper' },
+  claro:     { name: 'Claro',     color: '#DA291C', t: 'oper' },
+  wom:       { name: 'WOM',       color: '#8E24AA', t: 'oper' }
+};
+const $ = id => document.getElementById(id);
+const fmt = n => '$' + Math.round(n).toLocaleString('es-CL');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+PHONES.forEach(p => { p.g5 = !/\(4G\)/.test(p.name); });
+const GBM_MAX = Math.max(...PHONES.map(p => p.gb6 ? p.gb6[1] : 0));
+const ANT_MAX = Math.max(...PHONES.map(p => p.antutu || 0));
+const gbm = p => p.gb6 ? p.gb6[1] : 0;
+
+const st = { q: '', max: 1900000, cond: 'all', uses: new Set(), canal: 'all', brands: new Set(), sort: 'pasc', quick: 'all' };
+let limit = 24;
+const cmp = [];
+
+function offersOf(p) { return p.offers.filter(o => st.canal === 'all' || STORES[o.s].t === st.canal); }
+function bestOf(p) { const o = offersOf(p); return o.length ? o[0] : null; }
+function gama(price) { return price <= 250000 ? 'entrada' : price <= 600000 ? 'media' : 'alta'; }
+function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+
+function passes(p) {
+  const b = bestOf(p); if (!b) return false;
+  if (b.p > st.max) return false;
+  if (st.cond === 'new' && p.refurb) return false;
+  if (st.cond === 'ref' && !p.refurb) return false;
+  if (st.brands.size && !st.brands.has(p.brand)) return false;
+  if (st.q) { const h = norm(p.brand + ' ' + p.name + ' ' + p.chip); if (!norm(st.q).split(/\s+/).every(w => h.includes(w))) return false; }
+  if (st.uses.has('juegos') && gbm(p) < 6000) return false;
+  if (st.uses.has('bateria') && !(p.bat >= 6000)) return false;
+  if (st.uses.has('pantalla') && !(p.size >= 6.7)) return false;
+  if (st.uses.has('compacto') && !(p.size <= 6.3)) return false;
+  if (st.uses.has('5g') && !p.g5) return false;
+  if (st.quick === 'entrada' && b.p > 250000) return false;
+  if (st.quick === 'media' && (b.p <= 250000 || b.p > 600000)) return false;
+  if (st.quick === 'alta' && b.p <= 600000) return false;
+  if (st.quick === 'ref' && !p.refurb) return false;
+  return true;
+}
+function sorted(list) {
+  const pr = p => bestOf(p).p;
+  const f = { pasc: (a, b) => pr(a) - pr(b), pdesc: (a, b) => pr(b) - pr(a), pot: (a, b) => gbm(b) - gbm(a), ppp: (a, b) => gbm(b) / pr(b) - gbm(a) / pr(a) }[st.sort];
+  return list.slice().sort(f);
+}
+
+/* Dibujo propio de un celular genérico */
+const HUE = { Apple: ['#3B3F58', '#9AA4C7'], Samsung: ['#1D4ED8', '#7DD3FC'], Xiaomi: ['#C2410C', '#FDBA74'], Honor: ['#0F766E', '#5EEAD4'], Motorola: ['#4338CA', '#A5B4FC'], ZTE: ['#7C3AED', '#F0ABFC'], Vivo: ['#0369A1', '#67E8F9'] };
+function art(p, w) {
+  const h = HUE[p.brand] || ['#334155', '#94A3B8'];
+  const id = 'g' + p.id.replace(/[^a-z0-9]/gi, '');
+  const fold = /Fold/.test(p.name);
+  const W = fold ? 120 : 76, X = (140 - W) / 2;
+  return `<svg viewBox="0 0 140 170" width="${w || 140}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${h[1]}"/><stop offset="1" stop-color="${h[0]}"/></linearGradient></defs>
+  <rect x="${X}" y="10" width="${W}" height="150" rx="16" fill="#0B1030"/>
+  <rect x="${X + 5}" y="15" width="${W - 10}" height="140" rx="12" fill="url(#${id})"/>
+  ${fold ? `<line x1="70" y1="15" x2="70" y2="155" stroke="#0B1030" stroke-opacity=".35" stroke-width="2"/>` : ''}
+  <rect x="${70 - 9}" y="20" width="18" height="5" rx="2.5" fill="#0B1030"/>
+  <path d="M${X + 14} 128 l14 -16 10 10 16 -22" stroke="#fff" stroke-opacity=".75" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  ${p.refurb ? `<circle cx="${X + W - 14}" cy="40" r="11" fill="#FFD84D"/><path d="M${X + W - 19} 40a5 5 0 1 0 2-4" stroke="#2A2100" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M${X + W - 18} 33v4h4" stroke="#2A2100" stroke-width="2.2" fill="none" stroke-linecap="round"/>` : ''}
+  </svg>`;
+}
+function specLine(p) {
+  return [p.gb >= 1024 ? (p.gb / 1024) + ' TB' : p.gb + ' GB', p.ram ? p.ram + ' GB RAM' : '', p.size ? p.size + '" ' + p.hz + ' Hz' : '', p.bat ? p.bat.toLocaleString('es-CL') + ' mAh' : '', p.g5 ? '5G' : '4G'].filter(Boolean).join(' · ');
+}
+function offerRow(o, best) {
+  const s = STORES[o.s];
+  const small = [o.note, o.seller].filter(Boolean).map(esc).join(' · ');
+  return `<a class="offer${best ? ' best' : ''}" href="${esc(o.url)}" target="_blank" rel="noopener nofollow"><i class="dot" style="background:${s.color}"></i><span class="oname">${s.name} <span class="chan">${s.t === 'oper' ? 'operadora' : 'tienda'}</span>${small ? `<small>${small}</small>` : ''}${best ? '<span class="badge">Más barato</span>' : ''}</span><span class="oprice">${fmt(o.p)}${o.c ? '<span class="ast" title="Con tarjeta de la tienda o transferencia">*</span>' : ''}</span></a>`;
+}
+function bmBlock(p) {
+  if (!p.gb6 && !p.antutu) return `<div class="bm"><small>Sin benchmark publicado para este procesador (${esc(p.chip)}).</small></div>`;
+  const ios = p.brand === 'Apple';
+  return `<div class="bm" title="Procesador ${esc(p.chip)}">
+    <b>Geekbench 6</b><div class="pw"><i style="width:${(gbm(p) / GBM_MAX * 100).toFixed(1)}%"></i></div><span>${p.gb6[0].toLocaleString('es-CL')} / ${p.gb6[1].toLocaleString('es-CL')}</span>
+    <b>AnTuTu 11</b><div class="pw alt"><i style="width:${(p.antutu / ANT_MAX * 100).toFixed(1)}%"></i></div><span>${p.antutu.toLocaleString('es-CL')}</span>
+    <small>${esc(p.chip)} · Geekbench: un núcleo / multinúcleo${ios ? ' · En iPhone, AnTuTu marca menos: compara con Geekbench' : ''}</small></div>`;
+}
+function card(p) {
+  const os = offersOf(p), b = os[0], hi = os[os.length - 1];
+  const save = os.length > 1 && hi.p > b.p ? `<span class="save">Ahorras ${fmt(hi.p - b.p)} vs ${STORES[hi.s].name}</span>` : `<span class="save solo">Lo encontramos en 1 lugar</span>`;
+  const on = cmp.includes(p.id);
+  return `<article class="p" id="c-${p.id}">
+  <div class="pv"><div class="badges">${p.refurb ? `<span class="bd ref">${esc(p.cond || 'Reacondicionado')}</span>` : `<span class="bd cat">${{ entrada: 'Entrada', media: 'Gama media', alta: 'Gama alta' }[gama(b.p)]}</span>`}${!p.g5 ? '<span class="bd g4">Solo 4G</span>' : ''}</div>${art(p, 150)}</div>
+  <div class="pb">
+    <p class="brand">${esc(p.brand)}</p>
+    <h3>${esc(p.name)}</h3>
+    <p class="spec">${specLine(p)}</p>
+    ${p.refurb ? '<p class="refNote">Equipo usado y revisado. Confirma garantía, estado y batería en la ficha.</p>' : ''}
+    <div class="priceRow"><span class="from">Desde</span><span class="price">${fmt(b.p)}</span></div>
+    <span class="at"><i class="dot" style="background:${STORES[b.s].color}"></i>en ${STORES[b.s].name}</span>
+    ${save}
+    <div class="offers">${os.map((o, i) => offerRow(o, i === 0)).join('')}</div>
+    ${bmBlock(p)}
+    <label class="cmpBox"><input type="checkbox" data-cmp="${p.id}"${on ? ' checked' : ''}> Comparar</label>
+    <p class="seen">Precios revisados el ${SEEN}</p>
+  </div></article>`;
+}
+
+function render() {
+  const list = sorted(PHONES.filter(passes));
+  $('count').innerHTML = `<b>${list.length}</b> de ${PHONES.length} celulares`;
+  $('budgetOut').textContent = fmt(st.max);
+  $('budgetCount').textContent = `${PHONES.filter(p => bestOf(p) && bestOf(p).p <= st.max).length} celulares cuestan ${fmt(st.max)} o menos`;
+  if (!list.length) {
+    $('list').innerHTML = `<div class="empty"><h3>No hay celulares con estos filtros</h3><p>Sube el precio máximo o quita algún filtro.</p><button type="button" class="ghost" id="clearEmpty">Quitar todos los filtros</button></div>`;
+    $('moreBtn').hidden = true; return;
+  }
+  $('list').innerHTML = list.slice(0, limit).map(card).join('');
+  $('moreBtn').hidden = list.length <= limit;
+  $('moreBtn').textContent = `Ver ${Math.min(24, list.length - limit)} más`;
+}
+function refresh() { limit = 24; render(); }
+
+/* Mejor calidad-precio por presupuesto: más Geekbench por peso, solo nuevos */
+const PICKS = [
+  { id: 'e', name: 'Hasta $250.000', f: x => x <= 250000 },
+  { id: 'm', name: '$250.000 a $600.000', f: x => x > 250000 && x <= 600000 },
+  { id: 'a', name: 'Más de $600.000', f: x => x > 600000 }
+];
+let pickSel = 'm';
+function renderPick() {
+  $('pickTabs').innerHTML = PICKS.map(k => `<button type="button" data-pk="${k.id}" aria-pressed="${k.id === pickSel}">${k.name}</button>`).join('');
+  const k = PICKS.find(x => x.id === pickSel);
+  const c = PHONES.filter(p => !p.refurb && p.gb6 && k.f(p.offers[0].p)).sort((a, b) => gbm(b) / b.offers[0].p - gbm(a) / a.offers[0].p)[0];
+  if (!c) { $('pickBox').innerHTML = ''; return; }
+  const o = c.offers[0];
+  const avg = PHONES.filter(p => !p.refurb && p.gb6 && k.f(p.offers[0].p));
+  const rank = avg.slice().sort((a, b) => gbm(b) - gbm(a)).indexOf(c) + 1;
+  $('pickBox').innerHTML = `<div class="pickCard"><div class="pa">${art(c, 120)}</div>
+    <span class="medal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#3A2800"/><path d="M12 5.5l1.9 4 4.3.5-3.2 3 .9 4.3L12 15.1 8.1 17.3 9 13l-3.2-3 4.3-.5z" fill="#F5B301"/></svg>Más potencia por peso</span>
+    <h3>${esc(c.name)} <small style="font-weight:500;color:var(--muted)">${c.gb} GB</small></h3>
+    <span class="t4price">${fmt(o.p)}</span>
+    <span class="t4at"><i class="dot" style="background:${STORES[o.s].color}"></i>en ${STORES[o.s].name}${c.offers.length > 1 ? ` · en ${c.offers.length} lugares` : ''}</span>
+    <ul class="why"><li>${esc(c.chip)}: Geekbench multinúcleo ${gbm(c).toLocaleString('es-CL')}, el ${rank}º más potente de este rango (${avg.length} equipos)</li><li>${specLine(c)}</li></ul>
+    <button type="button" class="cta" data-open="${c.id}">Ver precios</button></div>`;
+}
+
+/* Comparación */
+function renderTray() {
+  $('tray').hidden = !cmp.length;
+  document.body.classList.toggle('hasTray', cmp.length > 0);
+  $('trayItems').innerHTML = cmp.map(id => { const p = PHONES.find(x => x.id === id); return `<button type="button" data-rm="${id}" aria-label="Quitar ${esc(p.name)}">${esc(p.name)} ✕</button>`; }).join('') + (cmp.length < 3 ? `<span style="font-size:13px;color:var(--nav-muted);align-self:center">Elige hasta 3</span>` : '');
+  $('trayGo').disabled = cmp.length < 2;
+  $('trayGo').style.opacity = cmp.length < 2 ? .5 : 1;
+}
+function renderCmp() {
+  const ps = cmp.map(id => PHONES.find(x => x.id === id));
+  if (ps.length < 2) { $('comparar').hidden = true; return; }
+  $('comparar').hidden = false;
+  const rows = [
+    ['Precio más bajo', p => p.offers[0].p, v => fmt(v), 'min'],
+    ['Dónde', p => STORES[p.offers[0].s].name, v => v],
+    ['Estado', p => p.refurb ? (p.cond || 'Reacondicionado') : 'Nuevo', v => v],
+    ['Procesador', p => p.chip, v => esc(v)],
+    ['Geekbench 6 (1 núcleo)', p => p.gb6 ? p.gb6[0] : null, v => v ? v.toLocaleString('es-CL') : '—', 'max'],
+    ['Geekbench 6 (multinúcleo)', p => p.gb6 ? p.gb6[1] : null, v => v ? v.toLocaleString('es-CL') : '—', 'max'],
+    ['AnTuTu 11', p => p.antutu, v => v ? v.toLocaleString('es-CL') : '—', 'max'],
+    ['Almacenamiento', p => p.gb, v => v >= 1024 ? v / 1024 + ' TB' : v + ' GB', 'max'],
+    ['RAM', p => p.ram, v => v ? v + ' GB' : '—', 'max'],
+    ['Pantalla', p => p.size, v => v + '"', null],
+    ['Tasa de refresco', p => p.hz, v => v + ' Hz', 'max'],
+    ['Batería', p => p.bat, v => v ? v.toLocaleString('es-CL') + ' mAh' : 'No informada', 'max'],
+    ['Cámara principal', p => p.cam, v => v + ' MP', null],
+    ['5G', p => p.g5 ? 'Sí' : 'No', v => v],
+    ['Potencia por cada $100.000', p => p.gb6 ? Math.round(p.gb6[1] / p.offers[0].p * 100000) : null, v => v ? v.toLocaleString('es-CL') + ' pts' : '—', 'max']
+  ];
+  const head = `<thead><tr><th></th>${ps.map(p => `<th>${esc(p.name)}<br><small style="font-weight:500;color:var(--muted)">${p.gb} GB</small></th>`).join('')}</tr></thead>`;
+  const body = rows.map(([lab, get, show, best]) => {
+    const vals = ps.map(get);
+    const nums = vals.filter(v => typeof v === 'number');
+    const target = best === 'min' ? Math.min(...nums) : best === 'max' ? Math.max(...nums) : null;
+    return `<tr><th scope="row">${lab}</th>${vals.map(v => `<td class="${best && nums.length > 1 && v === target ? 'win' : ''}">${v == null ? '—' : show(v)}</td>`).join('')}</tr>`;
+  }).join('') + `<tr><th scope="row">Ir a la tienda</th>${ps.map(p => `<td><a href="${esc(p.offers[0].url)}" target="_blank" rel="noopener nofollow">Ver en ${STORES[p.offers[0].s].name} ↗</a></td>`).join('')}</tr>`;
+  $('cmpTable').innerHTML = `<table class="cmp">${head}<tbody>${body}</tbody></table>`;
+}
+function toggleCmp(id, on) {
+  const i = cmp.indexOf(id);
+  if (on && i < 0) { if (cmp.length >= 3) { const old = cmp.shift(); const box = document.querySelector(`[data-cmp="${old}"]`); if (box) box.checked = false; } cmp.push(id); }
+  if (!on && i >= 0) cmp.splice(i, 1);
+  renderTray(); if (!$('comparar').hidden) renderCmp();
+}
+
+/* Ranking de benchmarks */
+let bmode = 'gbm';
+function renderBench() {
+  const inc = $('bRef').checked;
+  const val = p => bmode === 'gbm' ? gbm(p) : (p.antutu || 0);
+  const max = bmode === 'gbm' ? GBM_MAX : ANT_MAX;
+  const list = PHONES.filter(p => (inc || !p.refurb) && val(p) > 0).sort((a, b) => val(b) - val(a));
+  $('benchList').innerHTML = list.map((p, i) => `<div class="br"><span class="rk">${i + 1}</span>
+    <span class="nm"><b>${esc(p.name)}</b><small>${esc(p.chip)} · desde ${fmt(p.offers[0].p)}</small></span>
+    <div class="pw${bmode === 'ant' && p.brand === 'Apple' ? ' ios' : ''}"><i style="width:${(val(p) / max * 100).toFixed(1)}%"></i></div>
+    <span class="val">${val(p).toLocaleString('es-CL')}${bmode === 'gbm' ? `<small>1 núcleo ${p.gb6[0].toLocaleString('es-CL')}</small>` : (p.brand === 'Apple' ? '<small>iPhone: ver Geekbench</small>' : '')}</span></div>`).join('');
+}
+
+function goto(id) { const el = $(id); if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }); }
+function openPhone(id) {
+  Object.assign(st, { q: '', cond: 'all', quick: 'all', canal: 'all', max: 1900000 }); st.uses.clear(); st.brands.clear(); syncUI();
+  const p = PHONES.find(x => x.id === id);
+  st.q = p.name.replace(/\(.*?\)/g, '').trim(); $('q').value = st.q; refresh(); goto('compara');
+}
+function syncUI() {
+  $('budget').value = st.max; $('q').value = st.q;
+  document.querySelectorAll('[data-cond]').forEach(b => b.setAttribute('aria-pressed', b.dataset.cond === st.cond));
+  document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = st.uses.has(i.value); });
+  document.querySelectorAll('input[name=canal]').forEach(i => { i.checked = i.value === st.canal; });
+  document.querySelectorAll('#brandChips input').forEach(i => { i.checked = st.brands.has(i.value); });
+  document.querySelectorAll('[data-quick]').forEach(b => { b.classList.toggle('on', b.dataset.quick === st.quick); if (b.dataset.quick === st.quick) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+}
+function resetAll() { Object.assign(st, { q: '', max: 1900000, cond: 'all', canal: 'all', sort: st.sort, quick: 'all' }); st.uses.clear(); st.brands.clear(); syncUI(); refresh(); }
+
+/* Inicio */
+const nNew = PHONES.filter(p => !p.refurb).length, nRef = PHONES.length - nNew, nOff = PHONES.reduce((a, p) => a + p.offers.length, 0);
+$('lead').textContent = `${nNew} celulares nuevos y ${nRef} reacondicionados, con ${nOff} precios de Falabella, Paris, Ripley, PCFactory, Entel, Movistar, Claro y WOM. Cada uno con sus benchmarks.`;
+const BR = [...new Set(PHONES.map(p => p.brand))].sort((a, b) => PHONES.filter(p => p.brand === b).length - PHONES.filter(p => p.brand === a).length);
+$('brandChips').innerHTML = BR.map(b => `<label class="chip"><input type="checkbox" value="${b}"><span>${b}<small>${PHONES.filter(p => p.brand === b).length}</small></span></label>`).join('');
+$('stripSave').innerHTML = PHONES.filter(p => p.offers.length > 1).map(p => ({ p, d: p.offers[p.offers.length - 1].p - p.offers[0].p })).filter(x => x.d > 0).sort((a, b) => b.d - a.d).slice(0, 10)
+  .map(({ p, d }) => `<button type="button" class="mini" data-open="${p.id}">${art(p)}<h3>${esc(p.name)} ${p.gb} GB</h3><span class="mp">${fmt(p.offers[0].p)}</span><p class="ms"><i class="dot" style="background:${STORES[p.offers[0].s].color}"></i>en ${STORES[p.offers[0].s].name} · ${p.offers.length} lugares</p><span class="sv">Ahorras ${fmt(d)} vs ${STORES[p.offers[p.offers.length - 1].s].name}</span>${p.refurb ? '<span class="sv" style="background:var(--sale);color:var(--sale-ink)">Reacondicionado</span>' : ''}</button>`).join('');
+
+/* Eventos */
+document.addEventListener('click', e => {
+  const t = e.target;
+  const go = t.closest('[data-go]'); if (go) { goto(go.dataset.go); return; }
+  const op = t.closest('[data-open]'); if (op) { openPhone(op.dataset.open); return; }
+  const pk = t.closest('[data-pk]'); if (pk) { pickSel = pk.dataset.pk; renderPick(); return; }
+  const qk = t.closest('[data-quick]'); if (qk) { const q = qk.dataset.quick; Object.assign(st, { quick: q, cond: q === 'ref' ? 'ref' : 'all', q: '', max: 1900000 }); syncUI(); refresh(); goto('compara'); return; }
+  const cd = t.closest('[data-cond]'); if (cd) { st.cond = cd.dataset.cond; if (st.quick === 'ref') st.quick = 'all'; syncUI(); refresh(); return; }
+  const bm = t.closest('[data-bm]'); if (bm) { bmode = bm.dataset.bm; document.querySelectorAll('[data-bm]').forEach(b => b.setAttribute('aria-pressed', b === bm)); renderBench(); return; }
+  const rm = t.closest('[data-rm]'); if (rm) { toggleCmp(rm.dataset.rm, false); const box = document.querySelector(`[data-cmp="${rm.dataset.rm}"]`); if (box) box.checked = false; return; }
+  if (t.id === 'clearEmpty' || t.id === 'resetAll') { resetAll(); return; }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.cmp) { toggleCmp(t.dataset.cmp, t.checked); return; }
+  if (t.name === 'uso') { t.checked ? st.uses.add(t.value) : st.uses.delete(t.value); refresh(); }
+  if (t.name === 'canal') { st.canal = t.value; refresh(); }
+  if (t.closest('#brandChips')) { t.checked ? st.brands.add(t.value) : st.brands.delete(t.value); refresh(); }
+  if (t.id === 'sortF') { st.sort = t.value; refresh(); }
+  if (t.id === 'bRef') renderBench();
+});
+$('budget').addEventListener('input', e => { st.max = +e.target.value; refresh(); });
+$('bMinus').addEventListener('click', () => { st.max = Math.max(100000, st.max - 10000); $('budget').value = st.max; refresh(); });
+$('bPlus').addEventListener('click', () => { st.max = Math.min(1900000, st.max + 10000); $('budget').value = st.max; refresh(); });
+let qT; $('q').addEventListener('input', e => { clearTimeout(qT); qT = setTimeout(() => { st.q = e.target.value.trim(); if (st.quick === 'ref') st.cond = 'all'; st.quick = 'all'; syncUI(); $('q').value = e.target.value; refresh(); }, 150); });
+$('q').addEventListener('keydown', e => { if (e.key === 'Enter') goto('compara'); });
+$('moreBtn').addEventListener('click', () => { limit += 24; render(); });
+$('trayGo').addEventListener('click', () => { renderCmp(); goto('comparar'); });
+$('trayClear').addEventListener('click', () => { cmp.splice(0); document.querySelectorAll('[data-cmp]').forEach(b => { b.checked = false; }); renderTray(); $('comparar').hidden = true; });
+
+renderPick(); render(); renderBench(); renderTray();
+
+</script>
+</body>
+</html>

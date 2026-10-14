@@ -311,6 +311,10 @@ h2.sec { font-size: clamp(1.4rem, 3.6vw, 1.9rem); font-weight: 800; letter-spaci
 .menu button:hover { background: rgba(255,255,255,.1); }
 .menu button:focus-visible { outline: 2px solid var(--sale); }
 .menu .soon { color: var(--nav-muted); cursor: default; }
+.menu .mlink { flex: none; color: var(--nav-fg); font-weight: 600; font-size: 13.5px; padding: 7px 12px; border-radius: 8px; text-decoration: none; white-space: nowrap; }
+.menu .mlink:hover { background: rgba(255,255,255,.1); }
+.menu .mlink:focus-visible { outline: 2px solid var(--sale); }
+.menu .mlink small { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; background: var(--sale); color: var(--sale-ink); border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
 .menu .soon small { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; background: rgba(255,255,255,.12); border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
 @media (max-width: 640px) { .logoMark { width: 34px; height: 34px; } }
 
@@ -398,6 +402,7 @@ h2.sec { font-size: clamp(1.4rem, 3.6vw, 1.9rem); font-weight: 800; letter-spaci
     <button type="button" data-use="estudio">Estudio y oficina</button>
     <button type="button" data-use="diseno">Diseño y video</button>
     <button type="button" data-use="prog">Programación</button>
+    <a class="mlink" href="/celulares">Celulares <small>nuevo</small></a>
     <span class="soon" aria-disabled="true">Tablets <small>pronto</small></span>
     <span class="soon" aria-disabled="true">Televisores <small>pronto</small></span>
   </nav>
