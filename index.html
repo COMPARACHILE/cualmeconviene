@@ -2,12 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#0D1330">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#070A18">
-<meta name="description" content="Compara notebooks en Falabella, Paris, Ripley y PCFactory: precios, procesador y potencia real para elegir cuál te conviene.">
-
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="¿Cuál me conviene? compara el precio del mismo notebook o celular en tiendas y operadoras de Chile, y te ayuda a elegir según lo que necesitas.">
 <title>¿Cuál me conviene?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -311,6 +307,7 @@ h2.sec { font-size: clamp(1.4rem, 3.6vw, 1.9rem); font-weight: 800; letter-spaci
 .menu button:focus-visible { outline: 2px solid var(--sale); }
 .menu .soon { color: var(--nav-muted); cursor: default; }
 .menu button.on { background: rgba(255,255,255,.14); }
+.menu small.nw { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; background: var(--sale); color: var(--sale-ink); border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
 .menu .mlink { flex: none; color: var(--nav-fg); font-weight: 600; font-size: 13.5px; padding: 7px 12px; border-radius: 8px; text-decoration: none; white-space: nowrap; }
 .menu .mlink:hover { background: rgba(255,255,255,.1); }
 .menu .mlink:focus-visible { outline: 2px solid var(--sale); }
@@ -415,8 +412,54 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
 @media (prefers-reduced-motion: no-preference) { .jump { transition: transform 220ms var(--ease-out), opacity 180ms var(--ease-out); } }
 .jump:active { transform: scale(0.97); }
 @media (min-width: 960px) { .jump { display: none; } }
-</style>
 
+/* Inicio */
+.homeHero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px 32px; align-items: end; }
+@media (min-width: 760px) { .homeHero { grid-template-columns: 260px minmax(0, 1fr); } }
+.mascot.big { max-width: 260px; }
+@media (max-width: 759px) { .mascot.big { max-width: 160px; } }
+.homeTxt { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.talk { position: relative; background: var(--puma-soft); color: var(--puma-ink); border-radius: 18px; padding: 16px 20px; max-width: 62ch; display: flex; flex-direction: column; gap: 8px; font-size: 15.5px; }
+.talk::before { content: ""; position: absolute; left: -10px; bottom: 26px; border: 10px solid transparent; border-right-color: var(--puma-soft); border-left: 0; }
+@media (max-width: 759px) { .talk::before { left: 40px; bottom: auto; top: -10px; border: 10px solid transparent; border-bottom-color: var(--puma-soft); border-top: 0; } }
+.homeHero h1 { font-size: clamp(2rem, 5vw, 3.2rem); max-width: none; }
+.pick2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; max-width: 620px; }
+.secBtn { display: flex; align-items: center; gap: 14px; background: var(--sale); color: var(--sale-ink); text-decoration: none; border-radius: 14px; padding: 14px 16px; }
+.secBtn:hover { filter: brightness(1.05); }
+.secBtn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.secBtn svg { width: 34px; height: 34px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.secBtn b { display: block; font-family: var(--f-display); font-size: 1.25rem; line-height: 1.1; }
+.secBtn small { font-size: 13px; font-weight: 600; opacity: .8; }
+.steps3 { list-style: none; counter-reset: st; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 0; padding: 0; }
+.steps3 li { counter-increment: st; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+.steps3 li::before { content: counter(st); font-family: var(--f-display); font-weight: 800; font-size: 1.1rem; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); }
+.steps3 b { font-size: 1.05rem; }
+.steps3 span { color: var(--muted); font-size: 14px; }
+.bestCols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+@media (min-width: 900px) { .bestCols { grid-template-columns: 1fr 1fr; } }
+.bestCol { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.colHead { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.colHead h3 { font-size: 1.3rem; font-weight: 800; }
+.colHead a { color: var(--accent); font-weight: 700; font-size: 14px; text-decoration: none; }
+.bestList { display: flex; flex-direction: column; gap: 10px; }
+.bItem { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 4px 14px; align-items: center; text-decoration: none; color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; }
+.bItem:hover { border-color: var(--accent); }
+.bItem:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.bItem svg { width: 64px; height: auto; background: var(--surface-2); border-radius: 10px; grid-row: 1 / span 3; }
+.bItem .tag { font-size: 11.5px; font-weight: 800; color: var(--gold-ink); background: var(--gold); border-radius: 999px; padding: 2px 9px; justify-self: start; }
+.bItem .nm { font-weight: 700; line-height: 1.25; min-width: 0; }
+.bItem .why2 { font-size: 12.5px; color: var(--muted); grid-column: 2 / -1; }
+.bItem .pr { grid-column: 3; grid-row: 1 / span 2; text-align: right; font-family: var(--f-display); font-weight: 800; font-size: 1.3rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bItem .pr small { display: block; font-family: var(--f-body); font-size: 12px; font-weight: 700; color: var(--deal); }
+@media (max-width: 480px) { .bItem { grid-template-columns: 52px minmax(0, 1fr); } .bItem svg { width: 52px; } .bItem .pr { grid-column: 2; grid-row: auto; text-align: left; } }
+.loading { color: var(--muted); font-size: 14px; }
+.faq { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 10px; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; }
+.faq summary { font-weight: 700; cursor: pointer; }
+.faq details p { color: var(--muted); font-size: 14px; margin-top: 8px; }
+</style>
+</head>
+<body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
     <symbol id="pumaHead" viewBox="0 0 120 120">
@@ -434,198 +477,93 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
     </symbol>
   </defs>
 </svg>
-<div class="promo full">Precios revisados en tiendas de Chile · <span id="promoDate"></span></div>
+<div class="promo full">Comparamos precios de notebooks y celulares en tiendas y operadoras de Chile</div>
 <header class="top full">
   <div class="in topIn">
-    <a class="logo" href="#" aria-label="¿Cuál me conviene? Inicio"><svg class="logoMark" aria-hidden="true"><use href="#pumaHead"/></svg><span>¿Cuál me <em>conviene?</em></span></a>
-    <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Busca por marca, modelo o tarjeta gráfica (ej. RTX 4060)" autocomplete="off" aria-label="Buscar notebook" role="combobox" aria-autocomplete="list" aria-controls="sugg" aria-expanded="false"><div id="sugg" class="sugg" role="listbox" hidden></div></label>
-    <nav class="nav" aria-label="Secciones"><button type="button" data-go="ofertas">Ofertas</button><button type="button" data-go="conoce">Guía de piezas</button></nav>
+    <a class="logo" href="/" aria-label="¿Cuál me conviene? Inicio"><svg class="logoMark" aria-hidden="true"><use href="#pumaHead"/></svg><span>¿Cuál me <em>conviene?</em></span></a>
+    <nav class="nav" aria-label="Secciones"><button type="button" data-go="como">Cómo funciona</button><button type="button" data-go="mejores">Mejores de hoy</button></nav>
   </div>
   <nav class="menu in" aria-label="Categorías">
-    <button type="button" class="on" data-allnb aria-current="page">Notebooks</button>
+    <a class="mlink" href="/notebooks">Notebooks <small>nuevo</small></a>
     <a class="mlink" href="/celulares">Celulares <small>nuevo</small></a>
     <span class="soon" aria-disabled="true">Tablets <small>pronto</small></span>
     <span class="soon" aria-disabled="true">Televisores <small>pronto</small></span>
   </nav>
 </header>
 
-<section class="hero full"><div class="in heroIn">
-  <div class="banner">
-    <svg class="mascot" viewBox="0 0 240 250" role="img" aria-label="El puma mascota del sitio, con una lupa">
-      <path d="M58 226c-30-4-46-26-40-50 4-14 16-18 20-10-8 4-10 14-6 24 6 14 22 20 34 18z" fill="#B9773A"/>
-      <path d="M22 168c3-7 11-9 17-4l-3 6c-4-3-9-2-11 2z" fill="#3A2416"/>
-      <path d="M52 250c0-58 28-92 68-92s68 34 68 92z" fill="#D08E4A"/>
-      <path d="M96 250c0-40 10-66 24-66s24 26 24 66z" fill="#F6E3C6"/>
-      <use href="#pumaHead" x="40" y="22" width="160" height="160"/>
-      <g class="glass">
-        <path d="M150 208l22-30" stroke="#3A2416" stroke-width="10" stroke-linecap="round"/>
-        <circle cx="186" cy="156" r="30" fill="#BFE3FF" fill-opacity=".45" stroke="#3A2416" stroke-width="8"/>
-        <path d="M172 142a18 18 0 0 1 14-6" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <text x="186" y="166" text-anchor="middle" font-family="Bricolage Grotesque, Arial, sans-serif" font-weight="800" font-size="26" fill="#3A2416">$</text>
-        <ellipse cx="148" cy="214" rx="16" ry="13" fill="#D08E4A"/>
-        <path d="M140 210v8M148 208v10M156 210v8" stroke="#B9773A" stroke-width="2" stroke-linecap="round"/>
-      </g>
-    </svg>
-    <div class="bannerTxt">
-      <p class="bubble">Soy el puma de <b>¿Cuál me conviene?</b> Reviso las tiendas por ti.</p>
-      <h1>El mismo notebook en varias tiendas diferentes. Compra donde sale más barato.</h1>
-      <p class="lead" id="lead"></p>
-      <div class="heroBtns"><button type="button" class="cta" data-go="ofertas">Ver ofertas de hoy</button><button type="button" class="cta" data-go="elige">Ayúdame a elegir</button></div>
+<section class="hero full"><div class="in homeHero">
+  <svg class="mascot big" viewBox="0 0 240 250" role="img" aria-label="El puma mascota del sitio, con una lupa">
+    <path d="M58 226c-30-4-46-26-40-50 4-14 16-18 20-10-8 4-10 14-6 24 6 14 22 20 34 18z" fill="#B9773A"/>
+    <path d="M52 250c0-58 28-92 68-92s68 34 68 92z" fill="#D08E4A"/>
+    <path d="M96 250c0-40 10-66 24-66s24 26 24 66z" fill="#F6E3C6"/>
+    <use href="#pumaHead" x="40" y="22" width="160" height="160"/>
+    <g class="glass">
+      <path d="M150 208l22-30" stroke="#3A2416" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="186" cy="156" r="30" fill="#BFE3FF" fill-opacity=".45" stroke="#3A2416" stroke-width="8"/>
+      <path d="M172 142a18 18 0 0 1 14-6" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <text x="186" y="166" text-anchor="middle" font-family="Bricolage Grotesque, Arial, sans-serif" font-weight="800" font-size="26" fill="#3A2416">$</text>
+      <ellipse cx="148" cy="214" rx="16" ry="13" fill="#D08E4A"/>
+      <path d="M140 210v8M148 208v10M156 210v8" stroke="#B9773A" stroke-width="2" stroke-linecap="round"/>
+    </g>
+  </svg>
+  <div class="homeTxt">
+    <div class="talk">
+      <p>¡Hola! Soy el puma de <b>¿Cuál me conviene?</b></p>
+      <p>Antes de comprar un notebook o un celular, reviso cuánto cuesta <b>el mismo equipo</b> en distintas tiendas y operadoras de Chile. Así ves de un vistazo dónde está más barato.</p>
+      <p>Y si no sabes cuál elegir, te digo cuál te conviene según lo que necesitas y lo que quieres gastar.</p>
     </div>
-  </div>
-  <div class="deal" id="deal" aria-roledescription="carrusel" aria-label="Mejor calidad-precio por uso">
-    <div class="t4head"><h2>Mejor calidad-precio</h2><div class="t4nav"><button type="button" id="t4prev" aria-label="Anterior">&#8249;</button><button type="button" id="t4next" aria-label="Siguiente">&#8250;</button></div></div>
-    <div class="t4tabs" id="t4tabs" role="group" aria-label="Elegir uso"></div>
-    <div class="t4track" id="t4track"></div>
+    <h1>Compara antes de comprar.</h1>
+    <div class="pick2">
+      <a class="secBtn" href="/notebooks"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></svg><span><b>Notebooks</b><small id="cntNb">Gamer, estudio, diseño y más</small></span></a>
+      <a class="secBtn" href="/celulares"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg><span><b>Celulares</b><small id="cntPh">Nuevos y reacondicionados</small></span></a>
+    </div>
   </div>
 </div></section>
 
-<div class="in" id="viewOfertas">
-  <section class="home" id="categorias" aria-labelledby="catTitle">
-    <div class="rowHead"><h2 id="catTitle">Explora por categoría</h2></div>
-    <div class="catGrid" id="catGrid"></div>
+<div class="in">
+  <section class="home" id="como" aria-labelledby="comoT">
+    <div class="rowHead"><h2 id="comoT">Cómo funciona</h2><p>Tres pasos, sin registrarte ni dejar datos.</p></div>
+    <ol class="steps3">
+      <li><b>Elige qué buscas</b><span>Entra a Notebooks o Celulares. Puedes filtrar por precio, marca o por lo que necesitas: juegos, estudio, batería, etc.</span></li>
+      <li><b>Compara el mismo equipo</b><span>Cada tarjeta muestra el precio en cada tienda u operadora, y marca en verde el más barato. También ves cuánto rinde el procesador.</span></li>
+      <li><b>Compra en la tienda</b><span>Toca el precio y vas directo a la ficha de la tienda. Nosotros no vendemos nada ni cobramos por usar el sitio.</span></li>
+    </ol>
   </section>
-  <section class="home" id="ofertas" aria-labelledby="ofTitle">
-    <div class="rowHead"><h2 id="ofTitle">Donde más ahorras eligiendo tienda</h2><p>Diferencia entre la tienda más cara y la más barata para el mismo equipo.</p></div>
-    <div class="strip" id="stripSave"></div>
-  </section>
-  <section class="home" aria-labelledby="gmTitle">
-    <div class="rowHead"><h2 id="gmTitle">Gamer más baratos</h2><p>Con tarjeta gráfica dedicada, ordenados por precio.</p></div>
-    <div class="strip" id="stripGamer"></div>
-  </section>
-  <section class="home"><button type="button" class="cta big" style="align-self:flex-start;background:var(--accent);color:var(--accent-ink)" data-go="elige">Ayúdame a elegir mi notebook</button></section>
-</div>
 
-
-<div id="viewElige" hidden>
-<section id="elige" class="guide shopHead">
-  <div class="secHead"><h2 class="sec">Cuéntanos qué necesitas</h2>
-  <p>En Básico respondes pocas preguntas. En Avanzado afinas por memoria, procesador y gráficos.</p></div>
-  <button type="button" class="ghost" data-go="ofertas">← Volver a las ofertas de hoy</button>
-</section>
-<main id="tienda" class="shop">
-  <form class="filt" id="panel" onsubmit="return false">
-    <div class="seg" role="group" aria-label="Modo">
-      <button type="button" id="modeSimple" aria-pressed="true">Básico</button>
-      <button type="button" id="modeAdv" aria-pressed="false">Avanzado</button>
-    </div>
-    <p class="modeHint" id="modeHint">Te guiamos con pocas preguntas.</p>
-    <fieldset id="fsUso">
-      <legend>¿Para qué lo usarás?</legend>
-      <div class="chips">
-        <label class="chip"><input type="checkbox" name="uso" value="estudio"><span>Estudio y oficina</span></label>
-        <label class="chip"><input type="checkbox" name="uso" value="juegos"><span>Juegos</span></label>
-        <label class="chip"><input type="checkbox" name="uso" value="diseno"><span>Diseño y video</span></label>
-        <label class="chip"><input type="checkbox" name="uso" value="prog"><span>Programación</span></label>
+  <section class="home" id="mejores" aria-labelledby="bestT">
+    <div class="rowHead"><h2 id="bestT">Mejor calidad-precio de hoy</h2><p id="bestDate">Elegidos por el puma con los precios del día.</p></div>
+    <div class="bestCols">
+      <div class="bestCol">
+        <div class="colHead"><h3>Notebooks</h3><a href="/notebooks">Ver todos →</a></div>
+        <div class="bestList" id="bestNb"><p class="loading">Cargando precios…</p></div>
       </div>
-    </fieldset>
-    <fieldset id="bands">
-      <legend>Mi precio máximo</legend>
-      <div class="rangeRow"><output id="budgetOut" for="budget">$700.000</output></div>
-      <div class="stepper">
-        <button type="button" id="bMinus" aria-label="Bajar $10.000">&minus;</button>
-        <input type="range" id="budget" min="300000" max="5000000" step="10000" value="5000000" aria-label="Precio máximo">
-        <button type="button" id="bPlus" aria-label="Subir $10.000">+</button>
+      <div class="bestCol">
+        <div class="colHead"><h3>Celulares</h3><a href="/celulares">Ver todos →</a></div>
+        <div class="bestList" id="bestPh"><p class="loading">Cargando precios…</p></div>
       </div>
-      <p class="modeHint" style="margin:0"><b id="budgetCount"></b></p>
-      <p class="modeHint" style="margin:0">Mueve la barra o usa − y + para cambiar de a $10.000. Mientras más la bajas, menos equipos aparecen.</p>
-    </fieldset>
-    <div class="adv" id="adv" hidden>
-    <p class="lab" style="margin:0">Filtros avanzados</p>
-    <div>
-      <div class="advgrid">
-        <div class="field"><label for="ramMin">RAM mínima</label><select id="ramMin"><option value="8">8 GB</option><option value="16">16 GB</option><option value="24">24 GB o más</option></select></div>
-        <div class="field"><label for="ssdMin">Almacenamiento</label><select id="ssdMin"><option value="256">256 GB o más</option><option value="512">512 GB o más</option><option value="1024">1 TB</option></select></div>
-        <div class="field"><label for="cpuMin">Procesador</label><select id="cpuMin"><option value="1">Cualquiera</option><option value="2">Ryzen 5 / Core 5 o mejor</option><option value="4">Ryzen 7 / Core 7 / Ultra 7 o mejor</option></select></div>
-        <div class="field"><label for="gpuF">Gráficos</label><select id="gpuF"><option value="any">Indiferente</option><option value="none">Integrados</option><option value="ded">Dedicada (RTX 3050 o mejor)</option><option value="mid">RTX 4050 o mejor</option><option value="high">RTX 5060 o mejor</option></select></div>
-        <div class="field"><label for="sizeF">Pantalla</label><select id="sizeF"><option value="any">Cualquiera</option><option value="s">14" o menos</option><option value="m">15" a 16"</option></select></div>
-      </div>
-    </div></div>
-    <fieldset id="fsMarca">
-      <legend>Marca</legend>
-      <div class="chips" id="brandChips"></div>
-      <p class="modeHint" style="margin:0">Elige una o varias para comparar solo entre ellas.</p>
-    </fieldset>
-    <button type="button" class="ghost" id="resetAll">Quitar todos los filtros</button>
-  </form>
-
-  <section class="results" id="compara" aria-live="polite">
-    <div class="bar">
-      <p class="count" id="count"></p>
-      <p class="astnote"><b>*</b> Precio pagando con la tarjeta de la tienda o con transferencia. Sin ese medio de pago, el precio puede ser más alto.</p>
-      <label class="sortBox" id="sortBox">Ordenar por <select id="sortF"><option value="ajuste">Mejor ajuste</option><option value="pasc" selected>Menor precio</option><option value="pdesc">Mayor precio</option><option value="pot">Más potencia (procesador)</option><option value="ppp">Mejor potencia de CPU por precio</option></select></label>
-    </div>
-    <div id="hint"></div>
-    <div id="list" class="grid"></div>
-    <button type="button" class="more" id="moreBtn" hidden></button>
-  </section>
-</main>
-  <section id="conoce" class="guide" aria-labelledby="learnTitle">
-    <div class="secHead">
-      <h2 class="sec" id="learnTitle">Guía: conoce las piezas</h2>
-      <p>Toca un componente para ver qué hace y qué cambia según lo que pagues.</p>
-    </div>
-    <div class="learn">
-      <div class="figure">
-        <svg viewBox="0 0 640 372" role="group" aria-label="Vista interior esquemática de un notebook">
-          <rect class="lid" x="100" y="148" width="440" height="9" rx="4"/>
-          <rect class="shell" x="40" y="160" width="560" height="204" rx="18"/>
-          <g class="deco">
-            <circle cx="520" cy="226" r="38"/>
-            <path d="M520 190v72M484 226h72M494 200l52 52M546 200l-52 52"/>
-          </g>
-          <text class="lbl small" x="520" y="278">ventilador</text>
-
-          <g class="part" data-part="pantalla" tabindex="0" role="button" aria-label="Pantalla">
-            <rect class="box" x="130" y="8" width="380" height="136" rx="12"/>
-            <rect class="chipline" x="146" y="22" width="348" height="108" rx="6"/>
-            <text class="lbl" x="320" y="82">PANTALLA</text>
-          </g>
-          <g class="part" data-part="cpu" tabindex="0" role="button" aria-label="Procesador">
-            <rect class="box" x="215" y="184" width="84" height="84" rx="10"/>
-            <rect class="chipline" x="229" y="198" width="56" height="56" rx="5"/>
-            <text class="lbl" x="257" y="231">CPU</text>
-          </g>
-          <g class="part" data-part="gpu" tabindex="0" role="button" aria-label="Tarjeta gráfica">
-            <rect class="box" x="319" y="184" width="130" height="84" rx="10"/>
-            <text class="lbl" x="384" y="224">GPU</text>
-            <text class="lbl small" x="384" y="242">gráficos</text>
-          </g>
-          <g class="part" data-part="ram" tabindex="0" role="button" aria-label="Memoria RAM">
-            <rect class="box" x="64" y="184" width="124" height="30" rx="6"/>
-            <text class="lbl" x="126" y="204">RAM</text>
-            <rect class="box" x="64" y="222" width="124" height="30" rx="6"/>
-            <text class="lbl" x="126" y="242">RAM</text>
-          </g>
-          <g class="part" data-part="almacenamiento" tabindex="0" role="button" aria-label="Almacenamiento">
-            <rect class="box" x="64" y="262" width="124" height="34" rx="6"/>
-            <text class="lbl" x="126" y="284">SSD / HDD</text>
-          </g>
-          <g class="part" data-part="bateria" tabindex="0" role="button" aria-label="Batería">
-            <rect class="box" x="215" y="294" width="350" height="52" rx="8"/>
-            <text class="lbl" x="390" y="325">BATERÍA</text>
-          </g>
-        </svg>
-        <div class="tabs" id="partTabs"></div>
-        <p class="figcap">Vista interior esquemática, no a escala</p>
-      </div>
-      <div class="info" id="info" aria-live="polite"></div>
     </div>
   </section>
-</div>
+
+  <section class="home" aria-labelledby="faqT">
+    <div class="rowHead"><h2 id="faqT">Lo que conviene saber</h2></div>
+    <div class="faq">
+      <details><summary>¿Ustedes venden los equipos?</summary><p>No. ¿Cuál me conviene? es un comparador: reúne los precios que publican las tiendas y te lleva a ellas. La compra, el despacho y la garantía son con la tienda u operadora que elijas.</p></details>
+      <details><summary>¿Qué tiendas revisan?</summary><p>Falabella, Paris, Ripley y PCFactory. En celulares también Entel, Movistar, Claro y WOM. No incluimos Mercado Libre.</p></details>
+      <details><summary>¿Cada cuánto se actualizan los precios?</summary><p>Los revisamos a diario. Cada tarjeta indica la fecha de revisión. Los precios cambian rápido, así que confirma siempre en la tienda antes de pagar.</p></details>
+      <details><summary>¿Qué significa el asterisco (*) en un precio?</summary><p>Que ese precio exige un medio de pago: la tarjeta de la tienda (CMR, Cencosud, Ripley) o transferencia. Sin ese medio, el precio puede ser más alto.</p></details>
+      <details><summary>¿Qué es un celular reacondicionado?</summary><p>Un equipo usado que fue revisado y se vende con garantía, a menor precio que uno nuevo. Siempre lo marcamos con una etiqueta amarilla para que no te confundas.</p></details>
+      <details><summary>¿Qué son los benchmarks?</summary><p>Pruebas que miden la potencia del procesador con un número. Mientras más alto, más rápido. Te sirven para saber si un equipo más caro realmente rinde más.</p></details>
+    </div>
+  </section>
 
   <footer class="note">
-    <p><strong>Cómo leer los precios.</strong> Mostramos el precio más bajo que aparecía en la ficha de cada tienda. Todos los precios se revisaron el 14-10-2026. Algunos precios exigen un medio de pago (tarjeta Ripley, Tarjeta Cencosud Scotiabank en Paris, transferencia o débito en PCFactory); revisa la condición en la ficha de cada tienda.</p>
-    <p>En la lista gamer solo incluimos equipos nuevos, vendidos por la propia tienda o por la tienda oficial de la marca. Dejamos fuera reacondicionados, semi-nuevos y vendedores externos. Si un equipo aparece en una sola tienda es porque no lo encontramos publicado en las otras.</p>
-    <p><strong>Potencia del procesador.</strong> Usamos el puntaje CPU Mark de PassMark (cpubenchmark.net, consultado el 13-10-2026), que resume núcleos, hilos y velocidad en un número comparable: más alto rinde más en tareas pesadas. Solo lo mostramos cuando la ficha de la tienda publica el modelo exacto del procesador; si no, la potencia es una estimación por gama. Núcleos, hilos y GHz son los que informa PassMark. Cada modelo tiene su rendimiento real según la refrigeración y la configuración del fabricante.</p>
-    <p>Los descuentos de bancos u otros medios de pago no aparecen en las fichas, así que no están incluidos. Los precios cambian o se agotan: confirma siempre en la tienda antes de comprar.</p>
     <p>Aviso de afiliados: cuando los enlaces generen comisión, se indicará aquí. El precio para quien compra es el mismo.</p>
-  <details class="legal"><summary>Privacidad y términos de uso</summary>
+    <details class="legal"><summary>Privacidad y términos de uso</summary>
 <div class="legalBody">
 <h3>Quién está a cargo</h3>
-<p>Este sitio es administrado por <strong>Adictos Digitales</strong>, una persona natural domiciliada en Chile. Contacto para consultas, reclamos y solicitudes sobre tus datos: <strong>adictosdigitalesla@gmail.com</strong>. Última actualización: 13 de octubre de 2026.</p>
+<p>Este sitio es administrado por <strong>Adictos Digitales</strong>, una persona natural domiciliada en Chile. Contacto para consultas, reclamos y solicitudes sobre tus datos: <strong>adictosdigitalesla@gmail.com</strong>. Última actualización: 14 de octubre de 2026.</p>
 <h3>Qué es este sitio</h3>
-<p>¿Cuál me conviene? es una guía para comparar notebooks. Reúne información que las tiendas publican en sus páginas y te lleva a ellas con un enlace. No es una tienda: no vendemos productos, no recibimos pagos y no despachamos pedidos. No tenemos representación de ninguna de las tiendas ni de las marcas que aparecen.</p>
+<p>¿Cuál me conviene? es una guía para comparar notebooks y celulares. Reúne información que las tiendas publican en sus páginas y te lleva a ellas con un enlace. No es una tienda: no vendemos productos, no recibimos pagos y no despachamos pedidos. No tenemos representación de ninguna de las tiendas ni de las marcas que aparecen.</p>
 <h3>Los precios son referenciales</h3>
 <p>Los precios y las características son información de referencia tomada de las fichas públicas de cada tienda en la fecha indicada. No constituyen una oferta ni una invitación a contratar, y no los fijamos nosotros. Pueden cambiar, agotarse o contener errores. Antes de comprar, confirma en la tienda el precio final, el stock, las condiciones del medio de pago, el despacho y la garantía. El precio que mostramos es el más bajo publicado en la ficha: algunos exigen pagar con una tarjeta de la tienda, y los precios no incluyen despacho. Si la tienda cobra otro valor, vale el de la tienda.</p>
 <p>Hacemos nuestro mejor esfuerzo por mantener la información al día, pero no garantizamos que esté completa ni libre de errores.</p>
@@ -638,771 +576,68 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
 <h3>Privacidad</h3>
 <p>El sitio no tiene cuentas, formularios de registro ni cobros, y no te pide nombre, correo ni datos de pago. No usamos cookies propias. Para saber cuántas personas visitan el sitio usamos Cloudflare Web Analytics, una herramienta de medición que no usa cookies ni almacena datos en tu dispositivo y entrega cifras agregadas (páginas vistas, país, tipo de dispositivo y navegador), sin crear un perfil tuyo. Lo que escribes en el buscador y los filtros que eliges se procesan en tu navegador y no los guardamos. Además contamos cuántas veces se toca el precio de cada equipo en cada tienda: solo guardamos el equipo, la tienda, el día y el total, sin cookies, sin tu dirección IP y sin nada que te identifique.</p>
 <p>La plataforma donde se aloja la página puede registrar datos técnicos de la visita, como la dirección IP, el navegador y la fecha, para su funcionamiento y seguridad. Nosotros no accedemos a esos datos para identificarte. Si más adelante agregamos cookies no esenciales u otras herramientas de medición, te pediremos tu consentimiento cuando corresponda y actualizaremos este texto.</p>
-<p>Al tocar el enlace de un equipo sales a la tienda (Falabella, Paris, Ripley o PCFactory). Desde ese momento rigen la política de privacidad y las condiciones de esa tienda, y no nos hacemos responsables de lo que ocurra en ella.</p>
+<p>Al tocar el enlace de un equipo sales a la tienda (Falabella, Paris, Ripley, PCFactory) o a la operadora (Entel, Movistar, Claro, WOM). Desde ese momento rigen la política de privacidad y las condiciones de esa tienda, y no nos hacemos responsables de lo que ocurra en ella.</p>
 <p>Si nos escribes por correo, usaremos tu mensaje y tu dirección solo para responderte y los borraremos cuando el asunto esté resuelto. Puedes pedir acceso, rectificación, supresión u oposición respecto de tus datos escribiendo a la dirección de contacto; responderemos dentro de 30 días corridos. Si crees que no respetamos tus derechos, puedes reclamar ante la autoridad de protección de datos personales de Chile.</p>
 <h3>Uso del sitio y responsabilidad</h3>
 <p>Debes usar el sitio conforme a la ley y sin dañar derechos de terceros. No nos hacemos responsables de decisiones de compra tomadas solo con la información del sitio, ni de problemas con las tiendas o los productos, en la medida que la ley lo permita. Esto no limita los derechos que la ley de protección al consumidor te otorga frente a la tienda donde compres.</p>
 <h3>Cambios y ley aplicable</h3>
 <p>Podemos modificar el sitio y estos textos en cualquier momento. La fecha de arriba indica la versión vigente. Se aplica la ley chilena.</p>
-</div></details></footer>
+</div></details>
+  </footer>
 </div>
 
-<button type="button" class="jump" id="jumpRes" data-show="false" inert>Ver equipos</button>
 <script>
-/* ---------- Tiendas ---------- */
-const SEEN_GAMER = '14-10-2026', SEEN_OTHER = '14-10-2026';
-const CATN = { 'Entrada':'Gamer de entrada', 'Media':'Gamer gama media', 'Alta':'Gamer gama alta', 'Muy alta':'Gamer gama muy alta' };
-const STORES = {
-  falabella: { name: 'Falabella', color: '#5FA21A' },
-  paris:     { name: 'Paris',     color: '#1B8FD6' },
-  ripley:    { name: 'Ripley',    color: '#7A3FA0' },
-  pcfactory: { name: 'PCFactory', color: '#E8590C' }
-};
-
-/* ---------- Datos leídos de cada ficha de producto el 11-10-2026 ----------
-   cpuTier: 1 Core 3/i3/Ryzen 3 · 2 Core 5/Ryzen 5 de uso general · 3 i5/Ryzen 5 H o Core Ultra 5 · 4 i7/Ryzen 7/Ultra 7 · 5 i9/Ultra 9.
-   gpuTier: 0 integrada · 2 RTX 3050 · 3 RTX 4050 o 5050 · 4 RTX 5060 · 5 RTX 5070 o más.
-   hz solo se completa si la ficha lo indica.
-   offers: s = tienda, p = precio más bajo que muestra la ficha, url = ficha directa, note = condición del precio, seller = vendedor si no es la tienda. */
-const CENCO = 'Con Tarjeta Cencosud Scotiabank';
-const INET = 'Precio Internet';
-const NOTEBOOKS = [
-  {"id": "a1", "name": "Acer Aspire Lite AL15-46P-R7M1-2", "cpu": "Ryzen 3", "cpuTier": 1, "ram": 8, "ssd": 256, "gpu": "Integrada", "gpuTier": 0, "size": 15.6, "hz": null, "offers": [{"s": "paris", "p": 389990, "note": "Con Tarjeta Cencosud Scotiabank", "seller": "Acer Tienda Oficial", "url": "https://www.paris.cl/notebook-acer-aspire-lite-al15-46p-r7m1-2-amd-ryzen-3-8gb-ram-256gb-ssd-156-fhd-MKSQKNFQC9.html", "c": 1}], "seen": "14-10-2026"},
-  {"id": "a2", "name": "Lenovo IdeaPad Slim 3 (Ryzen 3 7320U)", "cpu": "Ryzen 3 7320U", "cpuTier": 1, "ram": 8, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 15.6, "hz": 60, "offers": [{"s": "falabella", "p": 449990, "url": "https://www.falabella.com/falabella-cl/product/17413121/NTB-LENOVO-R3-7320U-8GB-512SSD/17413121", "note": "Con tarjeta CMR", "c": 1}, {"s": "paris", "p": 449990, "url": "https://www.paris.cl/notebook-ideapad-slim-3-amd-ryzen-3-7320u-8gb-ram-512gb-ssd-15.6-windows-11-frost-blue-688751999.html"}], "seen": "14-10-2026"},
-  {"id": "a3", "name": "ASUS Vivobook 14 X1404VA-EB1660W", "cpu": "Intel Core 5", "cpuTier": 2, "ram": 8, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 14, "hz": 60, "offers": [{"s": "paris", "p": 489990, "url": "https://www.paris.cl/notebook-vivobook-14-x1404va-eb1660w-intel-core-5-8gb-ram-512gb-ssd-14-fhd-60hz-332777999.html"}], "seen": "14-10-2026"},
-  {"id": "a5", "name": "HP 15-fc0250la", "cpu": "Ryzen 5", "cpuTier": 2, "ram": 8, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 15.6, "hz": 60, "offers": [{"s": "paris", "p": 619990, "url": "https://www.paris.cl/notebook-15-fc0250la-amd-ryzen-5-8gb-ram-512gb-ssd-156-fhd-60hz-512134999.html", "note": "Con Tarjeta Cencosud Scotiabank", "c": 1}], "seen": "14-10-2026"},
-  {"id": "a7", "name": "Lenovo IdeaPad Slim 3 Gen 10 táctil", "cpu": "Core i5-13420H", "cpuTier": 3, "ram": 8, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 15.3, "hz": 60, "offers": [{"s": "falabella", "p": 599990, "url": "https://www.falabella.com/falabella-cl/product/17461845/Notebook-Ideapad-Slim-3-Gen-10-T%C3%A1ctil-Intel-Core-i5-13420H-8GB-RAM-512GB-SSD-15,3-WUXGA-Lenovo/17461845", "note": "Con tarjeta CMR", "c": 1}], "seen": "14-10-2026"},
-  {"id": "a9", "name": "ASUS Vivobook 15 M1502", "cpu": "Ryzen 7 7730U", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 15.6, "hz": 60, "offers": [{"s": "falabella", "p": 689990, "url": "https://www.falabella.com/falabella-cl/product/80739038/notebook-m1502-rz7-16gb-ram-512gb-ssd-1-asus/80739038", "note": "Con tarjeta CMR", "c": 1}], "seen": "14-10-2026"},
-  {"id": "a10", "name": "Acer Aspire Lite AL16-53P-578Y-1", "cpu": "Core Ultra 5 115U", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 16, "hz": 60, "offers": [{"s": "paris", "p": 669990, "url": "https://www.paris.cl/notebook-aspire-lite-al16-53p-578y-1-intel-core-ultra-5-16gb-ram-512gb-ssd-16-wuxga-240673999.html", "note": "Con Tarjeta Cencosud Scotiabank", "c": 1}, {"s": "ripley", "p": 679990, "url": "https://simple.ripley.cl/notebook-acer-aspire-lite-al16-53p-578y-1-intel-core-ultra-5-16gb-ram-512gb-ssd-16-2000407236215p", "note": "Con tarjeta Ripley · sin tarjeta $699.990", "c": 1}], "seen": "14-10-2026"},
-  {"id": "a11", "name": "Lenovo IdeaPad Slim 3 14\" (Ryzen 7 7735HS)", "cpu": "Ryzen 7 7735HS", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 14, "hz": 60, "offers": [{"s": "falabella", "p": 769990, "url": "https://www.falabella.com/falabella-cl/product/80724506/notebook-ideapad-slim-3-amd-ryzen-7-7735hs-16gb-ram-512gb-ssd-14-oled-lenovo/80724506", "note": "Con tarjeta CMR", "c": 1}], "seen": "14-10-2026"},
-  {"id": "a12", "name": "HP OmniBook 5 AI 16-af1072la", "cpu": "Core Ultra 7", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 16, "hz": 60, "offers": [{"s": "paris", "p": 879990, "url": "https://www.paris.cl/notebook-omnibook-5-ai-16-af1072la-intel-core-ultra-7-16gb-ram-512gb-ssd-16-2k-60hz-304086999.html"}], "seen": "14-10-2026"},
-  {"id": "a14", "name": "ASUS Zenbook 14 UM3406", "cpu": "Ryzen AI 5", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 14, "hz": 60, "offers": [{"s": "paris", "p": 919990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-zenbook-14-oled-um3406-ryzen-ai-5-16gb-512gb-ssd-14-wuxga-60hz-375092999.html", "c": 1}], "seen": "14-10-2026"},
-  {"id": "a8", "name": "Samsung Galaxy Book4", "cpu": "Core i5 de 13ª gen", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 15.6, "hz": null, "offers": [{"s": "paris", "p": 599990, "url": "https://www.paris.cl/notebook-galaxy-book4-intel-core-i5-13va-gen-16gb-ram-512gb-ssd-156-silver-151337999.html"}], "seen": "14-10-2026"},
-  {"id": "a15", "name": "ASUS Zenbook 14 UX3405CA-SU931W", "cpu": "Core Ultra 7 255H", "cpuTier": 4, "ram": 16, "ssd": 1024, "gpu": "Integrada", "gpuTier": 0, "size": 14, "hz": 120, "offers": [{"s": "ripley", "p": 1159990, "note": "Precio Internet", "url": "https://simple.ripley.cl/notebook-asus-zenbook-14-ux3405ca-su931w-intel-core-ultra-7-16gb-ram-1tb-ssd-14-2000410235472p"}], "seen": "14-10-2026"},
-  {"id": "n4", "name": "MacBook Air 13\" M4 (16 GB / 256 GB)", "cpu": "Apple M4", "cpuTier": 4, "ram": 16, "ssd": 256, "gpu": "Integrada", "gpuTier": 0, "size": 13.6, "hz": null, "offers": [{"s": "ripley", "p": 999990, "note": "Precio Internet", "url": "https://simple.ripley.cl/macbook-air-16-gb-ram-256-gb-ssd-136-chip-m4-cpu-10nuc-y-gpu-8nuc-2000405738780"}], "seen": "14-10-2026"},
-  {"id": "n5", "name": "MacBook Air 15\" M4 (16 GB / 512 GB)", "cpu": "Apple M4", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 15.3, "hz": null, "offers": [{"s": "paris", "p": 1299990, "url": "https://www.paris.cl/apple-macbook-air-153-chip-m4-16gb-ram-512gb-ssd-medianoche-986905999.html"}], "seen": "14-10-2026"},
-  {"id": "n6", "name": "MacBook Pro 14\" M4 (16 GB / 512 GB)", "cpu": "Apple M4", "cpuTier": 5, "ram": 16, "ssd": 512, "gpu": "Integrada", "gpuTier": 0, "size": 14.2, "hz": null, "offers": [{"s": "paris", "p": 2199990, "url": "https://www.paris.cl/apple-macbook-pro-chip-m4-16gb-ram-512gb-ssd-14-color-plata-888448999.html"}], "seen": "14-10-2026"},
-  {"id": "n7", "name": "ASUS Zenbook 14 UX3405CA (Core Ultra 7)", "cpu": "Core Ultra 7", "cpuTier": 4, "ram": 16, "ssd": 1024, "gpu": "Integrada", "gpuTier": 0, "size": 14, "hz": 120, "offers": [{"s": "paris", "p": 999990, "url": "https://www.paris.cl/notebook-zenbook-14-intel-core-ultra-7-16gb-ram-1tb-ssd-14-3k-120hz-964272999.html"}], "seen": "14-10-2026"},
-  {"id": "n8", "name": "ASUS Zenbook 14 UX3405 (Core Ultra 7 255H)", "cpu": "Core Ultra 7 255H", "cpuTier": 4, "ram": 16, "ssd": 1024, "gpu": "Integrada", "gpuTier": 0, "size": 14, "hz": 120, "offers": [{"s": "ripley", "p": 1139990, "note": "Precio Internet", "url": "https://simple.ripley.cl/notebook-asus-zenbook-14-ux3405-intel-core-ultra-7-16gb-ram-1tb-ssd-oled-touch-14-2000405436013p"}], "seen": "14-10-2026"},
-  {"id": "g1", "name": "HP Victus 15-fb3032la", "cat": "Entrada", "cpu": "Ryzen 5", "cpuTier": 3, "ram": 8, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": null, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 799990, "note": "Con tarjeta Ripley · sin tarjeta $837.990", "url": "https://simple.ripley.cl/notebook-gamer-victus-hp-15-fb3032la-amd-ryzen-5-8gb-ram-rtx-3050-512gb-ssd-156-fhd-w11h-mpm10003406589", "seller": "Tienda Oficial HP", "c": 1}, {"s": "paris", "p": 789990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-victus-hp-15-fb3032la-amd-ryzen-5-8gb-ram-512gb-ssd-rtx-3050-6gb-156-fhd-w11h-MKGB504DTV.html", "seller": "Tienda Oficial HP", "c": 1}, {"s": "falabella", "p": 1099990, "note": "Precio Internet", "url": "https://www.falabella.com/falabella-cl/product/155053813/notebook-gamer-victus-hp-15-fb3032la-amd-ryzen-5-8gb-ram-rtx-3050-512gb-ssd-15-6-fhd-w11h/155053814", "seller": "Tienda Oficial HP"}]},
-  {"id": "g2", "name": "HP Victus 15-fa2009la", "cat": "Entrada", "cpu": "Core i5-13420H", "cpuTier": 3, "ram": 8, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 799990, "note": "Con tarjeta Ripley · sin tarjeta $837.990", "url": "https://simple.ripley.cl/notebook-gamer-victus-hp-15-fa2009la-intel-core-i5-8gb-ram-rtx-3050-512gb-ssd-156-fhd-144hz-w11h-mpm10003406444", "seller": "Tienda Oficial HP", "c": 1}, {"s": "falabella", "p": 899990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/80726514/notebook-gamer-hp-13-3-victus-ci5-8g-512g-rtx3050/80726514", "c": 1}, {"s": "paris", "p": 789990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-victus-hp-15-fa2009la-intel-core-i5-8gb-ram-512gb-ssd-rtx-3050-6gb-156-fhd-144hz-MKAIO2T3P3.html", "seller": "Tienda Oficial HP", "c": 1}, {"s": "pcfactory", "p": 849990, "note": "Transferencia o débito · otros medios $876.290", "url": "https://www.pcfactory.cl/producto/56734", "c": 1}]},
-  {"id": "g3", "name": "ASUS TUF Gaming F16 FX607VJB", "cat": "Entrada", "cpu": "Core 5 210H", "cpuTier": 3, "ram": 8, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 16, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 689990, "note": "Precio Internet", "url": "https://simple.ripley.cl/notebook-asus-tuf-gaming-f16-fx607vjb-rl112w-intel-core-5-8gb-ram-512gb-ssd-nvidia-rtx-3050-16-2000409403301p"}, {"s": "paris", "p": 759990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-tuf-f16-intel-core-5-nvidia-geforce-rtx-3050-8gb-ram-512gb-ssd-16-144hz-332774999.html", "c": 1}]},
-  {"id": "g4", "name": "ASUS TUF Gaming A15 FA506NCG-HN345W", "cat": "Entrada", "cpu": "Ryzen 7 8845HS", "cpuTier": 4, "ram": 8, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "pcfactory", "p": 729990, "note": "Transferencia o débito · otros medios $752.590", "url": "https://www.pcfactory.cl/producto/56681", "c": 1}]},
-  {"id": "g5", "name": "Acer Nitro V15 ANV15-41-R6HJ-1", "cat": "Entrada", "cpu": "Ryzen 5", "cpuTier": 3, "ram": 8, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": 165, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 739990, "note": "Con Tarjeta Cencosud Scotiabank · sin tarjeta $769.990", "url": "https://www.paris.cl/notebook-gamer-acer-nitro-anv15-41-r6hj-1-amd-ryzen-5-rtx-3050-8gb-ram-512gb-ssd-156-fhd-165hz-MKELHY7TFU.html", "seller": "Acer Tienda Oficial", "c": 1}, {"s": "ripley", "p": 749990, "note": "Precio Internet", "url": "https://simple.ripley.cl/notebook-gamer-acer-nitro-anv15-41-r6hj-1-amd-ryzen-5-rtx-3050-8gb-ram-512gb-ssd-156-fhd-165hz-mpm10003363354", "seller": "Acer Store"}, {"s": "pcfactory", "p": 779990, "note": "Transferencia o débito · otros medios $804.090", "url": "https://www.pcfactory.cl/producto/57849", "c": 1}]},
-  {"id": "g6", "name": "HP Victus 15-fa2027la", "cat": "Entrada", "cpu": "Core i5", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 879990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-victus-15-fa2027la-intel-core-i5-16gb-ram-512gb-ssd-nvidia-geforce-rtx-3050-156-fhd-144hz-304085999.html", "c": 1}]},
-  {"id": "g7", "name": "Lenovo LOQ Ryzen 5 7235HS", "cat": "Entrada", "cpu": "Ryzen 5 7235HS", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "falabella", "p": 799990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/17495509/Notebook-Gamer-LOQ-Intel-Ryzen-5-7235HS-16GB-RAM-512GB-SSD-RTX-3050-15,6%22-FHD-144Hz-NVIDIA-G-Sync-Lenovo/17495509", "c": 1}]},
-  {"id": "g8", "name": "HP Victus 15-fb3026la", "cat": "Entrada", "cpu": "Ryzen 7", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 819990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-victus-15-fb3026la-amd-ryzen-7-rtx-3050-16gb-ram-512gb-ssd-156-fhd-144hz-512137999.html", "c": 1}, {"s": "ripley", "p": 829990, "note": "Con tarjeta Ripley · sin tarjeta $849.990", "url": "https://simple.ripley.cl/notebook-gamer-hp-victus-15-fb3026la-amd-ryzen-7-16gb-ram-512gb-ssd-nvidia-rtx-3050-156-2000408778592p", "c": 1}]},
-  {"id": "g9", "name": "Acer Nitro V15 ANV15-41-R6HJ-2", "cat": "Entrada", "cpu": "Ryzen 5", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": 165, "seen": "14-10-2026", "offers": [{"s": "falabella", "p": 829990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/80800089/notebook-gamer-acer-nitro-v15-anv15-41-r6hj-2-ryzen-5-rtx-3050-16gb-ram-512gb-ssd-15-6-fhd/80800089", "c": 1}, {"s": "pcfactory", "p": 859990, "note": "Transferencia o débito · otros medios $886.590", "url": "https://www.pcfactory.cl/producto/58186", "c": 1}, {"s": "paris", "p": 1099990, "note": "Precio publicado en la ficha", "url": "https://www.paris.cl/notebook-gamer-nitro-v15-anv15-41-r6hj-2-amd-ryzen-5-rtx-3050-16gb-ram-512gb-ssd-156-165hz-541691999.html"}]},
-  {"id": "g10", "name": "Lenovo LOQ Core i5 HX · RTX 3050 6 GB", "cat": "Entrada", "cpu": "Core i5 HX", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 859990, "url": "https://www.paris.cl/notebook-gamer-loq-intel-core-i5-hx-nvidia-rtx-3050-6gb-16gb-ram-512gb-ssd-156-fhd-144hz-g-sync-756792999.html"}, {"s": "ripley", "p": 829990, "note": "Con tarjeta Ripley · sin tarjeta $849.990", "url": "https://simple.ripley.cl/notebook-gamer-lenovo-loq-intel-core-i5-16gb-ram-512gb-ssd-nvidia-rtx-3050-156-2000401757082p", "c": 1}, {"s": "falabella", "p": 899990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/17028494/notebook-gamer-loq-intel-core-i5-12450hx-16gb-ram-512gb-ssd-rtx-3050-15-6-fhd-ips-144hz-nvidia-g-sync-lenovo/17028494", "c": 1}]},
-  {"id": "g11", "name": "HP Victus 15-fb3018la", "cat": "Entrada", "cpu": "Ryzen 7", "cpuTier": 4, "ram": 8, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": null, "seen": "14-10-2026", "offers": [{"s": "falabella", "p": 1099990, "note": "Precio Internet", "url": "https://www.falabella.com/falabella-cl/product/153374617/notebook-hp-gaming-victus-15-fb3018la-amd-ryzen-7-8gb-ram-512gb-ssd-rtx-3050-windows-11-home/153374618", "seller": "Tienda Oficial HP"}, {"s": "paris", "p": 839990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-hp-gaming-victus-15-fb3018la-amd-ryzen-7-8gb-ram-512gb-ssd-rtx-3050-windows-11-home-MK2OVGRQXI.html", "seller": "Tienda Oficial HP", "c": 1}]},
-  {"id": "g12", "name": "HP Victus 15-fa2014la", "cat": "Entrada", "cpu": "Core i5-13420H", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": null, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 869990, "note": "Con tarjeta Ripley · sin tarjeta $899.990", "url": "https://simple.ripley.cl/notebook-gamer-hp-victus-15-fa2014la-intel-core-i5-16gb-ram-512gb-ssd-nvidia-rtx-3050-156-2000408299608p", "c": 1}, {"s": "pcfactory", "p": 899990, "note": "Transferencia o débito · otros medios $927.790", "url": "https://www.pcfactory.cl/producto/56342", "c": 1}, {"s": "paris", "p": 1179990, "note": "Precio publicado en la ficha", "url": "https://www.paris.cl/notebook-gaming-victus-15-fa2014la-intel-core-i5-16-gb-512-gb-ssd-156-fhd-windows-11-home-MKUOTAHRU7.html", "seller": "Tienda Oficial HP"}]},
-  {"id": "g13", "name": "Lenovo LOQe Gen 10 · RTX 3050 6 GB", "cat": "Entrada", "cpu": "Ryzen 7 7735HS", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "pcfactory", "p": 919990, "note": "Transferencia o débito · otros medios $948.490", "url": "https://www.pcfactory.cl/producto/55838", "c": 1}, {"s": "falabella", "p": 919990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/80797737/notebook-gamer-loqe-amd-ryzen-7-16gb-ram-512gb-ssd-rtx-3050-6gb-15-6-fhd-144hz-lenovo/80797737", "c": 1}, {"s": "paris", "p": 919990, "note": "Precio publicado en la ficha", "url": "https://www.paris.cl/notebook-gamer-loqe-amd-ryzen-7-7735hs-rtx-3050-6gb-16gb-ram-512gb-ssd-156-fhd-144hz-430213999.html"}]},
-  {"id": "g14", "name": "HP Victus 15-fa2701la", "cat": "Media", "cpu": "Core i5", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "RTX 4050", "gpuTier": 3, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 1019990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-victus-15-fa2701la-intel-core-i5-16gb-ram-512gb-ssd-nvidia-rtx-4050-156-fhd-144hz-273729999.html", "c": 1}]},
-  {"id": "g15", "name": "Acer Nitro Lite 16 NL16-71G-50GH", "cat": "Media", "cpu": "Core i5", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "RTX 4050", "gpuTier": 3, "size": 16, "hz": 165, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 899990, "note": "Con tarjeta Ripley · sin tarjeta $919.990", "url": "https://simple.ripley.cl/notebook-acer-nitro-lite-16-nl16-71g-50gh-cl-intel-core-i5-16gb-ram-512gb-ssd-nviadia-rtx-4050-16-2000408414469p", "c": 1}, {"s": "paris", "p": 899990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-nitro-lite-intel-core-i5-rtx4050-16gb-ram-512gb-ssd-16-165hz-wuxga-310275999.html", "c": 1}, {"s": "pcfactory", "p": 969990, "note": "Transferencia o débito · otros medios $999.990", "url": "https://www.pcfactory.cl/producto/56216", "c": 1}, {"s": "falabella", "p": 999990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/80639342/notebook-gamer-acer-nitro-lite-nl16-71g-50gh-2-intel-core-i5-rtx-4050-24gb-ram-512gb-ssd-16-wuxga/80639342", "c": 1}]},
-  {"id": "g16", "name": "Acer Nitro V15 ANV15-51-51LF-2", "cat": "Media", "cpu": "Core i5", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "RTX 4050", "gpuTier": 3, "size": 15.6, "hz": 165, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 1169990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-nitro-v15-anv15-51-51lf-2-intelr-coretm-i5-gpu-nvidiar-rtx-4050-16gb-ram-512gb-MKN90BKW6F.html", "seller": "Acer Tienda Oficial", "c": 1}, {"s": "ripley", "p": 929990, "note": "Con tarjeta Ripley · sin tarjeta $1.009.990", "url": "https://simple.ripley.cl/notebook-gamer-nitro-v15-anvlf-2-intel-core-i5-gpu-nvidia-rtx-4050-16gb-ram-512gb-mpm10003546856", "seller": "Acer Store", "c": 1}, {"s": "falabella", "p": 1169990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/156974637/notebook-acer-anv15-51-51lf-2-intel-corei5-nvidia-rtx-4050-16gb-ram-512gb-ssd-15-6-fhd/156974638", "seller": "Acer Tienda Oficial", "c": 1}]},
-  {"id": "g17", "name": "Lenovo LOQe Gen 10 · RTX 4050", "cat": "Media", "cpu": "Ryzen 7 7735HS", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 4050", "gpuTier": 3, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "pcfactory", "p": 999990, "note": "Transferencia o débito · otros medios $1.030.890", "url": "https://www.pcfactory.cl/producto/57233", "c": 1}, {"s": "falabella", "p": 1099990, "note": "Precio Internet", "url": "https://www.falabella.com/falabella-cl/product/80738039/notebook-gamer-loqe-ryzen-r7-16gb-ram-512gb-ssd-rtx-4050-fhd-144hz-lenovo/80738039"}, {"s": "paris", "p": 1149990, "note": "Precio publicado en la ficha", "url": "https://www.paris.cl/notebook-gamer-loq-amd-ryzen-7-7735hs-16gb-ram-512gb-ssd-rtx4050-6gb-156-144hz-430214999.html"}]},
-  {"id": "g18", "name": "ASUS TUF Gaming A16 FA607NUQ", "cat": "Media", "cpu": "Ryzen 7", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 4050", "gpuTier": 3, "size": 16, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "pcfactory", "p": 999990, "note": "Transferencia o débito · otros medios $1.030.890", "url": "https://www.pcfactory.cl/producto/56428", "c": 1}]},
-  {"id": "g19", "name": "HP Victus 15-fb3027la", "cat": "Media", "cpu": "Ryzen 7", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 4050", "gpuTier": 3, "size": 15.6, "hz": null, "seen": "14-10-2026", "offers": [{"s": "falabella", "p": 1079990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/17482518/Notebook-Gamer-15-FB3027LA-R7-16GB-512-RTX4050-HP/17482518", "c": 1}]},
-  {"id": "g20", "name": "Lenovo LOQ Ryzen 7 · RTX 4050", "cat": "Media", "cpu": "Ryzen 7", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 4050", "gpuTier": 3, "size": 15.6, "hz": null, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 1069990, "note": "Con tarjeta Ripley · sin tarjeta $1.099.990", "url": "https://simple.ripley.cl/notebook-lenovo-loq-amd-ryzen-7-16gb-ram-512gb-ssd-nvidia-rtx-4050-156-2000410038547p", "c": 1}]},
-  {"id": "g21", "name": "HP Victus 15-fb3036la", "cat": "Media", "cpu": "Ryzen 7 7445H", "cpuTier": 4, "ram": 16, "ssd": 1024, "gpu": "RTX 4050", "gpuTier": 3, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 1099990, "note": "Precio Internet", "url": "https://simple.ripley.cl/notebook-hp-victus-15-fb3036la-amd-ryzen-7-16gb-ram-1tb-ssd-nvidia-rtx4050-156-2000409933471p"}]},
-  {"id": "g22", "name": "Acer Nitro ANV15-A31-R88H-1", "cat": "Media", "cpu": "Ryzen 7 170", "cpuTier": 4, "ram": 24, "ssd": 512, "gpu": "RTX 5050", "gpuTier": 3, "size": 15.6, "hz": 165, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 1569990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-nitro-anv15-a31-r88h-1-amd-ryzen-7-170-nvidiartx-5050-24gb-ram-512-ssd165hz-MKHQSWKR7P.html", "seller": "Acer Tienda Oficial", "c": 1}, {"s": "ripley", "p": 1259990, "note": "Con tarjeta Ripley · sin tarjeta $1.379.990", "url": "https://simple.ripley.cl/notebook-gamer-acer-anv15-a31-r88h-1-amd-ryzen-7-170-rtx-5050-24gb-ram-512ssdfhd-165hz-mpm10003547469", "seller": "Acer Store", "c": 1}]},
-  {"id": "g23", "name": "Gigabyte A16 (RTX 5050)", "cat": "Media", "cpu": "Ryzen 7 260", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 5050", "gpuTier": 3, "size": 16, "hz": 165, "seen": "14-10-2026", "offers": [{"s": "pcfactory", "p": 1260990, "note": "Transferencia o débito · otros medios $1.299.990", "url": "https://www.pcfactory.cl/producto/58255", "c": 1}]},
-  {"id": "g24", "name": "ASUS TUF Gaming F16 FX607 (RTX 5050)", "cat": "Media", "cpu": "Core i5", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "RTX 5050", "gpuTier": 3, "size": 16, "hz": null, "seen": "14-10-2026", "offers": [{"s": "falabella", "p": 1369990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/80808899/asus-tuf-gaming-fx607-intel-core-i5-16gb-ram-512gb-ssd-nvidia-geforce-rtx-5050/80808899", "c": 1}]},
-  {"id": "g25", "name": "Lenovo LOQ Gen 10 Core i5 · RTX 5050", "cat": "Media", "cpu": "Core i5", "cpuTier": 3, "ram": 16, "ssd": 512, "gpu": "RTX 5050", "gpuTier": 3, "size": 15.6, "hz": null, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 1379990, "note": "Con tarjeta Ripley · sin tarjeta $1.479.990", "url": "https://simple.ripley.cl/notebook-lenovo-gamer-loq-gen-10-intel-core-i5-16gb-ram-512gb-ssd-nvidia-geforce-rtx-5050-15-mpm10003347859", "seller": "Tienda Lenovo", "c": 1}, {"s": "paris", "p": 1349990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-lenovo-gamer-loq-gen-10-intel-core-i5-16gb-ram-512gb-ssd-nvidia-geforce-rtx-5050-15-MKBP2R9WS0.html", "seller": "Lenovo", "c": 1}, {"s": "falabella", "p": 1429990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/154422022/notebook-gamer-loq-gen-10-intel-core-i5-16gb-ram-512gb-ssd-nvidia-geforce-rtx-5050-15/154422023", "seller": "Lenovo", "c": 1}]},
-  {"id": "g26", "name": "HP Omen 16-wd0012la", "cat": "Alta", "cpu": "Core i7", "cpuTier": 4, "ram": 16, "ssd": 1024, "gpu": "RTX 4060", "gpuTier": 4, "size": 16, "hz": null, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 1499990, "note": "Con tarjeta Ripley · sin tarjeta $1.548.990", "url": "https://simple.ripley.cl/notebook-hp-gamer-omen-16-wd0012la-intel-core-i7-16gb-ram-1tb-ssd-rtx4060-8gb-windows-11-home-mpm10002698640", "seller": "Tienda Oficial HP", "c": 1}, {"s": "paris", "p": 1439990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-hp-gamer-16-wd0012la-i7-16gb-1tb-rtx4060-8gb-MKLF34JMP9.html", "seller": "Tienda Oficial HP", "c": 1}, {"s": "falabella", "p": 1829990, "note": "Precio Internet", "url": "https://www.falabella.com/falabella-cl/product/143311945/notebook-hp-gamer-omen-16-wd0012la-intel-core-i7-16gb-ram-1tb-ssd-rtx4060-8gb-windows-11-home/143311946", "seller": "Tienda Oficial HP"}]},
-  {"id": "g27", "name": "HP Omen 15-ga0001la", "cat": "Alta", "cpu": "Core i7", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 5060", "gpuTier": 4, "size": 15.3, "hz": 165, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 1559990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-omen-15-ga0001la-intel-core-i7-rtx-5060-16gb-ram-512gb-ssd-153-2k-165hz-518622999.html", "c": 1}]},
-  {"id": "g28", "name": "Lenovo LOQ Ryzen 7 250 · RTX 5060", "cat": "Alta", "cpu": "Ryzen 7 250", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 5060", "gpuTier": 4, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 1419990, "note": "Precio publicado en la ficha", "url": "https://www.paris.cl/notebook-gamer-loq-amd-ryzen-7-250-rtx-5060-8gb-16gb-ram-512gb-ssd-156-fhd-144hz-430218999.html"}, {"s": "falabella", "p": 1499990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/80643914/notebook-gamer-loq-ryzen-7-260-16gb-ram-512gb-ssd-rtx-5060-8gb-15-6-fhd-144hz-lenovo/80643914", "c": 1}]},
-  {"id": "g29", "name": "Lenovo LOQ Core i7 · RTX 5060", "cat": "Alta", "cpu": "Core i7", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 5060", "gpuTier": 4, "size": 15.6, "hz": null, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 1449990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-lenovo-loq-intel-core-i7-16gbram-512gbssd-nvidia-geforce-rtx-5060-156-MK82YCMVNT.html", "seller": "Lenovo", "c": 1}, {"s": "falabella", "p": 1519990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/156050289/notebook-gamer-lenovo-loq-intel-core-i7-16gbram-512gbssd-nvidia-geforce-rtx-5060-15-6/156050290", "seller": "Lenovo", "c": 1}, {"s": "ripley", "p": 1469990, "note": "Con tarjeta Ripley · sin tarjeta $1.569.990", "url": "https://simple.ripley.cl/notebook-gamer-lenovo-loq-intel-core-i7-16gbram-512gbssd-nvidia-geforce-rtx-5060-156-mpm10003487063", "seller": "Tienda Lenovo", "c": 1}]},
-  {"id": "g30", "name": "Gigabyte A16 (RTX 5060)", "cat": "Alta", "cpu": "Ryzen 7 170", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 5060", "gpuTier": 4, "size": 16, "hz": 165, "seen": "14-10-2026", "offers": [{"s": "pcfactory", "p": 1484090, "note": "Transferencia o débito · otros medios $1.529.990", "url": "https://www.pcfactory.cl/producto/58256", "c": 1}]},
-  {"id": "g31", "name": "HP Omen 16-ap0002la", "cat": "Alta", "cpu": "Ryzen AI 7 350", "cpuTier": 4, "ram": 16, "ssd": 1024, "gpu": "RTX 5060", "gpuTier": 4, "size": 16, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "pcfactory", "p": 1499990, "note": "Transferencia o débito · otros medios $1.546.390", "url": "https://www.pcfactory.cl/producto/56934", "c": 1}, {"s": "falabella", "p": 1549990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/17482526/notebook-gamer-16-ap0002la-r7-16gb-1tb-5060-16p-hp/17482526", "c": 1}]},
-  {"id": "g32", "name": "HP Omen 16-am0018la", "cat": "Alta", "cpu": "Core i7-14650HX", "cpuTier": 4, "ram": 16, "ssd": 1024, "gpu": "RTX 5060", "gpuTier": 4, "size": 16, "hz": null, "seen": "14-10-2026", "offers": [{"s": "pcfactory", "p": 1549990, "note": "Transferencia o débito · otros medios $1.597.890", "url": "https://www.pcfactory.cl/producto/56148", "c": 1}]},
-  {"id": "g33", "name": "ASUS TUF Gaming 16 FX610JM", "cat": "Alta", "cpu": "Core i7-14650HX", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 5060", "gpuTier": 4, "size": 16, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "pcfactory", "p": 1599990, "note": "Transferencia o débito · otros medios $1.649.490", "url": "https://www.pcfactory.cl/producto/57123", "c": 1}]},
-  {"id": "g34", "name": "Acer Nitro V15 ANV15-A31-R8WU-1", "cat": "Alta", "cpu": "Ryzen 7", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 5060", "gpuTier": 4, "size": 15.6, "hz": 165, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 1669990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-anv15-a31-r8wu-1-acer-gamer-ryzen-7-16-gb-512-ssd-rtx-5060-MKK9FOH3II.html", "seller": "Acer Tienda Oficial", "c": 1}, {"s": "pcfactory", "p": 1729990, "note": "Transferencia o débito · otros medios $1.783.490", "url": "https://www.pcfactory.cl/producto/57812", "c": 1}, {"s": "ripley", "p": 1799990, "note": "Precio Internet", "url": "https://simple.ripley.cl/notebook-acer-gamer-anv15-a31-r8wu-1-ryzen-7-16-gb-512-ssd-rtx-5060-mpm10003667371", "seller": "Acer Store"}]},
-  {"id": "g35", "name": "Lenovo Legion 5i 10ª gen · RTX 5060", "cat": "Alta", "cpu": "Core Ultra 7", "cpuTier": 4, "ram": 32, "ssd": 1024, "gpu": "RTX 5060", "gpuTier": 4, "size": 15.1, "hz": 165, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 2019990, "note": "Con tarjeta Ripley · sin tarjeta $2.119.990", "url": "https://simple.ripley.cl/notebook-gamer-legion-5i-10ma-gen-intel-core-ultra-7-32gb-ram-1tb-ssd-nvidia-rtx-5060-151-wqxga-mpm10002898027", "seller": "Tienda Lenovo", "c": 1}, {"s": "paris", "p": 1909990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-legion-5i-10ma-gen-intel-core-ultra-7-32gb-ram-1tb-ssd-nvidia-rtx-5060-151-wqxga-MK6BLRS197.html", "seller": "Lenovo", "c": 1}, {"s": "falabella", "p": 2059990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/145361937/notebook-gamer-legion-5i-10ma-gen-intel-core-ultra-7-32gb-ram-1tb-ssd-nvidia-rtx-5060-151-wqxga/145361938", "seller": "Lenovo", "c": 1}]},
-  {"id": "g36", "name": "ASUS ROG Strix G16 G614PM", "cat": "Alta", "cpu": "Ryzen 9 8940HX", "cpuTier": 5, "ram": 32, "ssd": 1024, "gpu": "RTX 5060", "gpuTier": 4, "size": 16, "hz": 240, "seen": "14-10-2026", "offers": [{"s": "pcfactory", "p": 2469990, "note": "Transferencia o débito · otros medios $2.546.390", "url": "https://www.pcfactory.cl/producto/54730", "c": 1}]},
-  {"id": "g37", "name": "HyperX OMEN 15-ga0009la", "cat": "Muy alta", "cpu": "Core i7", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 5070", "gpuTier": 5, "size": 15.3, "hz": null, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 1999990, "note": "Precio Internet", "url": "https://simple.ripley.cl/notebook-gamer-hp-hyperx-omen-15-ga0009-intel-core-i7-16gb-ram-nvidia-geforce-rtx-5070-512gb-ssd-153-2k-2000412654189p"}, {"s": "pcfactory", "p": 2029990, "note": "Transferencia o débito · otros medios $2.092.790", "url": "https://www.pcfactory.cl/producto/57692", "c": 1}, {"s": "falabella", "p": 2229990, "note": "Precio Internet", "url": "https://www.falabella.com/falabella-cl/product/156446438/notebook-gamer-hyperx-omen-hp-15-ga0009la-intel-core-i7-16gb-ram-512gb-ssd-rtx-5070-windows-11-home/156446439", "seller": "Tienda Oficial HP"}, {"s": "paris", "p": 2229990, "note": "Precio publicado en la ficha", "url": "https://www.paris.cl/notebook-gamer-hyperx-omen-15-ga0009la-intel-core-i7-16gb-ram-512gb-ssd-rtx-5070-windows-11-home-MKVEQV81WH.html", "seller": "Tienda Oficial HP"}]},
-  {"id": "g38", "name": "Lenovo Legion 5 i9-14900HX · RTX 5070", "cat": "Muy alta", "cpu": "Core i9-14900HX", "cpuTier": 5, "ram": 32, "ssd": 1024, "gpu": "RTX 5070", "gpuTier": 5, "size": 15.1, "hz": 165, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 2099990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-legion-5-intel-core-i9-14900hx-nvidia-rtx-5070-32gb-ram-1tb-ssd-151-wqxga-165hz-227611999.html", "c": 1}, {"s": "falabella", "p": 2249990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/17500183/Notebook-Gamer-Legion-5%20i9-14900HX-32GB-RAM-1TB-SSD-RTX-5070-8GB-15.1%22%20WQXGA-OLED-165Hz-Lenovo/17500183", "c": 1}]},
-  {"id": "g39", "name": "Lenovo Legion 5i i9 · RTX 5070 · 2 TB", "cat": "Muy alta", "cpu": "Core i9", "cpuTier": 5, "ram": 32, "ssd": 2048, "gpu": "RTX 5070", "gpuTier": 5, "size": 15.1, "hz": null, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 2619990, "note": "Con tarjeta Ripley · sin tarjeta $2.719.990", "url": "https://simple.ripley.cl/notebook-gamer-lenovo-legion-5i-intel-core-i9-32gbram-2tbssd-nvidia-rtx-5070-151-mpm10003486354", "seller": "Tienda Lenovo", "c": 1}, {"s": "paris", "p": 2449990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-lenovo-legion-5i-intel-core-i9-32gbram-2tbssd-nvidia-rtx-5070-151-MKTB8D6MEU.html", "seller": "Lenovo", "c": 1}, {"s": "falabella", "p": 2649990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/156049980/notebook-gamer-lenovo-legion-5i-intel-core-i9-32gbram-2tbssd-nvidia-rtx-5070-15-1/156049981", "seller": "Lenovo", "c": 1}]},
-  {"id": "g40", "name": "Lenovo Legion Pro 5 i9 · RTX 5070", "cat": "Muy alta", "cpu": "Core i9-14900HX", "cpuTier": 5, "ram": 32, "ssd": 1024, "gpu": "RTX 5070", "gpuTier": 5, "size": 16, "hz": 240, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 2149990, "note": "Precio publicado en la ficha", "url": "https://www.paris.cl/notebook-gamer-legion-pro-5-i9-14900hx-rtx5070-32gb-ram-1tb-ssd-16-wqxga-240hz-326456999.html"}, {"s": "ripley", "p": 2429990, "note": "Con tarjeta Ripley · sin tarjeta $2.469.990", "url": "https://simple.ripley.cl/notebook-gamer-lenovo-legion-pro-5-intel-core-i9-32gb-ram-1tb-ssd-nvidia-rtx-5070-16-2000408000617p", "c": 1}]},
-  {"id": "g41", "name": "Lenovo Legion 7i Gen 10 · RTX 5070", "cat": "Muy alta", "cpu": "Core Ultra 9", "cpuTier": 5, "ram": 32, "ssd": 2048, "gpu": "RTX 5070", "gpuTier": 5, "size": 16, "hz": null, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 3519990, "note": "Precio Internet", "url": "https://simple.ripley.cl/notebook-gamer-legion-7i-10ma-gen-intel-core-ultra-9-32gb-ram-2tb-ssd-nvidia-rtx-5070-16-wqxga-mpm10002942545", "seller": "Tienda Lenovo"}, {"s": "falabella", "p": 3699990, "note": "Precio Internet", "url": "https://www.falabella.com/falabella-cl/product/146409879/notebook-gamer-legion-7i-10ma-gen-intel-core-ultra-9-32gb-ram-2tb-ssd-nvidia-rtx-5070-16-wqxga/146409884", "seller": "Lenovo"}, {"s": "paris", "p": 3519990, "note": "Precio publicado en la ficha", "url": "https://www.paris.cl/notebook-gamer-legion-7i-10ma-gen-intel-core-ultra-9-32gb-ram-2tb-ssd-nvidia-rtx-5070-16-wqxga-MKL7KJY94C.html", "seller": "Lenovo"}]},
-  {"id": "g42", "name": "Lenovo Legion Pro 7 Gen 10 · RTX 5080", "cat": "Muy alta", "cpu": "Ryzen 9 9955HX", "cpuTier": 5, "ram": 32, "ssd": 1024, "gpu": "RTX 5080", "gpuTier": 5, "size": 16, "hz": 240, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 3999990, "note": "Precio publicado en la ficha", "url": "https://www.paris.cl/notebook-gamer-legion-pro-7-amd-ryzen-9-9955hx-rtx-5080-16gb-32gb-ram-1tb-ssd-16-wqxga-240hz-450124999.html"}, {"s": "pcfactory", "p": 4073990, "note": "Transferencia o débito · otros medios $4.199.990", "url": "https://www.pcfactory.cl/producto/56696", "c": 1}]},
-  {"id": "g43", "name": "ASUS ROG Strix G16 G615LW · RTX 5080", "cat": "Muy alta", "cpu": "Core Ultra 9 290HX", "cpuTier": 5, "ram": 32, "ssd": 1024, "gpu": "RTX 5080", "gpuTier": 5, "size": 16, "hz": null, "seen": "14-10-2026", "offers": [{"s": "pcfactory", "p": 4999990, "note": "Transferencia o débito · otros medios $5.154.590", "url": "https://www.pcfactory.cl/producto/56709", "c": 1}]},
-  {"id": "g44", "name": "HP OMEN MAX 16 · RTX 5090", "cat": "Muy alta", "cpu": "Core Ultra 9", "cpuTier": 5, "ram": 64, "ssd": 2048, "gpu": "RTX 5090", "gpuTier": 5, "size": 16.2, "hz": null, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 4299990, "note": "Precio Internet", "url": "https://simple.ripley.cl/notebook-gamer-hp-omen-max-16-ah0005la-intel-core-ultra-9-64gb-ram-2tb-ssd-nvidia-rtx-5090-162-2000408778615p"}]},
-  {"id": "g45", "name": "Lenovo LOQ Gen 10 Core i7 · RTX 5050", "cat": "Media", "cpu": "Core i7-13645HX", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 5050", "gpuTier": 3, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "falabella", "p": 1399990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/80752904/notebook-gamer-loq-intel-core-i7-13645hx-16gb-ram-512gb-ssd-rtx-5050-8gb-15-6-fhd-144hz/80752904", "c": 1}, {"s": "pcfactory", "p": 1454990, "note": "Transferencia o débito · otros medios $1.499.990", "url": "https://www.pcfactory.cl/producto/55428", "c": 1}]},
-  {"id": "g46", "name": "ASUS TUF Gaming A15 FA506 · RTX 3050 · 16 GB", "cat": "Entrada", "cpu": "Ryzen 7", "cpuTier": 4, "ram": 16, "ssd": 512, "gpu": "RTX 3050", "gpuTier": 2, "size": 15.6, "hz": 144, "seen": "14-10-2026", "offers": [{"s": "falabella", "p": 869990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/80758852/asus-tuf-gaming-a15-fa506-amd-ryzen-7-nvidia-rtx-3050-16gb-ram-512gb-15-6-fhd-144hz/80758852", "c": 1}, {"s": "pcfactory", "p": 869990, "note": "Transferencia o débito · otros medios $896.890", "url": "https://www.pcfactory.cl/producto/56670", "c": 1}]},
-  {"id": "g47", "name": "Lenovo Legion Pro 5 Ryzen 9 · RTX 5070", "cat": "Muy alta", "cpu": "Ryzen 9", "cpuTier": 5, "ram": 32, "ssd": 1024, "gpu": "RTX 5070", "gpuTier": 5, "size": 16, "hz": null, "seen": "14-10-2026", "offers": [{"s": "falabella", "p": 2549990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/146402305/notebook-gamer-legion-pro-5-amd-ryzen-9-32gb-ram-1tb-ssd-nvidia-rtx-5070-16-wqxga/146402306", "seller": "Lenovo", "c": 1}, {"s": "ripley", "p": 2519990, "note": "Con tarjeta Ripley · sin tarjeta $2.619.990", "url": "https://simple.ripley.cl/notebook-lenovo-gamer-legion-pro-5-amd-ryzen-9-32gb-ram-1tb-ssd-nvidia-rtx-5070-16-wqxga-mpm10002942334", "seller": "Tienda Lenovo", "c": 1}]},
-  {"id": "g48", "name": "Lenovo Legion 5 Gen 10 Ryzen 7 · RTX 5060", "cat": "Alta", "cpu": "Ryzen 7", "cpuTier": 4, "ram": 32, "ssd": 1024, "gpu": "RTX 5060", "gpuTier": 4, "size": 15.1, "hz": null, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 2019990, "note": "Con tarjeta Ripley · sin tarjeta $2.119.990", "url": "https://simple.ripley.cl/notebook-lenovo-gamer-legion-5-gen-10-amd-ryzen-7-32gb-ram-1tb-ssd-15-geforce-rtx-5060-mpm10003182883", "seller": "Tienda Lenovo", "c": 1}, {"s": "falabella", "p": 2059990, "note": "Con tarjeta CMR", "url": "https://www.falabella.com/falabella-cl/product/151587807/notebook-gamer-legion-5-gen-10-amd-ryzen-7-32gb-ram-1tb-ssd-15-geforce-rtx-5060/151587808", "seller": "Lenovo", "c": 1}]},
-  {"id": "g49", "name": "HP Victus 16-r1015la · RTX 4060", "cat": "Alta", "cpu": "Core i7", "cpuTier": 4, "ram": 16, "ssd": 1024, "gpu": "RTX 4060", "gpuTier": 4, "size": 16, "hz": null, "seen": "14-10-2026", "offers": [{"s": "ripley", "p": 1429990, "note": "Precio Internet", "url": "https://simple.ripley.cl/notebook-gamer-hp-victus-16-r1015la-intel-core-i7-16gb-ram-1tb-ssd-nvidia-rtx-4060-16-2000404540728p"}]},
-  {"id": "g50", "name": "HyperX OMEN 16-ah1002la · RTX 5080", "cat": "Muy alta", "cpu": "Core Ultra 9", "cpuTier": 5, "ram": 32, "ssd": 2048, "gpu": "RTX 5080", "gpuTier": 5, "size": 16, "hz": null, "seen": "14-10-2026", "offers": [{"s": "paris", "p": 4999990, "note": "Con Tarjeta Cencosud Scotiabank", "url": "https://www.paris.cl/notebook-gamer-hyperx-omen-16-ah1002la-hp-intel-core-ultra-9-32gb-ram-2tb-ssd-rtx-5080-16-25-w11h-MKE56QX6WA.html", "seller": "Tienda Oficial HP", "c": 1}, {"s": "falabella", "p": 5799990, "note": "Precio Internet", "url": "https://www.falabella.com/falabella-cl/product/157263907/notebook-gamer-hyperx-omen-16-ah1002la-hp-intel-core-ultra-9-32gb-ram-2tb-ssd-rtx-5080-16-2-5k-w11h/157263908", "seller": "Tienda Oficial HP"}, {"s": "ripley", "p": 5409990, "note": "Con tarjeta Ripley · sin tarjeta $5.449.990", "url": "https://simple.ripley.cl/notebook-gamer-hyperx-omen-16-ah1002la-hp-intel-core-ultra-9-32gb-ram-2tb-ssd-rtx-5080-16-25k-w11h-mpm10003563807", "seller": "Tienda Oficial HP", "c": 1}]}
-];
-
-/* ---------- Contenido del notebook interactivo ---------- */
-const PARTS = [
-  { id: 'pantalla', name: 'Pantalla', start: 1,
-    what: 'Es lo que ves. Define la calidad de los colores, el brillo y qué tan fluido se mueve todo.',
-    levels: [
-      { l: 'TN', t: 'Económica, con colores y ángulos de visión limitados. Sirve para oficina, pero se ve apagada si la miras de costado.' },
-      { l: 'IPS', t: 'Buenos colores y buenos ángulos de visión. Es lo más común y lo recomendable para casi todo.' },
-      { l: 'OLED', t: 'Negros profundos, colores intensos y mucho contraste. Ideal para diseño, fotos y películas. Cuesta más y puede gastar más batería.' },
-      { l: '120 Hz o más', t: 'La imagen se actualiza más veces por segundo. Se nota en juegos y al desplazarte por páginas. En oficina casi no se aprecia.' }
-    ],
-    tip: 'El tamaño también pesa: 14" se carga fácil, 15" a 16" da más espacio de trabajo y 17" ya es difícil de transportar.',
-    matters: ['Diseño y video', 'Juegos', 'Estudio y oficina'] },
-  { id: 'cpu', name: 'Procesador (CPU)', start: 1,
-    what: 'Es el cerebro del notebook: ejecuta las instrucciones de todos los programas. Mientras más potente, más rápido hace cada tarea.',
-    levels: [
-      { l: 'Básico', t: 'Core i3 o Ryzen 3. Alcanza para navegar, Office, videollamadas y series. Con muchos programas abiertos a la vez se pone lento.' },
-      { l: 'Medio', t: 'Core i5 o Ryzen 5. Buen equilibrio: mueve varias aplicaciones juntas, edición de fotos liviana y programación sin problemas.' },
-      { l: 'Alto', t: 'Core i7 o Ryzen 7, o superior. Pensado para editar video, compilar proyectos grandes y usar máquinas virtuales. Calienta más y gasta más batería.' }
-    ],
-    tip: 'No mires solo el nombre: un i5 o Ryzen 5 de generación reciente suele rendir más que un i7 antiguo.',
-    matters: ['Programación', 'Diseño y video'] },
-  { id: 'ram', name: 'Memoria RAM', start: 1,
-    what: 'Es la memoria de trabajo: guarda lo que estás usando ahora mismo. Más RAM permite tener más cosas abiertas a la vez sin que se trabe.',
-    levels: [
-      { l: '8 GB', t: 'Alcanza para navegar y usar Office. Con muchas pestañas de Chrome más otro programa ya se llena y el equipo se arrastra. Hoy es el mínimo.' },
-      { l: '16 GB', t: 'El punto ideal para la mayoría: multitarea cómoda, juegos y edición básica de fotos y video.' },
-      { l: '32 GB', t: 'Para edición de video, máquinas virtuales, programas de diseño pesados o proyectos de programación grandes.' }
-    ],
-    tip: 'Antes de comprar, revisa si la RAM es ampliable. En muchos equipos delgados viene soldada y después no se puede cambiar.',
-    matters: ['Programación', 'Diseño y video', 'Estudio y oficina'] },
-  { id: 'almacenamiento', name: 'Almacenamiento', start: 1,
-    what: 'Es donde se guardan tus archivos y programas. Hay dos tipos: el HDD, un disco mecánico con partes que giran, y el SSD, que no tiene partes móviles.',
-    levels: [
-      { l: 'HDD mecánico', t: 'Barato y con mucha capacidad, pero lento: el equipo tarda minutos en encender y es sensible a golpes. Hoy casi no se justifica como disco principal.' },
-      { l: 'SSD 256 GB', t: 'Enciende en segundos y abre los programas rápido. Se llena pronto si guardas juegos, fotos o videos.' },
-      { l: 'SSD 512 GB a 1 TB', t: 'Rápido y con espacio para juegos, proyectos y archivos. Es lo recomendable si será tu único disco.' }
-    ],
-    tip: 'Un SSD hace que todo se sienta más veloz, incluso con un procesador modesto. Es de las mejoras que más se notan.',
-    matters: ['Todos los usos', 'Juegos'] },
-  { id: 'gpu', name: 'Tarjeta gráfica (GPU)', start: 0,
-    what: 'Procesa imágenes, video y juegos. La integrada viene dentro del procesador. La dedicada es un chip aparte, con memoria propia y mucha más potencia.',
-    levels: [
-      { l: 'Integrada', t: 'Suficiente para clases, video, fotos y juegos muy livianos. No sirve para juegos exigentes ni para edición pesada.' },
-      { l: 'RTX 3050', t: 'La puerta de entrada a los juegos actuales en calidad media y a la edición de video básica.' },
-      { l: 'RTX 4050 / 5050', t: 'Juegos actuales en calidad alta a 1080p y edición de video más fluida.' },
-      { l: 'RTX 5060 o más', t: 'Juegos exigentes en calidad alta, 3D y renderizado. A cambio, más calor, ruido, peso y menos batería.' }
-    ],
-    tip: 'Para juegos exigentes la dedicada es obligatoria. Por eso, si eliges "Juegos", solo te mostramos equipos que la tienen.',
-    matters: ['Juegos', 'Diseño y video'] },
-  { id: 'bateria', name: 'Batería', start: 1,
-    what: 'Define cuánto dura el notebook sin enchufarlo.',
-    levels: [
-      { l: 'Cerca de 5 horas', t: 'Típico de notebooks para juegos: están pensados para usarse conectados a la corriente.' },
-      { l: 'Cerca de 8 horas', t: 'Aguanta una jornada de clases o de trabajo liviano.' },
-      { l: '11 horas o más', t: 'Dura todo el día fuera de casa. Suele ser característico de equipos ultraligeros.' }
-    ],
-    tip: 'La duración real depende del uso: juegos y edición la gastan mucho más rápido que navegar o escribir.',
-    matters: ['Estudio y oficina'] }
-];
-
-/* ---------- Lógica (pura, sin DOM) ---------- */
-const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
-const fmt = n => '$' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-function offersFor(n, stores) {
-  return n.offers.filter(o => !stores || stores.includes(o.s));
-}
-function bestPrice(n, stores) {
-  const o = offersFor(n, stores);
-  return o.length ? Math.min(...o.map(x => x.p)) : Infinity;
-}
-function gamingMin(stores) {
-  const ps = NOTEBOOKS.filter(n => n.gpuTier >= 2).map(n => bestPrice(n, stores)).filter(isFinite);
-  return ps.length ? Math.min(...ps) : Infinity;
-}
-
-
-/* ---------- Procesadores: modelo exacto y puntaje PassMark (CPU Mark multinúcleo, cpubenchmark.net, consultado el 13-10-2026) ---------- */
-const CPUDB = {
-  'Ryzen 3 7320U': { c: 4, t: 8, g: 4.1, m: 8402, s: 2288 },
-  'Core i5-13420H': { c: 8, t: 12, g: 4.6, m: 16751, s: 3345 },
-  'Ryzen 7 7730U': { c: 8, t: 16, g: 4.5, m: 16878, s: 2909 },
-  'Core Ultra 5 115U': { c: 8, t: 10, g: 4.2, m: 11874, s: 3159 },
-  'Ryzen 7 7735HS': { c: 8, t: 16, g: 4.8, m: 22132, s: 3234 },
-  'Core 5 210H': { c: 8, t: 12, g: 4.8, m: 18040, s: 3520 },
-  'Ryzen 7 8845HS': { c: 8, t: 16, g: 5.1, m: 28263, s: 3718 },
-  'Ryzen 5 7235HS': { c: 4, t: 8, g: 4.2, m: 12294, s: 2883 },
-  'Ryzen 7 7445HS': { c: 6, t: 12, g: 4.7, m: 18481, s: 3446 },
-  'Ryzen 7 170': { c: 8, t: 16, g: 4.8, m: 20613, s: 3116 },
-  'Ryzen 7 260': { c: 8, t: 16, g: 5.1, m: 27961, s: 3728 },
-  'Ryzen 7 250': { c: 8, t: 16, g: 5.1, m: 25122, s: 3676 },
-  'Ryzen AI 7 350': { c: 8, t: 16, g: 5.0, m: 24964, s: 3836 },
-  'Core i7-14650HX': { c: 16, t: 24, g: 5.2, m: 33325, s: 3839 },
-  'Ryzen 9 8940HX': { c: 16, t: 32, g: 5.3, m: 49431, s: 3868 },
-  'Core i9-14900HX': { c: 24, t: 32, g: 5.8, m: 43556, s: 4162 },
-  'Ryzen 9 9955HX': { c: 16, t: 32, g: 5.4, m: 56290, s: null },
-  'Core Ultra 9 290HX Plus': { c: 24, t: 24, g: 5.5, m: 58006, s: 4919 },
-  'Core i7-13645HX': { c: 14, t: 20, g: 4.9, m: 29503, s: 3596 },
-  'Ryzen 5 7535HS': { c: 6, t: 12, g: 4.6, m: 17548, s: 3093 },
-  'Core i5-12450HX': { c: 8, t: 12, g: 4.4, m: 17606, s: 3292 },
-  'Core i7-13620H': { c: 10, t: 16, g: 4.9, m: 23170, s: 3549 },
-  'Core Ultra 7 255HX': { c: 20, t: 20, g: 5.2, m: 47909, s: 4543 },
-  'Core Ultra 9 275HX': { c: 24, t: 24, g: 5.4, m: 55685, s: 4701 },
-  'Ryzen 9 8945HX': { c: 16, t: 32, g: 5.4, m: 51247, s: 3899 },
-  'Core 5 120U': { c: 10, t: 12, g: 5.0, m: 14884, s: 3461 },
-  'Ryzen 5 7520U': { c: 4, t: 8, g: 4.3, m: 8904, s: 2370 },
-  'Core i5-1335U': { c: 10, t: 12, g: 4.6, m: 13763, s: 3240 },
-  'Ryzen 3 5400U': { c: 4, t: 8, g: 4.0, m: 10726, s: 2721 },
-  'Core i5-13450HX': { c: 10, t: 16, g: 4.6, m: 24387, s: 3526 },
-  'Core i7-13650HX': { c: 14, t: 20, g: 4.9, m: 29924, s: 3733 },
-  'Core i7-14650HX': { c: 16, t: 24, g: 5.2, m: 33325, s: 3839 }
-};
-/* Modelo exacto confirmado en la ficha de una tienda. Sin entrada: la tienda no publica el modelo. */
-const CPU_OF = {
-  a2: 'Ryzen 3 7320U', a7: 'Core i5-13420H', a9: 'Ryzen 7 7730U', a10: 'Core Ultra 5 115U', a11: 'Ryzen 7 7735HS',
-  g1: 'Ryzen 5 7535HS', g2: 'Core i5-13420H', g3: 'Core 5 210H', g4: 'Ryzen 7 8845HS', g5: 'Ryzen 5 7535HS',
-  g7: 'Ryzen 5 7235HS', g8: 'Ryzen 7 7445HS', g9: 'Ryzen 5 7535HS', g10: 'Core i5-12450HX', g12: 'Core i5-13420H',
-  g13: 'Ryzen 7 7735HS', g17: 'Ryzen 7 7735HS', g19: 'Ryzen 7 7445HS', g20: 'Ryzen 7 7735HS', g21: 'Ryzen 7 7445HS',
-  g22: 'Ryzen 7 170', g23: 'Ryzen 7 260', g26: 'Core i7-13620H', g28: 'Ryzen 7 250', g30: 'Ryzen 7 170',
-  g31: 'Ryzen AI 7 350', g32: 'Core i7-14650HX', g33: 'Core i7-14650HX', g35: 'Core Ultra 7 255HX', g36: 'Ryzen 9 8940HX',
-  g37: 'Core i7-14650HX', g38: 'Core i9-14900HX', g39: 'Core i9-14900HX', g40: 'Core i9-14900HX', g41: 'Core Ultra 9 275HX',
-  g42: 'Ryzen 9 9955HX', g44: 'Core Ultra 9 275HX', g45: 'Core i7-13645HX', g47: 'Ryzen 9 8945HX', g48: 'Ryzen AI 7 350',
-  g49: 'Core i7-14650HX', g50: 'Core Ultra 9 290HX Plus',
-  a1: 'Ryzen 3 5400U', a3: 'Core 5 120U', a5: 'Ryzen 5 7520U', a8: 'Core i5-1335U', g11: 'Ryzen 7 7445HS', g14: 'Core i5-13420H', g15: 'Core i5-13420H', g16: 'Core i5-13420H', g18: 'Ryzen 7 170', g34: 'Ryzen 7 170', g46: 'Ryzen 7 7445HS',
-  g6: 'Core i5-13420H', g25: 'Core i5-13450HX', g29: 'Core i7-13650HX', g27: 'Core i7-14650HX',
-  a15: 'Core Ultra 7 255H', n8: 'Core Ultra 7 255H', n4: 'Apple M4', n5: 'Apple M4', n6: 'Apple M4', g43: 'Core Ultra 9 290HX'
-};
-const TIER_POW = [0, 8000, 12000, 18000, 28000, 45000];
-NOTEBOOKS.forEach(n => { n.cpuM = CPU_OF[n.id] || null; n.db = n.cpuM ? CPUDB[n.cpuM] || null : null; });
-const POW_MAX = 58000;
-const powOf = n => n.db ? n.db.m : TIER_POW[n.cpuTier];
-const nf = x => x.toLocaleString('es-CL');
-function feats(n) {
-  return {
-    cpu: clamp(powOf(n) / POW_MAX),
-    ram: n.ram >= 32 ? 1 : n.ram >= 24 ? 0.9 : n.ram >= 16 ? 0.75 : 0.4,
-    ssd: n.ssd >= 1024 ? 1 : n.ssd >= 512 ? 0.7 : 0.35,
-    gpu: n.gpuTier / 5,
-    size: clamp((n.size - 13.5) / 3),
-    hz: n.hz == null ? 0.5 : n.hz >= 120 ? 1 : 0.2,
-    port: clamp((16.5 - n.size) / 3)
-  };
-}
-const USE_W = {
-  estudio: { cpu: .25, ram: .25, ssd: .2, port: .15, size: .15 },
-  juegos:  { gpu: .55, cpu: .2, ram: .1, hz: .1, ssd: .05 },
-  diseno:  { cpu: .2, ram: .2, size: .25, gpu: .2, ssd: .15 },
-  prog:    { cpu: .35, ram: .35, ssd: .2, port: .1 }
-};
-function useScore(f, u) {
-  const w = USE_W[u]; let s = 0;
-  for (const k in w) s += w[k] * f[k];
-  return s;
-}
-function score(n, s, price) {
-  const f = feats(n);
-  const uses = s.uses.length ? s.uses : ['estudio'];
-  const base = uses.reduce((a, u) => a + useScore(f, u), 0) / uses.length;
-  let prio = base;
-  if (s.prio === 'rendimiento') prio = .4 * f.cpu + .3 * f.ram + .3 * Math.max(f.gpu, f.ssd);
-  else if (s.prio === 'portatil') prio = f.port;
-  else if (s.prio === 'ahorro') prio = clamp(1 - price / s.budget);
-  let t = s.prio === 'equilibrado' ? base : .7 * base + .3 * prio;
-  if (s.future) {
-    t += .08 * ((n.ram >= 16 ? 1 : 0) + (n.ssd >= 512 ? 1 : 0) + (n.cpuTier >= 3 ? 1 : 0)) / 3;
-    if (n.ram < 16) t -= .05;
-  }
-  return Math.round(clamp(t) * 100);
-}
-
-function matchQ(n, q) {
-  const hay = norm([BRAND(n), n.name, n.cpu, n.cpuM, n.gpu, n.gpuTier ? 'gamer dedicada' : 'integrada', n.ram + 'gb', n.ram + ' gb ram', n.size + '"'].join(' '));
-  const flat = hay.replace(/\s+/g, '');
-  return norm(q).split(/\s+/).filter(Boolean).every(w => hay.includes(w) || flat.includes(w));
-}
-const norm = t => String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-function passes(n, s, limit) {
-  const stores = s.mode === 'adv' ? s.stores : null;
-  const price = bestPrice(n, stores);
-  if (!isFinite(price) || price > limit || (s.lo && price < s.lo)) return false;
-  if (catFilter && !CATS.find(c => c.id === catFilter).f(n)) return false;
-  if (s.q && !matchQ(n, s.q)) return false;
-  if (s.brands.length && !s.brands.includes(BRAND(n))) return false;
-  /* Para juegos hace falta tarjeta gráfica dedicada, en cualquier modo */
-  if (s.uses.includes('juegos') && n.gpuTier < 2) return false;
-  if (s.mode !== 'adv') return true;
-  if (n.ram < s.ramMin || n.ssd < s.ssdMin || n.cpuTier < s.cpuMin) return false;
-  if (s.gpuF === 'none' && n.gpuTier > 0) return false;
-  if (s.gpuF === 'ded' && n.gpuTier < 2) return false;
-  if (s.gpuF === 'mid' && n.gpuTier < 3) return false;
-  if (s.gpuF === 'high' && n.gpuTier < 4) return false;
-  if (s.sizeF === 's' && n.size > 14.5) return false;
-  if (s.sizeF === 'm' && (n.size < 15 || n.size > 16.5)) return false;
-  return true;
-}
-
-function rank(s) {
-  const stores = s.mode === 'adv' ? s.stores : null;
-  const list = NOTEBOOKS.filter(n => passes(n, s, s.budget)).map(n => ({ n, price: bestPrice(n, stores), score: score(n, s, bestPrice(n, stores)) }));
-  const sort = s.sort;
-  list.sort((a, b) => {
-    if (sort === 'pasc') return a.price - b.price;
-    if (sort === 'pdesc') return b.price - a.price;
-    if (sort === 'pot') return powOf(b.n) - powOf(a.n) || a.price - b.price;
-    if (sort === 'ppp') return a.price / powOf(a.n) - b.price / powOf(b.n);
-    return b.score - a.score || a.price - b.price;
-  });
-  const stretch = s.band ? null : NOTEBOOKS
-    .filter(n => bestPrice(n, stores) > s.budget && passes(n, s, s.budget * 1.15))
-    .map(n => ({ n, price: bestPrice(n, stores), score: score(n, s, bestPrice(n, stores)) }))
-    .sort((a, b) => b.score - a.score)[0] || null;
-  return { list, stretch, sort };
-}
-
-function reasons(n, s, price) {
-  const uses = s.uses;
-  const out = [];
-  const add = (t, rel, p = 1) => out.push({ t, p: p + (rel.some(u => uses.includes(u)) ? 3 : 0) });
-  if (n.gpuTier >= 4) add('Gráficos dedicados ' + n.gpu + ', para juegos exigentes', ['juegos', 'diseno'], 2);
-  else if (n.gpuTier === 3) add('Gráficos dedicados ' + n.gpu + ', juegos actuales en calidad alta', ['juegos', 'diseno'], 2);
-  else if (n.gpuTier === 2) add('Gráficos dedicados ' + n.gpu + ', juegos en calidad media', ['juegos'], 1);
-  if (n.hz && n.hz >= 120) add('Pantalla de ' + n.hz + ' Hz, movimiento más fluido', ['juegos'], 1);
-  if (n.size <= 14) add('Pantalla de ' + n.size + '", fácil de llevar', ['estudio'], s.prio === 'portatil' ? 3 : 1);
-  if (n.ram >= 24) add(n.ram + ' GB de RAM para tareas pesadas', ['prog', 'diseno'], 1);
-  else if (n.ram >= 16) add('16 GB de RAM, multitarea cómoda', ['prog', 'diseno'], 0.8);
-  if (n.ssd >= 1024) add('1 TB de almacenamiento SSD', ['juegos', 'diseno'], 1);
-  if (n.cpuTier >= 4) add('Procesador de gama alta (' + n.cpu + ')', ['prog', 'diseno'], 1);
-  const offs = offersFor(n, s.mode === 'adv' ? s.stores : null).slice().sort((a, b) => a.p - b.p);
-  if (offs.length > 1 && offs[1].p > offs[0].p) add('Es ' + fmt(offs[1].p - offs[0].p) + ' más barato en ' + STORES[offs[0].s].name + ' que en ' + STORES[offs[1].s].name, [], 1.5);
-  if (!s.band && s.budget < +$('budget').max && price <= s.budget * 0.8) add('Queda ' + fmt(s.budget - price) + ' bajo tu presupuesto', [], s.prio === 'ahorro' ? 4 : 0.6);
-  if (!out.length) add('Cumple lo básico para el uso que elegiste', [], 1);
-  return out.sort((a, b) => b.p - a.p).slice(0, 3).map(r => r.t);
-}
-
-
-/* ---------- Interfaz ---------- */
-const PAGE = 100;
 const $ = id => document.getElementById(id);
-const BRAND = n => { const b = n.name.split(' ')[0]; return b === 'MacBook' ? 'Apple' : b; };
-const CAT_HUE = { 'Entrada': ['#1D4ED8', '#38BDF8'], 'Media': ['#6D28D9', '#A78BFA'], 'Alta': ['#BE185D', '#F472B6'], 'Muy alta': ['#C2410C', '#FBBF24'] };
-function shortCpu(n) { return n.cpu.length > 14 ? n.cpu.slice(0, 14) : n.cpu; }
-function art(n) {
-  const h = (n.cat && CAT_HUE[n.cat]) || ['#0F766E', '#5EEAD4'];
-  const gamer = n.gpuTier >= 2;
-  const label = gamer ? n.gpu : shortCpu(n);
-  const fs = label.length > 9 ? 16 : 21;
-  const id = 'g' + n.id;
-  const L = (p, q, t) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
-  const B0 = [60, 98], B1 = [190, 90], F0 = [26, 132], F1 = [218, 121];
-  const P = (u, v) => L(L(B0, B1, u), L(F0, F1, u), v).map(x => x.toFixed(1)).join(',');
-  const seg = (u1, v1, u2, v2) => { const a = P(u1, v1).split(','), b = P(u2, v2).split(','); return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"/>`; };
-  let keys = '';
-  for (let r = 0; r <= 4; r++) keys += seg(0.07, 0.1 + r * 0.12, 0.93, 0.1 + r * 0.12);
-  for (let c = 0; c <= 14; c++) { const u = 0.07 + c * (0.86 / 14); keys += seg(u, 0.1, u, 0.58); }
-  const base = gamer ? '#2A3158' : '#B8C0D8', edge = gamer ? '#171C3A' : '#8F99B8', pad = gamer ? '#3A4270' : '#A3ACC8', keyc = gamer ? 'url(#k' + id + ')' : '#7F89AC';
-  return `<svg viewBox="0 0 240 150" role="img" aria-label="${n.name}">
-    <defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${h[0]}"/><stop offset="1" stop-color="#0B1030"/></linearGradient>
-    <linearGradient id="k${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${h[1]}"/><stop offset=".5" stop-color="#FF6CB5"/><stop offset="1" stop-color="#7DD3FC"/></linearGradient>
-    <filter id="f${id}" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="2.2"/></filter></defs>
-    <ellipse cx="122" cy="141" rx="104" ry="6" fill="#000" opacity=".16"/>
-    <polygon points="56,18 192,8 192,92 60,100" fill="#1B2140"/>
-    <polygon points="62,24 186,15 186,86 65,94" fill="url(#${id})"/>
-    <polygon points="62,24 186,15 186,40 63,50" fill="#fff" opacity=".07"/>
-    <g transform="translate(124,56) skewY(-4)">
-      <text x="0" y="0" text-anchor="middle" font-family="Bricolage Grotesque, Arial, sans-serif" font-weight="800" font-size="${fs}" fill="#fff">${label}</text>
-      <text x="0" y="17" text-anchor="middle" font-family="DM Sans, Arial, sans-serif" font-size="10" fill="${h[1]}">${n.ram} GB · ${n.ssd >= 1024 ? (n.ssd / 1024) + ' TB' : n.ssd + ' GB'}</text>
-    </g>
-    <polygon points="${B0.join(',')} ${B1.join(',')} ${F1.join(',')} ${F0.join(',')}" fill="${base}"/>
-    <polygon points="${F0.join(',')} ${F1.join(',')} ${F1[0]},${F1[1] + 6} ${F0[0] + 2},${F0[1] + 6}" fill="${edge}"/>
-    ${gamer ? `<g stroke="url(#k${id})" stroke-width="3" fill="none" opacity=".75" filter="url(#f${id})">${keys}</g>` : ''}
-    <g stroke="${keyc}" stroke-width="${gamer ? 1.1 : .9}" fill="none">${keys}</g>
-    <polygon points="${P(0.38, 0.7)} ${P(0.62, 0.7)} ${P(0.62, 0.92)} ${P(0.38, 0.92)}" fill="${pad}"/>
-  </svg>`;
+const fmt = n => '$' + Math.round(n).toLocaleString('es-CL');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const SN = { falabella: 'Falabella', paris: 'Paris', ripley: 'Ripley', pcfactory: 'PCFactory', entel: 'Entel', movistar: 'Movistar', claro: 'Claro', wom: 'WOM' };
+const minOffer = os => os.reduce((a, b) => (b.p < a.p ? b : a));
+
+document.addEventListener('click', e => { const g = e.target.closest('[data-go]'); if (g) $(g.dataset.go).scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); });
+
+const laptop = (gpu) => `<svg viewBox="0 0 80 56" aria-hidden="true"><rect x="14" y="8" width="52" height="34" rx="3" fill="#0B1030"/><rect x="17" y="11" width="46" height="28" rx="2" fill="${gpu ? '#C2410C' : '#1D4ED8'}"/><path d="M24 33l8-8 6 5 9-10" stroke="#fff" stroke-opacity=".8" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 44h64l-4 5H12z" fill="#0B1030"/></svg>`;
+const phone = (brand) => `<svg viewBox="0 0 80 56" aria-hidden="true"><rect x="28" y="4" width="24" height="48" rx="5" fill="#0B1030"/><rect x="30" y="6" width="20" height="44" rx="3.5" fill="${brand === 'Apple' ? '#5B6386' : brand === 'Samsung' ? '#1D4ED8' : brand === 'Xiaomi' ? '#C2410C' : '#0F766E'}"/><rect x="36" y="8" width="8" height="2.4" rx="1.2" fill="#0B1030"/><path d="M33 40l5-6 4 4 5-7" stroke="#fff" stroke-opacity=".8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+function item(href, art, tag, name, why, o) {
+  return `<a class="bItem" href="${href}">${art}<span class="tag">${esc(tag)}</span><span class="nm">${esc(name)}</span><span class="pr">${fmt(o.p)}${o.c ? '*' : ''}<small>en ${SN[o.s] || o.s}</small></span><span class="why2">${why}</span></a>`;
 }
 
-function offerRow(o, best, diff, n) {
-  const st = STORES[o.s];
-  return `<li><a class="offer${best ? ' best' : ''}" data-id="${n.id}" data-store="${o.s}" href="${o.url}" target="_blank" rel="noopener sponsored" aria-label="${st.name}, ${fmt(o.p)}. Ver ficha en la tienda">
-    <i class="dot" style="background:${st.color}"></i>
-    <span class="oname">${st.name}${best ? '<span class="badge">Más barato</span>' : ''}</span>
-    <span class="oprice">${fmt(o.p)}${o.c ? '<abbr class="ast" title="Precio pagando con tarjeta de la tienda o transferencia">*</abbr>' : ''}${diff > 0 ? `<span class="diff">+${fmt(diff)}</span>` : ''}</span></a></li>`;
+async function grab(url, start, end) {
+  const t = await (await fetch(url, { cache: 'no-cache' })).text();
+  const i = t.indexOf(start); if (i < 0) throw new Error('sin datos');
+  const j = t.indexOf(end, i + start.length);
+  return JSON.parse(t.slice(i + start.length, j + (end.startsWith('\n]') ? 2 : 0)));
 }
 
-function cpuBlock(n, price) {
-  const w = Math.round(clamp(powOf(n) / POW_MAX) * 100);
-  if (n.db) {
-    const d = n.db;
-    return `<div class="cpu"><p class="cpuT"><b>${n.cpuM}</b> · ${d.c} núcleos · ${d.t} hilos · hasta ${String(d.g).replace('.', ',')} GHz</p>
-      <div class="pw" role="img" aria-label="Potencia del procesador ${nf(d.m)} puntos"><i style="width:${w}%"></i></div>
-      <p class="cpuS">Potencia ${nf(d.m)} pts</p></div>`;
-  }
-  return `<div class="cpu"><p class="cpuT">${n.cpuM ? '<b>' + n.cpuM + '</b> · ' : ''}Sin puntaje comparable${n.cpuM ? '' : ': la tienda no publica el modelo exacto'}</p>
-    <div class="pw est" role="img" aria-label="Potencia estimada"><i style="width:${w}%"></i></div>
-    <p class="cpuS">Potencia estimada por su gama (no medida)</p></div>`;
-}
-function card(r, s, pick) {
-  const n = r.n;
-  const stores = s.mode === 'adv' ? s.stores : null;
-  const offs = offersFor(n, stores).slice().sort((a, b) => a.p - b.p);
-  const lo = offs[0], hi = offs[offs.length - 1];
-  const multi = offs.length > 1;
-  const tied = multi && offs[1].p === lo.p;
-  const spec = [n.cpuM || n.cpu, n.ram + ' GB RAM', (n.ssd >= 1024 ? (n.ssd / 1024) + ' TB' : n.ssd + ' GB') + ' SSD', n.gpuTier ? n.gpu : 'Gráficos integrados', n.size + '"' + (n.hz ? ' ' + n.hz + ' Hz' : '')].join(' · ');
-  const cat = n.cat ? CATN[n.cat] : (n.gpuTier >= 2 ? 'Gamer' : (n.size <= 14 ? 'Portátil' : 'Uso general'));
-  let save;
-  if (!multi) save = `<p class="save solo">Solo lo encontramos en ${STORES[lo.s].name}</p>`;
-  else if (hi.p === lo.p) save = `<p class="save solo">Mismo precio en ${offs.map(x => STORES[x.s].name).join(', ')}</p>`;
-  else save = `<p class="save">Ahorras ${fmt(hi.p - lo.p)} frente a ${STORES[hi.s].name}</p>`;
-  const why = reasons(n, s, r.price).filter(t => !/más barato en/.test(t)).slice(0, 2);
-  return `<article class="p${pick ? ' pick' : ''}">
-    ${pick ? `<div class="pickBar"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#pumaHead"/></svg>El puma recomienda<small>${s.uses.length ? 'el que mejor te calza por precio' : 'mejor potencia por tu plata'}</small></div>` : ''}
-    <div class="pv">${art(n)}
-      <div class="badges"><span class="bd cat">${cat}</span>${s.uses.length ? `<span class="bd fit" title="Ajuste a lo que pediste">Ajuste ${r.score}</span>` : (multi ? `<span class="bd">${offs.length} tiendas</span>` : '')}</div></div>
-    <div class="pb">
-      ${(AWARD[n.id] || []).length ? `<p class="award">${MEDAL}Mejor calidad-precio · ${AWARD[n.id].map(u => USE_NAME[u]).join(' y ')}</p>` : ''}
-      <p class="brand">${BRAND(n)}</p>
-      <h3>${n.name}</h3>
-      <p class="spec">${spec}</p>
-      ${cpuBlock(n, lo.p)}
-      <div class="priceRow"><span class="from">Desde</span><span class="price">${fmt(lo.p)}</span><span class="at"><i class="dot" style="background:${STORES[lo.s].color}"></i>${tied ? 'en ' + offs.filter(x => x.p === lo.p).length + ' tiendas' : 'en ' + STORES[lo.s].name}</span></div>
-      ${save}
-      <ul class="offers" aria-label="Precios por tienda">${offs.map(o => offerRow(o, (multi && o.p === lo.p && hi.p !== lo.p) || tied && o.p === lo.p, o.p - lo.p, n)).join('')}</ul>
-      <ul class="why">${why.map(t => `<li>${t}</li>`).join('')}</ul>
-      <p class="seen">Precios vistos el ${n.seen || SEEN_OTHER}</p>
-    </div></article>`;
-}
-
-const USE_NAME = { juegos: 'Juegos', estudio: 'Estudio y oficina', diseno: 'Diseño y video', prog: 'Programación' };
-const MEDAL = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#3A2800"/><path d="M12 5.5l1.9 4 4.3.5-3.2 3 .9 4.3L12 15.1 8.1 17.3 9 13l-3.2-3 4.3-.5z" fill="#F5B301"/></svg>';
-/* Calidad-precio: puntaje de la ficha para el uso, al cuadrado, dividido por el precio más bajo. Así no gana solo el más barato ni solo el más potente. */
-const TOP = ['juegos', 'estudio', 'diseno', 'prog'].map(u => {
-  const best = NOTEBOOKS.filter(n => u === 'juegos' ? n.gpuTier >= 2 : u === 'estudio' ? n.gpuTier < 2 : true)
-    .map(n => { const p = bestPrice(n, null), q = useScore(feats(n), u); return { n, p, v: q * q / p }; })
-    .sort((a, b) => b.v - a.v)[0];
-  return { u, n: best.n, p: best.p };
-});
-const AWARD = {};
-TOP.forEach(t => { (AWARD[t.n.id] = AWARD[t.n.id] || []).push(t.u); });
-let limit = PAGE;
-const mode = { v: 'simple' };
-function readState() {
-  const band = null;
-  return {
-    mode: mode.v,
-    q: $('q').value.trim().toLowerCase(),
-    uses: mode.v === 'adv' ? [] : [...document.querySelectorAll('input[name=uso]:checked')].map(i => i.value),
-    budget: band ? band.hi : +$('budget').value,
-    lo: band ? band.lo : 0,
-    band: !!band,
-    prio: 'equilibrado',
-    brands: [...document.querySelectorAll('input[name=marca]:checked')].map(i => i.value),
-    future: false,
-    stores: null,
-    ramMin: +$('ramMin').value, ssdMin: +$('ssdMin').value, cpuMin: +$('cpuMin').value,
-    gpuF: $('gpuF').value, sizeF: $('sizeF').value, sort: $('sortF').value
-  };
-}
-
-function render() {
-  const s = readState();
-  $('budgetOut').textContent = fmt(+$('budget').value);
-  const { list, stretch } = rank(s);
-  $('budgetCount').textContent = list.length + (list.length === 1 ? ' equipo' : ' equipos') + ' hasta ' + fmt(+$('budget').value);
-  $('jumpRes').textContent = list.length ? 'Ver ' + list.length + (list.length === 1 ? ' equipo' : ' equipos') : 'Sin equipos: ajusta los filtros';
-  $('count').innerHTML = `<b>${list.length}</b> de ${NOTEBOOKS.length} equipos` + (catFilter ? ` <button type="button" class="catChip" id="catClear" aria-label="Quitar categoría">${CATS.find(c => c.id === catFilter).name} ✕</button>` : '');
-
-  const gaming = s.uses.includes('juegos');
-  const gMin = gamingMin(s.mode === 'adv' ? s.stores : null);
-  const top = list.length ? Math.max(...list.map(x => x.score)) : 0;
-  let hint = '';
-  if (gaming && isFinite(gMin)) {
-    const bump = Math.min(5000000, Math.ceil(gMin / 50000) * 50000);
-    hint += (s.budget < gMin && !s.band)
-      ? `<p class="hint">Para juegos hace falta tarjeta gráfica dedicada. El más barato cuesta <strong>${fmt(gMin)}</strong> y tu máximo es ${fmt(s.budget)}. <button type="button" class="ghost" id="bumpBudget" data-v="${bump}">Subir máximo a ${fmt(bump)}</button></p>`
-      : `<p class="hint info">Con "Juegos" solo mostramos equipos con tarjeta gráfica dedicada. El más barato cuesta ${fmt(gMin)}.</p>`;
-  }
-  if (stretch && (!list.length || stretch.score >= top + 4) && !(gaming && s.budget < gMin)) {
-    hint += `<p class="hint">Si subes tu máximo hasta ${fmt(stretch.price)} (+${fmt(stretch.price - s.budget)}), aparece <strong>${stretch.n.name}</strong> con ajuste ${stretch.score}/100.</p>`;
-  }
-  $('hint').innerHTML = hint;
-
-  if (!list.length) {
-    $('list').className = '';
-    $('list').innerHTML = `<div class="empty"><h3>No hay equipos con estos filtros</h3><p>Prueba otro rango de precio o quita algún filtro.</p><button type="button" class="ghost" id="clearEmpty">Quitar todos los filtros</button></div>`;
-    $('moreBtn').hidden = true;
-    return;
-  }
-  $('list').className = 'grid';
-  const val = r => { const q = s.uses.length ? r.score : powOf(r.n) / POW_MAX * 100; return q * q / r.price; };
-  const pickR = list.length > 1 ? list.reduce((a, b) => val(b) > val(a) ? b : a) : null;
-  $('list').innerHTML = list.slice(0, limit).map(r => card(r, s, r === pickR)).join('');
-  const rest = list.length - limit;
-  $('moreBtn').hidden = rest <= 0;
-  if (rest > 0) $('moreBtn').textContent = 'Ver más equipos (' + rest + ' restantes)';
-}
-function refresh() { limit = PAGE; render(); }
-
-function resetAll() {
-  catFilter = null;
-  $('q').value = '';
-  document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = false; });
-  $('budget').value = $('budget').max;
-  $('ramMin').value = '8'; $('ssdMin').value = '256'; $('cpuMin').value = '1';
-  $('gpuF').value = 'any'; $('sizeF').value = 'any'; $('sortF').value = 'pasc';
-  document.querySelectorAll('input[name=marca]').forEach(i => { i.checked = false; });
-  refresh();
-}
-function showView(v) {
-  $('viewOfertas').hidden = v !== 'ofertas';
-  $('viewElige').hidden = v !== 'elige';
-  document.querySelectorAll('.heroBtns [data-go]').forEach(b => {
-    const on = (b.dataset.go === 'ofertas') === (v === 'ofertas');
-    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
-  });
-}
-function goto(id) {
-  if (id === 'tienda' || id === 'elige' || id === 'conoce') showView('elige');
-  else if (id === 'ofertas' || id === 'categorias') { showView('ofertas'); id = 'categorias'; }
-  const t = $(id);
-  if (t) requestAnimationFrame(() => t.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-}
-
-/* Portada: textos calculados con los datos reales */
-const nStores = new Set(NOTEBOOKS.flatMap(n => n.offers.map(o => o.s))).size;
-const nGamer = NOTEBOOKS.filter(n => n.gpuTier >= 2).length;
-$('promoDate').textContent = 'precios al ' + SEEN_GAMER;
-$('lead').textContent = NOTEBOOKS.length + ' notebooks, ' + nGamer + ' con tarjeta gráfica dedicada, con el precio de cada tienda y un enlace directo a la ficha. Elige para qué lo quieres y te mostramos los que más te convienen.';
-(function top4() {
-  const track = $('t4track'), tabs = $('t4tabs');
-  tabs.innerHTML = TOP.map((t, i) => `<button type="button" data-i="${i}" aria-pressed="${i === 0}">${USE_NAME[t.u]}</button>`).join('');
-  track.innerHTML = TOP.map(t => {
-    const o = t.n.offers.slice().sort((a, b) => a.p - b.p);
-    return `<div class="t4s"><div class="t4art">${art(t.n)}</div>
-      <span class="pumaTag"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#pumaHead"/></svg>El puma recomienda</span>
-      <span class="medal">${MEDAL}Mejor calidad-precio · ${USE_NAME[t.u]}</span>
-      <h3>${t.n.name}</h3>
-      <p class="t4price">${fmt(o[0].p)}</p>
-      <p class="t4at"><i class="dot" style="background:${STORES[o[0].s].color}"></i>Más barato en ${STORES[o[0].s].name}</p>
-      ${o.length > 1 ? `<p class="t4others">También: ${o.slice(1).map(x => STORES[x.s].name + ' ' + fmt(x.p)).join(' · ')}</p>` : ''}
-      <button type="button" class="cta" data-name="${t.n.name.replace(/"/g, '&quot;')}">Ver este equipo</button></div>`;
-  }).join('');
-  const w = () => track.clientWidth;
-  const mark = () => { const i = Math.round(track.scrollLeft / w()); tabs.querySelectorAll('button').forEach((b, k) => b.setAttribute('aria-pressed', String(k === i))); };
-  track.addEventListener('scroll', mark);
-  $('t4prev').addEventListener('click', () => track.scrollBy({ left: -w(), behavior: 'smooth' }));
-  $('t4next').addEventListener('click', () => track.scrollBy({ left: w(), behavior: 'smooth' }));
-  tabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) track.scrollTo({ left: +b.dataset.i * w(), behavior: 'smooth' }); });
-  track.addEventListener('click', e => {
-    const b = e.target.closest('.cta'); if (!b) return;
-    resetAll();
-    $('budget').value = $('budget').max;
-    document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = false; });
-    $('q').value = b.dataset.name; refresh(); goto('tienda');
-  });
-})();
-
-  const sel = { part: 'ram', lvl: {} };
-  PARTS.forEach(p => { sel.lvl[p.id] = p.start; });
-
-  function renderLearn() {
-    const p = PARTS.find(x => x.id === sel.part);
-    const i = sel.lvl[p.id];
-    $('info').innerHTML = `
-      <p class="eyebrow">Componente</p>
-      <h3>${p.name}</h3>
-      <p>${p.what}</p>
-      <div><p class="lab">Compara</p>
-        <div class="chips" role="group" aria-label="Niveles">${p.levels.map((l, k) => `<button type="button" class="lvl" data-lvl="${k}" aria-pressed="${k === i}">${l.l}</button>`).join('')}</div></div>
-      <p class="levelText"><strong>${p.levels[i].l}</strong>${p.levels[i].t}</p>
-      <p class="tip">${p.tip}</p>
-      <div class="matters">Pesa más en: ${p.matters.map(m => `<span>${m}</span>`).join('')}</div>`;
-    document.querySelectorAll('.part').forEach(g => g.classList.toggle('on', g.dataset.part === sel.part));
-    $('partTabs').innerHTML = PARTS.map(x => `<button type="button" class="lvl" data-tab="${x.id}" aria-pressed="${x.id === sel.part}">${x.name.replace(' (CPU)', '').replace(' (GPU)', '')}</button>`).join('');
-  }
-  function pickPart(id) { sel.part = id; renderLearn(); }
-
-  document.querySelector('.learn').addEventListener('click', e => {
-    const g = e.target.closest('[data-part]');
-    if (g) { pickPart(g.dataset.part); return; }
-    const tab = e.target.closest('[data-tab]');
-    if (tab) { pickPart(tab.dataset.tab); return; }
-    const lv = e.target.closest('[data-lvl]');
-    if (lv) { sel.lvl[sel.part] = +lv.dataset.lvl; renderLearn(); }
-  });
-  document.querySelector('.learn').addEventListener('keydown', e => {
-    const g = e.target.closest && e.target.closest('[data-part]');
-    if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pickPart(g.dataset.part); }
-  });
-
-document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => goto(b.dataset.go)));
-document.querySelectorAll('[data-use]').forEach(b => b.addEventListener('click', () => {
-  catFilter = null;
-  document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = i.value === b.dataset.use; });
-  $('sortF').value = 'ajuste';
-  refresh(); goto('tienda');
-}));
-function setMode(m) {
-  mode.v = m;
-  document.body.dataset.mode = m;
-  $('modeSimple').setAttribute('aria-pressed', String(m === 'simple'));
-  $('modeAdv').setAttribute('aria-pressed', String(m === 'adv'));
-  $('modeHint').textContent = m === 'adv' ? 'Elige características técnicas.' : 'Te guiamos con pocas preguntas.';
-  $('adv').hidden = m !== 'adv';
-  $('fsUso').hidden = m === 'adv';
-  $('sortF').value = 'pasc';
-  refresh();
-}
-$('modeSimple').addEventListener('click', () => setMode('simple'));
-$('modeAdv').addEventListener('click', () => setMode('adv'));
-const BRANDS = [...new Set(NOTEBOOKS.map(BRAND))].sort((a, b) => NOTEBOOKS.filter(n => BRAND(n) === b).length - NOTEBOOKS.filter(n => BRAND(n) === a).length);
-$('brandChips').innerHTML = BRANDS.map(b => `<label class="chip"><input type="checkbox" name="marca" value="${b}"><span>${b}<small>${NOTEBOOKS.filter(n => BRAND(n) === b).length}</small></span></label>`).join('');
-let sgIdx = -1;
-const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-function closeSugg() { $('sugg').hidden = true; $('q').setAttribute('aria-expanded', 'false'); sgIdx = -1; }
-function renderSugg() {
-  const q = $('q').value.trim();
-  if (!q) { closeSugg(); return; }
-  const all = NOTEBOOKS.filter(n => matchQ(n, q)).map(n => ({ n, o: offersFor(n, null).slice().sort((a, b) => a.p - b.p) }))
-    .filter(r => r.o.length).sort((a, b) => a.o[0].p - b.o[0].p);
-  const brands = BRANDS.filter(b => norm(b).startsWith(norm(q)));
-  let h = '';
-  if (brands.length) h += `<p class="sgH">Marcas</p>` + brands.map(b => `<button type="button" class="sg sgB" role="option" data-brand="${esc(b)}">Ver todos los ${esc(b)} (${NOTEBOOKS.filter(n => BRAND(n) === b).length})</button>`).join('');
-  if (all.length) {
-    h += `<p class="sgH">Notebooks</p>` + all.slice(0, 6).map(({ n, o }) => {
-      const spec = [n.cpuM || n.cpu, n.ram + ' GB', n.gpuTier ? n.gpu : 'Gráficos integrados'].join(' · ');
-      return `<button type="button" class="sg" role="option" data-name="${esc(n.name)}"><span class="sgN">${esc(n.name)}</span><span class="sgS">${esc(spec)}</span><span class="sgP">${fmt(o[0].p)}<small>en ${STORES[o[0].s].name}${o.length > 1 ? ' · ' + o.length + ' tiendas' : ''}</small></span></button>`;
+(async () => {
+  try {
+    const NB = await grab('/notebooks.html', 'const NOTEBOOKS = ', '\n];');
+    NB.forEach(n => { n.best = minOffer(n.offers); });
+    $('cntNb').textContent = `${NB.length} notebooks · gamer, estudio, diseño`;
+    const cheapest = f => NB.filter(f).sort((a, b) => a.best.p - b.best.p)[0];
+    const picks = [
+      ['Para estudiar y trabajar', cheapest(n => !n.gpuTier && n.ram >= 16), n => `El más barato con 16 GB de RAM · ${esc(n.cpu)} · ${n.ssd >= 1024 ? n.ssd / 1024 + ' TB' : n.ssd + ' GB'}`],
+      ['Gamer económico', cheapest(n => n.gpuTier >= 2 && n.ram >= 16), n => `El más barato con tarjeta gráfica y 16 GB · ${esc(n.gpu)}`],
+      ['Gamer potente', cheapest(n => n.gpuTier >= 4), n => `El más barato con ${esc(n.gpu)} o superior · ${n.ram} GB RAM`]
+    ].filter(p => p[1]);
+    $('bestNb').innerHTML = picks.map(([tag, n, why]) => item('/notebooks', laptop(n.gpuTier), tag, n.name, why(n), n.best)).join('');
+    const seen = NB.map(n => n.seen).filter(Boolean).sort().pop();
+    if (seen) $('bestDate').textContent = `Elegidos por el puma con precios revisados el ${seen}. El asterisco (*) indica que el precio pide la tarjeta de la tienda o transferencia.`;
+  } catch (e) { $('bestNb').innerHTML = '<p class="loading">No pudimos cargar los notebooks. <a href="/notebooks">Ver la sección</a>.</p>'; }
+  try {
+    const PH = await grab('/celulares.html', 'const PHONES = ', ';\n');
+    const nNew = PH.filter(p => !p.refurb).length;
+    $('cntPh').textContent = `${nNew} nuevos y ${PH.length - nNew} reacondicionados`;
+    const gbm = p => (p.gb6 ? p.gb6[1] : 0);
+    const R = [['Hasta $250.000', x => x <= 250000], ['$250.000 a $600.000', x => x > 250000 && x <= 600000], ['Más de $600.000', x => x > 600000]];
+    $('bestPh').innerHTML = R.map(([tag, f]) => {
+      const c = PH.filter(p => !p.refurb && p.gb6 && f(p.offers[0].p)).sort((a, b) => gbm(b) / b.offers[0].p - gbm(a) / a.offers[0].p)[0];
+      if (!c) return '';
+      return item('/celulares', phone(c.brand), tag, `${c.name} ${c.gb} GB`, `Más potencia por peso en este rango · ${esc(c.chip)}`, minOffer(c.offers));
     }).join('');
-    h += `<button type="button" class="sg sgAll" role="option" data-all="1">Ver ${all.length === 1 ? 'el resultado' : 'los ' + all.length + ' resultados'} para “${esc(q)}” →</button>`;
-  } else if (!brands.length) h = `<p class="sgNone">No encontramos equipos para “${esc(q)}”. Prueba con la marca, el procesador o la tarjeta gráfica.</p>`;
-  $('sugg').innerHTML = h; $('sugg').hidden = false; $('q').setAttribute('aria-expanded', 'true'); sgIdx = -1;
-}
-function showAllResults() { closeSugg(); catFilter = null; refresh(); goto('compara'); $('q').blur(); }
-function pickSugg(b) {
-  if (b.dataset.all) return showAllResults();
-  closeSugg();
-  if (b.dataset.name) { openModel(b.dataset.name); $('q').blur(); return; }
-  if (b.dataset.brand) {
-    resetAll();
-    document.querySelectorAll('input[name=marca]').forEach(i => { i.checked = i.value === b.dataset.brand; });
-    refresh(); goto('tienda'); $('q').blur();
-  }
-}
-$('q').addEventListener('input', () => { refresh(); renderSugg(); });
-$('q').addEventListener('focus', renderSugg);
-$('q').addEventListener('keydown', e => {
-  const items = [...$('sugg').querySelectorAll('.sg')];
-  if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && items.length && !$('sugg').hidden) {
-    e.preventDefault();
-    if (e.key === 'ArrowDown') sgIdx = sgIdx + 1 >= items.length ? -1 : sgIdx + 1;
-    else sgIdx = sgIdx - 1 < -1 ? items.length - 1 : sgIdx - 1;
-    items.forEach((b, k) => b.classList.toggle('act', k === sgIdx));
-    if (items[sgIdx]) items[sgIdx].scrollIntoView({ block: 'nearest' });
-  } else if (e.key === 'Enter') {
-    e.preventDefault();
-    if (items[sgIdx] && !$('sugg').hidden) pickSugg(items[sgIdx]); else showAllResults();
-  } else if (e.key === 'Escape') closeSugg();
-});
-$('sugg').addEventListener('mousedown', e => e.preventDefault());
-$('sugg').addEventListener('click', e => { e.preventDefault(); const b = e.target.closest('.sg'); if (b) pickSugg(b); });
-document.addEventListener('click', e => { if (!e.target.closest('.search')) closeSugg(); });
-const nudge = d => { $('budget').value = Math.max(+$('budget').min, Math.min(+$('budget').max, +$('budget').value + d)); refresh(); };
-$('bMinus').addEventListener('click', () => nudge(-10000));
-$('bPlus').addEventListener('click', () => nudge(10000));
-$('panel').addEventListener('change', e => { if (mode.v === 'simple' && e.target.name && e.target.name === 'uso') $('sortF').value = 'ajuste'; });
-$('panel').addEventListener('input', refresh);
-$('panel').addEventListener('change', refresh);
-$('sortF').addEventListener('change', refresh);
-$('resetAll').addEventListener('click', resetAll);
-$('moreBtn').addEventListener('click', () => { limit += PAGE; render(); });
-$('list').addEventListener('click', e => { if (e.target.id === 'clearEmpty') resetAll(); });
-$('hint').addEventListener('click', e => {
-  if (e.target.id === 'bumpBudget') { $('budget').value = e.target.dataset.v; refresh(); }
-});
-
-/* ---------- Inicio: categorías y filas de ofertas ---------- */
-let catFilter = null;
-const ICO = {
-  pad: '<path d="M6 11h4M8 9v4"/><rect x="2.5" y="7" width="19" height="10" rx="5"/><path d="M15 11h.01M17 13h.01"/>',
-  book: '<path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H20v3H6.5"/>',
-  thin: '<rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/>'
-};
-const CATS = [
-  { id: 'g1', name: 'Gamer de entrada', ico: 'pad', hue: '#1D4ED8', f: n => n.cat === 'Entrada' },
-  { id: 'g2', name: 'Gamer gama media', ico: 'pad', hue: '#6D28D9', f: n => n.cat === 'Media' },
-  { id: 'g3', name: 'Gamer gama alta', ico: 'pad', hue: '#BE185D', f: n => n.cat === 'Alta' },
-  { id: 'g4', name: 'Gamer gama muy alta', ico: 'pad', hue: '#C2410C', f: n => n.cat === 'Muy alta' },
-  { id: 'gen', name: 'Uso general 15"+', ico: 'book', hue: '#0F766E', f: n => n.gpuTier < 2 && n.size > 14.5 },
-  { id: 'port', name: 'Portátiles hasta 14"', ico: 'thin', hue: '#0E7490', f: n => n.gpuTier < 2 && n.size <= 14.5 }
-];
-function openCat(id) {
-  resetAll();
-  catFilter = id;
-  document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = false; });
-  $('budget').value = $('budget').max;
-  refresh(); goto('tienda');
-}
-function openModel(name) {
-  resetAll();
-  $('budget').value = $('budget').max;
-  document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = false; });
-  $('q').value = name; refresh(); goto('tienda');
-}
-$('catGrid').innerHTML = CATS.map(c => {
-  const items = NOTEBOOKS.filter(c.f);
-  const lo = Math.min(...items.map(n => bestPrice(n, null)));
-  return `<button type="button" class="catT" data-cat="${c.id}"><i class="ci" style="background:${c.hue}"><svg viewBox="0 0 24 24">${ICO[c.ico]}</svg></i><b>${c.name}</b><span>${items.length} equipos · desde</span><strong>${fmt(lo)}</strong></button>`;
-}).join('');
-function mini(n, extra) {
-  const o = n.offers.slice().sort((a, b) => a.p - b.p);
-  return `<button type="button" class="mini" data-name="${n.name.replace(/"/g, '&quot;')}">${art(n)}<h3>${n.name}</h3><p class="mp">${fmt(o[0].p)}</p><p class="ms"><i class="dot" style="background:${STORES[o[0].s].color}"></i>en ${STORES[o[0].s].name}${o.length > 1 ? ' · ' + o.length + ' tiendas' : ''}</p>${extra(o)}</button>`;
-}
-$('stripSave').innerHTML = NOTEBOOKS.filter(n => n.offers.length > 1)
-  .map(n => { const ps = n.offers.map(o => o.p); return { n, d: Math.max(...ps) - Math.min(...ps) }; })
-  .filter(x => x.d > 0).sort((a, b) => b.d - a.d).slice(0, 10)
-  .map(x => mini(x.n, o => `<span class="sv">Ahorras ${fmt(x.d)} vs ${STORES[o[o.length - 1].s].name}</span>`)).join('');
-$('stripGamer').innerHTML = NOTEBOOKS.filter(n => n.gpuTier >= 2)
-  .sort((a, b) => bestPrice(a, null) - bestPrice(b, null)).slice(0, 10)
-  .map(n => mini(n, () => `<span class="sv" style="color:var(--accent);background:var(--accent-soft)">${n.gpu}</span>`)).join('');
-$('catGrid').addEventListener('click', e => { const b = e.target.closest('.catT'); if (b) openCat(b.dataset.cat); });
-['stripSave', 'stripGamer'].forEach(id => $(id).addEventListener('click', e => { const b = e.target.closest('.mini'); if (b) openModel(b.dataset.name); }));
-document.querySelector('[data-allnb]').addEventListener('click', () => { resetAll(); document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = false; }); $('budget').value = $('budget').max; refresh(); goto('tienda'); });
-$('count').addEventListener('click', e => { if (e.target.id === 'catClear') { catFilter = null; refresh(); } });
-document.body.dataset.mode = 'simple';
-renderLearn();
-render();
-showView('ofertas');
-
-
-/* Botón fijo de resultados (celular) */
-(() => {
-  const jump = $('jumpRes'), panel = $('panel'), res = $('list');
-  let panelIn = false, resIn = false;
-  const sync = () => {
-    const show = !$('viewElige').hidden && panelIn && !resIn;
-    jump.dataset.show = String(show); jump.inert = !show;
-  };
-  const io = new IntersectionObserver(es => { es.forEach(e => { if (e.target === panel) panelIn = e.isIntersecting; else resIn = e.isIntersecting; }); sync(); }, { rootMargin: '0px 0px -80px 0px' });
-  io.observe(panel); io.observe(res);
-  jump.addEventListener('click', () => {
-    const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-    $('compara').scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
-  });
-  new MutationObserver(sync).observe($('viewElige'), { attributes: true, attributeFilter: ['hidden'] });
-})();
-
-/* Contador de clics a tiendas: envía solo equipo, tienda y nombre del equipo. Sin cookies ni datos personales. */
-(() => {
-  const byId = new Map(NOTEBOOKS.map(n => [n.id, n.name]));
-  const send = a => {
-    if (location.protocol === 'file:') return;
-    const body = JSON.stringify({ id: a.dataset.id, s: a.dataset.store, n: byId.get(a.dataset.id) || '' });
-    try {
-      if (navigator.sendBeacon) navigator.sendBeacon('/api/clic', new Blob([body], { type: 'application/json' }));
-      else fetch('/api/clic', { method: 'POST', body, keepalive: true, headers: { 'Content-Type': 'application/json' } });
-    } catch (_) {}
-  };
-  const onTap = e => {
-    if (e.type === 'auxclick' && e.button !== 1) return;
-    const a = e.target.closest('a.offer[data-id]');
-    if (a) send(a);
-  };
-  document.addEventListener('click', onTap);
-  document.addEventListener('auxclick', onTap);
+  } catch (e) { $('bestPh').innerHTML = '<p class="loading">No pudimos cargar los celulares. <a href="/celulares">Ver la sección</a>.</p>'; }
 })();
 </script>
-
-
 <!-- Cloudflare Web Analytics: cuenta visitas sin cookies -->
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "839f9ada4cc443eaa027f591d0400c85"}'></script>
 </body>

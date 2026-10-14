@@ -307,6 +307,7 @@ h2.sec { font-size: clamp(1.4rem, 3.6vw, 1.9rem); font-weight: 800; letter-spaci
 .menu button:focus-visible { outline: 2px solid var(--sale); }
 .menu .soon { color: var(--nav-muted); cursor: default; }
 .menu button.on { background: rgba(255,255,255,.14); }
+.menu small.nw { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; background: var(--sale); color: var(--sale-ink); border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
 .menu .mlink { flex: none; color: var(--nav-fg); font-weight: 600; font-size: 13.5px; padding: 7px 12px; border-radius: 8px; text-decoration: none; white-space: nowrap; }
 .menu .mlink:hover { background: rgba(255,255,255,.1); }
 .menu .mlink:focus-visible { outline: 2px solid var(--sale); }
@@ -499,8 +500,8 @@ body.hasTray { padding-bottom: 96px; }
     <nav class="nav" aria-label="Secciones"><button type="button" data-go="tienda">Comparar precios</button><button type="button" data-go="bench">Benchmarks</button></nav>
   </div>
   <nav class="menu in" aria-label="Categorías">
-    <a class="mlink" href="/">Notebooks</a>
-    <a class="mlink on" href="/celulares" aria-current="page">Celulares</a>
+    <a class="mlink" href="/notebooks">Notebooks <small>nuevo</small></a>
+    <a class="mlink on" href="/celulares" aria-current="page">Celulares <small>nuevo</small></a>
     <span class="soon" aria-disabled="true">Tablets <small>pronto</small></span>
     <span class="soon" aria-disabled="true">Televisores <small>pronto</small></span>
   </nav>
@@ -625,7 +626,7 @@ body.hasTray { padding-bottom: 96px; }
     <p>Aviso de afiliados: cuando los enlaces generen comisión, se indicará aquí. El precio para quien compra es el mismo.</p>
     <details class="legal"><summary>Privacidad y términos de uso</summary>
     <div class="legalBody">
-      <p>Esta sección de celulares sigue las mismas condiciones de privacidad y uso del sitio. Puedes leerlas completas al final de la <a href="/">página principal</a>. En resumen: no vendemos productos, los precios son referenciales y los fija cada tienda u operadora, no usamos cookies propias y medimos visitas con Cloudflare Web Analytics sin cookies. Contacto: <strong>adictosdigitalesla@gmail.com</strong>.</p>
+      <p>Esta sección de celulares sigue las mismas condiciones de privacidad y uso del sitio. Puedes leerlas completas en la <a href="/">página de inicio</a>. En resumen: no vendemos productos, los precios son referenciales y los fija cada tienda u operadora, no usamos cookies propias y medimos visitas con Cloudflare Web Analytics sin cookies. Contacto: <strong>adictosdigitalesla@gmail.com</strong>.</p>
       <p>Los nombres de marcas, tiendas, operadoras y productos pertenecen a sus dueños y los usamos solo para identificar los equipos. Las ilustraciones son dibujos propios y no representan fielmente cada modelo.</p>
     </div></details>
   </footer>
