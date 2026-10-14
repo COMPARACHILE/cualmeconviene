@@ -135,6 +135,7 @@ a { color: inherit; }
 .modeHint { font-size: 13px; color: var(--muted); margin-top: -8px; }
 .adv { display: flex; flex-direction: column; gap: 18px; border-top: 1px solid var(--line); padding-top: 16px; }
 [hidden] { display: none !important; }
+#compara { scroll-margin-top: 150px; }
 body[data-mode="adv"] { --accent: #4A3FD3; --accent-ink: #FFFFFF; --accent-soft: #E2DFFA; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body[data-mode="adv"] { --accent: #A89FFF; --accent-ink: #14102F; --accent-soft: #2A2560; } }
 :root[data-theme="dark"] body[data-mode="adv"] { --accent: #A89FFF; --accent-ink: #14102F; --accent-soft: #2A2560; }
@@ -841,12 +842,16 @@ function score(n, s, price) {
   return Math.round(clamp(t) * 100);
 }
 
+const norm = t => String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 function passes(n, s, limit) {
   const stores = s.mode === 'adv' ? s.stores : null;
   const price = bestPrice(n, stores);
   if (!isFinite(price) || price > limit || (s.lo && price < s.lo)) return false;
   if (catFilter && !CATS.find(c => c.id === catFilter).f(n)) return false;
-  if (s.q && !(n.name + ' ' + n.cpu + ' ' + n.gpu).toLowerCase().includes(s.q)) return false;
+  if (s.q) {
+    const hay = norm([n.name, n.cpu, n.cpuM, n.gpu, n.gpuTier ? 'gamer dedicada' : 'integrada', n.ram + 'gb', n.ram + ' gb ram', n.size + '"'].join(' '));
+    if (!norm(s.q).split(/\s+/).filter(Boolean).every(w => hay.includes(w) || hay.replace(/\s+/g, '').includes(w))) return false;
+  }
   /* Para juegos hace falta tarjeta gráfica dedicada, en cualquier modo */
   if (s.uses.includes('juegos') && n.gpuTier < 2) return false;
   if (s.mode !== 'adv') return true;
@@ -1170,7 +1175,14 @@ function setMode(m) {
 }
 $('modeSimple').addEventListener('click', () => setMode('simple'));
 $('modeAdv').addEventListener('click', () => setMode('adv'));
-$('q').addEventListener('input', refresh);
+let qTimer;
+$('q').addEventListener('input', () => {
+  if ($('q').value.trim()) { catFilter = null; showView('elige'); }
+  refresh();
+  clearTimeout(qTimer);
+  if ($('q').value.trim()) qTimer = setTimeout(() => goto('compara'), 500);
+});
+$('q').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(qTimer); catFilter = null; refresh(); goto('compara'); $('q').blur(); } });
 const nudge = d => { $('budget').value = Math.max(+$('budget').min, Math.min(+$('budget').max, +$('budget').value + d)); refresh(); };
 $('bMinus').addEventListener('click', () => nudge(-10000));
 $('bPlus').addEventListener('click', () => nudge(10000));
