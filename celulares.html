@@ -306,6 +306,7 @@ h2.sec { font-size: clamp(1.4rem, 3.6vw, 1.9rem); font-weight: 800; letter-spaci
 .menu button, .menu .soon { flex: none; background: transparent; border: 0; color: var(--nav-fg); font-weight: 600; font-size: 13.5px; padding: 7px 12px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
 .menu button:focus-visible { outline: 2px solid var(--sale); }
 .menu .soon { color: var(--nav-muted); cursor: default; }
+.menu button.on { background: rgba(255,255,255,.14); }
 .menu .mlink { flex: none; color: var(--nav-fg); font-weight: 600; font-size: 13.5px; padding: 7px 12px; border-radius: 8px; text-decoration: none; white-space: nowrap; }
 .menu .mlink:hover { background: rgba(255,255,255,.1); }
 .menu .mlink:focus-visible { outline: 2px solid var(--sale); }
@@ -415,7 +416,7 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
 .menu .mlink { flex: none; color: var(--nav-fg); font-weight: 600; font-size: 13.5px; padding: 7px 12px; border-radius: 8px; text-decoration: none; white-space: nowrap; }
 .menu .mlink:hover { background: rgba(255,255,255,.1); }
 .menu .mlink:focus-visible { outline: 2px solid var(--sale); }
-.menu button.on { background: rgba(255,255,255,.14); }
+.menu button.on, .menu .mlink.on { background: rgba(255,255,255,.14); }
 .seg3 { grid-template-columns: repeat(3, 1fr); }
 .seg3 button { padding: 9px 4px; font-size: 13.5px; }
 .bd.ref { background: var(--sale); color: var(--sale-ink); }
@@ -499,11 +500,7 @@ body.hasTray { padding-bottom: 96px; }
   </div>
   <nav class="menu in" aria-label="Categorías">
     <a class="mlink" href="/">Notebooks</a>
-    <button type="button" class="on" data-quick="all" aria-current="page">Todos los celulares</button>
-    <button type="button" data-quick="entrada">Hasta $250.000</button>
-    <button type="button" data-quick="media">Gama media</button>
-    <button type="button" data-quick="alta">Gama alta</button>
-    <button type="button" data-quick="ref">Reacondicionados</button>
+    <a class="mlink on" href="/celulares" aria-current="page">Celulares</a>
     <span class="soon" aria-disabled="true">Tablets <small>pronto</small></span>
     <span class="soon" aria-disabled="true">Televisores <small>pronto</small></span>
   </nav>

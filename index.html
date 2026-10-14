@@ -310,6 +310,7 @@ h2.sec { font-size: clamp(1.4rem, 3.6vw, 1.9rem); font-weight: 800; letter-spaci
 .menu button, .menu .soon { flex: none; background: transparent; border: 0; color: var(--nav-fg); font-weight: 600; font-size: 13.5px; padding: 7px 12px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
 .menu button:focus-visible { outline: 2px solid var(--sale); }
 .menu .soon { color: var(--nav-muted); cursor: default; }
+.menu button.on { background: rgba(255,255,255,.14); }
 .menu .mlink { flex: none; color: var(--nav-fg); font-weight: 600; font-size: 13.5px; padding: 7px 12px; border-radius: 8px; text-decoration: none; white-space: nowrap; }
 .menu .mlink:hover { background: rgba(255,255,255,.1); }
 .menu .mlink:focus-visible { outline: 2px solid var(--sale); }
@@ -441,11 +442,7 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
     <nav class="nav" aria-label="Secciones"><button type="button" data-go="ofertas">Ofertas</button><button type="button" data-go="conoce">Guía de piezas</button></nav>
   </div>
   <nav class="menu in" aria-label="Categorías">
-    <button type="button" data-allnb>Todos los notebooks</button>
-    <button type="button" data-use="juegos">Gamer</button>
-    <button type="button" data-use="estudio">Estudio y oficina</button>
-    <button type="button" data-use="diseno">Diseño y video</button>
-    <button type="button" data-use="prog">Programación</button>
+    <button type="button" class="on" data-allnb aria-current="page">Notebooks</button>
     <a class="mlink" href="/celulares">Celulares <small>nuevo</small></a>
     <span class="soon" aria-disabled="true">Tablets <small>pronto</small></span>
     <span class="soon" aria-disabled="true">Televisores <small>pronto</small></span>
@@ -471,7 +468,7 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
     </svg>
     <div class="bannerTxt">
       <p class="bubble">Soy el puma de <b>¿Cuál me conviene?</b> Reviso las tiendas por ti.</p>
-      <h1>El mismo producto en varias tiendas diferentes. Compra donde sale más barato.</h1>
+      <h1>El mismo notebook en varias tiendas diferentes. Compra donde sale más barato.</h1>
       <p class="lead" id="lead"></p>
       <div class="heroBtns"><button type="button" class="cta" data-go="ofertas">Ver ofertas de hoy</button><button type="button" class="cta" data-go="elige">Ayúdame a elegir</button></div>
     </div>
