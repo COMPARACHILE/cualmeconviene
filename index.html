@@ -72,6 +72,18 @@ a { color: inherit; }
 .search input { width: 100%; font: inherit; font-size: 15px; border: 0; border-radius: 10px; padding: 11px 14px 11px 40px; background: #fff; color: #10152B; }
 .search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; stroke: #566082; fill: none; stroke-width: 2; }
 .search input:focus-visible { outline: 3px solid var(--sale); outline-offset: 1px; }
+.sugg { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 40; background: #fff; color: #10152B; border-radius: 12px; box-shadow: 0 14px 40px rgba(8,12,40,.35); padding: 6px; max-height: min(70vh, 460px); overflow-y: auto; }
+.sugg .sg { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; width: 100%; text-align: left; background: transparent; border: 0; border-radius: 8px; padding: 9px 10px; cursor: pointer; color: inherit; }
+.sugg .sg:hover, .sugg .sg.act { background: #EEF1FB; }
+.sugg .sgN { font-weight: 700; font-size: 14px; line-height: 1.25; }
+.sugg .sgS { grid-column: 1; font-size: 12.5px; color: #566082; }
+.sugg .sgP { grid-row: 1 / span 2; grid-column: 2; text-align: right; font-weight: 800; font-size: 15px; }
+.sugg .sgP small { display: block; font-weight: 600; font-size: 11.5px; color: #566082; }
+.sugg .sgH { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #566082; padding: 8px 10px 4px; }
+.sugg .sgAll { display: block; color: #1B2A78; font-weight: 700; font-size: 14px; border-top: 1px solid #E3E7F2; border-radius: 0 0 8px 8px; margin-top: 4px; }
+.sugg .sgB { display: inline-flex; width: auto; margin: 2px 4px 4px 6px; border: 1px solid #D5DBEC; border-radius: 999px; padding: 6px 12px; font-weight: 600; font-size: 13.5px; }
+.sugg .sgNone { padding: 12px 10px; font-size: 14px; color: #566082; }
+.chip span small { opacity: .65; font-weight: 600; margin-left: 4px; }
 .nav { display: flex; gap: 6px; }
 .nav button { background: transparent; border: 0; color: var(--nav-muted); font-weight: 600; font-size: 14px; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
 .nav button:hover { color: var(--nav-fg); background: rgba(255,255,255,.08); }
@@ -377,7 +389,7 @@ h2.sec { font-size: clamp(1.4rem, 3.6vw, 1.9rem); font-weight: 800; letter-spaci
 <header class="top full">
   <div class="in topIn">
     <a class="logo" href="#" aria-label="¿Cuál me conviene? Inicio"><svg class="logoMark" aria-hidden="true"><use href="#pumaHead"/></svg><span>¿Cuál me <em>conviene?</em></span></a>
-    <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Busca por marca, modelo o tarjeta gráfica (ej. RTX 4060)" autocomplete="off" aria-label="Buscar notebook"></label>
+    <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Busca por marca, modelo o tarjeta gráfica (ej. RTX 4060)" autocomplete="off" aria-label="Buscar notebook" role="combobox" aria-autocomplete="list" aria-controls="sugg" aria-expanded="false"><div id="sugg" class="sugg" role="listbox" hidden></div></label>
     <nav class="nav" aria-label="Secciones"><button type="button" data-go="ofertas">Ofertas</button><button type="button" data-go="conoce">Guía de piezas</button></nav>
   </div>
   <nav class="menu in" aria-label="Categorías">
@@ -483,6 +495,11 @@ h2.sec { font-size: clamp(1.4rem, 3.6vw, 1.9rem); font-weight: 800; letter-spaci
         <div class="field"><label for="sizeF">Pantalla</label><select id="sizeF"><option value="any">Cualquiera</option><option value="s">14" o menos</option><option value="m">15" a 16"</option></select></div>
       </div>
     </div></div>
+    <fieldset id="fsMarca">
+      <legend>Marca</legend>
+      <div class="chips" id="brandChips"></div>
+      <p class="modeHint" style="margin:0">Elige una o varias para comparar solo entre ellas.</p>
+    </fieldset>
     <button type="button" class="ghost" id="resetAll">Quitar todos los filtros</button>
   </form>
 
@@ -842,16 +859,19 @@ function score(n, s, price) {
   return Math.round(clamp(t) * 100);
 }
 
+function matchQ(n, q) {
+  const hay = norm([BRAND(n), n.name, n.cpu, n.cpuM, n.gpu, n.gpuTier ? 'gamer dedicada' : 'integrada', n.ram + 'gb', n.ram + ' gb ram', n.size + '"'].join(' '));
+  const flat = hay.replace(/\s+/g, '');
+  return norm(q).split(/\s+/).filter(Boolean).every(w => hay.includes(w) || flat.includes(w));
+}
 const norm = t => String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 function passes(n, s, limit) {
   const stores = s.mode === 'adv' ? s.stores : null;
   const price = bestPrice(n, stores);
   if (!isFinite(price) || price > limit || (s.lo && price < s.lo)) return false;
   if (catFilter && !CATS.find(c => c.id === catFilter).f(n)) return false;
-  if (s.q) {
-    const hay = norm([n.name, n.cpu, n.cpuM, n.gpu, n.gpuTier ? 'gamer dedicada' : 'integrada', n.ram + 'gb', n.ram + ' gb ram', n.size + '"'].join(' '));
-    if (!norm(s.q).split(/\s+/).filter(Boolean).every(w => hay.includes(w) || hay.replace(/\s+/g, '').includes(w))) return false;
-  }
+  if (s.q && !matchQ(n, s.q)) return false;
+  if (s.brands.length && !s.brands.includes(BRAND(n))) return false;
   /* Para juegos hace falta tarjeta gráfica dedicada, en cualquier modo */
   if (s.uses.includes('juegos') && n.gpuTier < 2) return false;
   if (s.mode !== 'adv') return true;
@@ -907,7 +927,7 @@ function reasons(n, s, price) {
 /* ---------- Interfaz ---------- */
 const PAGE = 100;
 const $ = id => document.getElementById(id);
-const BRAND = n => n.name.split(' ')[0];
+const BRAND = n => { const b = n.name.split(' ')[0]; return b === 'MacBook' ? 'Apple' : b; };
 const CAT_HUE = { 'Entrada': ['#1D4ED8', '#38BDF8'], 'Media': ['#6D28D9', '#A78BFA'], 'Alta': ['#BE185D', '#F472B6'], 'Muy alta': ['#C2410C', '#FBBF24'] };
 function shortCpu(n) { return n.cpu.length > 14 ? n.cpu.slice(0, 14) : n.cpu; }
 function art(n) {
@@ -1019,6 +1039,7 @@ function readState() {
     lo: band ? band.lo : 0,
     band: !!band,
     prio: 'equilibrado',
+    brands: [...document.querySelectorAll('input[name=marca]:checked')].map(i => i.value),
     future: false,
     stores: null,
     ramMin: +$('ramMin').value, ssdMin: +$('ssdMin').value, cpuMin: +$('cpuMin').value,
@@ -1071,6 +1092,7 @@ function resetAll() {
   $('budget').value = $('budget').max;
   $('ramMin').value = '8'; $('ssdMin').value = '256'; $('cpuMin').value = '1';
   $('gpuF').value = 'any'; $('sizeF').value = 'any'; $('sortF').value = 'pasc';
+  document.querySelectorAll('input[name=marca]').forEach(i => { i.checked = false; });
   refresh();
 }
 function showView(v) {
@@ -1175,14 +1197,57 @@ function setMode(m) {
 }
 $('modeSimple').addEventListener('click', () => setMode('simple'));
 $('modeAdv').addEventListener('click', () => setMode('adv'));
-let qTimer;
-$('q').addEventListener('input', () => {
-  if ($('q').value.trim()) { catFilter = null; showView('elige'); }
-  refresh();
-  clearTimeout(qTimer);
-  if ($('q').value.trim()) qTimer = setTimeout(() => goto('compara'), 500);
+const BRANDS = [...new Set(NOTEBOOKS.map(BRAND))].sort((a, b) => NOTEBOOKS.filter(n => BRAND(n) === b).length - NOTEBOOKS.filter(n => BRAND(n) === a).length);
+$('brandChips').innerHTML = BRANDS.map(b => `<label class="chip"><input type="checkbox" name="marca" value="${b}"><span>${b}<small>${NOTEBOOKS.filter(n => BRAND(n) === b).length}</small></span></label>`).join('');
+let sgIdx = -1;
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function closeSugg() { $('sugg').hidden = true; $('q').setAttribute('aria-expanded', 'false'); sgIdx = -1; }
+function renderSugg() {
+  const q = $('q').value.trim();
+  if (!q) { closeSugg(); return; }
+  const all = NOTEBOOKS.filter(n => matchQ(n, q)).map(n => ({ n, o: offersFor(n, null).slice().sort((a, b) => a.p - b.p) }))
+    .filter(r => r.o.length).sort((a, b) => a.o[0].p - b.o[0].p);
+  const brands = BRANDS.filter(b => norm(b).startsWith(norm(q)));
+  let h = '';
+  if (brands.length) h += `<p class="sgH">Marcas</p>` + brands.map(b => `<button type="button" class="sg sgB" role="option" data-brand="${esc(b)}">Ver todos los ${esc(b)} (${NOTEBOOKS.filter(n => BRAND(n) === b).length})</button>`).join('');
+  if (all.length) {
+    h += `<p class="sgH">Notebooks</p>` + all.slice(0, 6).map(({ n, o }) => {
+      const spec = [n.cpuM || n.cpu, n.ram + ' GB', n.gpuTier ? n.gpu : 'Gráficos integrados'].join(' · ');
+      return `<button type="button" class="sg" role="option" data-name="${esc(n.name)}"><span class="sgN">${esc(n.name)}</span><span class="sgS">${esc(spec)}</span><span class="sgP">${fmt(o[0].p)}<small>en ${STORES[o[0].s].name}${o.length > 1 ? ' · ' + o.length + ' tiendas' : ''}</small></span></button>`;
+    }).join('');
+    h += `<button type="button" class="sg sgAll" role="option" data-all="1">Ver ${all.length === 1 ? 'el resultado' : 'los ' + all.length + ' resultados'} para “${esc(q)}” →</button>`;
+  } else if (!brands.length) h = `<p class="sgNone">No encontramos equipos para “${esc(q)}”. Prueba con la marca, el procesador o la tarjeta gráfica.</p>`;
+  $('sugg').innerHTML = h; $('sugg').hidden = false; $('q').setAttribute('aria-expanded', 'true'); sgIdx = -1;
+}
+function showAllResults() { closeSugg(); catFilter = null; refresh(); goto('compara'); $('q').blur(); }
+function pickSugg(b) {
+  if (b.dataset.all) return showAllResults();
+  closeSugg();
+  if (b.dataset.name) { openModel(b.dataset.name); $('q').blur(); return; }
+  if (b.dataset.brand) {
+    resetAll();
+    document.querySelectorAll('input[name=marca]').forEach(i => { i.checked = i.value === b.dataset.brand; });
+    refresh(); goto('tienda'); $('q').blur();
+  }
+}
+$('q').addEventListener('input', () => { refresh(); renderSugg(); });
+$('q').addEventListener('focus', renderSugg);
+$('q').addEventListener('keydown', e => {
+  const items = [...$('sugg').querySelectorAll('.sg')];
+  if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && items.length && !$('sugg').hidden) {
+    e.preventDefault();
+    if (e.key === 'ArrowDown') sgIdx = sgIdx + 1 >= items.length ? -1 : sgIdx + 1;
+    else sgIdx = sgIdx - 1 < -1 ? items.length - 1 : sgIdx - 1;
+    items.forEach((b, k) => b.classList.toggle('act', k === sgIdx));
+    if (items[sgIdx]) items[sgIdx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (items[sgIdx] && !$('sugg').hidden) pickSugg(items[sgIdx]); else showAllResults();
+  } else if (e.key === 'Escape') closeSugg();
 });
-$('q').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(qTimer); catFilter = null; refresh(); goto('compara'); $('q').blur(); } });
+$('sugg').addEventListener('mousedown', e => e.preventDefault());
+$('sugg').addEventListener('click', e => { e.preventDefault(); const b = e.target.closest('.sg'); if (b) pickSugg(b); });
+document.addEventListener('click', e => { if (!e.target.closest('.search')) closeSugg(); });
 const nudge = d => { $('budget').value = Math.max(+$('budget').min, Math.min(+$('budget').max, +$('budget').value + d)); refresh(); };
 $('bMinus').addEventListener('click', () => nudge(-10000));
 $('bPlus').addEventListener('click', () => nudge(10000));
