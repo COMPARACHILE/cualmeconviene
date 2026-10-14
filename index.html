@@ -134,7 +134,7 @@ a { color: inherit; }
 .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .modeHint { font-size: 13px; color: var(--muted); margin-top: -8px; }
 .adv { display: flex; flex-direction: column; gap: 18px; border-top: 1px solid var(--line); padding-top: 16px; }
-.adv[hidden] { display: none; }
+[hidden] { display: none !important; }
 body[data-mode="adv"] { --accent: #4A3FD3; --accent-ink: #FFFFFF; --accent-soft: #E2DFFA; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body[data-mode="adv"] { --accent: #A89FFF; --accent-ink: #14102F; --accent-soft: #2A2560; } }
 :root[data-theme="dark"] body[data-mode="adv"] { --accent: #A89FFF; --accent-ink: #14102F; --accent-soft: #2A2560; }
