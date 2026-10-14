@@ -174,7 +174,8 @@ legend, .lab { font-weight: 700; font-size: 14px; padding: 0; margin-bottom: 8px
 .stepper button { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); font-size: 20px; line-height: 1; font-weight: 700; cursor: pointer; }
 .stepper button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .stepper input[type=range] { margin: 0; flex: 1; min-width: 0; }
-#budgetOut { font-family: var(--f-display); font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; }
+.rlab { font-size: 13px; font-weight: 700; color: var(--muted); }
+#budgetOut, #budgetMinOut { font-family: var(--f-display); font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; }
 .rangeRow { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 output { font-weight: 700; font-variant-numeric: tabular-nums; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 6px 0 0; }
@@ -523,15 +524,21 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
       </div>
     </fieldset>
     <fieldset id="bands">
-      <legend>Mi precio máximo</legend>
-      <div class="rangeRow"><output id="budgetOut" for="budget">$700.000</output></div>
+      <legend>Rango de precio</legend>
+      <div class="rangeRow"><span class="rlab">Desde</span><output id="budgetMinOut" for="budgetMin">$0</output></div>
+      <div class="stepper">
+        <button type="button" id="mMinus" aria-label="Bajar mínimo $10.000">&minus;</button>
+        <input type="range" id="budgetMin" min="0" max="5000000" step="10000" value="0" aria-label="Precio mínimo">
+        <button type="button" id="mPlus" aria-label="Subir mínimo $10.000">+</button>
+      </div>
+      <div class="rangeRow"><span class="rlab">Hasta</span><output id="budgetOut" for="budget">$700.000</output></div>
       <div class="stepper">
         <button type="button" id="bMinus" aria-label="Bajar $10.000">&minus;</button>
         <input type="range" id="budget" min="300000" max="5000000" step="10000" value="5000000" aria-label="Precio máximo">
         <button type="button" id="bPlus" aria-label="Subir $10.000">+</button>
       </div>
       <p class="modeHint" style="margin:0"><b id="budgetCount"></b></p>
-      <p class="modeHint" style="margin:0">Mueve la barra o usa − y + para cambiar de a $10.000. Mientras más la bajas, menos equipos aparecen.</p>
+      <p class="modeHint" style="margin:0">Mueve las barras o usa − y + para cambiar de a $10.000. "Desde" deja fuera los más baratos y "Hasta" los más caros.</p>
     </fieldset>
     <div class="adv" id="adv" hidden>
     <p class="lab" style="margin:0">Filtros avanzados</p>
@@ -1086,7 +1093,7 @@ function readState() {
     q: $('q').value.trim().toLowerCase(),
     uses: mode.v === 'adv' ? [] : [...document.querySelectorAll('input[name=uso]:checked')].map(i => i.value),
     budget: band ? band.hi : +$('budget').value,
-    lo: band ? band.lo : 0,
+    lo: band ? band.lo : Math.min(+$('budgetMin').value, +$('budget').value),
     band: !!band,
     prio: 'equilibrado',
     brands: [...document.querySelectorAll('input[name=marca]:checked')].map(i => i.value),
@@ -1100,8 +1107,9 @@ function readState() {
 function render() {
   const s = readState();
   $('budgetOut').textContent = fmt(+$('budget').value);
+  $('budgetMinOut').textContent = fmt(+$('budgetMin').value);
   const { list, stretch } = rank(s);
-  $('budgetCount').textContent = list.length + (list.length === 1 ? ' equipo' : ' equipos') + ' hasta ' + fmt(+$('budget').value);
+  $('budgetCount').textContent = list.length + (list.length === 1 ? ' equipo' : ' equipos') + (+$('budgetMin').value > 0 ? ' entre ' + fmt(+$('budgetMin').value) + ' y ' : ' hasta ') + fmt(+$('budget').value);
   $('jumpRes').textContent = list.length ? 'Ver ' + list.length + (list.length === 1 ? ' equipo' : ' equipos') : 'Sin equipos: ajusta los filtros';
   $('count').innerHTML = `<b>${list.length}</b> de ${NOTEBOOKS.length} equipos` + (catFilter ? ` <button type="button" class="catChip" id="catClear" aria-label="Quitar categoría">${CATS.find(c => c.id === catFilter).name} ✕</button>` : '');
 
@@ -1140,7 +1148,7 @@ function resetAll() {
   catFilter = null;
   $('q').value = '';
   document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = false; });
-  $('budget').value = $('budget').max;
+  $('budget').value = $('budget').max; $('budgetMin').value = 0;
   $('ramMin').value = '8'; $('ssdMin').value = '256'; $('cpuMin').value = '1';
   $('gpuF').value = 'any'; $('sizeF').value = 'any'; $('sortF').value = 'pasc';
   document.querySelectorAll('input[name=marca]').forEach(i => { i.checked = false; });
@@ -1189,7 +1197,7 @@ $('lead').textContent = NOTEBOOKS.length + ' notebooks, ' + nGamer + ' con tarje
   track.addEventListener('click', e => {
     const b = e.target.closest('.cta'); if (!b) return;
     resetAll();
-    $('budget').value = $('budget').max;
+    $('budget').value = $('budget').max; $('budgetMin').value = 0;
     document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = false; });
     $('q').value = b.dataset.name; refresh(); goto('tienda');
   });
@@ -1302,6 +1310,9 @@ document.addEventListener('click', e => { if (!e.target.closest('.search')) clos
 const nudge = d => { $('budget').value = Math.max(+$('budget').min, Math.min(+$('budget').max, +$('budget').value + d)); refresh(); };
 $('bMinus').addEventListener('click', () => nudge(-10000));
 $('bPlus').addEventListener('click', () => nudge(10000));
+const nudgeMin = d => { $('budgetMin').value = Math.max(0, Math.min(+$('budget').value, +$('budgetMin').value + d)); refresh(); };
+$('mMinus').addEventListener('click', () => nudgeMin(-10000));
+$('mPlus').addEventListener('click', () => nudgeMin(10000));
 $('panel').addEventListener('change', e => { if (mode.v === 'simple' && e.target.name && e.target.name === 'uso') $('sortF').value = 'ajuste'; });
 $('panel').addEventListener('input', refresh);
 $('panel').addEventListener('change', refresh);
@@ -1332,12 +1343,12 @@ function openCat(id) {
   resetAll();
   catFilter = id;
   document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = false; });
-  $('budget').value = $('budget').max;
+  $('budget').value = $('budget').max; $('budgetMin').value = 0;
   refresh(); goto('tienda');
 }
 function openModel(name) {
   resetAll();
-  $('budget').value = $('budget').max;
+  $('budget').value = $('budget').max; $('budgetMin').value = 0;
   document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = false; });
   $('q').value = name; refresh(); goto('tienda');
 }
@@ -1359,7 +1370,7 @@ $('stripGamer').innerHTML = NOTEBOOKS.filter(n => n.gpuTier >= 2)
   .map(n => mini(n, () => `<span class="sv" style="color:var(--accent);background:var(--accent-soft)">${n.gpu}</span>`)).join('');
 $('catGrid').addEventListener('click', e => { const b = e.target.closest('.catT'); if (b) openCat(b.dataset.cat); });
 ['stripSave', 'stripGamer'].forEach(id => $(id).addEventListener('click', e => { const b = e.target.closest('.mini'); if (b) openModel(b.dataset.name); }));
-document.querySelector('[data-allnb]').addEventListener('click', () => { resetAll(); document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = false; }); $('budget').value = $('budget').max; refresh(); goto('tienda'); });
+document.querySelector('[data-allnb]').addEventListener('click', () => { resetAll(); document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = false; }); $('budget').value = $('budget').max; $('budgetMin').value = 0; refresh(); goto('tienda'); });
 $('count').addEventListener('click', e => { if (e.target.id === 'catClear') { catFilter = null; refresh(); } });
 document.body.dataset.mode = 'simple';
 renderLearn();

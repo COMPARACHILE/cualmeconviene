@@ -170,7 +170,8 @@ legend, .lab { font-weight: 700; font-size: 14px; padding: 0; margin-bottom: 8px
 .stepper button { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); font-size: 20px; line-height: 1; font-weight: 700; cursor: pointer; }
 .stepper button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .stepper input[type=range] { margin: 0; flex: 1; min-width: 0; }
-#budgetOut { font-family: var(--f-display); font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; }
+.rlab { font-size: 13px; font-weight: 700; color: var(--muted); }
+#budgetOut, #budgetMinOut { font-family: var(--f-display); font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; }
 .rangeRow { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 output { font-weight: 700; font-variant-numeric: tabular-nums; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 6px 0 0; }
@@ -544,8 +545,14 @@ body.hasTray { padding-bottom: 96px; }
   <main id="tienda" class="shop">
     <form class="filt" id="panel" onsubmit="return false">
       <fieldset>
-        <legend>Mi precio máximo</legend>
-        <div class="rangeRow"><output id="budgetOut" for="budget"></output></div>
+        <legend>Rango de precio</legend>
+        <div class="rangeRow"><span class="rlab">Desde</span><output id="budgetMinOut" for="budgetMin"></output></div>
+        <div class="stepper">
+          <button type="button" id="mMinus" aria-label="Bajar mínimo $10.000">&minus;</button>
+          <input type="range" id="budgetMin" min="0" max="1900000" step="10000" value="0" aria-label="Precio mínimo">
+          <button type="button" id="mPlus" aria-label="Subir mínimo $10.000">+</button>
+        </div>
+        <div class="rangeRow"><span class="rlab">Hasta</span><output id="budgetOut" for="budget"></output></div>
         <div class="stepper">
           <button type="button" id="bMinus" aria-label="Bajar $10.000">&minus;</button>
           <input type="range" id="budget" min="100000" max="1900000" step="10000" value="1900000" aria-label="Precio máximo">
@@ -664,7 +671,7 @@ const GBM_MAX = Math.max(...PHONES.map(p => p.gb6 ? p.gb6[1] : 0));
 const ANT_MAX = Math.max(...PHONES.map(p => p.antutu || 0));
 const gbm = p => p.gb6 ? p.gb6[1] : 0;
 
-const st = { q: '', max: 1900000, cond: 'all', uses: new Set(), canal: 'all', brands: new Set(), sort: 'pasc', quick: 'all' };
+const st = { q: '', min: 0, max: 1900000, cond: 'all', uses: new Set(), canal: 'all', brands: new Set(), sort: 'pasc', quick: 'all' };
 let limit = 24;
 const cmp = [];
 
@@ -675,7 +682,7 @@ function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '
 
 function passes(p) {
   const b = bestOf(p); if (!b) return false;
-  if (b.p > st.max) return false;
+  if (b.p > st.max || b.p < st.min) return false;
   if (st.cond === 'new' && p.refurb) return false;
   if (st.cond === 'ref' && !p.refurb) return false;
   if (st.brands.size && !st.brands.has(p.brand)) return false;
@@ -754,7 +761,8 @@ function render() {
   const list = sorted(PHONES.filter(passes));
   $('count').innerHTML = `<b>${list.length}</b> de ${PHONES.length} celulares`;
   $('budgetOut').textContent = fmt(st.max);
-  $('budgetCount').textContent = `${PHONES.filter(p => bestOf(p) && bestOf(p).p <= st.max).length} celulares cuestan ${fmt(st.max)} o menos`;
+  $('budgetMinOut').textContent = fmt(st.min);
+  $('budgetCount').textContent = st.min ? `${PHONES.filter(p => bestOf(p) && bestOf(p).p <= st.max && bestOf(p).p >= st.min).length} celulares entre ${fmt(st.min)} y ${fmt(st.max)}` : `${PHONES.filter(p => bestOf(p) && bestOf(p).p <= st.max).length} celulares cuestan ${fmt(st.max)} o menos`;
   if (!list.length) {
     $('list').innerHTML = `<div class="empty"><h3>No hay celulares con estos filtros</h3><p>Sube el precio máximo o quita algún filtro.</p><button type="button" class="ghost" id="clearEmpty">Quitar todos los filtros</button></div>`;
     $('moreBtn').hidden = true; return;
@@ -849,19 +857,19 @@ function renderBench() {
 
 function goto(id) { const el = $(id); if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }); }
 function openPhone(id) {
-  Object.assign(st, { q: '', cond: 'all', quick: 'all', canal: 'all', max: 1900000 }); st.uses.clear(); st.brands.clear(); syncUI();
+  Object.assign(st, { q: '', cond: 'all', quick: 'all', canal: 'all', min: 0, max: 1900000 }); st.uses.clear(); st.brands.clear(); syncUI();
   const p = PHONES.find(x => x.id === id);
   st.q = p.name.replace(/\(.*?\)/g, '').trim(); $('q').value = st.q; refresh(); goto('compara');
 }
 function syncUI() {
-  $('budget').value = st.max; $('q').value = st.q;
+  $('budget').value = st.max; $('budgetMin').value = st.min; $('q').value = st.q;
   document.querySelectorAll('[data-cond]').forEach(b => b.setAttribute('aria-pressed', b.dataset.cond === st.cond));
   document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = st.uses.has(i.value); });
   document.querySelectorAll('input[name=canal]').forEach(i => { i.checked = i.value === st.canal; });
   document.querySelectorAll('#brandChips input').forEach(i => { i.checked = st.brands.has(i.value); });
   document.querySelectorAll('[data-quick]').forEach(b => { b.classList.toggle('on', b.dataset.quick === st.quick); if (b.dataset.quick === st.quick) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
 }
-function resetAll() { Object.assign(st, { q: '', max: 1900000, cond: 'all', canal: 'all', sort: st.sort, quick: 'all' }); st.uses.clear(); st.brands.clear(); syncUI(); refresh(); }
+function resetAll() { Object.assign(st, { q: '', min: 0, max: 1900000, cond: 'all', canal: 'all', sort: st.sort, quick: 'all' }); st.uses.clear(); st.brands.clear(); syncUI(); refresh(); }
 
 /* Inicio */
 const nNew = PHONES.filter(p => !p.refurb).length, nRef = PHONES.length - nNew, nOff = PHONES.reduce((a, p) => a + p.offers.length, 0);
@@ -877,7 +885,7 @@ document.addEventListener('click', e => {
   const go = t.closest('[data-go]'); if (go) { goto(go.dataset.go); return; }
   const op = t.closest('[data-open]'); if (op) { openPhone(op.dataset.open); return; }
   const pk = t.closest('[data-pk]'); if (pk) { pickSel = pk.dataset.pk; renderPick(); return; }
-  const qk = t.closest('[data-quick]'); if (qk) { const q = qk.dataset.quick; Object.assign(st, { quick: q, cond: q === 'ref' ? 'ref' : 'all', q: '', max: 1900000 }); syncUI(); refresh(); goto('compara'); return; }
+  const qk = t.closest('[data-quick]'); if (qk) { const q = qk.dataset.quick; Object.assign(st, { quick: q, cond: q === 'ref' ? 'ref' : 'all', q: '', min: 0, max: 1900000 }); syncUI(); refresh(); goto('compara'); return; }
   const cd = t.closest('[data-cond]'); if (cd) { st.cond = cd.dataset.cond; if (st.quick === 'ref') st.quick = 'all'; syncUI(); refresh(); return; }
   const bm = t.closest('[data-bm]'); if (bm) { bmode = bm.dataset.bm; document.querySelectorAll('[data-bm]').forEach(b => b.setAttribute('aria-pressed', b === bm)); renderBench(); return; }
   const rm = t.closest('[data-rm]'); if (rm) { toggleCmp(rm.dataset.rm, false); const box = document.querySelector(`[data-cmp="${rm.dataset.rm}"]`); if (box) box.checked = false; return; }
@@ -893,6 +901,9 @@ document.addEventListener('change', e => {
   if (t.id === 'bRef') renderBench();
 });
 $('budget').addEventListener('input', e => { st.max = +e.target.value; refresh(); });
+$('budgetMin').addEventListener('input', e => { st.min = Math.min(+e.target.value, st.max); refresh(); });
+$('mMinus').addEventListener('click', () => { st.min = Math.max(0, st.min - 10000); $('budgetMin').value = st.min; refresh(); });
+$('mPlus').addEventListener('click', () => { st.min = Math.min(st.max, st.min + 10000); $('budgetMin').value = st.min; refresh(); });
 $('bMinus').addEventListener('click', () => { st.max = Math.max(100000, st.max - 10000); $('budget').value = st.max; refresh(); });
 $('bPlus').addEventListener('click', () => { st.max = Math.min(1900000, st.max + 10000); $('budget').value = st.max; refresh(); });
 let qT; $('q').addEventListener('input', e => { clearTimeout(qT); qT = setTimeout(() => { st.q = e.target.value.trim(); if (st.quick === 'ref') st.cond = 'all'; st.quick = 'all'; syncUI(); $('q').value = e.target.value; refresh(); }, 150); });
