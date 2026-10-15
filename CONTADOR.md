@@ -25,3 +25,19 @@ SELECT tienda, SUM(n) AS clics FROM clics GROUP BY tienda ORDER BY clics DESC;
 -- Clics por día
 SELECT dia, SUM(n) AS clics FROM clics GROUP BY dia ORDER BY dia DESC;
 ```
+
+# Opiniones de las personas (botón "¿Qué te parece?")
+
+El botón flotante de abajo a la derecha envía a `/api/opinion` el voto (me gustó / no me convenció),
+el comentario y la página. Se guarda en la misma base D1, tabla `opiniones`. No se guardan IP ni cookies.
+
+**Activar (una sola vez):** en la consola de D1, ejecuta el bloque `CREATE TABLE IF NOT EXISTS opiniones …` de `schema.sql`.
+
+```sql
+-- Últimas opiniones
+SELECT dia, pagina, CASE voto WHEN 1 THEN '👍' WHEN -1 THEN '👎' ELSE '' END AS voto, texto
+FROM opiniones ORDER BY id DESC LIMIT 50;
+
+-- Balance de me gusta / no me convence
+SELECT SUM(voto = 1) AS me_gusto, SUM(voto = -1) AS no_convencio, COUNT(*) AS total FROM opiniones;
+```
