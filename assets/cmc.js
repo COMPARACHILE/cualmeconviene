@@ -16,7 +16,8 @@
   const flash = el => {
     if (!el) return;
     el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
-    clearTimeout(el._fl); el._fl = setTimeout(() => el.classList.remove('flash'), 2000);
+    clearTimeout(el._fl); el.classList.remove('out');
+    el._fl = setTimeout(() => { el.classList.add('out'); setTimeout(() => el.classList.remove('flash', 'out'), 300); }, 1600);
   };
   document.addEventListener('click', e => {
     const g = e.target.closest('[data-go]');
@@ -68,6 +69,10 @@
     });
   });
   window.cmcSync = sync;
+  const tips = () => document.querySelectorAll('button[aria-label]').forEach(b => {
+    if (b.textContent.trim().length <= 2 && !b.dataset.tip) b.dataset.tip = b.getAttribute('aria-label');
+  });
+  tips(); setTimeout(tips, 1500);
   sync();
   document.addEventListener('click', () => setTimeout(sync, 0));
 
@@ -121,14 +126,14 @@
       <label for="fbTxt">¿Qué mejorarías o te gustaría que agregáramos?</label>
       <textarea id="fbTxt" maxlength="600" placeholder="Ej.: comparar tablets, avisarme cuando baje un precio, más tiendas…"></textarea>
       <div class="hp" aria-hidden="true"><label>No llenar<input name="web" tabindex="-1" autocomplete="off"></label></div>
-      <div class="row"><span class="cnt" aria-live="polite">0/600</span><button type="submit" class="fb-send" disabled>Enviar opinión</button></div>
+      <div class="row"><span class="cnt" aria-live="polite">0/600</span><button type="submit" class="fb-send">Enviar opinión</button></div>
       <p class="msg" aria-live="polite"></p>
     </form>`;
   document.body.append(btn, box);
 
   const form = box.querySelector('form'), ta = box.querySelector('textarea'), send = box.querySelector('.fb-send'), msg = box.querySelector('.msg'), cnt = box.querySelector('.cnt');
   let vote = 0;
-  const ready = () => { send.disabled = !(vote || ta.value.trim().length >= 3); };
+  const ready = () => { if (vote || ta.value.trim().length >= 3) { msg.textContent = ''; msg.className = 'msg'; } };
   const open = () => { box.hidden = false; btn.hidden = true; (box.querySelector('.fb-vote button') || ta).focus(); };
   const close = () => { box.hidden = true; btn.hidden = false; btn.focus(); };
   btn.addEventListener('click', open);
@@ -143,6 +148,12 @@
   form.addEventListener('submit', async e => {
     e.preventDefault();
     if (send.disabled) return;
+    if (!vote && ta.value.trim().length < 3) {
+      msg.className = 'msg err';
+      msg.textContent = 'Marca "Me gustó" o "No me convenció", o escribe qué mejorarías.';
+      box.querySelector('.fb-vote button').focus();
+      return;
+    }
     send.disabled = true; send.textContent = 'Enviando…'; msg.textContent = ''; msg.className = 'msg';
     try {
       const r = await fetch('/api/opinion', {
