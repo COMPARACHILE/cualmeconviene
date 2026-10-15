@@ -88,12 +88,13 @@ function leerListado(tienda, rutas) {
       if (p) out.push({ u: new URL(a.href).pathname, p, c: 0 });
     });
   } else if (tienda === 'wom') {
-    [...document.querySelectorAll('*')].filter(e => e.children.length === 0 && /VER EQUIPO/i.test(e.textContent)).forEach(b => {
-      let c = b; for (let i = 0; i < 8 && !/C[aá]mara/.test(c.innerText); i++) c = c.parentElement;
-      const a = b.closest('a') || c.querySelector('a[href*="/equipos/"]'); if (!a) return;
+    // Cada tarjeta es un enlace a /equipos/...; el segundo precio es el de oferta (el primero es el normal)
+    document.querySelectorAll('a[href*="/equipos/"]').forEach(a => {
+      const u = new URL(a.href).pathname; if (u === '/equipos/' || out.some(r => r.u === u)) return;
+      let c = a; for (let i = 0; i < 6 && !/C[aá]mara[\s\S]*\$/.test(c.innerText); i++) c = c.parentElement;
       const ps = (c.innerText.match(/\$[\d.]+/g) || []).map(_num);
       const p = ps.length > 1 ? ps[1] : ps[0];
-      if (p) out.push({ u: new URL(a.href).pathname, p, c: 0, n: 'Modalidad Prepago (equipo liberado)' });
+      if (p) out.push({ u, p, c: 0, n: 'Modalidad Prepago (equipo liberado)' });
     });
   } else if (tienda === 'pcfactory') {
     new Set([...document.querySelectorAll('a[href*="/producto/"]')].map(a => a.href)).forEach(h => {
