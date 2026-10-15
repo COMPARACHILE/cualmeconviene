@@ -106,7 +106,7 @@
   const PAGE = location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
   const UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11v9H4v-9z"/><path d="M7 11l4-7c1.4 0 2.3 1 2 2.4L12.5 10H18a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 16.8 20H7"/></svg>';
   const DOWN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(180deg)"><path d="M7 11v9H4v-9z"/><path d="M7 11l4-7c1.4 0 2.3 1 2 2.4L12.5 10H18a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 16.8 20H7"/></svg>';
-  const head = '<svg viewBox="0 0 120 120" aria-hidden="true"><use href="#pumaHead"/></svg>';
+  const head = '<img src="/assets/puma-icono-96.png" alt="" width="30" height="30">';
 
   const btn = document.createElement('button');
   btn.type = 'button'; btn.className = 'fb-open'; btn.setAttribute('aria-haspopup', 'dialog');
@@ -161,7 +161,7 @@
         body: JSON.stringify({ v: vote, t: ta.value.trim(), p: PAGE, w: form.web.value })
       });
       if (!r.ok && r.status !== 204) throw new Error(r.status);
-      form.innerHTML = `<div class="ok">${head.replace('aria-hidden="true"', 'aria-hidden="true" style="width:72px;height:72px"')}<h2>¡Gracias!</h2><p class="sub">Leemos cada opinión. Si nos dejaste una idea, la vamos a considerar para las próximas mejoras.</p></div>`;
+      form.innerHTML = `<div class="ok"><img src="/assets/puma-icono-192.png" alt="" width="72" height="72"><h2>¡Gracias!</h2><p class="sub">Leemos cada opinión. Si nos dejaste una idea, la vamos a considerar para las próximas mejoras.</p></div>`;
       try { localStorage.setItem('cmc-fb', Date.now()); } catch (_) {}
       setTimeout(() => { if (!box.hidden) close(); }, 4000);
     } catch (_) {

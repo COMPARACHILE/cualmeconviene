@@ -87,7 +87,7 @@ section[id], main[id], [id="tienda"] { scroll-margin-top: calc(var(--hdr) + 16px
 
 /* ---------- 9. Opiniones ---------- */
 .fb-open { position: fixed; z-index: 40; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 999px; padding: 10px 16px 10px 10px; background: var(--nav-bg); color: var(--nav-fg); font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: 0 0 0 1px rgba(255, 255, 255, .16), 0 4px 16px rgba(8, 12, 40, .08); }
-.fb-open svg { width: 30px; height: 30px; background: var(--sale); border-radius: 50%; padding: 2px; }
+.fb-open img { width: 32px; height: 32px; border-radius: 50%; flex: none; }
 .fb-open:focus-visible { outline: 3px solid var(--sale); outline-offset: 3px; }
 @media (max-width: 959px) { body:has(.jump[data-show="true"]) .fb-open { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); } }
 @media (max-width: 480px) { .fb-open .t { display: none; } .fb-open { padding: 8px; } }
@@ -170,3 +170,11 @@ summary { padding-block: 12px; }
 @media (prefers-reduced-motion: no-preference) { .skel i { animation: cmcSkel 1s ease-in-out infinite alternate; } }
 @keyframes cmcSkel { from { opacity: 1; } to { opacity: .55; } }
 .chip small, .chips small { font-size: 12px; }
+
+/* ---------- Puma nuevo (imágenes) ---------- */
+img.mascot { height: auto; object-fit: contain; }
+img.logoMark { border-radius: 50%; }
+.pickBar img { width: 30px; height: 30px; flex: none; border-radius: 50%; }
+.pumaTag img { width: 24px; height: 24px; flex: none; border-radius: 50%; }
+.fb .ok img { display: block; margin: 0 auto; border-radius: 50%; }
+@media (max-width: 559px) { img.mascot { max-height: 96px; width: auto; justify-self: center; } }

@@ -21,7 +21,9 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/assets/puma.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/puma-icono-48.png" type="image/png" sizes="48x48">
+<link rel="icon" href="/assets/puma-icono-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Notebooks: compara precios en Chile · ¿Cuál me conviene?", "url": "https://cualmeconviene.cl/notebooks", "inLanguage": "es-CL", "description": "Notebooks gamer, para estudiar y trabajar: el mismo equipo en varias tiendas de Chile, con su procesador y el precio más bajo de hoy.", "isPartOf": {"@type": "WebSite", "name": "¿Cuál me conviene?", "url": "https://cualmeconviene.cl/"}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -455,7 +457,7 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
 <div class="promo full">Precios revisados en tiendas de Chile · <span id="promoDate"></span></div>
 <header class="top full">
   <div class="in topIn">
-    <a class="logo" href="/" aria-label="¿Cuál me conviene? Inicio"><svg class="logoMark" aria-hidden="true"><use href="#pumaHead"/></svg><span>¿Cuál me <em>conviene?</em></span></a>
+    <a class="logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img class="logoMark" src="/assets/puma-icono-96.png" alt="" width="40" height="40" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
     <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Ej.: Lenovo LOQ o RTX 4060" autocomplete="off" aria-label="Buscar notebook" role="combobox" aria-autocomplete="list" aria-controls="sugg" aria-expanded="false"><div id="sugg" class="sugg" role="listbox" hidden></div></label>
     <nav class="nav" aria-label="Secciones"><button type="button" data-go="ofertas">Ofertas</button><button type="button" data-go="conoce">Guía de piezas</button></nav>
   </div>
@@ -469,22 +471,7 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
 
 <section class="hero full"><div class="in heroIn">
   <div class="banner">
-    <svg class="mascot" viewBox="0 0 240 250" role="img" aria-label="El puma mascota del sitio, con un notebook">
-      <g class="tail"><path d="M58 226c-30-4-46-26-40-50 4-14 16-18 20-10-8 4-10 14-6 24 6 14 22 20 34 18z" fill="#B9773A"/><path d="M22 168c3-7 11-9 17-4l-3 6c-4-3-9-2-11 2z" fill="#3A2416"/></g>
-      <path d="M52 250c0-58 28-92 68-92s68 34 68 92z" fill="#D08E4A"/>
-      <path d="M96 250c0-40 10-66 24-66s24 26 24 66z" fill="#F6E3C6"/>
-      <use href="#pumaHead" x="40" y="22" width="160" height="160"/>
-      <g class="glass"><g transform="translate(-16 6)">
-        <path d="M150 196l14-6" stroke="#3A2416" stroke-width="0"/>
-        <rect x="150" y="122" width="78" height="52" rx="6" fill="#10152B" stroke="#3A2416" stroke-width="5" transform="rotate(-8 189 148)"/>
-        <rect x="157" y="128" width="64" height="40" rx="3" fill="#7DD3FC" transform="rotate(-8 189 148)"/>
-        <path d="M168 160l10-10 7 6 12-14" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="rotate(-8 189 148)"/>
-        <path d="M140 186l94-13 6 8-96 14z" fill="#3A2416"/>
-        <path d="M144 186l88-12" stroke="#6B7AA8" stroke-width="2"/>
-        <ellipse cx="150" cy="200" rx="16" ry="13" fill="#D08E4A"/>
-        <path d="M142 196v8M150 194v10M158 196v8" stroke="#B9773A" stroke-width="2" stroke-linecap="round"/>
-      </g></g>
-    </svg>
+    <img class="mascot" src="/assets/puma.webp" alt="El puma de ¿Cuál me conviene?, con una lupa y el pulgar arriba" width="555" height="700">
     <div class="bannerTxt">
       <p class="bubble">Soy el puma de <b>¿Cuál me conviene?</b> Reviso las tiendas por ti.</p>
       <h1>El mismo notebook, en la tienda más barata.</h1>
@@ -1065,7 +1052,7 @@ function card(r, s, pick) {
   else save = `<p class="save">Ahorras ${fmt(hi.p - lo.p)} frente a ${STORES[hi.s].name}</p>`;
   const why = reasons(n, s, r.price).filter(t => !/más barato en/.test(t)).slice(0, 2);
   return `<article class="p${pick ? ' pick' : ''}">
-    ${pick ? `<div class="pickBar"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#pumaHead"/></svg>El puma recomienda<small>${s.uses.length ? 'el que mejor te calza por precio' : 'mejor potencia por tu plata'}</small></div>` : ''}
+    ${pick ? `<div class="pickBar"><img src="/assets/puma-icono-96.png" alt="" width="40" height="40" decoding="async">El puma recomienda<small>${s.uses.length ? 'el que mejor te calza por precio' : 'mejor potencia por tu plata'}</small></div>` : ''}
     <div class="pv">${art(n)}
       <div class="badges"><span class="bd cat">${cat}</span>${s.uses.length && r.rank <= 10 ? `<span class="bd fit" title="Puesto entre los equipos que calzan con lo que pediste">Top N°${r.rank}</span>` : (multi ? `<span class="bd">${offs.length} tiendas</span>` : '')}</div></div>
     <div class="pb">
@@ -1190,7 +1177,7 @@ $('lead').textContent = NOTEBOOKS.length + ' notebooks, ' + nGamer + ' con tarje
   track.innerHTML = TOP.map(t => {
     const o = t.n.offers.slice().sort((a, b) => a.p - b.p);
     return `<div class="t4s"><div class="t4art">${art(t.n)}</div>
-      <span class="pumaTag"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#pumaHead"/></svg>El puma recomienda</span>
+      <span class="pumaTag"><img src="/assets/puma-icono-96.png" alt="" width="40" height="40" decoding="async">El puma recomienda</span>
       <span class="medal">${MEDAL}Mejor calidad-precio · ${USE_NAME[t.u]}</span>
       <h3>${t.n.name}</h3>
       <p class="t4price">${fmt(o[0].p)}</p>
