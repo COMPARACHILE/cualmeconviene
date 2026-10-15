@@ -67,7 +67,7 @@ section[id], main[id], [id="tienda"] { scroll-margin-top: calc(var(--hdr) + 16px
 .mascot .shine { display: none; }
 
 /* Ticker de ahorros del día (inicio) */
-.ticker { --gap: 34px; overflow: hidden; background: var(--nav-bg); color: var(--nav-fg); border-top: 1px solid rgba(255, 255, 255, .08); font-size: 13.5px; }
+.ticker { --gap: 34px; overflow: hidden; background: var(--nav-bg); color: var(--nav-fg); border-top: 1px solid rgba(255, 255, 255, .08); font-size: 14px; }
 .ticker[hidden] { display: none; }
 .tickerIn { display: flex; align-items: center; gap: 14px; padding-block: 9px; }
 .ticker .tlab { flex: none; display: inline-flex; align-items: center; gap: 7px; font-weight: 700; color: var(--sale); }
@@ -96,21 +96,21 @@ section[id], main[id], [id="tienda"] { scroll-margin-top: calc(var(--hdr) + 16px
 @media (prefers-reduced-motion: no-preference) { .fb { animation: cmcPanel 200ms var(--ease-out); } }
 @keyframes cmcPanel { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
 .fb h2 { font-size: 1.15rem; margin: 0 28px 4px 0; }
-.fb p.sub { color: var(--muted); font-size: 13.5px; margin-bottom: 14px; }
+.fb p.sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
 .fb-x { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: var(--surface-2); color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer; }
 .fb-x:focus-visible, .fb textarea:focus-visible, .fb-send:focus-visible, .fb-vote button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .fb-vote { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-.fb-vote button { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 8px; border: 1.5px solid var(--line); border-radius: 14px; background: var(--surface-2); color: var(--ink); font-weight: 700; font-size: 13.5px; cursor: pointer; }
+.fb-vote button { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 8px; border: 1.5px solid var(--line); border-radius: 14px; background: var(--surface-2); color: var(--ink); font-weight: 700; font-size: 14px; cursor: pointer; }
 .fb-vote button svg { width: 26px; height: 26px; }
 .fb-vote button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
-.fb label { display: block; font-weight: 700; font-size: 13.5px; margin-bottom: 6px; }
+.fb label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
 .fb textarea { width: 100%; min-height: 92px; resize: vertical; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: 16px; background: var(--surface); color: var(--ink); }
 .fb .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .fb .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; }
 .fb .cnt { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .fb-send { border: 0; border-radius: 12px; padding: 11px 18px; background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: 15px; cursor: pointer; }
 .fb-send:disabled { opacity: .5; cursor: not-allowed; }
-.fb .msg { margin-top: 10px; font-size: 13.5px; }
+.fb .msg { margin-top: 10px; font-size: 14px; }
 .fb .msg.err { color: #C62828; }
 .fb .ok { text-align: center; padding: 10px 0 4px; }
 .fb .ok svg { width: 72px; height: 72px; }
@@ -145,3 +145,28 @@ section[id], main[id], [id="tienda"] { scroll-margin-top: calc(var(--hdr) + 16px
 summary { padding-block: 12px; }
 .tickerIn { padding-block: 0; }
 .trail a { min-height: 44px; align-items: center; }
+
+/* ---------- Rediseño 15-10-2026: menos acento, sin píldoras en datos fijos, portada móvil más corta ---------- */
+/* 1. El amarillo queda solo para la acción principal y el logo */
+.promo { background: #070B22; color: var(--nav-muted); font-weight: 500; border-bottom: 1px solid rgba(255, 255, 255, .08); }
+/* 2. Datos fijos como texto simple, no como píldoras */
+.menu small.nw, .menu .mlink small, .menu .soon small { background: none; color: var(--nav-muted); padding: 0; margin-left: 6px; font-weight: 500; }
+.bItem .tag { background: none; color: var(--muted); padding: 0; border-radius: 0; font-weight: 600; font-size: 12px; }
+.bd { background: none; color: var(--muted); padding: 0; border-radius: 0; font-weight: 600; }
+.bd.cat { background: none; color: var(--ink); }
+.bd.fit { background: var(--accent); color: var(--accent-ink); padding: 3px 8px; border-radius: 6px; }
+/* 4. En el celular, la primera oferta aparece sin bajar */
+@media (max-width: 559px) {
+  .hero h1 { font-size: 1.75rem; line-height: 1.15; }
+  .hero .lead { display: none; }
+  .talk p + p + p { display: none; }
+  .talk { font-size: 14px; padding: 12px 16px; }
+  .heroBtns .cta + .cta { display: none; }
+}
+/* 5. Siluetas mientras cargan los precios */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skel { display: grid; gap: 8px; }
+.skel i { display: block; height: 76px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); }
+@media (prefers-reduced-motion: no-preference) { .skel i { animation: cmcSkel 1s ease-in-out infinite alternate; } }
+@keyframes cmcSkel { from { opacity: 1; } to { opacity: .55; } }
+.chip small, .chips small { font-size: 12px; }
