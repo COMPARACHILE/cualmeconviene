@@ -25,6 +25,12 @@ export async function onRequestPost({ request, env }) {
   const pagina = PAGINAS.has(String(d.p)) ? String(d.p) : 'otra';
   if (!voto && msg.length < 3) return new Response(null, { status: 400 });
 
+  // La tabla se crea sola la primera vez (no hace falta abrir la consola de D1)
+  await env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS opiniones (id INTEGER PRIMARY KEY AUTOINCREMENT, dia TEXT NOT NULL,
+      pagina TEXT NOT NULL, voto INTEGER NOT NULL DEFAULT 0, texto TEXT NOT NULL DEFAULT '')`
+  ).run();
+
   await env.DB.prepare(
     'INSERT INTO opiniones (dia, pagina, voto, texto) VALUES (?1, ?2, ?3, ?4)'
   ).bind(hoyChile(), pagina, voto, msg).run();

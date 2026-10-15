@@ -31,7 +31,7 @@ SELECT dia, SUM(n) AS clics FROM clics GROUP BY dia ORDER BY dia DESC;
 El botón flotante de abajo a la derecha envía a `/api/opinion` el voto (me gustó / no me convenció),
 el comentario y la página. Se guarda en la misma base D1, tabla `opiniones`. No se guardan IP ni cookies.
 
-**Activar (una sola vez):** en la consola de D1, ejecuta el bloque `CREATE TABLE IF NOT EXISTS opiniones …` de `schema.sql`.
+La tabla se crea sola con la primera opinión. Solo hace falta que la base D1 esté enlazada al proyecto con el nombre `DB`.
 
 ```sql
 -- Últimas opiniones

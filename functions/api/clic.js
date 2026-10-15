@@ -26,6 +26,11 @@ export async function onRequestPost({ request, env }) {
   if (!ID_OK.test(equipo) || !TIENDAS.has(tienda)) return new Response(null, { status: 400 });
 
   await env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS clics (dia TEXT NOT NULL, equipo TEXT NOT NULL, tienda TEXT NOT NULL,
+      nombre TEXT NOT NULL DEFAULT '', n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (dia, equipo, tienda))`
+  ).run();
+
+  await env.DB.prepare(
     `INSERT INTO clics (dia, equipo, tienda, nombre, n) VALUES (?1, ?2, ?3, ?4, 1)
      ON CONFLICT (dia, equipo, tienda) DO UPDATE SET n = n + 1, nombre = excluded.nombre`
   ).bind(hoyChile(), equipo, tienda, nombre).run();
