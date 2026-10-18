@@ -86,10 +86,13 @@ def historial():
             try:
                 t = subprocess.run(['git', '-C', RAIZ, 'show', f'{sha}:{archivo}'], capture_output=True, text=True, check=True).stdout
                 i = t.index(ini) + len(ini); j = t.index(fin, i) + (2 if fin.startswith('\n]') else 0)
+                # La fecha es la de la revisión de precios que dice el archivo, no la del cambio en git
+                m = re.search(r"const SEEN(?:_GAMER)? = '(\d\d)-(\d\d)-(\d{4})'", t)
+                d_rev = datetime.date(int(m.group(3)), int(m.group(2)), int(m.group(1))) if m else dia
                 for x in json.loads(t[i:j]):
                     os_ = [o['p'] for o in x.get('offers', []) if not o.get('x') and o.get('p')]
                     if os_:
-                        h.setdefault(x['id'], {})[dia] = min(os_)
+                        h.setdefault(x['id'], {})[d_rev] = min(os_)
             except Exception:
                 continue
     return h
