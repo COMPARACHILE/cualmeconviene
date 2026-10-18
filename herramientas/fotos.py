@@ -50,14 +50,50 @@ def faltan():
         print('RUTAS =', json.dumps(rs, ensure_ascii=False, separators=(',', ':')))
 
 
-def bajar(url):
+UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'
+
+
+def variantes(url):
+    """Direcciones alternativas de la misma foto (algunas tiendas rechazan ciertos tamaños)."""
+    yield url
+    if 'ecomm.cencosud.com/unsafe/fit-in/600x600/' in url:
+        yield url.replace('/unsafe/fit-in/600x600/', '/unsafe/adaptive-fit-in/792x1068/')
+        yield url.replace('/unsafe/fit-in/600x600/', '/unsafe/')
+
+
+def cabeceras(url, modo):
     host = urlparse(url).netloc
-    req = urllib.request.Request(url, headers={
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36',
-        'Accept': 'image/avif,image/webp,image/png,image/jpeg,*/*;q=0.8',
-        'Referer': REFERER.get(host, 'https://' + host + '/')})
-    with urllib.request.urlopen(req, timeout=40) as r:
-        return r.read()
+    ref = REFERER.get(host, 'https://www.paris.cl/' if 'cencosud' in host else 'https://' + host + '/')
+    if modo == 0:
+        return {'User-Agent': UA, 'Accept': 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8', 'Accept-Language': 'es-CL,es;q=0.9',
+                'Referer': ref, 'Sec-Fetch-Dest': 'image', 'Sec-Fetch-Mode': 'no-cors', 'Sec-Fetch-Site': 'cross-site'}
+    if modo == 1:
+        return {'User-Agent': UA, 'Accept': 'image/jpeg,image/png,*/*;q=0.5', 'Referer': ref}
+    return {'User-Agent': UA}
+
+
+def bajar(url):
+    """Prueba varias direcciones y cabeceras; devuelve los bytes de la primera que funcione."""
+    ultimo = None
+    for u in variantes(url):
+        for modo in (0, 1, 2):
+            try:
+                with urllib.request.urlopen(urllib.request.Request(u, headers=cabeceras(u, modo)), timeout=40) as r:
+                    datos = r.read()
+                    if len(datos) > 500:
+                        return datos
+            except Exception as e:
+                ultimo = e
+        try:  # último intento con curl, que algunas tiendas tratan distinto
+            import subprocess
+            r = subprocess.run(['curl', '-sfL', '--compressed', '--max-time', '40', '-A', UA, '-e', cabeceras(u, 1)['Referer'], u],
+                               capture_output=True, timeout=60)
+            if r.returncode == 0 and len(r.stdout) > 500:
+                return r.stdout
+            ultimo = ultimo or Exception('curl ' + str(r.returncode))
+        except Exception as e:
+            ultimo = e
+    raise ultimo or Exception('sin respuesta')
 
 
 def preparar(datos):
@@ -102,6 +138,7 @@ def descargar(todas=False):
                     log.append(f'ERROR\t{i}\t{str(e)[:120]}\t{url}'); mal += 1
                 else:
                     time.sleep(2 + 3 * intento)
+    escribir_mapa_web(mapa)
     resumen = f'Fotos nuevas: {ok} · con error: {mal} · total en la carpeta: {len([f for f in os.listdir(CARPETA) if f.endswith(".webp")])}'
     open(LOG, 'w', encoding='utf-8').write(resumen + '\n' + '\n'.join(log) + '\n')
     print(resumen)
@@ -110,7 +147,18 @@ def descargar(todas=False):
             print(l)
 
 
+def escribir_mapa_web(mapa=None):
+    """assets/fotos.js: para cada equipo, 1 si la foto está en assets/p/, o la dirección de la tienda si no se pudo bajar."""
+    mapa = mapa or json.load(open(MAPA, encoding='utf-8'))
+    web = {i: (1 if os.path.exists(os.path.join(CARPETA, i + '.webp')) else u) for i, u in mapa.items()}
+    txt = ('/* Generado por herramientas/fotos.py. 1 = foto en /assets/p/<id>.webp; texto = foto en la tienda. */\n'
+           'window.CMC_FOTOS = ' + json.dumps(web, ensure_ascii=False, separators=(',', ':')) + ';\n'
+           "window.cmcFoto = id => { const f = (window.CMC_FOTOS || {})[id]; return f === 1 ? '/assets/p/' + id + '.webp' : (f || null); };\n")
+    open(os.path.join(RAIZ, 'assets', 'fotos.js'), 'w', encoding='utf-8').write(txt)
+
+
 if __name__ == '__main__':
     if len(sys.argv) >= 2 and sys.argv[1] == 'faltan': faltan()
     elif len(sys.argv) >= 2 and sys.argv[1] == 'descargar': descargar('--todas' in sys.argv)
+    elif len(sys.argv) >= 2 and sys.argv[1] == 'web': escribir_mapa_web()
     else: print(__doc__)
