@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Actualización de precios de ¿Cuál me conviene? (notebooks.html y celulares.html).
+"""Actualización de precios de ¿Cuál me conviene? (notebooks.html, celulares.html, tablets.html y televisores.html).
 
   python3 herramientas/precios.py lista
       Muestra, por tienda, qué abrir y qué rutas leer con herramientas/leer_precios.js.
@@ -24,6 +24,23 @@ AGOTADO = {'sin stock', 'error 404', 'error 410'}
 NOTA_ESTANDAR = re.compile(r'^(Con tarjeta CMR|Precio Internet|Con Tarjeta Cencosud|Con tarjeta Ripley|Transferencia o débito|Con transferencia o débito|Modalidad Prepago)')
 
 
+# Categorías nuevas: mismo formato que celulares (lista JSON en una línea, "const EQUIPOS = [...];")
+EXTRA = {'tb': ('tablets.html', 'tablet'), 'tv': ('televisores.html', 'televisor')}
+
+
+def cargar_extra():
+    """{k: (html, (inicio, fin), lista)} de tablets y televisores (solo las que existen)."""
+    out = {}
+    for k, (archivo, _) in EXTRA.items():
+        ruta_a = os.path.join(RAIZ, archivo)
+        if not os.path.exists(ruta_a):
+            continue
+        h = open(ruta_a, encoding='utf-8').read()
+        s = h.index('const EQUIPOS = ') + len('const EQUIPOS = '); e = h.index(';\n', s)
+        out[k] = (h, (s, e), json.loads(h[s:e]))
+    return out
+
+
 def cargar():
     nb_h = open(NB, encoding='utf-8').read()
     s = nb_h.index('const NOTEBOOKS = [') + len('const NOTEBOOKS = '); e = nb_h.index('\n];', s) + 2
@@ -42,7 +59,7 @@ def ruta(o):
 def rutas_por_tienda():
     _, _, nbs, _, _, phs = cargar()
     por = {}
-    for eq in nbs + phs:
+    for eq in nbs + phs + [x for _, _, l in cargar_extra().values() for x in l]:
         for o in eq['offers']:
             por.setdefault(o['s'], set()).add(ruta(o))
     return {t: sorted(rs) for t, rs in por.items()}
@@ -71,6 +88,7 @@ def nota(t, c, x):
 
 def aplicar(carpeta):
     nb_h, (s, e), nbs, ph_h, (s2, e2), phs = cargar()
+    extra = cargar_extra()
     res, RT = {}, rutas_por_tienda()
     for f in glob.glob(os.path.join(carpeta, '*.json')):
         t = os.path.basename(f)[:-5]
@@ -79,9 +97,10 @@ def aplicar(carpeta):
             res[(t, u)] = {'e': x or 'sin precio'} if not p else {'p': p, 'c': c, 'n': nota(t, c, x)}
     hoy = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-3))).strftime('%d-%m-%Y')
     cambios, bajos, sin, ocultos = [], [], [], []
-    for grupo, lst in (('notebook', nbs), ('celular', phs)):
+    grupos = [('notebook', nbs), ('celular', phs)] + [(EXTRA[k][1], l) for k, (_, _, l) in extra.items()]
+    for grupo, lst in grupos:
         for eq in lst:
-            nombre = eq['name'] + (f" {eq['gb']} GB" if grupo == 'celular' else '')
+            nombre = eq['name'] + (f" {eq['gb']} GB" if grupo in ('celular', 'tablet') else '')
             for o in eq['offers']:
                 r = res.get((o['s'], ruta(o)))
                 if r is None:
@@ -119,6 +138,10 @@ def aplicar(carpeta):
     ph_h = re.sub(r'(ficha de cada tienda u operadora el )\d\d-\d\d-\d{4}', rf'\g<1>{hoy}', ph_h)
     open(NB, 'w', encoding='utf-8').write(nb_h)
     open(PH, 'w', encoding='utf-8').write(ph_h)
+    for k, (h, (a, b), l) in extra.items():
+        h = h[:a] + json.dumps(l, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/') + h[b:]
+        h = re.sub(r"const SEEN = '[\d-]+';", f"const SEEN = '{hoy}';", h)
+        open(os.path.join(RAIZ, EXTRA[k][0]), 'w', encoding='utf-8').write(h)
     cambios.sort(reverse=True)
     print(f'Fecha: {hoy}. Precios que cambiaron: {len(cambios)}')
     if bajos: print('REVISAR, bajaron a menos de la mitad:\n  ' + '\n  '.join(bajos))
