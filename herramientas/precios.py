@@ -19,6 +19,8 @@ LISTADOS = {
 }
 PORTADAS = {'falabella': 'https://www.falabella.com/falabella-cl', 'paris': 'https://www.paris.cl/', 'ripley': 'https://simple.ripley.cl/',
             'entel': 'https://miportal.entel.cl/personas/catalogo/celulares', 'movistar': 'https://catalogo.movistar.cl/tienda/'}
+# Sin stock o ficha borrada: la oferta se oculta en la página (x:1) hasta que vuelva
+AGOTADO = {'sin stock', 'error 404', 'error 410'}
 NOTA_ESTANDAR = re.compile(r'^(Con tarjeta CMR|Precio Internet|Con Tarjeta Cencosud|Con tarjeta Ripley|Transferencia o débito|Con transferencia o débito|Modalidad Prepago)')
 
 
@@ -76,7 +78,7 @@ def aplicar(carpeta):
             u = RT[t][i]
             res[(t, u)] = {'e': x or 'sin precio'} if not p else {'p': p, 'c': c, 'n': nota(t, c, x)}
     hoy = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-3))).strftime('%d-%m-%Y')
-    cambios, bajos, sin = [], [], []
+    cambios, bajos, sin, ocultos = [], [], [], []
     for grupo, lst in (('notebook', nbs), ('celular', phs)):
         for eq in lst:
             nombre = eq['name'] + (f" {eq['gb']} GB" if grupo == 'celular' else '')
@@ -84,8 +86,11 @@ def aplicar(carpeta):
                 r = res.get((o['s'], ruta(o)))
                 if r is None:
                     sin.append(f"{nombre} · {o['s']}: no apareció en la lectura"); continue
+                if r.get('e') in AGOTADO:
+                    o['x'] = 1; ocultos.append(f"{nombre} · {o['s']}: {r['e']}"); continue
                 if r.get('e') or not r.get('p'):
                     sin.append(f"{nombre} · {o['s']}: {r.get('e', 'sin precio')}"); continue
+                o.pop('x', None)
                 nuevo, viejo = int(r['p']), o['p']
                 if nuevo != viejo:
                     cambios.append((abs(nuevo - viejo), f"{nombre} · {o['s']}: {viejo:,} → {nuevo:,}".replace(',', '.')))
@@ -118,6 +123,7 @@ def aplicar(carpeta):
     print(f'Fecha: {hoy}. Precios que cambiaron: {len(cambios)}')
     if bajos: print('REVISAR, bajaron a menos de la mitad:\n  ' + '\n  '.join(bajos))
     print('Cambios más grandes:\n  ' + '\n  '.join(c[1] for c in cambios[:5]))
+    print(f'Ocultos por falta de stock ({len(ocultos)}):\n  ' + '\n  '.join(ocultos))
     print(f'No revisados ({len(sin)}):\n  ' + '\n  '.join(sin))
 
 

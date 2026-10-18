@@ -107,5 +107,5 @@ function leerListado(tienda, rutas) {
     });
   }
   const m = new Map(out.map(r => [r.u, r]));
-  return JSON.stringify(rutas.map((u, i) => m.has(u) ? _corto(i, m.get(u)) : [i, 0, 0, 'no está en el listado']));
+  return JSON.stringify(rutas.map((u, i) => m.has(u) ? _corto(i, m.get(u)) : [i, 0, 0, tienda === 'pcfactory' ? 'sin stock' : 'no está en el listado']));
 }
