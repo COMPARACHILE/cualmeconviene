@@ -170,6 +170,9 @@
       msg.textContent = 'No se pudo enviar. Revisa tu conexión e inténtalo de nuevo.';
     }
   });
+  // En teléfonos se muestra al bajar una pantalla (ver cmc.css, html.cmc-baja)
+  const baja = () => document.documentElement.classList.toggle('cmc-baja', scrollY > innerHeight * 0.6);
+  addEventListener('scroll', baja, { passive: true }); baja();
   // Si ya opinó en los últimos 30 días, el botón queda más discreto (solo el puma)
   try { if (Date.now() - (+localStorage.getItem('cmc-fb') || 0) < 2592e6) btn.querySelector('.t').remove(); } catch (_) {}
 })();

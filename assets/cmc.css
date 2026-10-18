@@ -200,3 +200,11 @@ footer.note > * { max-width: 90ch; }
 .pvA { display: block; }
 h3 .aFicha { text-decoration: none; color: inherit; }
 h3 .aFicha:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* En teléfonos el botón de opiniones aparece recién al bajar, para no tapar precios de la primera pantalla */
+@media (max-width: 719px) {
+  .fb-open { opacity: 0; pointer-events: none; transform: translateY(12px); }
+  html.cmc-baja .fb-open { opacity: 1; pointer-events: auto; transform: none; }
+}
+@media (max-width: 719px) and (prefers-reduced-motion: no-preference) { .fb-open { transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out); } }
+@media (max-width: 640px) { .menu .soon { display: none; } }
