@@ -298,6 +298,7 @@ button, input { font: inherit; color: inherit; }
 </style>
 <link rel="stylesheet" href="/assets/cmc.css">
 <script defer src="/assets/fotos.js"></script>
+<script defer src="/assets/fichas.js"></script>
 <script defer src="/assets/cmc.js"></script>
 </head>
 <body>
@@ -523,7 +524,7 @@ function prepara(e, k) {
     nombre: k === 'nb' ? e.name : `${e.name} ${gb(e.gb)}`,
     spec: k === 'nb' ? [e.cpu, e.gpuTier ? e.gpu : null, e.ram + ' GB RAM', gb(e.ssd)].filter(Boolean).join(', ')
                      : [e.chip, e.ram ? e.ram + ' GB RAM' : null, e.size ? e.size + '"' : null].filter(Boolean).join(', '),
-    href: (k === 'nb' ? '/notebooks?ver=' : '/celulares?ver=') + encodeURIComponent(e.id)
+    href: (window.CMC_FICHAS && CMC_FICHAS[e.id]) || (k === 'nb' ? '/notebooks?ver=' : '/celulares?ver=') + encodeURIComponent(e.id)
   };
 }
 

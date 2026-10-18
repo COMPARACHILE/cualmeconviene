@@ -24,6 +24,7 @@
 <link rel="preload" href="/assets/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/dmsans.woff2" as="font" type="font/woff2" crossorigin>
 <script src="/assets/fotos.js"></script>
+<script src="/assets/fichas.js"></script>
 <style>
 /* Layout: tienda. Barra de aviso, cabecera fija con buscador, portada con atajos por uso y la mayor diferencia de precio, luego filtros a la izquierda y grilla de productos. Lo más fuerte de la página es el precio y la tienda más barata de cada tarjeta. */
 :root {
@@ -636,7 +637,7 @@ body.hasTray { padding-bottom: 96px; }
     <details class="legal"><summary>Privacidad y términos de uso</summary>
     <div class="legalBody">
       <p>Esta sección de celulares sigue las mismas condiciones de privacidad y uso del sitio. Puedes leerlas completas en la <a href="/">página de inicio</a>. En resumen: no vendemos productos, los precios son referenciales y los fija cada tienda u operadora, no usamos cookies propias y medimos visitas con Cloudflare Web Analytics sin cookies. Contacto: <strong>adictosdigitalesla@gmail.com</strong>.</p>
-      <p>Los nombres de marcas, tiendas, operadoras y productos pertenecen a sus dueños y los usamos solo para identificar los equipos. Las ilustraciones son dibujos propios y no representan fielmente cada modelo.</p>
+      <p>Los nombres de marcas, tiendas, operadoras y productos pertenecen a sus dueños y los usamos solo para identificar los equipos. Las fotos de los equipos son la imagen pública del producto que aparece en la ficha de la tienda; las mostramos solo para que reconozcas el modelo, junto al enlace a esa ficha. Algunas se cargan directamente desde el sitio de la tienda. Si eres titular de una marca, de una foto o de una tienda y quieres corregir o retirar algo, escríbenos y lo retiramos a la brevedad.</p>
     </div></details>
   </footer>
 </div>
@@ -711,6 +712,8 @@ function sorted(list) {
 
 /* Dibujo propio de un celular genérico */
 const HUE = { Apple: ['#3B3F58', '#9AA4C7'], Samsung: ['#1D4ED8', '#7DD3FC'], Xiaomi: ['#C2410C', '#FDBA74'], Honor: ['#0F766E', '#5EEAD4'], Motorola: ['#4338CA', '#A5B4FC'], ZTE: ['#7C3AED', '#F0ABFC'], Vivo: ['#0369A1', '#67E8F9'] };
+/* Ficha propia del equipo (assets/fichas.js), con historial de precio. */
+const fichaDe = id => (window.CMC_FICHAS && CMC_FICHAS[id]) || '/celulares?ver=' + encodeURIComponent(id);
 /* Foto real del equipo (assets/fotos.js). Si no hay foto o no carga, queda el dibujo. */
 function art(p, w) {
   const u = window.cmcFoto && cmcFoto(p.id);
@@ -758,10 +761,10 @@ function card(p) {
   const save = os.length > 1 && hi.p > b.p ? `<span class="save">Ahorras ${fmt(hi.p - b.p)} vs ${STORES[hi.s].name}</span>` : `<span class="save solo">Lo encontramos en 1 lugar</span>`;
   const on = cmp.includes(p.id);
   return `<article class="p" id="c-${p.id}">
-  <div class="pv"><div class="badges">${p.refurb ? `<span class="bd ref">${esc(p.cond || 'Reacondicionado')}</span>` : `<span class="bd cat">${{ entrada: 'Entrada', media: 'Gama media', alta: 'Gama alta' }[gama(b.p)]}</span>`}${!p.g5 ? '<span class="bd g4">Solo 4G</span>' : ''}</div>${art(p, 150)}</div>
+  <div class="pv"><div class="badges">${p.refurb ? `<span class="bd ref">${esc(p.cond || 'Reacondicionado')}</span>` : `<span class="bd cat">${{ entrada: 'Entrada', media: 'Gama media', alta: 'Gama alta' }[gama(b.p)]}</span>`}${!p.g5 ? '<span class="bd g4">Solo 4G</span>' : ''}</div><a class="pvA" href="${fichaDe(p.id)}" tabindex="-1" aria-hidden="true">${art(p, 150)}</a></div>
   <div class="pb">
     <p class="brand">${esc(p.brand)}</p>
-    <h3>${esc(p.name)}</h3>
+    <h3><a class="aFicha" href="${fichaDe(p.id)}">${esc(p.name)}</a></h3>
     <p class="spec">${specLine(p)}</p>
     ${p.refurb ? '<p class="refNote">Equipo usado y revisado. Confirma garantía, estado y batería en la ficha.</p>' : ''}
     <div class="priceRow"><span class="from">Desde</span><span class="price">${fmt(b.p)}</span></div>

@@ -28,6 +28,7 @@
 <link rel="preload" href="/assets/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/dmsans.woff2" as="font" type="font/woff2" crossorigin>
 <script src="/assets/fotos.js"></script>
+<script src="/assets/fichas.js"></script>
 <style>
 /* Layout: tienda. Barra de aviso, cabecera fija con buscador, portada con atajos por uso y la mayor diferencia de precio, luego filtros a la izquierda y grilla de productos. Lo más fuerte de la página es el precio y la tienda más barata de cada tarjeta. */
 :root {
@@ -639,8 +640,8 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
 <p>El ranking Top N° y el "mejor calidad-precio" salen de una fórmula que combina la ficha técnica y el precio. No son pruebas de rendimiento ni asesoría profesional, y pueden no servirte para tu caso. La decisión de compra es tuya.</p>
 <h3>Comisiones</h3>
 <p>Hoy los enlaces no generan comisión para el sitio. Si algún día la generan, lo indicaremos de forma visible en esta página y el precio que pagas será el mismo.</p>
-<h3>Marcas y contenido de terceros</h3>
-<p>Los nombres de marcas, tiendas y productos pertenecen a sus dueños y los usamos solo para identificar los equipos. Las ilustraciones de los equipos son dibujos propios y no representan fielmente cada modelo. No copiamos fotos, textos descriptivos ni reseñas de las tiendas: solo mostramos datos técnicos y precios, con enlace a la ficha original. Si eres titular de una marca o de una tienda y quieres corregir o retirar algo, escríbenos y lo revisamos a la brevedad.</p>
+<h3>Marcas, fotos y contenido de terceros</h3>
+<p>Los nombres de marcas, tiendas y productos pertenecen a sus dueños y los usamos solo para identificar los equipos. Las fotos de los equipos son la imagen pública del producto que aparece en la ficha de la tienda; las mostramos solo para que reconozcas el modelo, junto al enlace a esa ficha. Algunas se cargan directamente desde el sitio de la tienda. No copiamos textos descriptivos ni reseñas de las tiendas: solo mostramos datos técnicos y precios. Si eres titular de una marca, de una foto o de una tienda y quieres corregir o retirar algo, escríbenos y lo retiramos a la brevedad.</p>
 <h3>Privacidad</h3>
 <p>El sitio no tiene cuentas, formularios de registro ni cobros, y no te pide nombre, correo ni datos de pago. No usamos cookies propias. Para saber cuántas personas visitan el sitio usamos Cloudflare Web Analytics, una herramienta de medición que no usa cookies ni almacena datos en tu dispositivo y entrega cifras agregadas (páginas vistas, país, tipo de dispositivo y navegador), sin crear un perfil tuyo. Lo que escribes en el buscador y los filtros que eliges se procesan en tu navegador y no los guardamos. Además contamos cuántas veces se toca el precio de cada equipo en cada tienda: solo guardamos el equipo, la tienda, el día y el total, sin cookies, sin tu dirección IP y sin nada que te identifique.</p>
 <p>La plataforma donde se aloja la página puede registrar datos técnicos de la visita, como la dirección IP, el navegador y la fecha, para su funcionamiento y seguridad. Nosotros no accedemos a esos datos para identificarte. Si más adelante agregamos cookies no esenciales u otras herramientas de medición, te pediremos tu consentimiento cuando corresponda y actualizaremos este texto.</p>
@@ -986,6 +987,8 @@ const $ = id => document.getElementById(id);
 const BRAND = n => { const b = n.name.split(' ')[0]; return b === 'MacBook' ? 'Apple' : b; };
 const CAT_HUE = { 'Entrada': ['#1D4ED8', '#38BDF8'], 'Media': ['#6D28D9', '#A78BFA'], 'Alta': ['#BE185D', '#F472B6'], 'Muy alta': ['#C2410C', '#FBBF24'] };
 function shortCpu(n) { return n.cpu.length > 14 ? n.cpu.slice(0, 14) : n.cpu; }
+/* Ficha propia del equipo (assets/fichas.js), con historial de precio. */
+const fichaDe = id => (window.CMC_FICHAS && CMC_FICHAS[id]) || '/notebooks?ver=' + encodeURIComponent(id);
 /* Foto real del equipo (assets/fotos.js). Si no hay foto o no carga, queda el dibujo. */
 function art(n) {
   const u = window.cmcFoto && cmcFoto(n.id);
@@ -1068,12 +1071,12 @@ function card(r, s, pick) {
   const why = reasons(n, s, r.price).filter(t => !/más barato en/.test(t)).slice(0, 2);
   return `<article class="p${pick ? ' pick' : ''}">
     ${pick ? `<div class="pickBar"><img src="/assets/puma-icono-96.png" alt="" width="40" height="40" decoding="async">El puma recomienda<small>${s.uses.length ? 'el que mejor te calza por precio' : 'mejor potencia por tu plata'}</small></div>` : ''}
-    <div class="pv">${art(n)}
+    <div class="pv"><a class="pvA" href="${fichaDe(n.id)}" tabindex="-1" aria-hidden="true">${art(n)}</a>
       <div class="badges"><span class="bd cat">${cat}</span>${s.uses.length && r.rank <= 10 ? `<span class="bd fit" title="Puesto entre los equipos que calzan con lo que pediste">Top N°${r.rank}</span>` : (multi ? `<span class="bd">${offs.length} tiendas</span>` : '')}</div></div>
     <div class="pb">
       ${(AWARD[n.id] || []).length ? `<p class="award">${MEDAL}Mejor calidad-precio · ${AWARD[n.id].map(u => USE_NAME[u]).join(' y ')}</p>` : ''}
       <p class="brand">${BRAND(n)}</p>
-      <h3>${n.name}</h3>
+      <h3><a class="aFicha" href="${fichaDe(n.id)}">${n.name}</a></h3>
       <p class="spec">${spec}</p>
       ${cpuBlock(n, lo.p)}
       <div class="priceRow"><span class="from">Desde</span><span class="price">${fmt(lo.p)}</span><span class="at"><i class="dot" style="background:${STORES[lo.s].color}"></i>${tied ? 'en ' + offs.filter(x => x.p === lo.p).length + ' tiendas' : 'en ' + STORES[lo.s].name}</span></div>

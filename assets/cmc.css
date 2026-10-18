@@ -196,3 +196,7 @@ img.foto { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; objec
 .mini img.foto { max-width: none !important; }
 footer.note { max-width: 1240px; margin-inline: auto; }
 footer.note > * { max-width: 90ch; }
+/* Título y foto de cada tarjeta llevan a la ficha del equipo */
+.pvA { display: block; }
+h3 .aFicha { text-decoration: none; color: inherit; }
+h3 .aFicha:hover { text-decoration: underline; text-underline-offset: 3px; }
