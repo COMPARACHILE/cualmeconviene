@@ -25,9 +25,9 @@
 <link rel="icon" href="/assets/puma-icono-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Notebooks: compara precios en Chile · ¿Cuál me conviene?", "url": "https://cualmeconviene.cl/notebooks", "inLanguage": "es-CL", "description": "Notebooks gamer, para estudiar y trabajar: el mismo equipo en varias tiendas de Chile, con su procesador y el precio más bajo de hoy.", "isPartOf": {"@type": "WebSite", "name": "¿Cuál me conviene?", "url": "https://cualmeconviene.cl/"}}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:wght@400;500;700&display=swap">
+<link rel="preload" href="/assets/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/dmsans.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/assets/fotos.js"></script>
 <style>
 /* Layout: tienda. Barra de aviso, cabecera fija con buscador, portada con atajos por uso y la mayor diferencia de precio, luego filtros a la izquierda y grilla de productos. Lo más fuerte de la página es el precio y la tienda más barata de cada tarjeta. */
 :root {
@@ -986,7 +986,19 @@ const $ = id => document.getElementById(id);
 const BRAND = n => { const b = n.name.split(' ')[0]; return b === 'MacBook' ? 'Apple' : b; };
 const CAT_HUE = { 'Entrada': ['#1D4ED8', '#38BDF8'], 'Media': ['#6D28D9', '#A78BFA'], 'Alta': ['#BE185D', '#F472B6'], 'Muy alta': ['#C2410C', '#FBBF24'] };
 function shortCpu(n) { return n.cpu.length > 14 ? n.cpu.slice(0, 14) : n.cpu; }
+/* Foto real del equipo (assets/fotos.js). Si no hay foto o no carga, queda el dibujo. */
 function art(n) {
+  const u = window.cmcFoto && cmcFoto(n.id);
+  if (!u) return artSvg(n);
+  return `<img class="foto" src="${u}" alt="${n.name.replace(/"/g, '&quot;')}" width="480" height="480" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-eq="${n.id}">`;
+}
+document.addEventListener('error', e => {
+  const im = e.target;
+  if (im.tagName !== 'IMG' || !im.dataset.eq) return;
+  const n = NOTEBOOKS.find(x => x.id === im.dataset.eq);
+  if (n) im.outerHTML = artSvg(n);
+}, true);
+function artSvg(n) {
   const h = (n.cat && CAT_HUE[n.cat]) || ['#0F766E', '#5EEAD4'];
   const gamer = n.gpuTier >= 2;
   const label = gamer ? n.gpu : shortCpu(n);
@@ -1370,6 +1382,25 @@ document.body.dataset.mode = 'simple';
 renderLearn();
 render();
 showView('ofertas');
+
+/* Enlaces directos desde la portada o Instagram:
+   ?ver=<id> un equipo · ?q=texto · ?uso=juegos|estudio|diseno|prog · ?cat=g1..g4|gen|port · ?marca=Lenovo */
+function enlaceDirecto() {
+  const u = new URLSearchParams(location.search);
+  const ver = u.get('ver'), q = u.get('q'), uso = u.get('uso'), cat = u.get('cat'), marca = u.get('marca');
+  if (ver) { const n = NOTEBOOKS.find(x => x.id === ver); if (n) openModel(n.name); else showView('elige'); }
+  else if (q) openModel(q);
+  else if (cat && CATS.some(c => c.id === cat)) openCat(cat);
+  else if (uso || marca) {
+    resetAll();
+    if (uso) document.querySelectorAll('input[name=uso]').forEach(i => { i.checked = i.value === uso; });
+    if (marca) document.querySelectorAll('input[name=marca]').forEach(i => { i.checked = i.value.toLowerCase() === marca.toLowerCase(); });
+    if (uso) $('sortF').value = 'ajuste';
+    refresh(); goto('tienda');
+  }
+}
+// Espera a que la cabecera fija tenga su altura para no tapar la sección
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enlaceDirecto); else enlaceDirecto();
 
 
 /* Botón fijo de resultados (celular) */

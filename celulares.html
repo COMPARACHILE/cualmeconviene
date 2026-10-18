@@ -21,9 +21,9 @@
 <link rel="icon" href="/assets/puma-icono-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Celulares: compara precios en Chile · ¿Cuál me conviene?", "url": "https://cualmeconviene.cl/celulares", "inLanguage": "es-CL", "description": "Celulares nuevos y reacondicionados en tiendas y operadoras de Chile (Entel, Movistar, Claro, WOM), con benchmarks y el precio más bajo de hoy.", "isPartOf": {"@type": "WebSite", "name": "¿Cuál me conviene?", "url": "https://cualmeconviene.cl/"}}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:wght@400;500;700&display=swap">
+<link rel="preload" href="/assets/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/dmsans.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/assets/fotos.js"></script>
 <style>
 /* Layout: tienda. Barra de aviso, cabecera fija con buscador, portada con atajos por uso y la mayor diferencia de precio, luego filtros a la izquierda y grilla de productos. Lo más fuerte de la página es el precio y la tienda más barata de cada tarjeta. */
 :root {
@@ -711,7 +711,19 @@ function sorted(list) {
 
 /* Dibujo propio de un celular genérico */
 const HUE = { Apple: ['#3B3F58', '#9AA4C7'], Samsung: ['#1D4ED8', '#7DD3FC'], Xiaomi: ['#C2410C', '#FDBA74'], Honor: ['#0F766E', '#5EEAD4'], Motorola: ['#4338CA', '#A5B4FC'], ZTE: ['#7C3AED', '#F0ABFC'], Vivo: ['#0369A1', '#67E8F9'] };
+/* Foto real del equipo (assets/fotos.js). Si no hay foto o no carga, queda el dibujo. */
 function art(p, w) {
+  const u = window.cmcFoto && cmcFoto(p.id);
+  if (!u) return artSvg(p, w);
+  return `<img class="foto${p.refurb ? ' ref' : ''}" src="${u}" alt="${esc(p.name)}" width="480" height="480" style="max-width:${w || 140}px" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-eq="${p.id}" data-w="${w || ''}">`;
+}
+document.addEventListener('error', e => {
+  const im = e.target;
+  if (im.tagName !== 'IMG' || !im.dataset.eq) return;
+  const p = PHONES.find(x => x.id === im.dataset.eq);
+  if (p) im.outerHTML = artSvg(p, +im.dataset.w || undefined);
+}, true);
+function artSvg(p, w) {
   const h = HUE[p.brand] || ['#334155', '#94A3B8'];
   const id = 'g' + p.id.replace(/[^a-z0-9]/gi, '');
   const fold = /Fold/.test(p.name);
@@ -914,6 +926,23 @@ $('trayGo').addEventListener('click', () => { renderCmp(); goto('comparar'); });
 $('trayClear').addEventListener('click', () => { cmp.splice(0); document.querySelectorAll('[data-cmp]').forEach(b => { b.checked = false; }); renderTray(); $('comparar').hidden = true; });
 
 renderPick(); render(); renderBench(); renderTray();
+
+/* Enlaces directos desde la portada o Instagram:
+   ?ver=<id> un equipo · ?q=texto · ?gama=entrada|media|alta|ref · ?marca=Apple */
+function enlaceDirecto() {
+  const u = new URLSearchParams(location.search);
+  const ver = u.get('ver'), q = u.get('q'), gama = u.get('gama'), marca = u.get('marca');
+  if (ver && PHONES.some(p => p.id === ver)) { openPhone(ver); return; }
+  if (!q && !gama && !marca) return;
+  Object.assign(st, { q: q || '', cond: gama === 'ref' ? 'ref' : 'all', quick: ['entrada', 'media', 'alta', 'ref'].includes(gama) ? gama : 'all', canal: 'all', min: 0, max: 1900000 });
+  st.uses.clear(); st.brands.clear();
+  if (marca) { const b = BR.find(x => x.toLowerCase() === marca.toLowerCase()); if (b) st.brands.add(b); }
+  syncUI();
+  if (marca) document.querySelectorAll('#brandChips input').forEach(i => { i.checked = st.brands.has(i.value); });
+  refresh(); goto('compara');
+}
+// Espera a que la cabecera fija tenga su altura para no tapar la sección
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enlaceDirecto); else enlaceDirecto();
 
 /* Contador de clics a tiendas: envía solo equipo, tienda y nombre del equipo. Sin cookies ni datos personales. */
 (() => {

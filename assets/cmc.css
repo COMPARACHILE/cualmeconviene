@@ -178,3 +178,21 @@ img.logoMark { border-radius: 50%; }
 .pumaTag img { width: 24px; height: 24px; flex: none; border-radius: 50%; }
 .fb .ok img { display: block; margin: 0 auto; border-radius: 50%; }
 @media (max-width: 559px) { img.mascot { max-height: 96px; width: auto; justify-self: center; } }
+
+/* ---------- Rediseño 18-10-2026: fuentes propias, sin borde blanco y fotos reales de los equipos ---------- */
+@font-face { font-family: 'Bricolage Grotesque'; src: url(/assets/fonts/bricolage.woff2) format('woff2'); font-weight: 200 800; font-display: swap; }
+@font-face { font-family: 'DM Sans'; src: url(/assets/fonts/dmsans.woff2) format('woff2'); font-weight: 100 1000; font-display: swap; }
+html, body { margin: 0; }
+/* La foto va siempre sobre fondo blanco (así vienen de las tiendas), también en modo oscuro */
+img.foto { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: contain; background: #fff; }
+.pv { background: #fff; border-bottom: 1px solid var(--line); padding: 14px 14px 10px; }
+.pv img.foto { max-width: 230px; margin-inline: auto; }
+.pv .badges { position: relative; z-index: 1; }
+.mini img.foto { border-radius: 10px; border: 1px solid var(--line); padding: 8px; }
+.t4art img.foto { max-width: 190px; margin-inline: auto; border-radius: 12px; border: 1px solid var(--line); padding: 8px; }
+.pickCard .pa img.foto { max-width: 120px !important; margin-inline: auto; border-radius: 12px; border: 1px solid var(--line); padding: 6px; }
+.p .pv img.foto[style] { max-width: 230px !important; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pv { border-bottom-color: transparent; } }
+.mini img.foto { max-width: none !important; }
+footer.note { max-width: 1240px; margin-inline: auto; }
+footer.note > * { max-width: 90ch; }
