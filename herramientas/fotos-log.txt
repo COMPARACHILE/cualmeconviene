@@ -1,0 +1,130 @@
+Fotos nuevas: 100 · con error: 29 · total en la carpeta: 100
+ERROR	a1	HTTP Error 400: Bad Request	https://cl-cenco-pim-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/prd-cl/product-medias/982b3e60-7f14-4f19-953d-457fbaa85cab/MKSQKNFQC9/MKSQKNFQC9-1/1785880720652-MKSQKNFQC9-1-1.jpg
+ok	a2	9 KB
+ERROR	a3	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/332777999/variant/6a68cda62e88813991788510/images/7f3b76fe-110a-46c3-837b-28307feb8e85/332777999-0000-001.jpg
+ERROR	a5	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/512134999/variant/6a6b85fff0fff43b1be13093/images/31ac4d40-ef3d-4497-84f7-adb197589af6/512134999-0000-001.jpg
+ok	a7	10 KB
+ok	a9	8 KB
+ERROR	a10	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/paris/240673999/variant/images/d212150d-2eb0-40a1-bd15-faf1c1902d64/240673999-0000-001.jpg
+ok	a11	9 KB
+ERROR	a12	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/304086999/variant/68ee7eaecbb0e0e2b43efaf6/images/99580c18-c4da-4bae-bd8b-3afff624bd71/304086999-0000-001.jpg
+ERROR	a14	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/375092999/variant/69a090c36bec5757825cb694/images/eca29b35-3156-4c92-a394-ca77176830c8/375092999-0000-001.jpg
+ERROR	a8	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/151337999/variant/68123dd9afa563bc0a571ae8/images/2e38490c-312f-4966-a421-b87fc2f07a1d/151337999-0000-001.jpg
+ERROR	a15	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000410235472/full_image-2000410235472
+ERROR	n4	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000405738810/full_image-2000405738810
+ERROR	n5	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/paris/986905999/variant/images/823dac7e-8891-4efe-92d0-3fb876943bf4/986905999-0000-001.jpg
+ERROR	n6	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/888448999/variant/68c198ba19ba14879c9576a5/images/eada7c6f-1aa8-4ea1-9c74-e1ceb7428971/888448999-0000-001.jpg
+ERROR	n7	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/964272999/variant/699e2cbe4f96a6d9501f6933/images/f3dca9bb-e0d9-472a-9ba3-f76681363ce3/964272999-0000-001.jpg
+ERROR	n8	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000405436013/full_image-2000405436013
+ok	g1	12 KB
+ok	g2	13 KB
+ERROR	g3	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/332774999/variant/6a76127ea6bf41d2b58e20c7/images/e594df72-b9b5-4039-9ae5-34f1214e8424/332774999-0000-001.jpg
+ok	g4	9 KB
+ERROR	g5	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/MKP/3857/MPM10003363354/full_image-1
+ERROR	g6	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/304085999/variant/68ee7eb2cbb0e0e2b43efb58/images/e3c9cea8-6b6b-4cc8-9ef0-b8f05e7c4d35/304085999-0000-001.jpg
+ok	g7	10 KB
+ERROR	g8	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/512137999/variant/6a50ef037e764238bc31453f/images/0a1af946-205a-4ccf-9b0b-b27fbef168d3/512137999-0000-001.jpg
+ok	g9	20 KB
+ok	g10	10 KB
+ok	g11	11 KB
+ok	g12	7 KB
+ok	g13	9 KB
+ERROR	g14	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/273729999/variant/69667fe41d1fe634c10924bf/images/d80687fd-ec7c-47d2-99a6-8c15f01f1a32/273729999-0000-001.jpg
+ok	g15	17 KB
+ok	g16	20 KB
+ok	g17	9 KB
+ok	g18	10 KB
+ok	g19	16 KB
+ERROR	g20	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000410038547/full_image-2000410038547
+ERROR	g21	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000409933471/full_image-2000409933471
+ERROR	g22	HTTP Error 400: Bad Request	https://cl-cenco-pim-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/prd-cl/product-medias/982b3e60-7f14-4f19-953d-457fbaa85cab/MKHQSWKR7P/MKHQSWKR7P-1/1787847979724-MKHQSWKR7P-1-1.jpg
+ok	g23	12 KB
+ok	g24	12 KB
+ok	g25	15 KB
+ok	g26	14 KB
+ERROR	g27	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/518622999/variant/6a6b8611f0fff43b1be1315f/images/8de67421-3b91-494b-8a7b-e9ff88ec9cef/518622999-0000-001.jpg
+ok	g28	11 KB
+ok	g29	17 KB
+ok	g30	13 KB
+ok	g31	15 KB
+ok	g32	8 KB
+ok	g33	8 KB
+ok	g34	22 KB
+ok	g35	11 KB
+ok	g36	10 KB
+ok	g37	16 KB
+ok	g38	10 KB
+ok	g39	15 KB
+ERROR	g40	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/326456999/variant/690e44075a6c1817178ecc9f/images/a5ba583e-a7a1-47ea-881c-3a185e2e3365/326456999-0000-001.jpg
+ok	g41	13 KB
+ok	g42	7 KB
+ok	g43	9 KB
+ERROR	g44	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000408778615/full_image-2000408778615
+ok	g45	11 KB
+ok	g46	12 KB
+ok	g47	13 KB
+ok	g48	14 KB
+ERROR	g49	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000404540728/full_image-2000404540728
+ok	g50	25 KB
+ok	ip18p	4 KB
+ok	ip17pm	6 KB
+ok	ip17p	7 KB
+ok	ip17	6 KB
+ok	ipair	3 KB
+ok	ip17e	4 KB
+ok	ip16e	4 KB
+ok	ip16	6 KB
+ok	ip15	5 KB
+ok	s26u	10 KB
+ok	s26p	7 KB
+ok	s26	8 KB
+ok	s26fe	5 KB
+ok	s25u	7 KB
+ok	s25	5 KB
+ok	s25fe	5 KB
+ok	zfold7	2 KB
+ok	a57	6 KB
+ERROR	a57b	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/424619999/variant/69bc1c7b9fc653a3074e0508/images/a58cb8d6-2d06-4155-9c7f-9437c2a7e667/424619999-0000-001.jpg
+ok	a37	5 KB
+ok	a27	6 KB
+ok	a17	5 KB
+ok	a07	5 KB
+ok	x17u	6 KB
+ok	x17	11 KB
+ok	x17tp	4 KB
+ok	x17t	5 KB
+ok	x15t	4 KB
+ok	rn17pm	6 KB
+ok	rn17p	6 KB
+ok	rn17	5 KB
+ok	rn15pp	3 KB
+ok	r17	6 KB
+ok	r17c	4 KB
+ERROR	r15c	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/305159999/variant/69907215213b26f50199e935/images/e819e953-0205-4747-bcbd-b70c9a2c7817/305159999-0000-001.jpg
+ok	ra7p	7 KB
+ok	hm8p	5 KB
+ok	hm8l	5 KB
+ok	h600	9 KB
+ok	h600e	5 KB
+ok	h600el	8 KB
+ok	h600s	5 KB
+ok	msig	14 KB
+ok	me70	14 KB
+ok	me70f	11 KB
+ok	mg67	10 KB
+ok	mg47	12 KB
+ok	mg06	8 KB
+ok	nn5gt	12 KB
+ok	vv70	3 KB
+ok	blA76	10 KB
+ok	r-ip16pm	6 KB
+ok	r-ip16p	6 KB
+ok	r-ip16e	6 KB
+ok	r-ip15	5 KB
+ERROR	r-ip14	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/MKP/6675/MPM10003406796/full_image-1
+ok	r-ip13	5 KB
+ok	r-s25u	7 KB
+ok	r-s25	6 KB
+ERROR	r-s24	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/MKP/5346/MPM10002173050/full_image-1
+ok	r-x15u	4 KB
+ok	r-x15t	4 KB
