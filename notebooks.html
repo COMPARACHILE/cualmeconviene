@@ -951,7 +951,9 @@ function rank(s) {
     if (sort === 'pdesc') return b.price - a.price;
     if (sort === 'pot') return powOf(b.n) - powOf(a.n) || a.price - b.price;
     if (sort === 'ppp') return a.price / powOf(a.n) - b.price / powOf(b.n);
-    return b.score - a.score || a.price - b.price;
+    /* Top recomendados = calidad-precio para el uso elegido (la misma fórmula del premio "Mejor calidad-precio"):
+       antes ganaba siempre el equipo más caro y potente, aunque se eligiera "Estudio y oficina". */
+    return (b.score * b.score / b.price) - (a.score * a.score / a.price) || a.price - b.price;
   });
   const stretch = s.band ? null : NOTEBOOKS
     .filter(n => bestPrice(n, stores) > s.budget && passes(n, s, s.budget * 1.15))
