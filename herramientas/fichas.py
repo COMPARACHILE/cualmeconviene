@@ -248,7 +248,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
         mejor = '<div class="mejor sin"><p class="et">Sin stock hoy</p><p>No lo encontramos disponible en las tiendas que revisamos. Abajo tienes equipos parecidos.</p></div>'
     ref_txt = ('<p class="aviso">Equipo reacondicionado: usado y revisado. Confirma garantía, estado y batería en la ficha de la tienda.</p>' if q.get('refurb') else '')
     img = (f'<img src="{e(f_rel)}" alt="{e(nombre)}" width="480" height="480" fetchpriority="high" decoding="async" referrerpolicy="no-referrer">' if f_rel else '')
-    og = f_abs or f'{SITIO}/assets/og.png'
+    og = (f'{SITIO}/assets/og/{x["id"]}.jpg' if os.path.exists(os.path.join(OG_DIR, x['id'] + '.jpg')) else (f_abs or f'{SITIO}/assets/og.png'))
     return f'''<!doctype html>
 <html lang="es">
 <head>
@@ -328,6 +328,87 @@ document.addEventListener('click', ev => {{
 '''
 
 
+# ---------------- Imagen para compartir (WhatsApp, Instagram, Facebook) ----------------
+OG_DIR = os.path.join(RAIZ, 'assets', 'og')
+FUENTES = os.path.join(RAIZ, 'herramientas', 'fuentes')
+
+
+def _fuente(nombre, tam, peso=None, opsz=None):
+    from PIL import ImageFont
+    f = ImageFont.truetype(os.path.join(FUENTES, nombre), tam)
+    try:
+        ejes = f.get_variation_axes()
+        vals = []
+        for a in ejes:
+            n = a['name'].decode() if isinstance(a['name'], bytes) else a['name']
+            vals.append(opsz if 'Optical' in n and opsz else peso if 'Weight' in n and peso else a['default'])
+        f.set_variation_by_axes(vals)
+    except Exception:
+        pass
+    return f
+
+
+def _envolver(draw, texto, fuente, ancho, max_lineas):
+    palabras, lineas, actual = texto.split(), [], ''
+    for p in palabras:
+        prueba = (actual + ' ' + p).strip()
+        if draw.textlength(prueba, font=fuente) <= ancho:
+            actual = prueba
+        else:
+            if actual: lineas.append(actual)
+            actual = p
+    if actual: lineas.append(actual)
+    if len(lineas) > max_lineas:
+        lineas = lineas[:max_lineas]
+        while draw.textlength(lineas[-1] + '…', font=fuente) > ancho and ' ' in lineas[-1]:
+            lineas[-1] = lineas[-1].rsplit(' ', 1)[0]
+        lineas[-1] += '…'
+    return lineas
+
+
+def generar_og(todos):
+    """Crea assets/og/<id>.jpg (1200x630) una sola vez por equipo, sin precio para que no quede viejo."""
+    try:
+        from PIL import Image, ImageDraw
+    except ImportError:
+        return 0
+    os.makedirs(OG_DIR, exist_ok=True)
+    sello_p = os.path.join(RAIZ, 'assets', 'puma-sello.png')
+    hechas = 0
+    for x in todos:
+        dest = os.path.join(OG_DIR, x['id'] + '.jpg')
+        foto = os.path.join(RAIZ, 'assets', 'p', x['id'] + '.webp')
+        if os.path.exists(dest) or not os.path.exists(foto):
+            continue
+        W, H = 1200, 630
+        im = Image.new('RGB', (W, H), (14, 21, 51))
+        d = ImageDraw.Draw(im)
+        # Foto del equipo sobre una placa blanca
+        d.rounded_rectangle((640, 45, 1155, 585), radius=36, fill=(255, 255, 255))
+        ph = Image.open(foto).convert('RGB')
+        ph.thumbnail((470, 470))
+        im.paste(ph, (640 + (515 - ph.width) // 2, 45 + (540 - ph.height) // 2))
+        # Sello del puma y nombre del sitio
+        if os.path.exists(sello_p):
+            se = Image.open(sello_p).convert('RGBA'); se.thumbnail((92, 92))
+            im.paste(se, (60, 52), se)
+        d.text((168, 98), '¿Cuál me conviene?', font=_fuente('bricolage.ttf', 36, 800, 48), fill=(255, 216, 77), anchor='lm')
+        # Nombre del equipo
+        fn = _fuente('bricolage.ttf', 62, 800, 96)
+        lineas = _envolver(d, x['nombre'], fn, 540, 3)
+        y = 190
+        for l in lineas:
+            d.text((60, y), l, font=fn, fill=(255, 255, 255)); y += 70
+        sub = 'Compara su precio en ' + ('las tiendas y operadoras de Chile' if x['k'] == 'ph' else 'las tiendas de Chile')
+        fs = _fuente('dmsans.ttf', 30, 500)
+        for l in _envolver(d, sub, fs, 540, 2):
+            d.text((60, y + 18), l, font=fs, fill=(196, 203, 234)); y += 40
+        d.text((60, 560), 'cualmeconviene.cl', font=_fuente('dmsans.ttf', 30, 700), fill=(255, 216, 77))
+        im.save(dest, 'JPEG', quality=84, optimize=True, progressive=True)
+        hechas += 1
+    return hechas
+
+
 def main():
     todos = equipos()
     slugs = json.load(open(SLUGS, encoding='utf-8')) if os.path.exists(SLUGS) else {}
@@ -343,6 +424,7 @@ def main():
         slugs[x['id']] = s; usados.add(s)
     json.dump(slugs, open(SLUGS, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     urls = {x['id']: ('/notebook/' if x['k'] == 'nb' else '/celular/') + slugs[x['id']] for x in todos}
+    n_og = generar_og(todos)
     hist = historial()
     hoy = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-3))).date()
     vistos = [x['eq'].get('seen') for x in todos if x['eq'].get('seen')]
@@ -372,7 +454,7 @@ def main():
     filas += [f'  <url><loc>{SITIO}{urls[x["id"]]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>' for x in todos if x['os']]
     open(os.path.join(RAIZ, 'sitemap.xml'), 'w', encoding='utf-8').write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + '\n'.join(filas) + '\n</urlset>\n')
-    print(f'Fichas: {len(todos)} equipos, {escritas} páginas nuevas o cambiadas. Historial: {len(hist)} equipos con datos.')
+    print(f'Fichas: {len(todos)} equipos, {escritas} páginas nuevas o cambiadas. Imágenes para compartir nuevas: {n_og}. Historial: {len(hist)} equipos con datos.')
 
 
 if __name__ == '__main__':
