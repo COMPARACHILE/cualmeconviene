@@ -31,7 +31,8 @@ def equipos():
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import precios
     _, _, nbs, _, _, phs = precios.cargar()
-    return nbs + phs, precios.ruta
+    extra = [x for _, _, l in precios.cargar_extra().values() for x in l]
+    return nbs + phs + extra, precios.ruta
 
 
 def faltan():

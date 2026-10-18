@@ -512,7 +512,7 @@ body.hasTray { padding-bottom: 96px; }
     </symbol>
   </defs>
 </svg>
-<div class="promo full">Precios de celulares revisados en tiendas y operadoras de Chile · 17-10-2026</div>
+<div class="promo full">Precios de celulares revisados en tiendas y operadoras de Chile · 18-10-2026</div>
 <header class="top full">
   <div class="in topIn">
     <a class="logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img class="logoMark" src="/assets/puma-icono-96.png" alt="" width="40" height="40" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
@@ -522,8 +522,8 @@ body.hasTray { padding-bottom: 96px; }
   <nav class="menu in" aria-label="Categorías">
     <a class="mlink" href="/notebooks">Notebooks</a>
     <a class="mlink on" href="/celulares" aria-current="page">Celulares</a>
-    <span class="soon" aria-disabled="true">Tablets <small>pronto</small></span>
-    <span class="soon" aria-disabled="true">Televisores <small>pronto</small></span>
+    <a class="mlink" href="/tablets">Tablets</a>
+    <a class="mlink" href="/televisores">Televisores</a>
   </nav>
 </header>
 
@@ -628,7 +628,7 @@ body.hasTray { padding-bottom: 96px; }
   </section>
 
   <footer class="note">
-    <p><strong>Cómo leer los precios.</strong> Mostramos el precio más bajo que aparecía en la ficha de cada tienda u operadora el 17-10-2026, para el celular sin plan. Falabella y Paris tienen precios menores con su tarjeta (CMR y Tarjeta Cencosud Scotiabank) y PCFactory con transferencia o débito; los marcamos con asterisco. No incluimos Mercado Libre.</p>
+    <p><strong>Cómo leer los precios.</strong> Mostramos el precio más bajo que aparecía en la ficha de cada tienda u operadora el 18-10-2026, para el celular sin plan. Falabella y Paris tienen precios menores con su tarjeta (CMR y Tarjeta Cencosud Scotiabank) y PCFactory con transferencia o débito; los marcamos con asterisco. No incluimos Mercado Libre.</p>
     <p><strong>Operadoras.</strong> En Entel usamos el "precio oferta online" del equipo solo. En Movistar y Claro, el precio del equipo liberado. En WOM, la modalidad Prepago (equipo liberado); el precio para quien renueva o se porta puede ser distinto. Las operadoras pueden pedir que seas cliente para algunas ofertas: confírmalo en la ficha.</p>
     <p><strong>Reacondicionados y seminuevos.</strong> Son equipos usados que fueron revisados y se venden con garantía. Siempre aparecen con la etiqueta amarilla. Los de Movistar y Entel los vende la operadora; los de Ripley los venden tiendas externas (Reuse, Digitek, Renewed, Mobile Tech), y lo indicamos en cada oferta. Revisa el estado, la batería y la garantía antes de comprar.</p>
     <p><strong>Capacidad.</strong> Cada tarjeta indica la memoria (GB) del equipo comparado. Cuando la operadora no la muestra en el listado, lo advertimos en la oferta: revisa la ficha.</p>
@@ -658,7 +658,7 @@ const PHONES = [{"id":"ip18p","name":"iPhone 18 Pro","brand":"Apple","gb":256,"r
 PHONES.forEach(n => { n.offers = n.offers.filter(o => !o.x); });
 PHONES.splice(0, PHONES.length, ...PHONES.filter(n => n.offers.length));
 
-const SEEN = '17-10-2026';
+const SEEN = '18-10-2026';
 const STORES = {
   falabella: { name: 'Falabella', color: '#5FA21A', t: 'tienda' },
   paris:     { name: 'Paris',     color: '#1B8FD6', t: 'tienda' },

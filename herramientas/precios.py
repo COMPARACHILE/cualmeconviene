@@ -4,6 +4,11 @@
   python3 herramientas/precios.py lista
       Muestra, por tienda, qué abrir y qué rutas leer con herramientas/leer_precios.js.
 
+  python3 herramientas/precios.py rutas
+      Escribe herramientas/rutas.json ({tienda: [rutas]}, en el mismo orden que "lista"), para leerlo
+      desde la pestaña de la tienda: fetch('https://raw.githubusercontent.com/COMPARACHILE/cualmeconviene/main/herramientas/rutas.json').
+      El flujo de GitHub lo rehace solo cada vez que cambian los equipos.
+
   python3 herramientas/precios.py aplicar resultados/
       Lee los archivos <tienda>.json de esa carpeta (lo que devolvió leer_precios.js),
       actualiza precios, notas y fechas, y muestra el resumen.
@@ -150,7 +155,12 @@ def aplicar(carpeta):
     print(f'No revisados ({len(sin)}):\n  ' + '\n  '.join(sin))
 
 
+def escribir_rutas():
+    json.dump(rutas_por_tienda(), open(os.path.join(RAIZ, 'herramientas', 'rutas.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+
+
 if __name__ == '__main__':
     if len(sys.argv) >= 2 and sys.argv[1] == 'lista': lista()
+    elif len(sys.argv) >= 2 and sys.argv[1] == 'rutas': escribir_rutas()
     elif len(sys.argv) >= 3 and sys.argv[1] == 'aplicar': aplicar(sys.argv[2])
     else: print(__doc__)
