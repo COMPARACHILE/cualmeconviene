@@ -127,17 +127,25 @@ def descargar(todas=False):
         destino = os.path.join(CARPETA, i + '.webp')
         if os.path.exists(destino) and not todas:
             continue
-        for intento in range(3):
-            try:
-                webp = preparar(bajar(url))
-                open(destino, 'wb').write(webp)
-                log.append(f'ok\t{i}\t{len(webp)//1024} KB'); ok += 1
+        # Cada equipo puede tener una lista de fotos posibles (otras tiendas o el mismo modelo en otro color):
+        # se usa la primera que se pueda bajar.
+        urls = url if isinstance(url, list) else [url]
+        hecho, error = False, None
+        for u in urls:
+            for intento in range(2):
+                try:
+                    webp = preparar(bajar(u))
+                    open(destino, 'wb').write(webp)
+                    log.append(f'ok\t{i}\t{len(webp)//1024} KB\t{urlparse(u).netloc}'); ok += 1
+                    hecho = True
+                    break
+                except Exception as e:
+                    error = e
+                    time.sleep(2)
+            if hecho:
                 break
-            except Exception as e:
-                if intento == 2:
-                    log.append(f'ERROR\t{i}\t{str(e)[:120]}\t{url}'); mal += 1
-                else:
-                    time.sleep(2 + 3 * intento)
+        if not hecho:
+            log.append(f'ERROR\t{i}\t{str(error)[:120]}\t{urls[0]}'); mal += 1
     escribir_mapa_web(mapa)
     resumen = f'Fotos nuevas: {ok} · con error: {mal} · total en la carpeta: {len([f for f in os.listdir(CARPETA) if f.endswith(".webp")])}'
     open(LOG, 'w', encoding='utf-8').write(resumen + '\n' + '\n'.join(log) + '\n')
@@ -150,7 +158,7 @@ def descargar(todas=False):
 def escribir_mapa_web(mapa=None):
     """assets/fotos.js: para cada equipo, 1 si la foto está en assets/p/, o la dirección de la tienda si no se pudo bajar."""
     mapa = mapa or json.load(open(MAPA, encoding='utf-8'))
-    web = {i: (1 if os.path.exists(os.path.join(CARPETA, i + '.webp')) else u) for i, u in mapa.items()}
+    web = {i: (1 if os.path.exists(os.path.join(CARPETA, i + '.webp')) else (u[0] if isinstance(u, list) else u)) for i, u in mapa.items()}
     txt = ('/* Generado por herramientas/fotos.py. 1 = foto en /assets/p/<id>.webp; texto = foto en la tienda. */\n'
            'window.CMC_FOTOS = ' + json.dumps(web, ensure_ascii=False, separators=(',', ':')) + ';\n'
            "window.cmcFoto = id => { const f = (window.CMC_FOTOS || {})[id]; return f === 1 ? '/assets/p/' + id + '.webp' : (f || null); };\n")

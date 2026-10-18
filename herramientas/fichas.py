@@ -103,6 +103,8 @@ def foto_de(i, fotos):
     if os.path.exists(os.path.join(RAIZ, 'assets', 'p', i + '.webp')):
         return f'/assets/p/{i}.webp', f'{SITIO}/assets/p/{i}.webp'
     u = fotos.get(i)
+    if isinstance(u, list):
+        u = u[0] if u else None
     return u, u
 
 

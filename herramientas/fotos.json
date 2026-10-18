@@ -1,48 +1,172 @@
 {
- "a1": "https://cl-cenco-pim-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/prd-cl/product-medias/982b3e60-7f14-4f19-953d-457fbaa85cab/MKSQKNFQC9/MKSQKNFQC9-1/1785880720652-MKSQKNFQC9-1-1.jpg",
+ "a1": [
+  "https://media.falabella.com/falabellaCL/156291191_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/156291191_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/156291191_01/public?scl=1.0",
+  "https://assets.pcfactory.cl/public/foto/58141/1.jpg?t=1790273634628",
+  "https://www.acerstore.cl/cdn/shop/files/PNR-1082_02.jpg"
+ ],
  "a2": "https://media.falabella.com/falabellaCL/17413121_1/w=600,h=600,fit=pad",
- "a3": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/332777999/variant/6a68cda62e88813991788510/images/7f3b76fe-110a-46c3-837b-28307feb8e85/332777999-0000-001.jpg",
- "a5": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/512134999/variant/6a6b85fff0fff43b1be13093/images/31ac4d40-ef3d-4497-84f7-adb197589af6/512134999-0000-001.jpg",
+ "a3": [
+  "https://csbyte.cl/cdn/shop/files/ASUSVivoBook14X1404VA-EB1660W1.png?v=1790943968&width=800",
+  "https://media.falabella.com/falabellaCL/147666202_1/w=600,h=600,fit=pad"
+ ],
+ "a5": [
+  "https://media.falabella.com/falabellaCL/156832686_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/156832686_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/156832686_01/public?scl=1.0"
+ ],
  "a7": "https://media.falabella.com/falabellaCL/17461845_1/w=600,h=600,fit=pad",
  "a9": "https://media.falabella.com/falabellaCL/80739038_01/w=600,h=600,fit=pad",
- "a10": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/paris/240673999/variant/images/d212150d-2eb0-40a1-bd15-faf1c1902d64/240673999-0000-001.jpg",
+ "a10": [
+  "https://media.falabella.com/falabellaCL/80723709_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/80723709_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/80723709_01/public?scl=1.0",
+  "https://media.falabella.com/falabellaCL/146199274_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/146199274_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/146199274_01/public?scl=1.0"
+ ],
  "a11": "https://media.falabella.com/falabellaCL/80724506_1/w=600,h=600,fit=pad",
- "a12": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/304086999/variant/68ee7eaecbb0e0e2b43efaf6/images/99580c18-c4da-4bae-bd8b-3afff624bd71/304086999-0000-001.jpg",
- "a14": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/375092999/variant/69a090c36bec5757825cb694/images/eca29b35-3156-4c92-a394-ca77176830c8/375092999-0000-001.jpg",
- "a8": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/151337999/variant/68123dd9afa563bc0a571ae8/images/2e38490c-312f-4966-a421-b87fc2f07a1d/151337999-0000-001.jpg",
- "a15": "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000410235472/full_image-2000410235472",
- "n4": "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000405738810/full_image-2000405738810",
- "n5": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/paris/986905999/variant/images/823dac7e-8891-4efe-92d0-3fb876943bf4/986905999-0000-001.jpg",
- "n6": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/888448999/variant/68c198ba19ba14879c9576a5/images/eada7c6f-1aa8-4ea1-9c74-e1ceb7428971/888448999-0000-001.jpg",
- "n7": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/964272999/variant/699e2cbe4f96a6d9501f6933/images/f3dca9bb-e0d9-472a-9ba3-f76681363ce3/964272999-0000-001.jpg",
- "n8": "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000405436013/full_image-2000405436013",
+ "a12": [
+  "https://media.falabella.com/falabellaCL/80676158_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/80676158_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/80676158_01/public?scl=1.0"
+ ],
+ "a14": [
+  "https://media.falabella.com/falabellaCL/154029622_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/154029622_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/154029622_01/public?scl=1.0",
+  "https://cl.store.asus.com/media/catalog/product/e/s/eshop_um3406ga-qd062w_1.png?width=439&height=439&store=es_CL&image-type=image"
+ ],
+ "a8": [
+  "https://assets.pcfactory.cl/public/foto/52058/1.jpg?t=1712001144128",
+  "https://images.samsung.com/is/image/samsung/p6pim/cl/np750xgk-kg1cl/gallery/cl-galaxy-book4-156-inch-np750xgka-500625-np750xgk-kg1cl-thumb-540609023",
+  "https://imagedelivery.net/4fYuQyy-r8_rpBpcY7lH_A/falabellaCL/17086121_1/public?scl=1.0",
+  "https://www.paris.cl/on/demandware.static/-/Sites-cencosud-master-catalog/default/dwc94f341e/images/imagenes-productos/741/701978-0000-001.jpg",
+  "https://tienda.travel.cl/ccstore/v1/images/?source=/file/v4197337518844607661/products/SKU101760.1.jpg"
+ ],
+ "a15": [
+  "https://media.falabella.com/falabellaCL/80835904_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/80835904_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/80835904_01/public?scl=1.0"
+ ],
+ "n4": [
+  "https://media.falabella.com/falabellaCL/17407851_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17407851_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17407851_1/public?scl=1.0",
+  "https://d1aqw5mz0wngqe.cloudfront.net/images/spree/images/2477531/attachments/large/Apple_MacBook_Air_13-inch_M4_Midnight_1.jpg",
+  "https://cdnx.jumpseller.com/notebook-store/image/63134640/resize/760/760",
+  "https://api-prd.ynk.cl/medias/REIFSTORE-MRXV3CI-A-VIEW1.jpg?context=bWFzdGVyfGltYWdlc3wzODk2MDR8aW1hZ2UvanBlZ3xhR1EwTDJneVpTODVOakUyTWpNeE5qazBNelkyTDFKRlNVWlRWRTlTUlY5TlVsaFdNME5KSTBGZlZrbEZWekV1YW5CbnxhMWRjNTY3NWQ5MDJhOTliNjU0ODQ0ZGZkZjUzODk1MDAzZWQ1MmZjNDk0MGMyYmM3M2RhYmYyYTU2ODE0YTRj"
+ ],
+ "n5": [
+  "https://media.falabella.com/falabellaCL/17479106_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17479106_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17479106_1/public?scl=1.0",
+  "https://d1aqw5mz0wngqe.cloudfront.net/images/spree/images/2477675/attachments/large/Apple_MacBook_Air_15-inch_M4_Midnight_1.jpg",
+  "https://api-prd.ynk.cl/medias/REIFSTORE-MW1J3CI-A-VIEW1.jpg?context=bWFzdGVyfGltYWdlc3wyMDk1MjV8aW1hZ2UvanBlZ3xhR0ZrTDJneU9DODVPRFF3T0RVMU16RTROVFU0TDFKRlNVWlRWRTlTUlY5TlZ6RktNME5KSTBGZlZrbEZWekV1YW5Cbnw3NmE5MGFiNDFjMjYwZDY3NjhhMGM4YTlmNmU3N2Q4Y2MwMzViYTNjODE1YzMzNzFjMjhhYzYwZDY4Y2UzNTQy",
+  "https://notebooksya.cl/wp-content/uploads/2025/06/b7uk1fdof2vg18y9ax8a202j9440.avif"
+ ],
+ "n6": [
+  "https://media.falabella.com/falabellaCL/17495412_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17495412_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17495412_1/public?scl=1.0",
+  "https://backonline.cl/cdn/shop/files/Apple_MacBook_Pro_14-inch_M4_chip_Silver_1.jpg?v=1747164423",
+  "https://d1aqw5mz0wngqe.cloudfront.net/images/spree/images/2474664/attachments/large/Apple_MacBook_Pro_14-inch_M4_chip_Silver_1.jpg",
+  "https://cdnx.jumpseller.com/notebook-store/image/62347021/resize/760/760"
+ ],
+ "n7": [
+  "https://media.falabella.com/falabellaCL/17439034_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17439034_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17439034_01/public?scl=1.0",
+  "https://media.falabella.com/falabellaCL/143845550_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/143845550_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/143845550_01/public?scl=1.0"
+ ],
+ "n8": [
+  "https://media.falabella.com/falabellaCL/17439034_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17439034_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17439034_01/public?scl=1.0",
+  "https://media.falabella.com/falabellaCL/143845550_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/143845550_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/143845550_01/public?scl=1.0"
+ ],
  "g1": "https://media.falabella.com/falabellaCL/155053814_01/w=600,h=600,fit=pad",
  "g2": "https://media.falabella.com/falabellaCL/80726514_01/w=600,h=600,fit=pad",
- "g3": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/332774999/variant/6a76127ea6bf41d2b58e20c7/images/e594df72-b9b5-4039-9ae5-34f1214e8424/332774999-0000-001.jpg",
+ "g3": [
+  "https://media.falabella.com/falabellaCL/151215195_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/151215195_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/151215195_01/public?scl=1.0",
+  "https://cl.store.asus.com/media/catalog/product/e/s/eshop_fx607vjb-rl112w_1.png?store=es_CL&image-type=image"
+ ],
  "g4": "https://assets.pcfactory.cl/public/foto/56681/1_500.jpg",
- "g5": "https://rimage.ripley.cl/home.ripley/Attachment/MKP/3857/MPM10003363354/full_image-1",
- "g6": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/304085999/variant/68ee7eb2cbb0e0e2b43efb58/images/e3c9cea8-6b6b-4cc8-9ef0-b8f05e7c4d35/304085999-0000-001.jpg",
+ "g5": [
+  "https://media.falabella.com/falabellaCL/154502344_1/w=600,h=600,fit=pad",
+  "https://www.acerstore.cl/cdn/shop/files/157744-1600-auto.jpg",
+  "https://media.falabella.com/falabellaCL/17188132_1/w=600,h=600,fit=pad"
+ ],
+ "g6": [
+  "https://media.falabella.com/falabellaCL/17482517_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17482517_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17482517_01/public?scl=1.0"
+ ],
  "g7": "https://media.falabella.com/falabellaCL/17495509_1/w=600,h=600,fit=pad",
- "g8": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/512137999/variant/6a50ef037e764238bc31453f/images/0a1af946-205a-4ccf-9b0b-b27fbef168d3/512137999-0000-001.jpg",
+ "g8": [
+  "https://media.falabella.com/falabellaCL/151739870_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/151739870_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/151739870_01/public?scl=1.0",
+  "https://assets.pcfactory.cl/public/foto/55905/1.jpg?t=1775680167317",
+  "https://cdnx.jumpseller.com/notebook-store/image/76601113/resize/760/760",
+  "https://i5.walmartimages.cl/asr/d9efd540-dfab-4575-ba42-468daf90015c.c0cd17e2329db4769bfec78638cda565.jpeg"
+ ],
  "g9": "https://media.falabella.com/falabellaCL/80800089_1/w=600,h=600,fit=pad",
  "g10": "https://media.falabella.com/falabellaCL/17028494_01/w=600,h=600,fit=pad",
  "g11": "https://media.falabella.com/falabellaCL/153374618_01/w=600,h=600,fit=pad",
  "g12": "https://assets.pcfactory.cl/public/foto/56342/1_500.jpg",
  "g13": "https://media.falabella.com/falabellaCL/80797737_1/w=600,h=600,fit=pad",
- "g14": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/273729999/variant/69667fe41d1fe634c10924bf/images/d80687fd-ec7c-47d2-99a6-8c15f01f1a32/273729999-0000-001.jpg",
+ "g14": [
+  "https://centrale.cl/wp-content/uploads/Victus-Laptop-156-FHD-NT-i513420H-16GB-512GB-RTX405006GB-Win-Silver-510x510.webp",
+  "https://media.falabella.com/falabellaCL/17482517_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17482517_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17482517_01/public?scl=1.0"
+ ],
  "g15": "https://media.falabella.com/falabellaCL/80639342_1/w=600,h=600,fit=pad",
  "g16": "https://media.falabella.com/falabellaCL/156974638_01/w=600,h=600,fit=pad",
  "g17": "https://media.falabella.com/falabellaCL/80738039_1/w=600,h=600,fit=pad",
  "g18": "https://assets.pcfactory.cl/public/foto/56428/1_500.jpg",
  "g19": "https://media.falabella.com/falabellaCL/17482518_1/w=600,h=600,fit=pad",
- "g20": "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000410038547/full_image-2000410038547",
- "g21": "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000409933471/full_image-2000409933471",
- "g22": "https://cl-cenco-pim-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/prd-cl/product-medias/982b3e60-7f14-4f19-953d-457fbaa85cab/MKHQSWKR7P/MKHQSWKR7P-1/1787847979724-MKHQSWKR7P-1-1.jpg",
+ "g20": [
+  "https://static.myshop.cl/35951/8_1745271405000.png",
+  "https://v2.cl/2194-home_default/lenovo-loq-amd-ryzen-7-7435hs-ai-geforce-rtx-4060-512gb-ssd-16gb-ram-ddr5-156-fhd-144hz-83jc0000us.jpg",
+  "https://media.falabella.com/falabellaCL/80643914_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/145374801_1/w=600,h=600,fit=pad"
+ ],
+ "g21": [
+  "https://media.falabella.com/falabellaCL/151784353_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/151784353_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/151784353_01/public?scl=1.0",
+  "https://assets.pcfactory.cl/public/foto/55906/1.jpg?t=1775681216067",
+  "https://cdnx.jumpseller.com/notebook-store/image/75730684/resize/760/760",
+  "https://s3.amazonaws.com/w3.assets/fotos/37662/1..webp?v=1041425519"
+ ],
+ "g22": [
+  "https://media.falabella.com/falabellaCL/156999062_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/156999062_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/156999062_01/public?scl=1.0",
+  "https://assets.pcfactory.cl/public/foto/58189/1.jpg?t=1790105648050",
+  "https://www.acerstore.cl/cdn/shop/files/PNR-1087_07.jpg"
+ ],
  "g23": "https://assets.pcfactory.cl/public/foto/58255/1_500.jpg",
  "g24": "https://media.falabella.com/falabellaCL/80808899_01/w=600,h=600,fit=pad",
  "g25": "https://media.falabella.com/falabellaCL/154422023_01/w=600,h=600,fit=pad",
  "g26": "https://media.falabella.com/falabellaCL/143311946_01/w=600,h=600,fit=pad",
- "g27": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/518622999/variant/6a6b8611f0fff43b1be1315f/images/8de67421-3b91-494b-8a7b-e9ff88ec9cef/518622999-0000-001.jpg",
+ "g27": [
+  "https://media.falabella.com/falabellaCL/80726513_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/80726513_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/80726513_01/public?scl=1.0",
+  "https://media.falabella.com/falabellaCL/153681109_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/153681109_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/153681109_01/public?scl=1.0"
+ ],
  "g28": "https://media.falabella.com/falabellaCL/80643914_1/w=600,h=600,fit=pad",
  "g29": "https://media.falabella.com/falabellaCL/156050290_01/w=600,h=600,fit=pad",
  "g30": "https://assets.pcfactory.cl/public/foto/58256/1_500.jpg",
@@ -55,16 +179,34 @@
  "g37": "https://media.falabella.com/falabellaCL/156446439_01/w=600,h=600,fit=pad",
  "g38": "https://media.falabella.com/falabellaCL/17500183_1/w=600,h=600,fit=pad",
  "g39": "https://media.falabella.com/falabellaCL/156049981_01/w=600,h=600,fit=pad",
- "g40": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/326456999/variant/690e44075a6c1817178ecc9f/images/a5ba583e-a7a1-47ea-881c-3a185e2e3365/326456999-0000-001.jpg",
+ "g40": [
+  "https://media.falabella.com/falabellaCL/80642557_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/80642557_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/80642557_1/public?scl=1.0",
+  "https://assets.pcfactory.cl/public/foto/54320/1.jpg?t=1750781679557",
+  "https://cdnx.jumpseller.com/notebook-store/image/80092685/resize/760/760",
+  "https://www.tecnoshopping.cl/wp-content/uploads/2025/11/Legion_Pro_5_16IAX10H_CT1_02-TecnoShopping-CL.webp"
+ ],
  "g41": "https://media.falabella.com/falabellaCL/146409884_01/w=600,h=600,fit=pad",
  "g42": "https://assets.pcfactory.cl/public/foto/56696/1_500.jpg",
  "g43": "https://assets.pcfactory.cl/public/foto/56709/1_500.jpg",
- "g44": "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000408778615/full_image-2000408778615",
+ "g44": [
+  "https://media.falabella.com/falabellaCL/17482520_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/157192723_1/w=600,h=600,fit=pad",
+  "https://www.megabytes.cl/wp-content/uploads/2025/11/25C1_OMEN_16_Shadow-Black_NT_HD-Cam_nonFPR_B1_BD1_D2_RGB-per-key_Valorant-Screen_Core-Set_Front_3554150-1200x901.png"
+ ],
  "g45": "https://media.falabella.com/falabellaCL/80752904_1/w=600,h=600,fit=pad",
  "g46": "https://media.falabella.com/falabellaCL/80758852_01/w=600,h=600,fit=pad",
  "g47": "https://media.falabella.com/falabellaCL/146402306_01/w=600,h=600,fit=pad",
  "g48": "https://media.falabella.com/falabellaCL/151587808_01/w=600,h=600,fit=pad",
- "g49": "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000404540728/full_image-2000404540728",
+ "g49": [
+  "https://media.falabella.com/falabellaCL/17113169_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17113169_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17113169_1/public?scl=1.0",
+  "https://media.falabella.com/falabellaCL/143701900_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/143701900_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/143701900_01/public?scl=1.0"
+ ],
  "g50": "https://media.falabella.com/falabellaCL/157263908_01/w=600,h=600,fit=pad",
  "ip18p": "https://media.falabella.com/falabellaCL/17776863_1/w=600,h=600,fit=pad",
  "ip17pm": "https://media.falabella.com/falabellaCL/17564075_1/w=600,h=600,fit=pad",
@@ -84,7 +226,14 @@
  "s25fe": "https://media.falabella.com/falabellaCL/17558930_1/w=600,h=600,fit=pad",
  "zfold7": "https://miportal.entel.cl/static/091120261554004/images/galaxy-z-fold-7-negro-01_670x670.jpg",
  "a57": "https://media.falabella.com/falabellaCL/17684254_1/w=600,h=600,fit=pad",
- "a57b": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/424619999/variant/69bc1c7b9fc653a3074e0508/images/a58cb8d6-2d06-4155-9c7f-9437c2a7e667/424619999-0000-001.jpg",
+ "a57b": [
+  "https://media.falabella.com/falabellaCL/152630751_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/152630751_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/152630751_01/public?scl=1.0",
+  "https://images.samsung.com/is/image/samsung/p6pim/cl/sm-a576bzaeltl/gallery/cl-galaxy-a57-5g-sm-a576-sm-a576bzaeltl-thumb-551727761",
+  "https://i5.walmartimages.cl/asr/dfc48e4b-d0dc-4fa9-871f-7881c657c5c7.31de10eef0e0e30c5eefeecf17338f26.jpeg",
+  "https://i5.walmartimages.cl/asr/dbf7351c-e515-481b-8fe6-5483c681a7b6.f0bacdfdf60732ed95dff46a642d9c77.jpeg"
+ ],
  "a37": "https://media.falabella.com/falabellaCL/17684249_1/w=600,h=600,fit=pad",
  "a27": "https://media.falabella.com/falabellaCL/17743539_1/w=600,h=600,fit=pad",
  "a17": "https://miportal.entel.cl/static/091120261554004/images/a17-negro-01_670x670.jpg",
@@ -100,7 +249,14 @@
  "rn15pp": "https://miportal.entel.cl/static/091120261554004/images/note-15-pro-plus-negro-01_670x670.jpg",
  "r17": "https://assets.pcfactory.cl/public/foto/58048/1_500.jpg",
  "r17c": "https://media.falabella.com/falabellaCL/17757788_1/w=600,h=600,fit=pad",
- "r15c": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/fit-in/600x600/cl/paris/305159999/variant/69907215213b26f50199e935/images/e819e953-0205-4747-bcbd-b70c9a2c7817/305159999-0000-001.jpg",
+ "r15c": [
+  "https://media.falabella.com/falabellaCL/17619331_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17619331_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17619331_01/public?scl=1.0",
+  "https://media.falabella.com/falabellaCL/149468172_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/149468172_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/149468172_01/public?scl=1.0"
+ ],
  "ra7p": "https://assets.pcfactory.cl/public/foto/57374/1_500.jpg",
  "hm8p": "https://miportal.entel.cl/static/091120261554004/images/honor-magic-8-pro-negro-01_670x670.jpg",
  "hm8l": "https://miportal.entel.cl/static/091120261554004/images/honor-magic-8-lite-verde-01_670x670.jpg",
@@ -121,11 +277,25 @@
  "r-ip16p": "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clap16prlne_370_other_1_1.png",
  "r-ip16e": "https://catalogo.movistar.cl/media/catalog/product/i/p/iphone_16e_128gb_blanco_370_other_1.png",
  "r-ip15": "https://catalogo.movistar.cl/media/catalog/product/a/p/apple-_1_19_1.png",
- "r-ip14": "https://rimage.ripley.cl/home.ripley/Attachment/MKP/6675/MPM10003406796/full_image-1",
+ "r-ip14": [
+  "https://falabella.scene7.com/is/image/Falabella/gsc_116915015_1606457_1?scl=1.0",
+  "https://falabella.scene7.com/is/image/Falabella/gsc_117994056_1923814_1?scl=1.0",
+  "https://falabella.scene7.com/is/image/Falabella/gsc_118066048_1952074_1?scl=1.0",
+  "https://media.falabella.com/falabellaCL/16563270_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/16563270_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/16563270_1/public?scl=1.0"
+ ],
  "r-ip13": "https://catalogo.movistar.cl/media/catalog/product/a/p/apple-iphone-13-blanco-128gb-_-lamina-seminuevo-370x700.png",
  "r-s25u": "https://catalogo.movistar.cl/media/catalog/product/s/2/s25_ultra_256gb_azul_titanio370_other_1.png",
  "r-s25": "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clsags25paz_370_other_0_1.png",
- "r-s24": "https://rimage.ripley.cl/home.ripley/Attachment/MKP/5346/MPM10002173050/full_image-1",
+ "r-s24": [
+  "https://media.falabella.com/falabellaCL/17007776_1/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17007776_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/falabellaCL/17007776_10/public?scl=1.0",
+  "https://assets.pcfactory.cl/public/foto/51215/1.jpg?t=1714149738807",
+  "https://images.samsung.com/is/image/samsung/p6pim/cl/2401/gallery/cl-galaxy-s24-sm-s921bzkjltl-thumb-539293469",
+  "https://i5.walmartimages.cl/asr/f1918da0-b976-4090-9b21-cfa99ef74fe5.72df8eba2a905bf6888c29ad669429b0.jpeg?odnHeight=2000&odnWidth=2000&odnBg=ffffff"
+ ],
  "r-x15u": "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clxi0015upl_370_other_1.png",
  "r-x15t": "https://miportal.entel.cl/static/091120261554004/images/xiaomi-15t-rose-gold-01_670x670.jpg"
 }
