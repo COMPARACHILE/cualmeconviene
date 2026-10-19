@@ -115,3 +115,18 @@ img { display: block; max-width: 100%; }
 .pie { margin-top: 56px; background: var(--noche); color: #C4CBEA; padding-block: 32px calc(96px + env(safe-area-inset-bottom, 0px)); font-size: 15px; }
 .pie p { margin-top: 10px; max-width: 70ch; }
 .pie p a { color: #fff; }
+
+/* ---------- Rediseño 19-10-2026 ---------- */
+.hd .hd-in.wrap { padding-inline: 0; }
+.mejor .precio .pago, .tp .pago, .parP .pago { font-size: 12px; vertical-align: middle; margin-left: 6px; letter-spacing: 0; }
+.mejor .precio .pago { font-size: 13px; vertical-align: 10px; }
+/* En el celular la foto es más chica y el precio de cada tienda aparece antes */
+@media (max-width: 819px) {
+  .top { grid-template-columns: 112px minmax(0, 1fr); align-items: start; gap: 12px 14px; }
+  .fg { max-width: none; border-radius: 14px; grid-row: span 3; }
+  .fg img { padding: 8px; }
+  .res h1 { font-size: 1.35rem; }
+  .res .mejor { grid-column: 1 / -1; margin-top: 4px; }
+  .top > .res { display: contents; }
+  .top > .res > .mc, .top > .res > h1, .top > .res > .sp, .top > .res > .aviso { grid-column: 2; }
+}

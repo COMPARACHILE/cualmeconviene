@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#0E1533">
 <link rel="icon" href="/assets/puma-icono-48.png" type="image/png" sizes="48x48">
 <link rel="preload" href="/assets/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/cmc.css?v=8517732a">
-<link rel="stylesheet" href="/assets/ficha.css?v=e057e41a">
+<link rel="stylesheet" href="/assets/cmc.css?v=099e63d8">
+<link rel="stylesheet" href="/assets/ficha.css?v=c9d44658">
 <style>
 .p404 { display: grid; gap: 24px; align-items: center; padding-block: 48px 24px; }
 @media (min-width: 760px) { .p404 { grid-template-columns: 220px 1fr; gap: 40px; } }
@@ -21,16 +21,19 @@
 .b404 button { font: inherit; font-weight: 700; border: 0; border-radius: 14px; padding: 0 20px; min-height: 50px; background: var(--amarillo); color: #2A2100; cursor: pointer; }
 .l404 { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 .l404 a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 12px; background: var(--blanco); border: 1px solid var(--borde); text-decoration: none; font-weight: 600; }
+.hd .hd-in.wrap { padding-inline: 0; }
 </style>
-<script defer src="/assets/cmc.js?v=7e776bdd"></script>
+<script defer src="/assets/cmc.js?v=d7c8fc65"></script>
 </head>
 <body>
-<header class="cab"><div class="wrap cabIn">
-  <a class="marca" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="40" height="40"><span>¿Cuál me conviene?</span></a>
-  <nav class="cats" aria-label="Categorías"><a href="/notebooks">Notebooks</a><a href="/celulares">Celulares</a><a href="/tablets">Tablets</a><a href="/televisores">Televisores</a></nav>
-</div></header>
+<header class="hd">
+  <div class="hd-in wrap">
+    <a class="hd-logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="36" height="36" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
+    <nav class="hd-cats" aria-label="Categorías"><a href="/notebooks">Notebooks</a><a href="/celulares">Celulares</a><a href="/tablets">Tablets</a><a href="/televisores"><span class="lg">Televisores</span><span class="sm">TV</span></a></nav>
+  </div>
+</header>
 <main class="wrap p404">
-  <img src="/assets/puma.webp" alt="" width="555" height="700">
+  <img src="/assets/puma-sello.webp" alt="" width="160" height="160" style="border-radius:50%">
   <div>
     <h1>El puma no encontró esta página</h1>
     <p>Puede que el enlace esté mal escrito o que el equipo ya no esté en las tiendas. Busca el modelo o entra a una categoría.</p>

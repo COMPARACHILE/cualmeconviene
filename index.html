@@ -295,22 +295,45 @@ button, input { font: inherit; color: inherit; }
 .legalBody h3 { font: 700 15px/1.3 var(--f-body); color: #fff; margin-top: 18px; letter-spacing: 0; }
 .legalBody p { margin-top: 6px; max-width: none; }
 .aviso { font-size: 14px; color: #A5AFD6; }
+
+/* ---------- Rediseño 19-10-2026 ---------- */
+.hd .hd-in.wrap { padding-inline: 0; }
+.escena { padding-right: 0 !important; margin-top: 0 !important; }
+.ficha { max-width: 520px; }
+.fichaTop { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.fichaTop p { font-size: 14px; font-weight: 700; color: #10152B; padding-right: 0 !important; }
+.ficha .sello { font-size: 13px; }
+.ahorro p .baja { display: inline-block; margin-left: 6px; font: 700 13px/1 var(--f-body); color: #0B7F57; background: #DDF5EA; padding: 4px 7px; border-radius: 6px; vertical-align: 2px; }
+.ficha .pago, .of .pago, .reco .pago { margin-left: 6px; vertical-align: 3px; font-size: 11.5px; min-height: 20px; }
+.ficha .pago { color: #566082; border-color: #DCE1EE; }
+.of .ofFoto b { display: inline-flex; gap: 6px; }
+.of .ofFoto b i { font-style: normal; opacity: .85; }
+/* Las cuatro categorías con foto, arriba */
+.catsH { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 18px; max-width: 580px; }
+.catsH a { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px 10px; border-radius: 14px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .14); color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; text-align: center; transition: background-color 150ms var(--ease); }
+.catsH a:hover { background: rgba(255, 255, 255, .13); }
+.catsH .cf { width: 56px; height: 56px; border-radius: 12px; background: #fff; display: grid; place-items: center; overflow: hidden; }
+.catsH .cf img, .catsH .cf svg { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.catsH small { font-weight: 500; font-size: 12px; color: #A5AFD6; }
+@media (max-width: 559px) {
+  .bajada { display: none; }
+  .portada h1 { font-size: 2rem; }
+  .catsH a { font-size: 13px; padding: 8px 4px; }
+  .catsH .cf { width: 48px; height: 48px; }
+  .portadaIn { gap: 24px; }
+}
 </style>
-<link rel="stylesheet" href="/assets/cmc.css?v=8517732a">
+<link rel="stylesheet" href="/assets/cmc.css?v=099e63d8">
+<script src="/assets/cmc-ui.js?v=890112db"></script>
 <script defer src="/assets/fotos.js?v=14da43ef"></script>
 <script defer src="/assets/fichas.js?v=baa574e9"></script>
-<script defer src="/assets/cmc.js?v=7e776bdd"></script>
+<script defer src="/assets/cmc.js?v=d7c8fc65"></script>
 </head>
 <body>
-<header class="cab">
-  <div class="wrap cabIn">
-    <a class="marca" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="40" height="40" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
-    <nav class="cats" aria-label="Categorías">
-      <a href="/notebooks">Notebooks</a>
-      <a href="/celulares">Celulares</a>
-      <a href="/tablets">Tablets</a>
-      <a href="/televisores">Televisores</a>
-    </nav>
+<header class="hd">
+  <div class="hd-in wrap">
+    <a class="hd-logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="36" height="36" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
+    <nav class="hd-cats" aria-label="Categorías"><a href="/notebooks">Notebooks</a><a href="/celulares">Celulares</a><a href="/tablets">Tablets</a><a href="/televisores"><span class="lg">Televisores</span><span class="sm">TV</span></a></nav>
   </div>
 </header>
 
@@ -329,22 +352,12 @@ button, input { font: inherit; color: inherit; }
         </div>
         <div class="sug" id="sug" role="listbox" aria-label="Sugerencias" hidden></div>
       </form>
-      <nav class="atajos" aria-label="Búsquedas rápidas">
-        <a href="/notebooks?uso=juegos">Notebook gamer</a>
-        <a href="/notebooks?uso=estudio">Para estudiar</a>
-        <a href="/celulares?marca=Apple">iPhone</a>
-        <a href="/celulares?marca=Samsung">Samsung Galaxy</a>
-        <a href="/televisores?tam=m">Televisor 55"</a>
-        <a href="/tablets?marca=Apple">iPad</a>
-        <a href="/celulares?gama=entrada">Celulares hasta $250.000</a>
-        <a href="/celulares?gama=ref">Reacondicionados</a>
-      </nav>
+      <nav class="catsH" id="catsH" aria-label="Categorías"><a href="/notebooks"><span class="cf" data-k="nb"></span>Notebooks<small data-n="nb"></small></a><a href="/celulares"><span class="cf" data-k="ph"></span>Celulares<small data-n="ph"></small></a><a href="/tablets"><span class="cf" data-k="tb"></span>Tablets<small data-n="tb"></small></a><a href="/televisores"><span class="cf" data-k="tv"></span>TV<small data-n="tv"></small></a></nav>
     </div>
 
     <div class="escena">
-      <img class="pumaHero" src="/assets/puma.webp" alt="" width="555" height="700" fetchpriority="high">
-      <article class="ficha carga" id="ficha" aria-roledescription="carrusel" aria-label="Comparación de precios del día">
-        <div class="fichaTop"><p id="fichaEt">Mismo equipo, distinto precio</p></div>
+      <article class="ficha carga" id="ficha" aria-label="La oferta del día">
+        <div class="fichaTop"><p id="fichaEt">La oferta del día</p><span id="fichaSello"></span></div>
         <div class="esq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
         <div id="fichaCuerpo" aria-live="polite">
           <a class="prod" id="prod" href="/notebooks"><span class="foto"></span><span><h2>Cargando precios</h2><p></p></span></a>
@@ -352,7 +365,6 @@ button, input { font: inherit; color: inherit; }
           <div class="ahorro"><p id="ahorroTxt"></p><a class="btnVer" id="btnVer" href="/notebooks">Ver precios</a></div>
         </div>
       </article>
-      <div class="puntos" id="puntos" role="group" aria-label="Elegir equipo"></div>
     </div>
   </div>
   <div class="wrap tiendas" aria-label="Tiendas y operadoras que revisamos">
@@ -457,7 +469,7 @@ button, input { font: inherit; color: inherit; }
       <details><summary>¿Ustedes venden los equipos?</summary><p>No. ¿Cuál me conviene? es un comparador: reúne los precios que publican las tiendas y te lleva a ellas. La compra, el despacho y la garantía son con la tienda u operadora que elijas.</p></details>
       <details><summary>¿Qué tiendas revisan?</summary><p>Falabella, Paris, Ripley y PCFactory. En celulares también Entel, Movistar, Claro y WOM, y en tablets, Movistar. No incluimos Mercado Libre.</p></details>
       <details><summary>¿Cada cuánto se actualizan los precios?</summary><p>Los revisamos a diario. Cada equipo indica la fecha de revisión. Los precios cambian rápido, así que confirma siempre en la tienda antes de pagar.</p></details>
-      <details><summary>¿Qué significa el asterisco (*) en un precio?</summary><p>Que ese precio exige un medio de pago: la tarjeta de la tienda (CMR, Cencosud, Ripley) o transferencia. Sin ese medio, el precio puede ser más alto.</p></details>
+      <details><summary>¿Qué significa "con tarjeta" o "transferencia" junto a un precio?</summary><p>Que ese precio exige un medio de pago: la tarjeta de la tienda (CMR, Cencosud, Ripley) o transferencia. Sin ese medio, el precio puede ser más alto.</p></details>
       <details><summary>¿Qué es un celular reacondicionado?</summary><p>Un equipo usado que fue revisado y se vende con garantía, a menor precio que uno nuevo. Siempre lo marcamos con una etiqueta amarilla para que no te confundas.</p></details>
       <details><summary>¿Qué son los benchmarks?</summary><p>Pruebas que miden la potencia del procesador con un número. Mientras más alto, más rápido. Te sirven para saber si un equipo más caro realmente rinde más.</p></details>
     </div>
@@ -527,10 +539,10 @@ const SIN = {
   tv: '<svg viewBox="0 0 80 60" aria-hidden="true" class="sinFoto"><rect x="8" y="8" width="64" height="38" rx="3" fill="#C9D0E4"/><path d="M30 54h20M40 46v8" stroke="#AEB7D4" stroke-width="3"/></svg>'
 };
 // Foto del equipo: la propia si existe, la de la tienda si no, y un dibujo simple si nada carga
-function foto(e, cls) {
+function foto(e, cls, alt) {
   const u = window.cmcFoto ? cmcFoto(e.id) : null;
   if (!u) return SIN[e.k];
-  return `<img${cls ? ` class="${cls}"` : ''} src="${esc(u)}" alt="" width="480" height="480" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-k="${e.k}">`;
+  return `<img${cls ? ` class="${cls}"` : ''} src="${esc(u)}" alt="${alt ? esc(e.nombre) : ''}" width="480" height="480" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-k="${e.k}">`;
 }
 document.addEventListener('error', ev => {
   const im = ev.target;
@@ -590,54 +602,40 @@ fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch((
   const pinta = (id, l) => { $(id).innerHTML = l.map(e => `<span>${foto(e)}</span>`).join(''); };
   const porId = (l, ids) => ids.map(i => l.find(e => e.id === i)).filter(Boolean);
   const abanico = (l, ids) => { const a = porId(l, ids); return a.length === 3 ? a : l.filter(e => window.cmcFoto && cmcFoto(e.id)).sort((x, y) => y.gap - x.gap).slice(0, 3); };
+  const LST = { nb: NB, ph: PH, tb: TB, tv: TV };
+  const PRIMERO = { nb: abanico(NB, ['a11', 'g38', 'n5'])[1], ph: abanico(PH, ['s26u', 'ip17p', 'rn17p'])[1], tb: abanico(TB, ['tb383370', 'tb271963', 'tb280328'])[1], tv: abanico(TV, ['tv392864', 'tv393545', 'tv385084'])[1] };
+  document.querySelectorAll('#catsH [data-k]').forEach(s => { const e = PRIMERO[s.dataset.k]; if (e) s.innerHTML = foto(e); });
+  document.querySelectorAll('#catsH [data-n]').forEach(s => { s.textContent = LST[s.dataset.n].length + ' equipos'; });
   pinta('fanNb', abanico(NB, ['a11', 'g38', 'n5']));
   pinta('fanPh', abanico(PH, ['s26u', 'ip17p', 'rn17p']));
   pinta('fanTb', abanico(TB, ['tb383370', 'tb271963', 'tb280328']));
   pinta('fanTv', abanico(TV, ['tv392864', 'tv393545', 'tv385084']));
 
-  // ---------- Ficha principal: alterna las cuatro categorías con la mayor diferencia ----------
+  // ---------- La oferta del día: el equipo con la mayor diferencia entre tiendas ----------
   const conDif = l => l.filter(e => e.os.length > 1 && e.gap > 0).sort((a, b) => b.gap - a.gap);
-  const grupos = [conDif(NB).slice(0, 2), conDif(PH).slice(0, 2), conDif(TV).slice(0, 2), conDif(TB).slice(0, 2)];
-  const ROT = [];
-  for (let i = 0; i < 2; i++) grupos.forEach(g => { if (g[i]) ROT.push(g[i]); });
-  let cur = 0, timer = null, pausa = false, visible = true;
-  $('puntos').innerHTML = ROT.map((e, i) => `<button type="button" aria-label="${esc(e.nombre)}" aria-current="${i === 0}"><i></i></button>`).join('');
-  function muestra(i, anim) {
-    cur = (i + ROT.length) % ROT.length;
-    const e = ROT[cur], max = e.worst.p - e.best.p || 1;
+  const DIA = conDif(TODO)[0];
+  if (DIA) {
+    const e = DIA, max = e.worst.p - e.best.p || 1;
     const filas = e.os.slice(0, 4).map((o, k) => {
       const d = o.p - e.best.p, gana = k === 0, igual = k > 0 && d === 0;
-      const tag = gana ? (e.os[1] && e.os[1].p === e.best.p ? ' <b>Más barato</b>' : ' <b>Más barato</b>') : (igual ? ' <b>Mismo precio</b>' : '');
-      return `<li class="${gana ? 'gana' : igual ? 'igual' : ''}"><span class="t"><i style="background:${sc(o.s)}"></i>${sn(o.s)}${tag}</span><span class="p">${fmt(o.p)}${o.c ? '*' : ''}${d > 0 ? `<small>+${fmt(d)}</small>` : ''}</span><span class="b" aria-hidden="true"><span style="--w:${gana || igual ? 100 : Math.max(4, d / max * 100).toFixed(1)}%"></span></span></li>`;
+      const tag = gana ? ' <b>Más barato</b>' : (igual ? ' <b>Mismo precio</b>' : '');
+      return `<li class="${gana ? 'gana' : igual ? 'igual' : ''}"><span class="t"><i style="background:${sc(o.s)}"></i>${sn(o.s)}${tag}</span><span class="p">${fmt(o.p)}${d > 0 ? `<small>+${fmt(d)}</small>` : ''}</span><span class="b" aria-hidden="true"><span style="--w:${Math.round(d / max * 100)}%"></span></span></li>`;
     }).join('');
     $('prod').href = e.href; $('btnVer').href = e.href;
-    $('prod').innerHTML = `<span class="foto">${foto(e)}</span><span><h2>${esc(e.nombre)}</h2><p>${esc(e.spec)}</p></span>`;
+    $('prod').innerHTML = `<span class="foto">${foto(e, '', true)}</span><span><h2>${esc(e.nombre)}</h2><p>${esc(e.spec)}</p></span>`;
     $('escalera').innerHTML = filas;
     const empatan = e.os.filter(o => o.p === e.best.p).map(o => sn(o.s));
-    $('ahorroTxt').innerHTML = `Ahorras <b>${fmt(e.gap)}</b> en ${empatan.length > 1 ? empatan.slice(0, -1).join(', ') + ' o ' + empatan.slice(-1) : empatan[0]}`;
-    $('fichaEt').textContent = { nb: 'Mismo notebook, distinto precio', ph: 'Mismo celular, distinto precio', tb: 'Misma tablet, distinto precio', tv: 'Mismo televisor, distinto precio' }[e.k];
-    $('puntos').querySelectorAll('button').forEach((b, k) => b.setAttribute('aria-current', String(k === cur)));
-    if (anim && !reduce.matches) {
-      const c = $('fichaCuerpo'); c.classList.remove('cambia'); void c.offsetWidth; c.classList.add('cambia');
-      $('escalera').querySelectorAll('.b span').forEach(s => { const w = s.style.getPropertyValue('--w'); s.style.setProperty('--w', '0%'); requestAnimationFrame(() => requestAnimationFrame(() => s.style.setProperty('--w', w))); });
-    }
-  }
-  const sigue = () => { clearInterval(timer); if (!reduce.matches && ROT.length > 1) timer = setInterval(() => { if (!pausa && visible && !document.hidden) muestra(cur + 1, true); }, 6500); };
-  if (ROT.length) {
-    muestra(0, false); $('ficha').classList.remove('carga'); sigue();
-    $('puntos').addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; muestra([...$('puntos').children].indexOf(b), true); sigue(); });
-    $('ficha').addEventListener('pointerenter', () => { pausa = true; });
-    $('ficha').addEventListener('pointerleave', () => { pausa = false; });
-    $('ficha').addEventListener('focusin', () => { pausa = true; });
-    $('ficha').addEventListener('focusout', () => { pausa = false; });
-    if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe($('ficha'));
+    const baja = Math.round(e.gap / e.worst.p * 100);
+    $('ahorroTxt').innerHTML = `Ahorras <b>${fmt(e.gap)}</b> en ${empatan.length > 1 ? empatan.slice(0, -1).join(', ') + ' o ' + empatan.slice(-1) : empatan[0]}${window.CMC ? CMC.pago(e.best) : ''}<span class="baja">↓ ${baja}%</span>`;
+    if (window.CMC) $('fichaSello').innerHTML = CMC.sello();
+    $('ficha').classList.remove('carga');
   }
 
   // ---------- Riel: donde más ahorras ----------
-  const riel = conDif(TODO).slice(0, 14);
+  const riel = conDif(TODO).slice(1, 15);
   $('riel').innerHTML = riel.map(e => `<a class="of" href="${e.href}">
-    <span class="ofFoto">${foto(e)}<b>Ahorras ${fmt(e.gap)}</b></span>
-    <span class="ofTxt"><h3>${esc(e.nombre)}</h3><span class="pr">${fmt(e.best.p)}${e.best.c ? '*' : ''}</span>
+    <span class="ofFoto">${foto(e, '', true)}<b>Ahorras ${fmt(e.gap)}<i>↓ ${Math.round(e.gap / e.worst.p * 100)}%</i></b></span>
+    <span class="ofTxt"><h3>${esc(e.nombre)}</h3><span class="pr">${fmt(e.best.p)}${window.CMC ? CMC.pago(e.best) : ''}</span>
     <span class="en"><i style="background:${sc(e.best.s)}"></i>en ${sn(e.best.s)} · ${e.os.length} tiendas</span>
     <span class="vs">En ${sn(e.worst.s)} cuesta ${fmt(e.worst.p)}</span></span></a>`).join('');
   const R = $('riel');
@@ -665,9 +663,9 @@ fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch((
     ['Televisor de 50 a 55"', tvTam(x => x >= 48 && x <= 55), e => `Mejor imagen por su precio en este tamaño`],
     ['Televisor de 58 a 65"', tvTam(x => x >= 58 && x <= 65), e => `Mejor imagen por su precio en este tamaño`]
   ].filter(r => r[1]);
-  $('recos').innerHTML = recos.map(([para, e, porque]) => `<a class="reco" href="${e.href}"><span class="rf">${foto(e)}</span><span>
+  $('recos').innerHTML = recos.map(([para, e, porque]) => `<a class="reco" href="${e.href}"><span class="rf">${foto(e, '', true)}</span><span>
     <span class="para">${para}</span><h3>${esc(e.nombre)}</h3><span class="porque">${porque(e)}, ${esc(e.spec.split(', ').slice(0, 2).join(', '))}</span>
-    <span class="pr">${fmt(e.best.p)}${e.best.c ? '*' : ''}<small>en ${sn(e.best.s)}</small></span></span></a>`).join('');
+    <span class="pr">${fmt(e.best.p)}<small>en ${sn(e.best.s)}</small>${window.CMC ? CMC.pago(e.best) : ''}</span></span></a>`).join('');
 
   // ---------- Buscador con fotos ----------
   const PAL = { nb: e => 'notebook laptop ' + (e.raw.gpuTier ? 'gamer' : ''), ph: e => 'celular telefono smartphone ' + (e.raw.refurb ? 'reacondicionado' : ''),

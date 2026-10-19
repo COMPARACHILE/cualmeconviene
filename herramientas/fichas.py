@@ -208,12 +208,20 @@ def grafico(hist, hoy_precio, hoy):
     return svg, frase
 
 
+def pago(o):
+    """Etiqueta corta del medio de pago ("con tarjeta" o "transferencia") en vez de un asterisco."""
+    if not o.get('c'):
+        return ''
+    t = 'transferencia' if 'transfer' in (o.get('note') or '').lower() else 'con tarjeta'
+    return f' <span class="pago" title="{e(o.get("note") or "")}">{t}</span>'
+
+
 def tarjeta(x, fotos, url_ficha):
     f, _ = foto_de(x['id'], fotos)
     img = f'<img src="{e(f)}" alt="" width="480" height="480" loading="lazy" decoding="async" referrerpolicy="no-referrer">' if f else ''
     o = x['os'][0]
     return (f'<a class="par" href="{url_ficha}"><span class="parF">{img}</span><span class="parT">{e(x["nombre"])}</span>'
-            f'<span class="parP">{plata(o["p"])}{"*" if o.get("c") else ""}</span><span class="parE">en {TIENDAS[o["s"]][0]}</span></a>')
+            f'<span class="parP">{plata(o["p"])}{pago(o)}</span><span class="parE">en {TIENDAS[o["s"]][0]}</span></a>')
 
 
 def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
@@ -251,7 +259,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
         etiqueta = '<b class="gana">Más barato</b>' if k == 0 or dif == 0 else f'<b class="mas">+{plata(dif)}</b>'
         filas += (f'<li class="{"g" if dif == 0 else ""}"><span class="tn"><i style="background:{color}"></i><span><strong>{nom}</strong>'
                   f'{" <small>operadora</small>" if canal == "operadora" else ""}{f"<em>{e(extra)}</em>" if extra else ""}</span></span>'
-                  f'<span class="tp">{plata(o["p"])}{"<abbr title=\"Pide tarjeta de la tienda o transferencia\">*</abbr>" if o.get("c") else ""}{etiqueta}</span>'
+                  f'<span class="tp">{plata(o["p"])}{pago(o)}{etiqueta}</span>'
                   f'<a class="tb" href="{e(o["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{o["s"]}">Ver en {nom}</a></li>')
     svg, frase = grafico(hist.get(x['id'], {}), os_[0]['p'] if os_ else None, hoy)
     # Parecidos: misma familia y precio cercano
@@ -273,7 +281,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
         donde = ' o '.join([', '.join(empatan[:-1]), empatan[-1]]) if len(empatan) > 1 else empatan[0]
         ahorro = (f'<p class="ah">Ahorras <b>{plata(w["p"] - b["p"])}</b> frente a {TIENDAS[w["s"]][0]}</p>' if w['p'] > b['p'] else
                   (f'<p class="ah neutro">Mismo precio en {len(os_)} tiendas</p>' if len(os_) > 1 else '<p class="ah neutro">Lo encontramos en una tienda</p>'))
-        mejor = (f'<div class="mejor"><p class="et">Precio más bajo hoy</p><p class="precio">{plata(b["p"])}{"<abbr title=\"Pide tarjeta de la tienda o transferencia\">*</abbr>" if b.get("c") else ""}</p>'
+        mejor = (f'<div class="mejor"><p class="et">Precio más bajo hoy</p><p class="precio">{plata(b["p"])}{pago(b)}</p>'
                  f'<p class="donde"><i style="background:{TIENDAS[b["s"]][1]}"></i>en {e(donde)}{(" · " + e(b["note"])) if b.get("note") else ""}</p>{ahorro}'
                  f'<a class="ir" href="{e(b["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{b["s"]}">Ir a {TIENDAS[b["s"]][0]}</a></div>')
     else:
@@ -308,9 +316,10 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
 <script defer src="/assets/cmc.js"></script>
 </head>
 <body>
-<header class="cab"><div class="wrap cabIn">
-  <a class="marca" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="40" height="40" decoding="async"><span>¿Cuál me conviene?</span></a>
-  <nav class="cats" aria-label="Categorías">{''.join(f'<a href="/{c.lower()}"' + (' aria-current="true"' if c == tipo else '') + f'>{c}</a>' for c in ('Notebooks', 'Celulares', 'Tablets', 'Televisores'))}</nav>
+<header class="hd"><div class="hd-in wrap">
+  <a class="hd-logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="36" height="36" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
+  <form class="search" action="{lista}" role="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input name="q" type="search" placeholder="Buscar {tipo.lower()}" aria-label="Buscar {tipo.lower()}" autocomplete="off"></form>
+  <nav class="hd-cats" aria-label="Categorías">{''.join(f'<a href="/{c.lower()}"' + (' aria-current="page"' if c == tipo else '') + '>' + (f'<span class="lg">{c}</span><span class="sm">TV</span>' if c == 'Televisores' else c) + '</a>' for c in ('Notebooks', 'Celulares', 'Tablets', 'Televisores'))}</nav>
 </div></header>
 <main class="wrap">
   <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a><span aria-hidden="true">›</span><a href="{lista}">{tipo}</a><span aria-hidden="true">›</span><span aria-current="page">{e(nombre)}</span></nav>
@@ -327,7 +336,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
   <section class="bloque" aria-labelledby="t1">
     <h2 id="t1">Precio en cada tienda</h2>
     {f'<ol class="tiendas">{filas}</ol>' if filas else '<p>Hoy no hay tiendas con stock.</p>'}
-    <p class="nota">Precios revisados el {hoy_txt}. El asterisco (*) indica que el precio pide la tarjeta de la tienda o transferencia. Confirma siempre el precio final en la tienda antes de pagar.</p>
+    <p class="nota">Precios revisados el {hoy_txt}. Confirma el precio final en la tienda antes de pagar.</p>
   </section>
   <section class="bloque" aria-labelledby="t2">
     <h2 id="t2">Historial del precio más bajo</h2>

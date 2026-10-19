@@ -498,76 +498,42 @@ body.hasTray { padding-bottom: 96px; }
 .paneles dt { font-weight: 700; }
 .paneles dd { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
 </style>
-<link rel="stylesheet" href="/assets/cmc.css?v=8517732a">
-<script defer src="/assets/cmc.js?v=7e776bdd"></script>
+<link rel="stylesheet" href="/assets/cmc.css?v=099e63d8">
+<script src="/assets/cmc-ui.js?v=890112db"></script>
+<script defer src="/assets/cmc.js?v=d7c8fc65"></script>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <symbol id="pumaHead" viewBox="0 0 120 120">
-      <circle cx="28" cy="30" r="17" fill="#B9773A"/><circle cx="92" cy="30" r="17" fill="#B9773A"/>
-      <circle cx="29" cy="32" r="9" fill="#5A3420"/><circle cx="91" cy="32" r="9" fill="#5A3420"/>
-      <path d="M60 22c26 0 46 16 46 42 0 26-20 46-46 46S14 90 14 64c0-26 20-42 46-42z" fill="#D08E4A"/>
-      <path d="M60 30c-6 0-10 4-10 9 4-2 7-3 10-3s6 1 10 3c0-5-4-9-10-9z" fill="#B9773A"/>
-      <path d="M22 74c6 18 20 30 38 30s32-12 38-30c-8 6-16 7-22 4-4 6-10 8-16 8s-12-2-16-8c-6 3-14 2-22-4z" fill="#F6E3C6"/>
-      <path d="M45 66c-4 6-6 12-6 18M75 66c4 6 6 12 6 18" stroke="#5A3420" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <g class="pupils"><g class="eyes"><ellipse cx="44" cy="58" rx="6.5" ry="7.5" fill="#1E1410"/><ellipse cx="76" cy="58" rx="6.5" ry="7.5" fill="#1E1410"/>
-      <circle cx="46" cy="55" r="2.2" fill="#fff"/><circle cx="78" cy="55" r="2.2" fill="#fff"/></g></g>
-      <path d="M52 72h16c0 5-4 9-8 9s-8-4-8-9z" fill="#7A3B2E"/>
-      <path d="M60 81v6M60 87c-3 4-8 4-10 1M60 87c3 4 8 4 10 1" stroke="#5A3420" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-      <path d="M34 82h-12M34 87l-11 3M86 82h12M86 87l11 3" stroke="#B9773A" stroke-width="1.6" stroke-linecap="round"/>
-    </symbol>
-  </defs>
-</svg>
-<div class="promo full">Precios de televisores revisados en tiendas de Chile · <span id="promoDate"></span></div>
-<header class="top full">
-  <div class="in topIn">
-    <a class="logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img class="logoMark" src="/assets/puma-icono-96.png" alt="" width="40" height="40" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
+<header class="hd full">
+  <div class="hd-in">
+    <a class="hd-logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="36" height="36" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
     <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Ej.: Samsung 55, OLED o 65U7" autocomplete="off" aria-label="Buscar televisor"></label>
-    <nav class="nav" aria-label="Secciones"><button type="button" data-go="tienda">Comparar precios</button><button type="button" data-go="guia">¿Qué tamaño?</button></nav>
+    <nav class="hd-cats" aria-label="Categorías"><a href="/notebooks">Notebooks</a><a href="/celulares">Celulares</a><a href="/tablets">Tablets</a><a href="/televisores" aria-current="page"><span class="lg">Televisores</span><span class="sm">TV</span></a></nav>
   </div>
-  <nav class="menu in" aria-label="Categorías">
-    <a class="mlink" href="/notebooks">Notebooks</a>
-    <a class="mlink" href="/celulares">Celulares</a>
-    <a class="mlink" href="/tablets">Tablets</a>
-    <a class="mlink on" href="/televisores" aria-current="page">Televisores</a>
-  </nav>
 </header>
 
-<section class="hero full"><div class="in heroIn">
-  <div class="banner">
-    <img class="mascot" src="/assets/puma.webp" alt="El puma de ¿Cuál me conviene?, con una lupa y el pulgar arriba" width="555" height="700">
-    <div class="bannerTxt">
-      <p class="bubble">Reviso <b>las tiendas</b> por ti, todos los días.</p>
-      <h1>El mismo televisor, en la tienda más barata.</h1>
-      <p class="lead" id="lead"></p>
-      <div class="heroBtns"><button type="button" class="cta on" data-go="tienda">Comparar precios</button><button type="button" class="cta" data-go="guia">¿Qué tamaño me conviene?</button></div>
-    </div>
-  </div>
-  <div class="deal" aria-label="Mejor calidad-precio por tamaño">
-    <div class="t4head"><h2>Mejor calidad-precio</h2></div>
-    <div class="t4tabs" id="pickTabs" role="group" aria-label="Elegir tamaño"></div>
-    <div id="pickBox"></div>
-  </div>
+<section class="hero3 full"><div class="in">
+  <h1>El mismo televisor, en la tienda más barata.</h1>
+  <div class="hero3-fila"><p class="hero3-sub" id="lead"></p><button type="button" class="guiaBtn" data-guia><img src="/assets/puma-sello.webp" alt="" width="40" height="40" decoding="async">Ayúdame a elegir</button></div>
+  <nav class="atajos3" aria-label="Atajos"><a href="/televisores?tam=s">Hasta 43"<small>pieza o cocina</small></a><a href="/televisores?tam=m">48 a 55"<small>living chico</small></a><a href="/televisores?tam=l">58 a 65"<small>living grande</small></a><a href="/televisores?tam=xl">70" o más<small>pantalla gigante</small></a><a href="#guia" data-go="guia">¿Qué tamaño me conviene?<small>según la distancia</small></a></nav>
 </div></section>
+<div hidden><div id="pickTabs"></div><div id="pickBox"></div></div>
 
 <div class="in">
-  <section class="home" aria-labelledby="svTitle">
-    <div class="rowHead"><h2 id="svTitle">Donde más ahorras eligiendo dónde comprar</h2><p>Diferencia entre el precio más alto y el más bajo del mismo televisor.</p></div>
-    <div class="strip" id="stripSave"></div>
-  </section>
 
   <main id="tienda" class="shop">
     <form class="filt" id="panel" onsubmit="return false">
       <fieldset>
-        <legend>Rango de precio</legend>
+        <legend>Precio</legend>
+        <div class="rangos" data-rangos="0-400000,400000-800000,800000-1500000,1500000-"></div>
+        <details class="otro"><summary>Otro rango</summary>
         <div class="dualHead"><div><span class="rlab">Desde</span><output id="budgetMinOut" for="budgetMin"></output></div><div class="r"><span class="rlab">Hasta</span><output id="budgetOut" for="budget"></output></div></div>
       <div class="dual" data-dual>
         <div class="dualTrack" aria-hidden="true"><i></i></div>
         <input type="range" id="budgetMin" min="0" max="6000000" step="10000" value="0" aria-label="Precio mínimo">
         <input type="range" id="budget" min="0" max="6000000" step="10000" value="6000000" aria-label="Precio máximo">
       </div>
-        <p class="modeHint" style="margin:0"><b id="budgetCount"></b></p>
+        </details>
+        <p class="modeHint" hidden><b id="budgetCount"></b></p>
         <p class="modeHint" style="margin:0">Arrastra los dos puntos: el izquierdo fija el mínimo y el derecho el máximo.</p>
       </fieldset>
       <fieldset>
@@ -579,7 +545,7 @@ body.hasTray { padding-bottom: 96px; }
           <label class="chip"><input type="checkbox" name="tam" value="xl"><span>70 a 77"</span></label>
           <label class="chip"><input type="checkbox" name="tam" value="xxl"><span>83" o más</span></label>
         </div>
-        <p class="modeHint" style="margin:0"><a href="#guia" data-go="guia">¿Qué tamaño me conviene?</a></p>
+        <p class="modeHint keep" style="margin:0"><a href="#guia" data-go="guia">¿Qué tamaño me conviene?</a></p>
       </fieldset>
       <fieldset>
         <legend>¿Qué te importa más?</legend>
@@ -604,13 +570,18 @@ body.hasTray { padding-bottom: 96px; }
     <section class="results" id="compara" aria-live="polite">
       <div class="bar">
         <p class="count" id="count"></p>
-        <label class="sortBox">Ordenar por <select id="sortF"><option value="pasc" selected>Menor precio</option><option value="pdesc">Mayor precio</option><option value="grande">Pantalla más grande</option><option value="ppul">Menor precio por pulgada</option></select></label>
+        <label class="sortBox">Ordenar por <select id="sortF"><option value="pasc" selected>Menor precio</option><option value="pdesc">Mayor precio</option><option value="grande">Pantalla más grande</option><option value="ppul">Precio por pulgada</option></select></label>
       </div>
       <p class="astnote"><b>*</b> Precio pagando con la tarjeta de la tienda o con transferencia. Sin ese medio de pago puede ser más alto.</p>
       <div id="list" class="grid"></div>
       <button type="button" class="more" id="moreBtn" hidden></button>
     </section>
   </main>
+
+  <section class="home" aria-labelledby="svTitle">
+    <div class="rowHead"><h2 id="svTitle">Donde más ahorras eligiendo dónde comprar</h2><p>Diferencia entre el precio más alto y el más bajo del mismo televisor.</p></div>
+    <div class="strip" id="stripSave"></div>
+  </section>
 
   <section id="comparar" class="guide" aria-labelledby="cmpTitle" hidden>
     <div class="secHead"><h2 class="sec" id="cmpTitle">Comparación lado a lado</h2>
@@ -761,24 +732,19 @@ function tvBlock(p) {
   return `<div class="bm"><b>Precio por pulgada</b><span style="grid-column: 2 / -1; text-align:right">${fmt(porPulgada(p))}</span>
     <small>${pan ? `<b style="font-weight:600">${esc(p.panel)}:</b> ${esc(pan.t)}` : ''}${p.model ? ` Modelo ${esc(p.model)}.` : ''}</small></div>`;
 }
+/* Nota de potencia de 1 a 10 y sello del puma (assets/cmc-ui.js) */
+const NOTA = CMC.escala(PHONES.map(p => p.gb6 ? p.gb6[1] : 0));
+const ELEGIDO = {};
 function card(p) {
-  const os = offersOf(p), b = os[0], hi = os[os.length - 1];
-  const save = os.length > 1 && hi.p > b.p ? `<span class="save">Ahorras ${fmt(hi.p - b.p)} vs ${STORES[hi.s].name}</span>` : (os.length > 1 ? `<span class="save solo">Mismo precio en ${os.length} tiendas</span>` : `<span class="save solo">Lo encontramos en 1 tienda</span>`);
-  const on = cmp.includes(p.id);
-  return `<article class="p" id="c-${p.id}">
-  <div class="pv"><div class="badges"><span class="bd cat">${esc(p.panel || 'TV')}</span>${p.hz >= 120 ? `<span class="bd g4">${p.hz} Hz</span>` : ''}</div><a class="pvA" href="${fichaDe(p.id)}" tabindex="-1" aria-hidden="true">${art(p, 170)}</a></div>
-  <div class="pb">
-    <p class="brand">${esc(p.brand)}</p>
-    <h3><a class="aFicha" href="${fichaDe(p.id)}">${esc(p.name)}</a></h3>
-    <p class="spec">${specLine(p)}</p>
-    <div class="priceRow"><span class="from">Desde</span><span class="price">${fmt(b.p)}</span></div>
-    <span class="at"><i class="dot" style="background:${STORES[b.s].color}"></i>en ${STORES[b.s].name}</span>
-    ${save}
-    <div class="offers">${os.map((o, i) => offerRow(o, i === 0, p.id)).join('')}</div>
-    ${tvBlock(p)}
-    <label class="cmpBox"><input type="checkbox" data-cmp="${p.id}"${on ? ' checked' : ''}> Comparar</label>
-    <p class="seen">Precios revisados el ${SEEN}</p>
-  </div></article>`;
+  const os = offersOf(p).slice().sort((a, b) => a.p - b.p);
+  const tags = [];
+  if (p.panel) tags.push(`<span>${esc(p.panel)}</span>`); if (p.hz >= 120) tags.push(`<span class="g4">${p.hz} Hz</span>`);
+  return CMC.tarjeta({
+    dataId: 'c-' + p.id, anchor: 'c-' + p.id, ficha: fichaDe(p.id), art: art(p, 170), nombre: p.name, spec: specLine(p), tags,
+    nota: `<span class="nota">${fmt(porPulgada(p))} por pulgada</span>`,
+    sello: ELEGIDO[p.id] || false, os, tiendas: STORES,
+    extra: `<label class="cmpBox"><input type="checkbox" data-cmp="${p.id}"${cmp.includes(p.id) ? ' checked' : ''}> Comparar</label>`
+  });
 }
 
 function render() {
@@ -788,7 +754,7 @@ function render() {
   $('budgetMinOut').textContent = fmt(st.min);
   $('budgetCount').textContent = st.min ? `${PHONES.filter(p => bestOf(p) && bestOf(p).p <= st.max && bestOf(p).p >= st.min).length} televisores entre ${fmt(st.min)} y ${fmt(st.max)}` : `${PHONES.filter(p => bestOf(p) && bestOf(p).p <= st.max).length} televisores cuestan ${fmt(st.max)} o menos`;
   if (!list.length) {
-    $('list').innerHTML = `<div class="empty"><h3>No hay televisores con estos filtros</h3><p>Sube el precio máximo o quita algún filtro.</p><button type="button" class="ghost" id="clearEmpty">Quitar todos los filtros</button></div>`;
+    $('list').innerHTML = `<div class="empty"><h3>No encontré televisores con esos filtros</h3><p>Sube el precio máximo o quita algún filtro.</p><button type="button" class="ghost" id="clearEmpty">Quitar todos los filtros</button></div>`;
     $('moreBtn').hidden = true; return;
   }
   $('list').innerHTML = list.slice(0, limit).map(card).join('');
@@ -880,7 +846,7 @@ function resetAll() { Object.assign(st, { q: '', min: 0, max: PMAX, sort: st.sor
 
 /* Inicio */
 const nOff = PHONES.reduce((a, p) => a + p.offers.length, 0);
-$('lead').textContent = `${PHONES.length} televisores de ${PHONES.reduce((a, p) => Math.min(a, p.size), 99)}" a ${PHONES.reduce((a, p) => Math.max(a, p.size), 0)}", con ${nOff} precios de Falabella, Paris, Ripley y PCFactory.`;
+$('lead').textContent = `${PHONES.length} televisores de ${PHONES.reduce((a, p) => Math.min(a, p.size), 99)}" a ${PHONES.reduce((a, p) => Math.max(a, p.size), 0)}" · 4 tiendas · precios del ${SEEN.slice(0, 5).replace('-', '/')}`;
 if ($('promoDate')) $('promoDate').textContent = SEEN;
 document.querySelectorAll('.seenTxt').forEach(s => { s.textContent = SEEN; });
 const cuenta = f => PHONES.filter(f).length;
@@ -918,6 +884,7 @@ $('moreBtn').addEventListener('click', () => { limit += 24; render(); });
 $('trayGo').addEventListener('click', () => { renderCmp(); goto('comparar'); });
 $('trayClear').addEventListener('click', () => { cmp.splice(0); document.querySelectorAll('[data-cmp]').forEach(b => { b.checked = false; }); renderTray(); $('comparar').hidden = true; });
 
+PICKS.forEach(k => { const c = ganador(k); if (c) ELEGIDO[c.id] = 'Mejor imagen por precio · ' + k.name; });
 renderPick(); render(); renderTray();
 
 /* Enlaces directos desde la portada o Instagram:
@@ -958,6 +925,34 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
   document.addEventListener('click', onTap);
   document.addEventListener('auxclick', onTap);
 })();
+
+/* Rediseño 19-10-2026: barra "Filtros | Ordenar" y asistente de tres preguntas (assets/cmc-ui.js) */
+document.addEventListener('DOMContentLoaded', () => {
+  CMC.filtros({ noun: 'televisores', uno: 'televisor' });
+  CMC.guia({
+    antes: resetAll,
+    pasos: [
+      { q: '¿De qué tamaño lo buscas?', ops: [
+        { t: 'Hasta 43"', d: 'Pieza, cocina o a menos de 1,5 m', a: () => CMC.marcar('input[name=tam][value=s]') },
+        { t: '48 a 55"', d: 'Living chico, a unos 2 m', a: () => CMC.marcar('input[name=tam][value=m]') },
+        { t: '58 a 65"', d: 'Living grande, a unos 2,5 m', a: () => CMC.marcar('input[name=tam][value=l]') },
+        { t: '70" o más', d: 'A 3 m o más', a: () => { CMC.marcar('input[name=tam][value=xl]'); CMC.marcar('input[name=tam][value=xxl]'); } }
+      ] },
+      { q: '¿Para qué lo usarás más?', ops: [
+        { t: 'Series, fútbol y películas', a: null },
+        { t: 'Jugar en consola', d: 'PlayStation 5 o Xbox: 120 Hz o más', a: () => CMC.marcar('input[name=uso][value=juegos]') },
+        { t: 'Quiero la mejor imagen', d: 'OLED o Mini LED', a: () => CMC.marcar('input[name=uso][value=premium]') }
+      ] },
+      { q: '¿Cuánto quieres gastar?', ops: [
+        { t: 'Hasta $400 mil', a: () => CMC.rango(0, 400000) },
+        { t: '$400 a $800 mil', a: () => CMC.rango(400000, 800000) },
+        { t: '$800 mil a $1,5 M', a: () => CMC.rango(800000, 1500000) },
+        { t: 'Más de $1,5 M', a: () => CMC.rango(1500000, null) }
+      ] }
+    ],
+    despues: null
+  });
+});
 
 </script>
 <!-- Cloudflare Web Analytics: cuenta visitas sin cookies -->

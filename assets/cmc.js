@@ -106,7 +106,7 @@
   const PAGE = location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
   const UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11v9H4v-9z"/><path d="M7 11l4-7c1.4 0 2.3 1 2 2.4L12.5 10H18a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 16.8 20H7"/></svg>';
   const DOWN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(180deg)"><path d="M7 11v9H4v-9z"/><path d="M7 11l4-7c1.4 0 2.3 1 2 2.4L12.5 10H18a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 16.8 20H7"/></svg>';
-  const head = '<img src="/assets/puma-icono-96.png" alt="" width="30" height="30">';
+  const head = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></svg>';
 
   const btn = document.createElement('button');
   btn.type = 'button'; btn.className = 'fb-open'; btn.setAttribute('aria-haspopup', 'dialog');
@@ -176,3 +176,4 @@
   // Si ya opinó en los últimos 30 días, el botón queda más discreto (solo el puma)
   try { if (Date.now() - (+localStorage.getItem('cmc-fb') || 0) < 2592e6) btn.querySelector('.t').remove(); } catch (_) {}
 })();
+

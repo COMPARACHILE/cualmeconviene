@@ -11,7 +11,7 @@ Con ?v=<huella del contenido>, cada cambio en esos archivos obliga al navegador 
 import glob, hashlib, os, re
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ARCHIVOS = ['fotos.js', 'fichas.js', 'cmc.js', 'cmc.css', 'ficha.css']
+ARCHIVOS = ['fotos.js', 'fichas.js', 'cmc.js', 'cmc-ui.js', 'cmc.css', 'ficha.css']
 
 
 def huella(nombre):
