@@ -161,7 +161,7 @@ def descargar(todas=False):
 def escribir_mapa_web(mapa=None):
     """assets/fotos.js: para cada equipo, 1 si la foto está en assets/p/, o la dirección de la tienda si no se pudo bajar."""
     mapa = mapa or json.load(open(MAPA, encoding='utf-8'))
-    web = {i: (1 if os.path.exists(os.path.join(CARPETA, i + '.webp')) else (u[0] if isinstance(u, list) else u)) for i, u in mapa.items()}
+    web = {i: (1 if os.path.exists(os.path.join(CARPETA, i + '.webp')) else (u[0] if isinstance(u, list) and u else (None if isinstance(u, list) else u))) for i, u in mapa.items()}
     txt = ('/* Generado por herramientas/fotos.py. 1 = foto en /assets/p/<id>.webp; texto = foto en la tienda. */\n'
            'window.CMC_FOTOS = ' + json.dumps(web, ensure_ascii=False, separators=(',', ':')) + ';\n'
            "window.cmcFoto = id => { const f = (window.CMC_FOTOS || {})[id]; return f === 1 ? '/assets/p/' + id + '.webp' : (f || null); };\n")
