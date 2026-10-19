@@ -101,7 +101,8 @@ def bajar(url):
 
 
 def preparar(datos):
-    """Fondo blanco, recorta el borde blanco sobrante y centra en un cuadrado de LADO px."""
+    """Fondo blanco, recorta el borde blanco sobrante y centra en un cuadrado de LADO px.
+    Devuelve (webp, lado útil de la foto original en px) para poder preferir fotos más grandes."""
     from PIL import Image, ImageChops
     im = Image.open(io.BytesIO(datos))
     im.load()
@@ -114,13 +115,21 @@ def preparar(datos):
     caja = gris.getbbox()
     if caja:
         im = im.crop(caja)
+    original = max(im.size)
     util = int(LADO * (1 - 2 * MARGEN))
-    im.thumbnail((util, util), Image.LANCZOS)
+    escala = util / original
+    if escala < 1:
+        im.thumbnail((util, util), Image.LANCZOS)
+    elif escala > 1:  # foto chica (p. ej. 216 px): se agranda para que no quede diminuta en la tarjeta
+        im = im.resize((max(1, round(im.width * escala)), max(1, round(im.height * escala))), Image.LANCZOS)
     lienzo = Image.new('RGB', (LADO, LADO), (255, 255, 255))
     lienzo.paste(im, ((LADO - im.width) // 2, (LADO - im.height) // 2))
     out = io.BytesIO()
     lienzo.save(out, 'WEBP', quality=80, method=6)
-    return out.getvalue()
+    return out.getvalue(), original
+
+
+MINIMO = 380  # px: una foto más chica se usa solo si ninguna otra opción de la lista es mejor
 
 
 def descargar(todas=False):
@@ -136,11 +145,15 @@ def descargar(todas=False):
         urls = url if isinstance(url, list) else [url]
         if not urls:
             continue
-        hecho, error = False, None
+        hecho, error, reserva = False, None, None
         for u in urls:
             for intento in range(2):
                 try:
-                    webp = preparar(bajar(u))
+                    webp, original = preparar(bajar(u))
+                    if original < MINIMO:
+                        if not reserva or original > reserva[1]:
+                            reserva = (webp, original, u)
+                        break  # foto chica: probar la siguiente opción de la lista
                     open(destino, 'wb').write(webp)
                     log.append(f'ok\t{i}\t{len(webp)//1024} KB\t{urlparse(u).netloc}'); ok += 1
                     hecho = True
@@ -150,6 +163,10 @@ def descargar(todas=False):
                     time.sleep(2)
             if hecho:
                 break
+        if not hecho and reserva:
+            open(destino, 'wb').write(reserva[0])
+            log.append(f'ok\t{i}\t{len(reserva[0])//1024} KB\t{urlparse(reserva[2]).netloc}\t(foto chica: {reserva[1]} px, agrandada)'); ok += 1
+            hecho = True
         if not hecho:
             log.append(f'ERROR\t{i}\t{str(error)[:120]}\t{urls[0]}'); mal += 1
     escribir_mapa_web(mapa)

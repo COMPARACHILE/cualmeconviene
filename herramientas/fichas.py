@@ -443,6 +443,15 @@ def generar_og(todos):
 
 def main():
     todos = equipos()
+    # Cada equipo necesita un id único en todo el sitio (fotos, fichas e historial usan el id sin la categoría)
+    vistos, repetidos = {}, []
+    for x in todos:
+        if x['id'] in vistos:
+            repetidos.append(f"{x['id']}: {vistos[x['id']]} / {x['nombre']}")
+        vistos[x['id']] = x['nombre']
+    if repetidos:
+        print('ERROR: ids repetidos entre categorías (cambia el id del equipo nuevo):\n  ' + '\n  '.join(repetidos))
+        sys.exit(1)
     slugs = json.load(open(SLUGS, encoding='utf-8')) if os.path.exists(SLUGS) else {}
     fotos = json.load(open(FOTOS, encoding='utf-8')) if os.path.exists(FOTOS) else {}
     usados = set(slugs.values())

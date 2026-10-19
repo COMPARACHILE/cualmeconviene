@@ -223,10 +223,11 @@
  "s25u": "https://media.falabella.com/falabellaCL/17354685_1/w=600,h=600,fit=pad",
  "s25": "https://media.falabella.com/falabellaCL/17354674_1/w=600,h=600,fit=pad",
  "s25fe": "https://media.falabella.com/falabellaCL/17558930_1/w=600,h=600,fit=pad",
- "zfold7": "https://miportal.entel.cl/static/091120261554004/images/galaxy-z-fold-7-negro-01_670x670.jpg",
- "a57": [
-  "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000412654929/full_image-2000412654929"
+ "zfold7": [
+  "https://media.solotodo.com/media/products/2168530_picture_1755024427.png",
+  "https://miportal.entel.cl/static/091120261554004/images/galaxy-z-fold-7-negro-01_670x670.jpg"
  ],
+ "a57": "https://media.falabella.com/falabellaCL/17684254_1/w=600,h=600,fit=pad",
  "a57b": [
   "https://media.falabella.com/falabellaCL/152630751_1/w=600,h=600,fit=pad",
   "https://media.falabella.com/falabellaCL/152630751_01/w=600,h=600,fit=pad",
@@ -235,17 +236,9 @@
   "https://i5.walmartimages.cl/asr/dfc48e4b-d0dc-4fa9-871f-7881c657c5c7.31de10eef0e0e30c5eefeecf17338f26.jpeg",
   "https://i5.walmartimages.cl/asr/dbf7351c-e515-481b-8fe6-5483c681a7b6.f0bacdfdf60732ed95dff46a642d9c77.jpeg"
  ],
- "a37": [
-  "https://media.falabella.com/falabellaCL/17506334_1/w=600,h=600,fit=pad"
- ],
- "a27": [
-  "https://media.falabella.com/falabellaCL/80726511_1/w=600,h=600,fit=pad",
-  "https://assets.pcfactory.cl/public/foto/56743/1.jpg?t=1780436625836",
-  "https://assets.pcfactory.cl/public/foto/56743/2.jpg?t=1780436632310"
- ],
- "a17": [
-  "https://media.falabella.com/falabellaCL/80835904_1/w=600,h=600,fit=pad"
- ],
+ "a37": "https://media.falabella.com/falabellaCL/17684249_1/w=600,h=600,fit=pad",
+ "a27": "https://media.falabella.com/falabellaCL/17743539_1/w=600,h=600,fit=pad",
+ "a17": "https://miportal.entel.cl/static/091120261554004/images/a17-negro-01_670x670.jpg",
  "a07": "https://media.falabella.com/falabellaCL/17558926_1/w=600,h=600,fit=pad",
  "x17u": "https://media.falabella.com/falabellaCL/17687663_1/w=600,h=600,fit=pad",
  "x17": "https://media.falabella.com/falabellaCL/17687661_1/w=600,h=600,fit=pad",
@@ -255,7 +248,10 @@
  "rn17pm": "https://media.falabella.com/falabellaCL/17767412_1/w=600,h=600,fit=pad",
  "rn17p": "https://media.falabella.com/falabellaCL/17767411_1/w=600,h=600,fit=pad",
  "rn17": "https://media.falabella.com/falabellaCL/17767409_1/w=600,h=600,fit=pad",
- "rn15pp": "https://miportal.entel.cl/static/091120261554004/images/note-15-pro-plus-negro-01_670x670.jpg",
+ "rn15pp": [
+  "https://media.solotodo.com/media/products/2624954_picture_1768485214.webp",
+  "https://miportal.entel.cl/static/091120261554004/images/note-15-pro-plus-negro-01_670x670.jpg"
+ ],
  "r17": "https://assets.pcfactory.cl/public/foto/58048/1_500.jpg",
  "r17c": "https://media.falabella.com/falabellaCL/17757788_1/w=600,h=600,fit=pad",
  "r15c": [
@@ -2308,6 +2304,7 @@
   "https://assets.pcfactory.cl/public/foto/57679/2.jpg?t=1786715381589"
  ],
  "p1": [
+  "https://media.solotodo.com/media/products/2012241_picture_1737572537.webp",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clsagsuadne_216_front.png"
  ],
  "p2": [
@@ -2318,6 +2315,7 @@
   "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/421670999/variant/69a6c9ff529ff2b5867be50b/images/c1670034-7d15-4814-9a78-806660cf0bbd/421670999-0000-001.jpg"
  ],
  "p4": [
+  "https://media.solotodo.com/media/products/2012298_picture_1737608946.jpg",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clsagas25az_216_front_fimlexypavhhdqhd.png"
  ],
  "p5": [
@@ -2330,6 +2328,9 @@
   "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/431015999/variant/69bd6c7f0624055f3c4476e7/images/92bf81c2-f7ba-4c9f-a4b7-7edc69ec782d/431015999-0000-001.jpg"
  ],
  "p7": [
+  "https://media.solotodo.com/media/products/2704404_picture_1772097411.png",
+  "https://media.solotodo.com/media/products/2704404_picture_1772014547.png",
+  "https://media.solotodo.com/media/products/2705003_picture_1772087943.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clsags26une_216_front_1.png",
   "https://miportal.entel.cl/static/091120261554004/images/s26-ultra-negro-01_337x671.jpg",
   "https://miportal.entel.cl/static/091120261554004/images/s26-ultra-negro-02_337x671.jpg",
@@ -2340,6 +2341,7 @@
   "https://miportal.entel.cl/static/091120261554004/images/moto-g56-azul-marino-bg-02_337x671.jpg"
  ],
  "p9": [
+  "https://media.solotodo.com/media/products/2586746_picture_1762596284.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clztnuairne_216_front.png",
   "https://media.falabella.com/falabellaCL/17671052_1/w=600,h=600,fit=pad"
  ],
@@ -2347,6 +2349,9 @@
   "https://media.falabella.com/falabellaCL/17564062_1/w=600,h=600,fit=pad"
  ],
  "p11": [
+  "https://media.solotodo.com/media/products/2704898_picture_1772086562.png",
+  "https://media.solotodo.com/media/products/2705093_picture_1772089267.png",
+  "https://media.solotodo.com/media/products/2704868_picture_1772086157.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clsagas26bl_216_front_1.png",
   "https://miportal.entel.cl/static/091120261554004/images/s26-negro-01_337x671.jpg",
   "https://miportal.entel.cl/static/091120261554004/images/s26-negro-02_337x671.jpg"
@@ -2374,6 +2379,8 @@
   "https://catalogo.movistar.cl/media/catalog/product/i/p/iphone_duo_night_sky_pdp_image_position_1__cles.jpg"
  ],
  "p17": [
+  "https://media.solotodo.com/media/products/2846981_picture_1792153978.webp",
+  "https://media.solotodo.com/media/products/2847050_picture_1792154382.jpg",
   "https://miportal.entel.cl/static/091120261554004/images/iphone-duo-night-sky-01_337x671.jpg",
   "https://miportal.entel.cl/static/091120261554004/images/iphone-duo-night-sky-02_337x671.jpg"
  ],
@@ -2383,6 +2390,8 @@
   "https://miportal.entel.cl/static/091120261554004/images/redmi-note-15-negro-02_337x671.jpg"
  ],
  "p19": [
+  "https://media.solotodo.com/media/products/2827555_picture_1789471004.png",
+  "https://media.solotodo.com/media/products/2827752_picture_1789471968.png",
   "https://catalogo.movistar.cl/media/catalog/product/b/l/black_1_1.png"
  ],
  "p20": [
@@ -2439,6 +2448,7 @@
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clsags25fne_216_front.png"
  ],
  "p32": [
+  "https://media.solotodo.com/media/products/2168435_picture_1755022773.jpg",
   "https://miportal.entel.cl/static/091120261554004/images/galaxy-z-flip-7-azul-01_337x671.jpg",
   "https://miportal.entel.cl/static/091120261554004/images/galaxy-z-flip-7-azul-02_337x671.jpg"
  ],
@@ -2451,6 +2461,7 @@
   "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000405914566/full_image-2000405914566"
  ],
  "p35": [
+  "https://media.solotodo.com/media/products/2075657_picture_1747066070.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clv1y29s0ne_216_front.png"
  ],
  "p36": [
@@ -2458,6 +2469,7 @@
   "https://assets.pcfactory.cl/public/foto/53387/2.jpg?t=1736274114380"
  ],
  "p37": [
+  "https://media.solotodo.com/media/products/2009033_picture_1736346414.jpg",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clhnm7litmo_216_front.png"
  ],
  "p38": [
@@ -2478,6 +2490,7 @@
   "https://media.falabella.com/falabellaCL/17567240_1/w=600,h=600,fit=pad"
  ],
  "p42": [
+  "https://media.solotodo.com/media/products/2168573_picture_1755024597.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clsazfol7az_216_front_2.png"
  ],
  "p43": [
@@ -2504,6 +2517,7 @@
   "https://assets.pcfactory.cl/public/foto/57363/2.jpg?t=1786145667680"
  ],
  "p48": [
+  "https://media.solotodo.com/media/products/1640850_picture_1662841932.webp",
   "https://catalogo.movistar.cl/media/catalog/product/a/p/applei_1_3.png"
  ],
  "p49": [
@@ -2512,6 +2526,7 @@
   "https://assets.pcfactory.cl/public/foto/56514/2.jpg?t=1778679446276"
  ],
  "p50": [
+  "https://media.solotodo.com/media/products/2624879_picture_1768484152.webp",
   "https://miportal.entel.cl/static/091120261554004/images/redmi-note-15-pro-negro-01_337x671.jpg",
   "https://miportal.entel.cl/static/091120261554004/images/redmi-note-15-pro-negro-02_337x671.jpg"
  ],
@@ -2552,6 +2567,7 @@
   "https://assets.pcfactory.cl/public/foto/54106/2.jpg?t=1771000822452"
  ],
  "p59": [
+  "https://media.solotodo.com/media/products/2072194_picture_1746475093.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clmoed60fve_216_front.png"
  ],
  "p60": [
@@ -2573,17 +2589,22 @@
   "https://assets.pcfactory.cl/public/foto/57222/2.jpg?t=1786052679172"
  ],
  "p65": [
+  "https://media.solotodo.com/media/products/2045292_picture_1742557745.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clv1v5000az_216_front.png"
  ],
  "p66": [
+  "https://media.solotodo.com/media/products/2279113_picture_1755942107.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clop000a5bl_216_front.png"
  ],
  "p67": [
+  "https://media.solotodo.com/media/products/2705033_picture_1772620671.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clsags26pne_216_front.png",
   "https://miportal.entel.cl/static/091120261554004/images/s26-plus-violeta-01_337x671.jpg",
   "https://miportal.entel.cl/static/091120261554004/images/s26-violeta-02_337x671.jpg"
  ],
  "p68": [
+  "https://media.solotodo.com/media/products/2571176_picture_1760377450.png",
+  "https://media.solotodo.com/media/products/2571209_picture_1760377586.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm4clmomog06az_216_front.png",
   "https://assets.pcfactory.cl/public/foto/55288/1.jpg?t=1768243811394",
   "https://assets.pcfactory.cl/public/foto/55288/2.jpg?t=1768243817673"
@@ -2602,10 +2623,11 @@
   "https://media.falabella.com/falabellaCL/17640866_1/w=600,h=600,fit=pad"
  ],
  "p72": [
-  "https://miportal.entel.cl/static/091120261554004/images/regla-cargador-si-5-15w_337x671.jpg",
+  "https://media.solotodo.com/media/products/2578109_picture_1761139900.webp",
   "https://miportal.entel.cl/static/091120261554004/images/honor-x5c-plus-01_337x671.jpg"
  ],
  "p73": [
+  "https://media.solotodo.com/media/products/2177203_picture_1755062640.png",
   "https://miportal.entel.cl/static/091120261554004/images/moto-g86-power-azul-01_337x671.jpg",
   "https://miportal.entel.cl/static/091120261554004/images/moto-g86-power-azul-02_337x671.jpg"
  ],
@@ -2617,6 +2639,8 @@
   "https://media.falabella.com/falabellaCL/17449064_1/w=600,h=600,fit=pad"
  ],
  "p76": [
+  "https://media.solotodo.com/media/products/2720845_picture_1774520684.png",
+  "https://media.solotodo.com/media/products/2720864_picture_1774520798.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clsagaa37ne_216_front.png",
   "https://miportal.entel.cl/static/091120261554004/images/samsung-galaxy-a37-gray-01_337x671.jpg",
   "https://miportal.entel.cl/static/091120261554004/images/samsung-galaxy-a37-gray-02_337x671.jpg",
@@ -2665,6 +2689,7 @@
   "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000409273157/full_image-2000409273157"
  ],
  "p86": [
+  "https://media.solotodo.com/media/products/2601940_picture_1770191395.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clopre14fve_216_front.png"
  ],
  "p87": [
@@ -2758,6 +2783,7 @@
   "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/425497999/variant/6a2af62b1fc70e4e730d2d21/images/4550157e-d80c-4ce5-951a-15cff03f9237/425497999-0000-001.jpg"
  ],
  "p111": [
+  "https://media.solotodo.com/media/products/2096164_picture_1750154183.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clopa5proca_216_front.png"
  ],
  "p112": [
@@ -2832,6 +2858,7 @@
   "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000408434436/full_image-2000408434436"
  ],
  "p131": [
+  "https://media.solotodo.com/media/products/2058471_picture_1743688637.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clv1v50line_216_front.png"
  ],
  "p132": [
@@ -2859,13 +2886,30 @@
   "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/298256999/variant/694068994d99531da9d57e93/images/ea2694a6-ae8c-4a03-ba2a-1883c43e50bf/298256999-0000-001.jpg"
  ],
  "p138": [
+  "https://media.solotodo.com/media/products/1975512_picture_1733937992.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clv1v40sene_216_front.png"
  ],
  "p139": [
+  "https://media.solotodo.com/media/products/1971319_picture_1729623178.png",
   "https://catalogo.movistar.cl/media/catalog/product/t/m/tm5clopre12fve_216_front_jsifjeu0qu5bipz6.png"
  ],
  "p140": [
   "https://assets.pcfactory.cl/public/foto/58203/1.jpg?t=1790709452072",
   "https://assets.pcfactory.cl/public/foto/58203/2.jpg?t=1790709458051"
+ ],
+ "a144": [
+  "https://media.falabella.com/falabellaCL/80835904_1/w=600,h=600,fit=pad"
+ ],
+ "a145": [
+  "https://media.falabella.com/falabellaCL/80726511_1/w=600,h=600,fit=pad",
+  "https://assets.pcfactory.cl/public/foto/56743/1.jpg?t=1780436625836",
+  "https://assets.pcfactory.cl/public/foto/56743/2.jpg?t=1780436632310"
+ ],
+ "a146": [
+  "https://media.falabella.com/falabellaCL/17506334_1/w=600,h=600,fit=pad"
+ ],
+ "a147": [
+  "https://media.solotodo.com/media/products/2824513_picture_1788960857.png",
+  "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000412654929/full_image-2000412654929"
  ]
 }

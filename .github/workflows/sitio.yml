@@ -15,6 +15,7 @@ on:
       - 'herramientas/fotos.py'
       - 'herramientas/fichas.py'
       - 'herramientas/precios.py'
+      - 'herramientas/versiones.py'
       - '.github/workflows/sitio.yml'
 permissions:
   contents: write
@@ -40,11 +41,13 @@ jobs:
         run: python herramientas/fichas.py
       - name: Rutas para la actualización de precios
         run: python herramientas/precios.py rutas
+      - name: Versión de los archivos compartidos (evita fotos viejas en caché)
+        run: python herramientas/versiones.py
       - name: Guardar en el repositorio
         run: |
           git config user.name "sitio-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/p assets/og assets/fotos.js assets/fichas.js assets/portada.json herramientas/fotos-log.txt herramientas/fichas.json herramientas/rutas.json notebook celular tablet televisor sitemap.xml
+          git add *.html assets/p assets/og assets/fotos.js assets/fichas.js assets/portada.json herramientas/fotos-log.txt herramientas/fichas.json herramientas/rutas.json notebook celular tablet televisor sitemap.xml
           if git diff --cached --quiet; then echo "Sin cambios"; exit 0; fi
           git commit -m "Fotos y fichas actualizadas (automático)"
           for i in 1 2 3; do git pull --rebase origin "${GITHUB_REF_NAME}" && git push && exit 0; sleep 5; done
