@@ -60,6 +60,9 @@ def variantes(url):
     if 'ecomm.cencosud.com/unsafe/fit-in/600x600/' in url:
         yield url.replace('/unsafe/fit-in/600x600/', '/unsafe/adaptive-fit-in/792x1068/')
         yield url.replace('/unsafe/fit-in/600x600/', '/unsafe/')
+    if 'ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/' in url:
+        yield url.replace('/unsafe/adaptive-fit-in/792x1068/', '/unsafe/fit-in/600x600/')
+        yield url.replace('/unsafe/adaptive-fit-in/792x1068/', '/unsafe/')
 
 
 def cabeceras(url, modo):
