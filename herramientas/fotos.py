@@ -131,6 +131,8 @@ def descargar(todas=False):
         # Cada equipo puede tener una lista de fotos posibles (otras tiendas o el mismo modelo en otro color):
         # se usa la primera que se pueda bajar.
         urls = url if isinstance(url, list) else [url]
+        if not urls:
+            continue
         hecho, error = False, None
         for u in urls:
             for intento in range(2):
