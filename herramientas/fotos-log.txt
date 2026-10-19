@@ -1,291 +1,56 @@
-Fotos nuevas: 235 · con error: 55 · total en la carpeta: 545
-ok	a16	11 KB	assets.pcfactory.cl
-ok	g51	8 KB	assets.pcfactory.cl
-ok	a18	7 KB	assets.pcfactory.cl
-ok	n9	15 KB	media.falabella.com
-ok	a19	7 KB	assets.pcfactory.cl
-ok	a20	9 KB	assets.pcfactory.cl
-ERROR	g52	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000412061086/full_image-2000412061086
-ok	n10	6 KB	media.falabella.com
-ok	a21	9 KB	assets.pcfactory.cl
-ok	a22	8 KB	assets.pcfactory.cl
-ok	a23	8 KB	assets.pcfactory.cl
-ok	a24	8 KB	assets.pcfactory.cl
-ok	a25	7 KB	assets.pcfactory.cl
-ok	a26	8 KB	assets.pcfactory.cl
-ok	g53	10 KB	media.falabella.com
-ok	a28	14 KB	assets.pcfactory.cl
-ERROR	a29	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000409403295/full_image-2000409403295
-ok	n11	13 KB	media.falabella.com
-ERROR	g54	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000408020271/full_image-2000408020271
-ok	a30	8 KB	assets.pcfactory.cl
-ok	g55	13 KB	assets.pcfactory.cl
-ok	g56	9 KB	media.falabella.com
-ERROR	g57	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/505542999/variant/6a21f679f05958b041d7ea60/images/3bd5baf8-0ada-4126-ae32-d49bf95e8fc7/505542999-0000-001.jpg
-ERROR	g58	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/508635999/variant/6a28732f302db09c5caa6be3/images/0d0b11f1-ff9f-4594-a827-2e34439d3b89/508635999-0000-001.jpg
-ok	a31	12 KB	assets.pcfactory.cl
-ok	n12	5 KB	media.falabella.com
-ok	a32	7 KB	assets.pcfactory.cl
-ok	a33	15 KB	media.falabella.com
-ok	a34	8 KB	assets.pcfactory.cl
-ok	g59	8 KB	assets.pcfactory.cl
-ok	a35	7 KB	media.falabella.com
-ok	a36	16 KB	assets.pcfactory.cl
-ERROR	g60	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/505531999/variant/6a21f6961addb38dca8ccf31/images/d347bd70-78bf-47e8-a09b-68c17b66c30e/505531999-0000-001.jpg
-ok	a38	10 KB	assets.pcfactory.cl
-ok	a39	8 KB	assets.pcfactory.cl
-ok	a40	9 KB	assets.pcfactory.cl
-ok	a41	7 KB	assets.pcfactory.cl
-ERROR	a42	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000409403332/full_image-2000409403332
-ok	a43	6 KB	media.falabella.com
-ERROR	a44	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000410235496/full_image-2000410235496
-ok	g61	9 KB	assets.pcfactory.cl
-ok	a45	9 KB	media.falabella.com
-ERROR	a46	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000406555881/full_image-2000406555881
-ok	a47	15 KB	assets.pcfactory.cl
-ERROR	a48	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000408778585/full_image-2000408778585
-ERROR	g62	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000412465525/full_image-2000412465525
-ok	a49	8 KB	assets.pcfactory.cl
-ok	n13	3 KB	media.falabella.com
-ok	a50	10 KB	media.falabella.com
-ok	a51	12 KB	media.falabella.com
-ok	a52	12 KB	assets.pcfactory.cl
-ok	a53	6 KB	media.falabella.com
-ok	a54	6 KB	assets.pcfactory.cl
-ok	a55	14 KB	media.falabella.com
-ok	g63	10 KB	media.falabella.com
-ERROR	a56	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000410235458/full_image-2000410235458
-ok	g64	8 KB	assets.pcfactory.cl
-ok	a58	5 KB	assets.pcfactory.cl
-ERROR	a59	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/228466999/variant/6960092643208011653983d6/images/634988bf-6d33-439d-ba2d-daca438435e9/228466999-0000-001.jpg
-ERROR	a60	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000412095494/full_image-2000412095494
-ok	g65	9 KB	assets.pcfactory.cl
-ok	a61	12 KB	assets.pcfactory.cl
-ok	a62	9 KB	assets.pcfactory.cl
-ok	a63	9 KB	assets.pcfactory.cl
-ok	a64	9 KB	assets.pcfactory.cl
-ok	a65	8 KB	assets.pcfactory.cl
-ok	a66	8 KB	assets.pcfactory.cl
-ok	a67	9 KB	assets.pcfactory.cl
-ERROR	a68	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000412654899/full_image-2000412654899
-ok	a69	9 KB	assets.pcfactory.cl
-ERROR	a70	HTTP Error 400: Bad Request	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000412654981/full_image-2000412654981
-ok	a71	10 KB	assets.pcfactory.cl
-ok	a72	15 KB	assets.pcfactory.cl
-ok	a73	13 KB	assets.pcfactory.cl
-ok	n14	3 KB	media.falabella.com
-ok	a74	9 KB	assets.pcfactory.cl
-ok	a75	4 KB	assets.pcfactory.cl
-ok	a76	4 KB	assets.pcfactory.cl
-ok	a77	10 KB	assets.pcfactory.cl
-ok	a78	9 KB	assets.pcfactory.cl
-ok	a79	8 KB	assets.pcfactory.cl
-ok	n15	13 KB	media.falabella.com
-ok	a80	27 KB	assets.pcfactory.cl
-ok	a81	7 KB	assets.pcfactory.cl
-ok	a82	12 KB	assets.pcfactory.cl
-ok	a83	8 KB	assets.pcfactory.cl
-ok	a84	11 KB	assets.pcfactory.cl
-ok	a85	12 KB	assets.pcfactory.cl
-ok	a86	22 KB	assets.pcfactory.cl
-ok	a87	11 KB	assets.pcfactory.cl
-ok	a88	13 KB	assets.pcfactory.cl
-ok	a89	9 KB	assets.pcfactory.cl
-ok	a90	10 KB	assets.pcfactory.cl
-ok	a91	11 KB	assets.pcfactory.cl
-ok	a92	10 KB	assets.pcfactory.cl
-ok	a93	10 KB	assets.pcfactory.cl
-ok	a94	8 KB	assets.pcfactory.cl
-ok	a95	10 KB	assets.pcfactory.cl
-ok	a96	11 KB	assets.pcfactory.cl
-ok	a97	8 KB	assets.pcfactory.cl
-ok	a98	7 KB	assets.pcfactory.cl
-ok	a99	10 KB	assets.pcfactory.cl
-ok	n16	3 KB	media.falabella.com
-ok	a100	11 KB	assets.pcfactory.cl
-ok	a101	17 KB	assets.pcfactory.cl
-ok	a102	7 KB	assets.pcfactory.cl
-ok	a103	10 KB	assets.pcfactory.cl
-ERROR	a104	HTTP Error 400: Bad Request	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000412654974/full_image-2000412654974
-ok	a105	9 KB	assets.pcfactory.cl
-ok	a106	10 KB	assets.pcfactory.cl
-ok	a107	5 KB	assets.pcfactory.cl
-ok	a108	11 KB	assets.pcfactory.cl
-ok	a109	9 KB	assets.pcfactory.cl
-ERROR	a110	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/228464999/variant/6913ee7e17c594504658fde4/images/bf3d470d-3db3-47be-b237-acb48c866c1b/228464999-0000-001.jpg
-ok	g66	17 KB	media.falabella.com
-ok	a111	8 KB	assets.pcfactory.cl
-ok	a112	7 KB	assets.pcfactory.cl
-ok	a113	8 KB	assets.pcfactory.cl
-ERROR	a114	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000412061109/full_image-2000412061109
-ok	a115	7 KB	assets.pcfactory.cl
-ok	a116	8 KB	assets.pcfactory.cl
-ok	a117	9 KB	assets.pcfactory.cl
-ok	a118	10 KB	assets.pcfactory.cl
-ERROR	g67	HTTP Error 400: Bad Request	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000412836967/full_image-2000412836967
-ERROR	a119	HTTP Error 400: Bad Request	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000412654905/full_image-2000412654905
-ok	a120	14 KB	assets.pcfactory.cl
-ERROR	a121	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000410248533/full_image-2000410248533
-ok	a122	7 KB	assets.pcfactory.cl
-ok	a123	10 KB	assets.pcfactory.cl
-ok	a124	9 KB	assets.pcfactory.cl
-ok	a125	8 KB	assets.pcfactory.cl
-ok	a126	13 KB	assets.pcfactory.cl
-ok	a127	11 KB	assets.pcfactory.cl
-ok	a128	5 KB	assets.pcfactory.cl
-ok	a129	11 KB	assets.pcfactory.cl
-ERROR	a130	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000407236208/full_image-2000407236208
-ok	a131	9 KB	assets.pcfactory.cl
-ok	a132	8 KB	assets.pcfactory.cl
-ok	a133	8 KB	assets.pcfactory.cl
-ok	a134	11 KB	assets.pcfactory.cl
-ok	a135	6 KB	assets.pcfactory.cl
-ok	a136	6 KB	assets.pcfactory.cl
-ok	a137	11 KB	assets.pcfactory.cl
-ok	a138	13 KB	assets.pcfactory.cl
-ok	g68	8 KB	assets.pcfactory.cl
-ok	a139	10 KB	assets.pcfactory.cl
-ok	a140	7 KB	assets.pcfactory.cl
-ok	a141	12 KB	assets.pcfactory.cl
-ok	a142	8 KB	assets.pcfactory.cl
-ok	a143	11 KB	assets.pcfactory.cl
-ok	p1	4 KB	catalogo.movistar.cl
-ok	p2	5 KB	media.falabella.com
-ERROR	p3	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/421670999/variant/69a6c9ff529ff2b5867be50b/images/c1670034-7d15-4814-9a78-806660cf0bbd/421670999-0000-001.jpg
-ok	p4	3 KB	catalogo.movistar.cl
-ok	p5	4 KB	miportal.entel.cl
-ERROR	p6	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/431015999/variant/69bd6c7f0624055f3c4476e7/images/92bf81c2-f7ba-4c9f-a4b7-7edc69ec782d/431015999-0000-001.jpg
-ok	p7	4 KB	catalogo.movistar.cl
-ok	p8	6 KB	miportal.entel.cl
-ok	p9	5 KB	catalogo.movistar.cl
-ok	p10	4 KB	media.falabella.com
-ok	p11	2 KB	catalogo.movistar.cl
-ERROR	p12	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000411487368/full_image-2000411487368
-ok	p13	5 KB	miportal.entel.cl
-ok	p14	5 KB	miportal.entel.cl
-ok	p15	9 KB	miportal.entel.cl
-ok	p16	5 KB	media.falabella.com
-ok	p17	3 KB	miportal.entel.cl
-ok	p18	6 KB	media.falabella.com
-ok	p19	2 KB	catalogo.movistar.cl
-ok	p20	3 KB	miportal.entel.cl
-ERROR	p21	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000409923489/full_image-2000409923489
-ok	p22	5 KB	media.falabella.com
-ok	p23	3 KB	miportal.entel.cl
-ok	p24	3 KB	miportal.entel.cl
-ok	p25	13 KB	media.falabella.com
-ok	p26	8 KB	media.falabella.com
-ok	p27	8 KB	media.falabella.com
-ERROR	p28	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000409764075/full_image-2000409764075
-ok	p29	5 KB	miportal.entel.cl
-ok	p30	5 KB	miportal.entel.cl
-ok	p31	5 KB	miportal.entel.cl
-ok	p32	4 KB	miportal.entel.cl
-ok	p33	5 KB	miportal.entel.cl
-ERROR	p34	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000405914566/full_image-2000405914566
-ok	p35	3 KB	catalogo.movistar.cl
-ok	p36	11 KB	assets.pcfactory.cl
-ok	p37	1 KB	catalogo.movistar.cl
-ERROR	p38	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/425529999/variant/69a99c2552e5ef5433137029/images/0c960b0f-40d1-4c50-b6c3-6ada377c969d/425529999-0000-001.jpg
-ok	p39	17 KB	assets.pcfactory.cl
-ok	p40	6 KB	miportal.entel.cl
-ok	p41	5 KB	media.falabella.com
-ok	p42	2 KB	catalogo.movistar.cl
-ok	p43	6 KB	miportal.entel.cl
-ok	p44	8 KB	media.falabella.com
-ok	p45	3 KB	catalogo.movistar.cl
-ok	p46	8 KB	assets.pcfactory.cl
-ok	p47	20 KB	assets.pcfactory.cl
-ok	p48	2 KB	catalogo.movistar.cl
-ok	p49	20 KB	media.falabella.com
-ok	p50	3 KB	miportal.entel.cl
-ok	p51	8 KB	miportal.entel.cl
-ERROR	p52	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000408331865/full_image-2000408331865
-ERROR	p53	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000411413176/full_image-2000411413176
-ERROR	p54	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000411413244/full_image-2000411413244
-ok	p55	13 KB	media.falabella.com
-ok	p56	6 KB	media.falabella.com
-ok	p57	6 KB	miportal.entel.cl
-ok	p58	14 KB	media.falabella.com
-ok	p59	5 KB	catalogo.movistar.cl
-ok	p60	5 KB	miportal.entel.cl
-ok	p61	4 KB	media.falabella.com
-ok	p62	3 KB	media.falabella.com
-ERROR	p63	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/425512999/variant/69a99c2f52e5ef5433137129/images/34e013e9-af2d-415d-bc16-f79d9f4ff723/425512999-0000-001.jpg
-ok	p64	8 KB	assets.pcfactory.cl
-ok	p65	3 KB	catalogo.movistar.cl
-ok	p66	2 KB	catalogo.movistar.cl
-ok	p67	3 KB	catalogo.movistar.cl
-ok	p68	3 KB	catalogo.movistar.cl
-ok	p69	8 KB	media.falabella.com
-ok	p70	7 KB	assets.pcfactory.cl
-ok	p71	6 KB	media.falabella.com
-ok	p72	10 KB	miportal.entel.cl
-ok	p73	6 KB	miportal.entel.cl
-ok	p74	5 KB	miportal.entel.cl
-ok	p75	11 KB	media.falabella.com
-ok	p76	3 KB	catalogo.movistar.cl
-ok	p77	13 KB	catalogo.movistar.cl
-ERROR	p78	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000399366709/full_image-2000399366709
-ERROR	p79	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000411413138/full_image-2000411413138
-ok	p80	6 KB	media.falabella.com
-ok	p81	4 KB	miportal.entel.cl
-ok	p82	4 KB	miportal.entel.cl
-ok	p83	10 KB	miportal.entel.cl
-ERROR	p84	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000408330851/full_image-2000408330851
-ERROR	p85	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000409273157/full_image-2000409273157
-ok	p86	2 KB	catalogo.movistar.cl
-ok	p87	8 KB	media.falabella.com
-ERROR	p88	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000405057911/full_image-2000405057911
-ok	p89	6 KB	miportal.entel.cl
-ok	p90	7 KB	assets.pcfactory.cl
-ERROR	p91	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000395221804/full_image-2000395221804
-ok	p92	8 KB	media.falabella.com
-ERROR	p93	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000398761185/full_image-2000398761185
-ERROR	p94	HTTP Error 403: Forbidden	https://home.ripley.cl/store/Attachment/WOP/D191/2000398761178/2000398761178_2.jpg
-ok	p95	6 KB	media.falabella.com
-ok	p96	7 KB	media.falabella.com
-ok	p97	6 KB	media.falabella.com
-ERROR	p98	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000409272730/full_image-2000409272730
-ERROR	p99	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000409272648/full_image-2000409272648
-ok	p100	6 KB	media.falabella.com
-ok	p101	8 KB	media.falabella.com
-ok	p102	17 KB	catalogo.movistar.cl
-ERROR	p103	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/633362999/variant/6ac8e20b421b09a21aac9d65/images/27f3a81a-c4bf-458a-aaeb-1b1098e5d04d/633362999-0000-001.jpg
-ok	p104	8 KB	assets.pcfactory.cl
-ok	p105	9 KB	assets.pcfactory.cl
-ok	p106	6 KB	media.falabella.com
-ERROR	p107	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000411413268/full_image-2000411413268
-ok	p108	8 KB	media.falabella.com
-ERROR	p109	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000405524031/full_image-2000405524031
-ERROR	p110	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/425497999/variant/6a2af62b1fc70e4e730d2d21/images/4550157e-d80c-4ce5-951a-15cff03f9237/425497999-0000-001.jpg
-ok	p111	3 KB	catalogo.movistar.cl
-ERROR	p112	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/425499999/variant/6a02b0abaec486ac4b80a681/images/89795317-85d3-46f2-a843-bda8d0426d98/425499999-0000-001.jpg
-ok	p113	4 KB	media.falabella.com
-ok	p114	5 KB	miportal.entel.cl
-ERROR	p115	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/382373999/variant/696e82f3bcb643dd71f10321/images/d373dea2-8fa8-487b-bf51-ddb499440851/382373999-0000-001.jpg
-ok	p116	5 KB	media.falabella.com
-ok	p117	7 KB	media.falabella.com
-ok	p118	7 KB	media.falabella.com
-ok	p119	5 KB	miportal.entel.cl
-ok	p120	5 KB	media.falabella.com
-ok	p121	10 KB	assets.pcfactory.cl
-ok	p122	5 KB	miportal.entel.cl
-ok	p123	9 KB	assets.pcfactory.cl
-ok	p124	6 KB	media.falabella.com
-ok	p125	3 KB	media.falabella.com
-ok	p126	10 KB	assets.pcfactory.cl
-ok	p127	7 KB	media.falabella.com
-ok	p128	4 KB	miportal.entel.cl
-ok	p129	6 KB	media.falabella.com
-ERROR	p130	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000408434436/full_image-2000408434436
-ok	p131	3 KB	catalogo.movistar.cl
-ok	p132	6 KB	media.falabella.com
-ERROR	p133	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/516529999/variant/6a32dd6c60bb4ff1f4fbd96b/images/f567e4d2-1633-4d02-8e5d-c5cdb1d23daa/516529999-0000-001.jpg
-ok	p134	20 KB	assets.pcfactory.cl
-ERROR	p135	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000409272808/full_image-2000409272808
-ERROR	p136	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000395221644/full_image-2000395221644
-ERROR	p137	HTTP Error 400: Bad Request	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000408434399/full_image-2000408434399
-ok	p138	3 KB	catalogo.movistar.cl
-ok	p139	3 KB	catalogo.movistar.cl
-ok	p140	8 KB	assets.pcfactory.cl
+Fotos nuevas: 55 · con error: 0 · total en la carpeta: 600
+ok	g52	13 KB	media.solotodo.com
+ok	a29	7 KB	media.solotodo.com
+ok	g54	6 KB	media.solotodo.com
+ok	g57	11 KB	media.solotodo.com
+ok	g58	13 KB	media.solotodo.com
+ok	g60	11 KB	media.solotodo.com
+ok	a42	7 KB	media.solotodo.com
+ok	a44	9 KB	media.solotodo.com
+ok	a46	14 KB	media.solotodo.com
+ok	a48	4 KB	media.solotodo.com
+ok	g62	10 KB	media.solotodo.com
+ok	a56	9 KB	media.solotodo.com
+ok	a59	8 KB	media.solotodo.com
+ok	a60	16 KB	media.solotodo.com
+ok	a68	14 KB	media.solotodo.com
+ok	a70	3 KB	media.solotodo.com
+ok	a104	14 KB	media.solotodo.com
+ok	a110	13 KB	media.solotodo.com
+ok	a114	9 KB	media.solotodo.com
+ok	g67	21 KB	media.solotodo.com
+ok	a119	9 KB	media.solotodo.com
+ok	a121	10 KB	media.solotodo.com
+ok	a130	13 KB	media.solotodo.com
+ok	p3	5 KB	media.solotodo.com
+ok	p6	8 KB	media.solotodo.com
+ok	p12	7 KB	media.solotodo.com
+ok	p21	6 KB	media.solotodo.com
+ok	p28	6 KB	media.solotodo.com
+ok	p34	4 KB	media.solotodo.com
+ok	p38	9 KB	media.solotodo.com
+ok	p52	8 KB	media.solotodo.com
+ok	p53	7 KB	media.solotodo.com
+ok	p54	7 KB	media.solotodo.com
+ok	p63	12 KB	media.solotodo.com
+ok	p78	6 KB	media.solotodo.com
+ok	p79	5 KB	media.solotodo.com
+ok	p84	6 KB	media.solotodo.com
+ok	p85	8 KB	media.solotodo.com
+ok	p88	5 KB	media.solotodo.com
+ok	p91	3 KB	media.solotodo.com
+ok	p93	6 KB	media.solotodo.com
+ok	p94	3 KB	media.solotodo.com
+ok	p98	10 KB	media.solotodo.com
+ok	p99	15 KB	media.solotodo.com
+ok	p103	13 KB	media.solotodo.com
+ok	p107	5 KB	media.solotodo.com
+ok	p109	6 KB	media.solotodo.com
+ok	p110	10 KB	media.solotodo.com
+ok	p112	12 KB	media.solotodo.com
+ok	p115	6 KB	media.solotodo.com
+ok	p130	7 KB	media.solotodo.com
+ok	p133	12 KB	media.solotodo.com
+ok	p135	6 KB	media.solotodo.com
+ok	p136	3 KB	media.solotodo.com
+ok	p137	6 KB	media.solotodo.com
