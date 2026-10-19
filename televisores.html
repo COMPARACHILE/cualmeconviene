@@ -498,8 +498,8 @@ body.hasTray { padding-bottom: 96px; }
 .paneles dt { font-weight: 700; }
 .paneles dd { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
 </style>
-<link rel="stylesheet" href="/assets/cmc.css?v=099e63d8">
-<script src="/assets/cmc-ui.js?v=890112db"></script>
+<link rel="stylesheet" href="/assets/cmc.css?v=4b984d02">
+<script src="/assets/cmc-ui.js?v=5593f45e"></script>
 <script defer src="/assets/cmc.js?v=d7c8fc65"></script>
 </head>
 <body>
@@ -524,15 +524,12 @@ body.hasTray { padding-bottom: 96px; }
     <form class="filt" id="panel" onsubmit="return false">
       <fieldset>
         <legend>Precio</legend>
-        <div class="rangos" data-rangos="0-400000,400000-800000,800000-1500000,1500000-"></div>
-        <details class="otro"><summary>Otro rango</summary>
         <div class="dualHead"><div><span class="rlab">Desde</span><output id="budgetMinOut" for="budgetMin"></output></div><div class="r"><span class="rlab">Hasta</span><output id="budgetOut" for="budget"></output></div></div>
       <div class="dual" data-dual>
         <div class="dualTrack" aria-hidden="true"><i></i></div>
         <input type="range" id="budgetMin" min="0" max="6000000" step="10000" value="0" aria-label="Precio mínimo">
         <input type="range" id="budget" min="0" max="6000000" step="10000" value="6000000" aria-label="Precio máximo">
       </div>
-        </details>
         <p class="modeHint" hidden><b id="budgetCount"></b></p>
         <p class="modeHint" style="margin:0">Arrastra los dos puntos: el izquierdo fija el mínimo y el derecho el máximo.</p>
       </fieldset>
@@ -732,8 +729,7 @@ function tvBlock(p) {
   return `<div class="bm"><b>Precio por pulgada</b><span style="grid-column: 2 / -1; text-align:right">${fmt(porPulgada(p))}</span>
     <small>${pan ? `<b style="font-weight:600">${esc(p.panel)}:</b> ${esc(pan.t)}` : ''}${p.model ? ` Modelo ${esc(p.model)}.` : ''}</small></div>`;
 }
-/* Nota de potencia de 1 a 10 y sello del puma (assets/cmc-ui.js) */
-const NOTA = CMC.escala(PHONES.map(p => p.gb6 ? p.gb6[1] : 0));
+/* Sello del puma (assets/cmc-ui.js) */
 const ELEGIDO = {};
 function card(p) {
   const os = offersOf(p).slice().sort((a, b) => a.p - b.p);

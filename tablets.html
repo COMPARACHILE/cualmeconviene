@@ -491,8 +491,8 @@ body.hasTray { padding-bottom: 96px; }
 .offer { grid-template-columns: auto minmax(0, 1fr) max-content; }
 .oname .chan { margin-left: 2px; }
 </style>
-<link rel="stylesheet" href="/assets/cmc.css?v=099e63d8">
-<script src="/assets/cmc-ui.js?v=890112db"></script>
+<link rel="stylesheet" href="/assets/cmc.css?v=4b984d02">
+<script src="/assets/cmc-ui.js?v=5593f45e"></script>
 <script defer src="/assets/cmc.js?v=d7c8fc65"></script>
 </head>
 <body>
@@ -517,15 +517,12 @@ body.hasTray { padding-bottom: 96px; }
     <form class="filt" id="panel" onsubmit="return false">
       <fieldset>
         <legend>Precio</legend>
-        <div class="rangos" data-rangos="0-250000,250000-600000,600000-1000000,1000000-"></div>
-        <details class="otro"><summary>Otro rango</summary>
         <div class="dualHead"><div><span class="rlab">Desde</span><output id="budgetMinOut" for="budgetMin"></output></div><div class="r"><span class="rlab">Hasta</span><output id="budgetOut" for="budget"></output></div></div>
       <div class="dual" data-dual>
         <div class="dualTrack" aria-hidden="true"><i></i></div>
         <input type="range" id="budgetMin" min="0" max="1900000" step="10000" value="0" aria-label="Precio mínimo">
         <input type="range" id="budget" min="0" max="1900000" step="10000" value="1900000" aria-label="Precio máximo">
       </div>
-        </details>
         <p class="modeHint" hidden><b id="budgetCount"></b></p>
         <p class="modeHint" style="margin:0">Arrastra los dos puntos: el izquierdo fija el mínimo y el derecho el máximo.</p>
       </fieldset>
@@ -710,8 +707,7 @@ function bmBlock(p) {
     ${p.antutu ? `<b>AnTuTu 11</b><div class="pw alt"><i style="width:${(p.antutu / ANT_MAX * 100).toFixed(1)}%"></i></div><span>${p.antutu.toLocaleString('es-CL')}</span>` : ''}
     <small>${esc(p.chip)} · Geekbench: un núcleo / multinúcleo${ios && p.antutu ? ' · En iPad, AnTuTu marca menos: compara con Geekbench' : ''}${p.bnote ? ' · ' + esc(p.bnote) : ''}</small></div>`;
 }
-/* Nota de potencia de 1 a 10 y sello del puma (assets/cmc-ui.js) */
-const NOTA = CMC.escala(PHONES.map(p => p.gb6 ? p.gb6[1] : 0));
+/* Sello del puma (assets/cmc-ui.js) */
 const ELEGIDO = {};
 function card(p) {
   const os = offersOf(p).slice().sort((a, b) => a.p - b.p);
@@ -719,7 +715,9 @@ function card(p) {
   if (p.refurb) tags.push(`<span class="ref">${esc(p.cond || 'Reacondicionado')}</span>`); if (p.chipNet) tags.push(`<span class="g4">Con chip ${esc(p.net)}</span>`);
   return CMC.tarjeta({
     dataId: 'c-' + p.id, anchor: 'c-' + p.id, ficha: fichaDe(p.id), art: art(p, 150), nombre: p.name, spec: specLine(p), tags,
-    nota: CMC.nota(NOTA(gbm(p)), 'Potencia del procesador (Geekbench 6) comparada con las demás tablets del sitio'),
+    nota: p.gb6 ? CMC.medidor('Geekbench 6', p.gb6[0].toLocaleString('es-CL') + ' / ' + p.gb6[1].toLocaleString('es-CL'), gbm(p) / GBM_MAX * 100, p.chip + ' · Geekbench 6: un núcleo / multinúcleo')
+        + (p.antutu ? CMC.medidor('AnTuTu 11', p.antutu.toLocaleString('es-CL'), p.antutu / ANT_MAX * 100, p.brand === 'Apple' ? 'En Apple, AnTuTu marca menos: compara con Geekbench' : p.chip) : '')
+      : '<span class="bmk"><span class="bmk-t">Sin benchmark publicado</span></span>',
     sello: ELEGIDO[p.id] || false, os, tiendas: STORES,
     extra: `<label class="cmpBox"><input type="checkbox" data-cmp="${p.id}"${cmp.includes(p.id) ? ' checked' : ''}> Comparar</label>`
   });

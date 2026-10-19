@@ -408,3 +408,9 @@ img.foto.ok { background: #fff; }
 .c3-ir:hover { filter: brightness(.96); }
 .c3-ir:focus-visible, .c3-ver:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 #hint:empty { display: none; }
+/* Puntaje de benchmark en la tarjeta (19-10-2026, a pedido: el número real, no una nota de 1 a 10) */
+.bmk { display: grid; grid-template-columns: auto minmax(40px, 1fr) auto; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.bmk-t { white-space: nowrap; }
+.bmk .nota-b { width: auto; }
+.bmk b { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bmk + .bmk { margin-top: -2px; }

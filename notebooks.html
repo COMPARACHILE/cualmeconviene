@@ -435,8 +435,8 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
 .jump:active { transform: scale(0.97); }
 @media (min-width: 960px) { .jump { display: none; } }
 </style>
-<link rel="stylesheet" href="/assets/cmc.css?v=099e63d8">
-<script src="/assets/cmc-ui.js?v=890112db"></script>
+<link rel="stylesheet" href="/assets/cmc.css?v=4b984d02">
+<script src="/assets/cmc-ui.js?v=5593f45e"></script>
 <script defer src="/assets/cmc.js?v=d7c8fc65"></script>
 
 <header class="hd full">
@@ -468,15 +468,12 @@ body { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(s
     </fieldset>
     <fieldset id="bands">
       <legend>Precio</legend>
-      <div class="rangos" data-rangos="0-500000,500000-800000,800000-1200000,1200000-"></div>
-      <details class="otro"><summary>Otro rango</summary>
       <div class="dualHead"><div><span class="rlab">Desde</span><output id="budgetMinOut" for="budgetMin">$0</output></div><div class="r"><span class="rlab">Hasta</span><output id="budgetOut" for="budget"></output></div></div>
       <div class="dual" data-dual>
         <div class="dualTrack" aria-hidden="true"><i></i></div>
         <input type="range" id="budgetMin" min="0" max="5000000" step="10000" value="0" aria-label="Precio mínimo">
         <input type="range" id="budget" min="0" max="5000000" step="10000" value="5000000" aria-label="Precio máximo">
       </div>
-      </details>
       <p class="modeHint" hidden><b id="budgetCount"></b></p>
     </fieldset>
     <fieldset id="fsMarca">
@@ -1040,8 +1037,7 @@ const TIER_POW = [0, 8000, 12000, 18000, 28000, 45000];
 NOTEBOOKS.forEach(n => { n.cpuM = CPU_OF[n.id] || null; n.db = n.cpuM ? CPUDB[n.cpuM] || null : null; });
 const POW_MAX = 58000;
 const powOf = n => n.db ? n.db.m : TIER_POW[n.cpuTier];
-/* Nota de potencia de 1 a 10: el puesto del procesador entre todos los notebooks del sitio */
-const POW_NOTA = CMC.escala(NOTEBOOKS.map(powOf));
+
 const nf = x => x.toLocaleString('es-CL');
 function feats(n) {
   return {
@@ -1230,7 +1226,8 @@ function card(r, s) {
   return CMC.tarjeta({
     dataId: n.id, ficha: fichaDe(n.id), art: art(n), nombre: n.name, spec,
     tags: n.cat ? [`<span>${CATN[n.cat]}</span>`] : [],
-    nota: CMC.nota(POW_NOTA(powOf(n)), n.db ? 'Potencia del procesador (PassMark) comparada con los demás notebooks del sitio' : 'Potencia estimada por la gama del procesador, comparada con los demás notebooks del sitio'),
+    nota: n.db ? CMC.medidor('Potencia', nf(n.db.m) + ' pts', powOf(n) / POW_MAX * 100, 'PassMark CPU Mark del ' + n.cpuM + ': más alto rinde más')
+      : CMC.medidor('Potencia', 'estimada', powOf(n) / POW_MAX * 100, 'La tienda no publica el modelo exacto del procesador: potencia estimada por su gama'),
     sello: aw.length ? 'Mejor calidad-precio · ' + aw.map(u => USE_NAME[u]).join(' y ') : false,
     os: offs, tiendas: STORES
   });

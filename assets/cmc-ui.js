@@ -35,6 +35,8 @@
       return Math.max(1, Math.min(10, Math.ceil(lo / s.length * 10)));
     };
   };
+  /* Puntaje de benchmark con barra (la barra compara con el equipo más potente del sitio) */
+  CMC.medidor = (t, valor, pct, que) => `<span class="bmk"${que ? ` title="${esc(que)}"` : ''}><span class="bmk-t">${esc(t)}</span><span class="nota-b" aria-hidden="true"><i style="width:${Math.max(2, Math.min(100, pct)).toFixed(1)}%"></i></span><b>${esc(valor)}</b></span>`;
   CMC.nota = (n, que) => !n ? '' : `<span class="nota" title="${esc(que || 'Potencia comparada con los demás equipos del sitio')}"><span>Potencia</span><span class="nota-b" aria-hidden="true"><i style="width:${n * 10}%"></i></span><span><b>${n}</b>/10</span></span>`;
 
   /* Tarjeta compacta, igual en las cuatro categorías */
