@@ -1,2 +1,33 @@
-Fotos nuevas: 0 · con error: 0 · total en la carpeta: 600
-
+Fotos nuevas: 32 · con error: 0 · total en la carpeta: 604
+ok	zfold7	3 KB	media.solotodo.com
+ok	rn15pp	6 KB	media.solotodo.com
+ok	p1	5 KB	media.solotodo.com
+ok	p4	7 KB	media.solotodo.com
+ok	p7	10 KB	media.solotodo.com
+ok	p9	15 KB	media.solotodo.com
+ok	p11	8 KB	media.solotodo.com
+ok	p17	5 KB	media.solotodo.com
+ok	p19	5 KB	media.solotodo.com
+ok	p32	5 KB	media.solotodo.com
+ok	p35	8 KB	media.solotodo.com
+ok	p37	10 KB	media.solotodo.com
+ok	p42	4 KB	media.solotodo.com
+ok	p48	6 KB	media.solotodo.com
+ok	p50	7 KB	media.solotodo.com
+ok	p59	16 KB	media.solotodo.com
+ok	p65	10 KB	media.solotodo.com
+ok	p66	7 KB	media.solotodo.com
+ok	p67	7 KB	media.solotodo.com
+ok	p68	11 KB	media.solotodo.com
+ok	p72	6 KB	media.solotodo.com
+ok	p73	8 KB	media.solotodo.com
+ok	p76	4 KB	media.solotodo.com
+ok	p86	4 KB	media.solotodo.com
+ok	p111	6 KB	media.solotodo.com
+ok	p131	9 KB	media.solotodo.com
+ok	p138	8 KB	media.solotodo.com
+ok	p139	4 KB	media.solotodo.com
+ok	a144	6 KB	media.falabella.com
+ok	a145	14 KB	media.falabella.com
+ok	a146	8 KB	media.falabella.com
+ok	a147	11 KB	media.solotodo.com
