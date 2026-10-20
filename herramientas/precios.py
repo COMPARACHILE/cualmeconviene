@@ -73,8 +73,14 @@ def rutas_por_tienda():
 def lista():
     for t, rs in sorted(rutas_por_tienda().items()):
         if t == 'pcfactory':
-            ids = ','.join(r.split('/')[-1] for r in rs)
-            print(f'## pcfactory · abrir https://www.pcfactory.cl/busqueda?productos={ids}&size=60 · luego leerListado("pcfactory", RUTAS)')
+            # La búsqueda pagina y repite equipos entre páginas: se lee en tandas de 48 (caben en una página)
+            ids = [r.split('/')[-1] for r in rs]
+            for n, k in enumerate(range(0, len(ids), 48), 1):
+                print(f'## pcfactory-{n} · abrir https://www.pcfactory.cl/busqueda?productos={",".join(ids[k:k + 48])}&size=60 · luego leerListado("pcfactory", RUTAS) · guardar como pcfactory-{n}.json')
+        elif t == 'entel':
+            print(f'## entel · abrir {PORTADAS[t]} · luego await leerEntel(RUTAS)')
+        elif t == 'wom':
+            print(f'## wom · abrir {LISTADOS[t]} · luego await leerWom(RUTAS)')
         elif t in LISTADOS:
             print(f'## {t} · abrir {LISTADOS[t]} · bajar hasta el final · luego leerListado("{t}", RUTAS)')
         else:
@@ -95,10 +101,12 @@ def aplicar(carpeta):
     nb_h, (s, e), nbs, ph_h, (s2, e2), phs = cargar()
     extra = cargar_extra()
     res, RT = {}, rutas_por_tienda()
-    for f in glob.glob(os.path.join(carpeta, '*.json')):
-        t = os.path.basename(f)[:-5]
+    for f in sorted(glob.glob(os.path.join(carpeta, '*.json'))):
+        t = os.path.basename(f)[:-5].split('-')[0]  # pcfactory-1.json, pcfactory-2.json... = pcfactory
         for i, p, c, x in json.load(open(f, encoding='utf-8')):
             u = RT[t][i]
+            if not p and res.get((t, u), {}).get('p'):
+                continue  # otra tanda ya trajo el precio
             res[(t, u)] = {'e': x or 'sin precio'} if not p else {'p': p, 'c': c, 'n': nota(t, c, x)}
     hoy = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-3))).strftime('%d-%m-%Y')
     cambios, bajos, sin, ocultos = [], [], [], []

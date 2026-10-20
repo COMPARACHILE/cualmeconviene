@@ -2,8 +2,13 @@
    Se pega en la consola (javascript_tool) de una pestaña abierta en la tienda que corresponde.
    Uso (RUTAS = la lista que imprime "python3 herramientas/precios.py lista" para esa tienda):
      1) Pega este archivo completo una vez por pestaña.
-     2) await leer('falabella', RUTAS)        // fichas una por una
-        leerListado('claro', RUTAS)          // claro, wom y pcfactory leen un listado ya abierto
+     2) await leer('falabella', RUTAS)        // fichas una por una (falabella, paris, ripley, movistar)
+        await leerEntel(RUTAS)               // entel: abre cada ficha en un iframe y lee el precio dibujado
+        leerListado('claro', RUTAS)          // claro y pcfactory leen un listado ya abierto
+        await leerWom(RUTAS)                 // wom: recorre las páginas del listado
+   Claro bloquea fetch a GitHub: ahí hay que pegar el archivo y las RUTAS a mano.
+   PCFactory: "precios.py lista" da varios enlaces (48 equipos c/u); se lee cada uno y se guarda
+   como pcfactory-1.json, pcfactory-2.json... "aplicar" los junta.
    Devuelve un texto JSON corto: [[i, precio, c, extra], ...] donde i es la posición en RUTAS,
    c = 1 si el precio pide tarjeta o transferencia, y extra es el precio sin tarjeta (Ripley),
    el de otros medios (PCFactory) o el motivo del error cuando precio = 0.
@@ -18,6 +23,7 @@ const LECTORES = {
     if (!d) return { e: 'sin datos' };
     const pd = JSON.parse(d[1]).props.pageProps.productData;
     if (!pd) return { e: 'sin producto' };
+    if (!(pd.variants || []).length) return { e: 'sin stock' };  // ficha sin variantes = ya no se vende
     const sku = u.split('/').pop();
     const v = (pd.variants || []).find(x => x.id === sku) || pd.variants[0];
     const pr = Object.fromEntries((v.prices || []).map(p => [p.type, _num((p.price || [])[0])]));
@@ -48,6 +54,8 @@ const LECTORES = {
     return sale ? { p: sale, c: 0, n: 'Precio Internet' } : { e: 'sin precio' };
   },
   entel(h) {
+    // Respaldo: el "price" del JSON-LD a veces es el precio del equipo CON plan (ej. Moto G35 $59.990).
+    // Usar leerEntel, que lee el "Precio oferta" que ve el comprador en la ficha.
     const p = _num((h.match(/"offers"\s*:\s*\{[\s\S]{0,300}?"price"\s*:\s*"?([\d.]+)/) || [])[1]);
     return p ? { p, c: 0, n: 'Precio oferta online Entel (solo equipo)' } : { e: 'sin precio' };
   },
@@ -72,6 +80,45 @@ async function leer(tienda, rutas, grupo = 6) {
     }));
   }
   return JSON.stringify(out.sort((a, b) => a[0] - b[0]));
+}
+
+/* Entel arma el precio con JavaScript: cada ficha se abre en un iframe oculto (misma página de Entel)
+   y se lee "Precio oferta" (o "Precio General" si no hay oferta) de la opción "Equipo".
+   Si la ficha carga sin el bloque de capacidad, el equipo ya no se vende (sin stock). */
+async function leerEntel(rutas, grupo = 4) {
+  const out = [];
+  const uno = (u, i) => new Promise(res => {
+    const f = document.createElement('iframe');
+    f.style.cssText = 'position:fixed;left:-3000px;top:0;width:1200px;height:900px';
+    f.src = u; const t0 = Date.now();
+    const tick = () => {
+      let txt = ''; try { txt = f.contentDocument.body.innerText; } catch (e) {}
+      const p = _num((txt.match(/Precio oferta:\s*\$\s*([\d.]+)/) || txt.match(/Precio General:\s*\$\s*([\d.]+)/) || [])[1]);
+      const listo = f.contentDocument && f.contentDocument.readyState === 'complete';
+      if (p) { out.push([i, p, 0, 0]); f.remove(); res(); }
+      else if (Date.now() - t0 > 20000) { out.push([i, 0, 0, listo && !/Capacidad/.test(txt) ? 'sin stock' : 'sin precio']); f.remove(); res(); }
+      else setTimeout(tick, 700);
+    };
+    document.body.appendChild(f); setTimeout(tick, 2500);
+  });
+  for (let i = 0; i < rutas.length; i += grupo) await Promise.all(rutas.slice(i, i + grupo).map((u, k) => uno(u, i + k)));
+  return JSON.stringify(out.sort((a, b) => a[0] - b[0]));
+}
+
+/* WOM muestra 24 equipos por página: lee la página abierta y luego pasa a la 2, 3... */
+async function leerWom(rutas) {
+  const best = rutas.map((u, i) => [i, 0, 0, 'no está en el listado']);
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const primero = () => (document.querySelector('a[href*="/equipos/"]:not([href$="/equipos/"])') || {}).href;
+  const juntar = () => JSON.parse(leerListado('wom', rutas)).forEach(r => { if (r[1] && !best[r[0]][1]) best[r[0]] = r; });
+  juntar();
+  for (let p = 2; p < 10; p++) {
+    const li = document.querySelector('li.rc-pagination-item-' + p); if (!li) break;
+    const antes = primero(); (li.querySelector('a') || li).click();
+    for (let k = 0; k < 20 && primero() === antes; k++) await sleep(400);
+    await sleep(1500); juntar();
+  }
+  return JSON.stringify(best);
 }
 
 /* Listados: abrir primero la página indicada y esperar a que cargue.
