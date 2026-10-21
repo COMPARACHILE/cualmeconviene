@@ -323,6 +323,48 @@ button, input { font: inherit; color: inherit; }
   .catsH .cf { width: 48px; height: 48px; }
   .portadaIn { gap: 24px; }
 }
+
+/* ---------- La oferta del día en carrusel, una por categoría (21-10-2026) ---------- */
+.ficha :focus-visible { outline-color: #2E57FF; }
+.rulBar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.rulTabs { position: relative; flex: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 5px; margin: -5px; }
+.rulTabs::-webkit-scrollbar { display: none; }
+/* Difuminado en el borde cuando hay más pestañas hacia ese lado (celular) */
+.rulTabs.izq, .rulTabs.mas { --fi: 0px; --fd: 0px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--fi), #000 calc(100% - var(--fd)), transparent); mask-image: linear-gradient(90deg, transparent, #000 var(--fi), #000 calc(100% - var(--fd)), transparent); }
+.rulTabs.izq { --fi: 32px; }
+.rulTabs.mas { --fd: 40px; }
+.rulTab { position: relative; flex: none; min-height: 40px; padding: 0 14px; border: 0; border-radius: 10px; background: #F1F3F8; color: #566082; font: 600 14px/1 var(--f-body); cursor: pointer; overflow: hidden; transition: background-color 150ms var(--ease), color 150ms var(--ease); }
+.rulTab:hover { background: #E4E8F2; color: #10152B; }
+.rulTab[aria-selected="true"] { background: #10152B; color: #fff; }
+/* La rayita amarilla se llena mientras corre el tiempo de cada oferta */
+.rulBarra { position: absolute; left: 12px; right: 12px; bottom: 6px; height: 2px; border-radius: 2px; background: #FFD84D; transform: scaleX(0); transform-origin: left center; pointer-events: none; }
+.ficha.auto .rulTab[aria-selected="true"] .rulBarra { animation: llena 7s linear forwards; }
+.ficha.pausa .rulBarra { animation-play-state: paused; }
+@keyframes llena { to { transform: scaleX(1); } }
+.rulPausa { flex: none; width: 40px; height: 40px; border-radius: 10px; border: 1px solid #DCE1EE; background: #fff; color: #10152B; display: grid; place-items: center; cursor: pointer; padding: 0; }
+.rulPausa[hidden] { display: none; }
+.rulPausa:hover { border-color: #566082; }
+.rulPausa svg { width: 14px; height: 14px; fill: currentColor; }
+.rulPausa .ipl, .rulPausa.play .ipa { display: none; }
+.rulPausa.play .ipl { display: block; }
+.ficha.carga .rulTabs, .ficha.carga .rulPausa { pointer-events: none; }
+/* Las ofertas van una al lado de la otra y se deslizan con el dedo */
+.rulVista { position: relative; margin-inline: -18px; }
+.rul { position: relative; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; }
+.rul::-webkit-scrollbar { display: none; }
+.rulSlide { flex: 0 0 100%; min-width: 0; padding: 0 18px; scroll-snap-align: start; scroll-snap-stop: always; display: flex; flex-direction: column; }
+.rulSlide .escalera { margin-bottom: 14px; }
+.rulSlide .ahorro { margin-top: auto; }
+.ficha .rulVista .esq { inset: 0 18px; }
+.ficha.carga .rulVista { min-height: 300px; }
+.rulFlecha { position: absolute; top: 30px; z-index: 2; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #DCE1EE; background: #fff; color: #10152B; display: none; place-items: center; padding: 0; cursor: pointer; box-shadow: 0 8px 22px rgba(3, 6, 25, .3); transition: transform 150ms var(--ease); }
+.rulFlecha svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.rulVista > .rulFlecha { position: absolute; }
+.rulFlecha.atras { left: -22px; }
+.rulFlecha.adelante { right: -22px; }
+@media (hover: hover) and (min-width: 980px) { .rulFlecha { display: grid; } .rulFlecha:hover { transform: scale(1.06); } .rulFlecha:active { transform: scale(.96); } }
+.ficha.carga .rulFlecha, .rulFlecha[hidden] { display: none; }
+@media (max-width: 420px) { .rulTab { padding: 0 12px; font-size: 13.5px; } }
 </style>
 <link rel="stylesheet" href="/assets/cmc.css?v=4b984d02">
 <script src="/assets/cmc-ui.js?v=5593f45e"></script>
@@ -357,13 +399,29 @@ button, input { font: inherit; color: inherit; }
     </div>
 
     <div class="escena">
-      <article class="ficha carga" id="ficha" aria-label="La oferta del día">
+      <article class="ficha carga" id="ficha" aria-roledescription="carrusel" aria-label="La oferta del día en cada categoría">
         <div class="fichaTop"><p id="fichaEt">La oferta del día</p><span id="fichaSello"></span></div>
-        <div class="esq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-        <div id="fichaCuerpo" aria-live="polite">
-          <a class="prod" id="prod" href="/notebooks"><span class="foto"></span><span><h2>Cargando precios</h2><p></p></span></a>
-          <ol class="escalera" id="escalera" aria-label="Precio en cada tienda"></ol>
-          <div class="ahorro"><p id="ahorroTxt"></p><a class="btnVer" id="btnVer" href="/notebooks">Ver precios</a></div>
+        <!-- Una oferta por categoría. Pestañas, deslizar con el dedo, flechas y cambio automático que se puede pausar -->
+        <div class="rulBar">
+          <div class="rulTabs" id="rulTabs" role="tablist" aria-label="Categoría">
+            <button type="button" class="rulTab" role="tab" aria-selected="true" tabindex="0">Notebooks</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Celulares</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Tablets</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">TV</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Consolas</button>
+          </div>
+          <button type="button" class="rulPausa" id="rulPausa" aria-label="Pausar el cambio automático" hidden>
+            <svg class="ipa" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.6" height="12" rx="1"/><rect x="9.4" y="2" width="3.6" height="12" rx="1"/></svg>
+            <svg class="ipl" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.6v10.8c0 .8.9 1.3 1.6.8l8.1-5.4c.6-.4.6-1.2 0-1.6L5.6 1.8C4.9 1.3 4 1.8 4 2.6z"/></svg>
+          </button>
+        </div>
+        <div class="rulVista">
+          <div class="esq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="rul" id="rul" aria-live="polite">
+            <div class="rulSlide">
+              <a class="prod" href="/notebooks"><span class="foto"></span><span><h2>Cargando precios</h2><p></p></span></a>
+              <ol class="escalera" aria-label="Precio en cada tienda"></ol>
+              <div class="ahorro"><p></p><a class="btnVer" href="/notebooks">Ver precios</a></div>
+            </div>
+          </div>
+          <button type="button" class="rulFlecha atras" id="rulAtras" aria-label="Oferta anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <button type="button" class="rulFlecha adelante" id="rulAdelante" aria-label="Oferta siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
         </div>
       </article>
     </div>
@@ -558,10 +616,10 @@ const SIN = {
   cs: '<svg viewBox="0 0 80 60" aria-hidden="true" class="sinFoto"><path d="M22 18h36c8 0 12 6 14 15l2 10c1 6-5 9-9 5l-6-6H25l-6 6c-4 4-10 1-9-5l2-10c2-9 6-15 14-15z" fill="#C9D0E4"/></svg>'
 };
 // Foto del equipo: la propia si existe, la de la tienda si no, y un dibujo simple si nada carga
-function foto(e, cls, alt) {
+function foto(e, cls, alt, ya) {
   const u = window.cmcFoto ? cmcFoto(e.id) : null;
   if (!u) return SIN[e.k];
-  return `<img${cls ? ` class="${cls}"` : ''} src="${esc(u)}" alt="${alt ? esc(e.nombre) : ''}" width="480" height="480" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-k="${e.k}">`;
+  return `<img${cls ? ` class="${cls}"` : ''} src="${esc(u)}" alt="${alt ? esc(e.nombre) : ''}" width="480" height="480" loading="${ya ? 'eager' : 'lazy'}" decoding="async" referrerpolicy="no-referrer" data-k="${e.k}">`;
 }
 document.addEventListener('error', ev => {
   const im = ev.target;
@@ -591,13 +649,101 @@ function prepara(e, k) {
   };
 }
 
+/* ---------- Carrusel de "La oferta del día": una oferta por categoría ----------
+   Pasa sola cada 7 segundos (la rayita amarilla de la pestaña marca el tiempo). Se detiene un rato mientras el mouse
+   o el dedo están encima, mientras la tarjeta no se ve o con el teclado dentro, y deja de pasar sola apenas la persona
+   elige una pestaña, usa las flechas o desliza con el dedo. El botón de pausa la detiene o la vuelve a encender. */
+function ruleta(OF, diapo) {
+  const F = $('ficha'), T = $('rulTabs'), R = $('rul'), P = $('rulPausa'), n = OF.length;
+  T.innerHTML = OF.map((o, i) => `<button type="button" class="rulTab" role="tab" id="rulT-${o.k}" aria-controls="rulP-${o.k}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${o.t}<span class="rulBarra" aria-hidden="true"></span></button>`).join('');
+  R.innerHTML = OF.map(diapo).join('');
+  if (window.CMC) $('fichaSello').innerHTML = CMC.sello();
+  const tabs = [...T.children], slides = [...R.children];
+  let act = 0, auto = n > 1 && !reduce.matches, viendo = true, encima = false, foco = false;
+  let destino = -1, tDest = 0, toque = false, rueda = 0;
+
+  const estado = () => {
+    F.classList.toggle('auto', auto);
+    F.classList.toggle('pausa', !viendo || encima || foco || document.hidden);
+    P.classList.toggle('play', !auto);
+    P.setAttribute('aria-label', auto ? 'Pausar el cambio automático' : 'Pasar las ofertas solas');
+    P.dataset.tip = auto ? 'Pausar' : 'Pasar solas';
+    R.setAttribute('aria-live', auto ? 'off' : 'polite');
+  };
+  const borde = () => { T.classList.toggle('izq', T.scrollLeft > 4); T.classList.toggle('mas', T.scrollLeft + T.clientWidth < T.scrollWidth - 4); };
+  const marca = i => {
+    act = i;
+    tabs.forEach((b, j) => { b.setAttribute('aria-selected', j === i); b.tabIndex = j === i ? 0 : -1; });
+    slides.forEach((s, j) => { s.setAttribute('aria-hidden', j !== i); s.querySelectorAll('a').forEach(a => { a.tabIndex = j === i ? 0 : -1; }); });
+    // En pantallas chicas las pestañas se desplazan: deja a la vista la elegida
+    const b = tabs[i];
+    if (T.scrollWidth > T.clientWidth) T.scrollTo({ left: b.offsetLeft - (T.clientWidth - b.offsetWidth) / 2, behavior: reduce.matches ? 'auto' : 'smooth' });
+  };
+  const espera = (i, ms) => { destino = i; clearTimeout(tDest); tDest = setTimeout(() => { destino = -1; }, ms); };
+  const ir = (i, persona) => {
+    i = (i + n) % n;
+    if (persona && auto) { auto = false; estado(); }
+    // A la de al lado se desliza; si salta varias (o vuelve al inicio) cambia de golpe con un fundido
+    const salta = reduce.matches || Math.abs(i - act) > 1;
+    espera(i, 1500);
+    marca(i);
+    R.scrollTo({ left: slides[i].offsetLeft, behavior: salta ? 'auto' : 'smooth' });
+    if (salta && !reduce.matches) { const s = slides[i]; s.classList.remove('cambia'); void s.offsetWidth; s.classList.add('cambia'); }
+  };
+
+  // Cuando la persona desliza con el dedo o el trackpad, la pestaña sigue a la oferta que queda a la vista
+  R.addEventListener('scroll', () => {
+    const persona = toque || Date.now() - rueda < 500;
+    if (destino >= 0 && !persona) return;
+    if (persona) { destino = -1; if (auto) { auto = false; estado(); } }
+    const i = Math.min(n - 1, Math.max(0, Math.round(R.scrollLeft / R.clientWidth)));
+    if (i !== act) marca(i);
+  }, { passive: true });
+  R.addEventListener('scrollend', () => { if (destino >= 0 && Math.round(R.scrollLeft / R.clientWidth) === destino) { clearTimeout(tDest); destino = -1; } });
+  R.addEventListener('wheel', ev => { if (Math.abs(ev.deltaX) > Math.abs(ev.deltaY)) rueda = Date.now(); }, { passive: true });
+  F.addEventListener('touchstart', ev => { encima = true; if (R.contains(ev.target)) toque = true; estado(); }, { passive: true });
+  const suelta = () => { if (!encima && !toque) return; encima = false; toque = false; estado(); };
+  addEventListener('touchend', suelta, { passive: true });
+  addEventListener('touchcancel', suelta, { passive: true });
+  F.addEventListener('pointerenter', ev => { if (ev.pointerType === 'mouse') { encima = true; estado(); } });
+  F.addEventListener('pointerleave', ev => { if (ev.pointerType === 'mouse') { encima = false; estado(); } });
+  const vFoco = () => {
+    const a = document.activeElement;
+    let visible = false; try { visible = !!a && a.matches(':focus-visible'); } catch (_) {}
+    foco = !!a && a !== P && F.contains(a) && visible; estado();
+  };
+  F.addEventListener('focusin', vFoco);
+  F.addEventListener('focusout', () => setTimeout(vFoco));
+  if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { viendo = en.isIntersecting; estado(); }, { threshold: 0.4 }).observe(F);
+  document.addEventListener('visibilitychange', estado);
+
+  // Cuando la rayita amarilla se llena, pasa a la siguiente
+  T.addEventListener('animationend', ev => { if (ev.animationName === 'llena' && auto) ir(act + 1); });
+  T.addEventListener('click', ev => { const b = ev.target.closest('.rulTab'); if (b) ir(tabs.indexOf(b), true); });
+  T.addEventListener('keydown', ev => {
+    const m = { ArrowRight: act + 1, ArrowLeft: act - 1, Home: 0, End: n - 1 }[ev.key];
+    if (m === undefined) return;
+    ev.preventDefault(); ir(m, true); tabs[act].focus();
+  });
+  T.addEventListener('scroll', borde, { passive: true });
+  $('rulAtras').addEventListener('click', () => ir(act - 1, true));
+  $('rulAdelante').addEventListener('click', () => ir(act + 1, true));
+  P.addEventListener('click', () => { auto = !auto; estado(); });
+  addEventListener('resize', () => { borde(); espera(act, 300); R.scrollTo({ left: slides[act].offsetLeft, behavior: 'auto' }); });
+
+  P.hidden = !(n > 1 && !reduce.matches);
+  $('rulAtras').hidden = $('rulAdelante').hidden = n < 2;
+  marca(0); borde(); estado();
+  F.classList.remove('carga');
+}
+
 /* Todas las categorías vienen en assets/portada.json (lo arma herramientas/fichas.py con cada cambio de precios) */
 fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch(() => []).then(ALL => {
   const NBraw = ALL.filter(e => e.k === 'nb');
   const de = k => ALL.filter(e => e.k === k).map(e => prepara(e, k)).filter(Boolean);
   const NB = de('nb'), PH = de('ph'), TB = de('tb'), TV = de('tv'), CS = de('cs');
   const TODO = NB.concat(PH, TB, TV, CS);
-  if (!TODO.length) { $('ficha').classList.remove('carga'); $('prod').querySelector('h2').textContent = 'No pudimos cargar los precios. Entra a una categoría del menú.'; return; }
+  if (!TODO.length) { $('ficha').classList.remove('carga'); $('ficha').querySelector('.prod h2').textContent = 'No pudimos cargar los precios. Entra a una categoría del menú.'; return; }
 
   // Textos con los números reales
   const fechas = NBraw.map(n => n.seen).filter(Boolean);
@@ -633,28 +779,31 @@ fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch((
   pinta('fanTv', abanico(TV, ['tv392864', 'tv393545', 'tv385084']));
   if (CS.length) pinta('fanCs', abanico(CS, ['cs1', 'cs4', 'cs10']));
 
-  // ---------- La oferta del día: el equipo con la mayor diferencia entre tiendas ----------
+  // ---------- La oferta del día: en cada categoría, el equipo con la mayor diferencia entre tiendas ----------
   const conDif = l => l.filter(e => e.os.length > 1 && e.gap > 0).sort((a, b) => b.gap - a.gap);
-  const DIA = conDif(TODO)[0];
-  if (DIA) {
-    const e = DIA, max = e.worst.p - e.best.p || 1;
-    const filas = e.os.slice(0, 4).map((o, k) => {
-      const d = o.p - e.best.p, gana = k === 0, igual = k > 0 && d === 0;
+  const OFERTAS = [['nb', 'Notebooks', NB], ['ph', 'Celulares', PH], ['tb', 'Tablets', TB], ['tv', 'TV', TV], ['cs', 'Consolas', CS]]
+    .map(([k, t, l]) => ({ k, t, e: conDif(l)[0] })).filter(o => o.e);
+  const diapo = ({ k, e }) => {
+    const max = e.worst.p - e.best.p || 1;
+    const filas = e.os.slice(0, 4).map((o, j) => {
+      const d = o.p - e.best.p, gana = j === 0, igual = j > 0 && d === 0;
       const tag = gana ? ' <b>Más barato</b>' : (igual ? ' <b>Mismo precio</b>' : '');
       return `<li class="${gana ? 'gana' : igual ? 'igual' : ''}"><span class="t"><i style="background:${sc(o.s)}"></i>${sn(o.s)}${tag}</span><span class="p">${fmt(o.p)}${d > 0 ? `<small>+${fmt(d)}</small>` : ''}</span><span class="b" aria-hidden="true"><span style="--w:${Math.round(d / max * 100)}%"></span></span></li>`;
     }).join('');
-    $('prod').href = e.href; $('btnVer').href = e.href;
-    $('prod').innerHTML = `<span class="foto">${foto(e, '', true)}</span><span><h2>${esc(e.nombre)}</h2><p>${esc(e.spec)}</p></span>`;
-    $('escalera').innerHTML = filas;
     const empatan = e.os.filter(o => o.p === e.best.p).map(o => sn(o.s));
     const baja = Math.round(e.gap / e.worst.p * 100);
-    $('ahorroTxt').innerHTML = `Ahorras <b>${fmt(e.gap)}</b> en ${empatan.length > 1 ? empatan.slice(0, -1).join(', ') + ' o ' + empatan.slice(-1) : empatan[0]}${window.CMC ? CMC.pago(e.best) : ''}<span class="baja">↓ ${baja}%</span>`;
-    if (window.CMC) $('fichaSello').innerHTML = CMC.sello();
-    $('ficha').classList.remove('carga');
-  }
+    return `<div class="rulSlide" role="tabpanel" id="rulP-${k}" aria-labelledby="rulT-${k}">
+      <a class="prod" href="${esc(e.href)}"><span class="foto">${foto(e, '', true, true)}</span><span><h2>${esc(e.nombre)}</h2><p>${esc(e.spec)}</p></span></a>
+      <ol class="escalera" aria-label="Precio en cada tienda">${filas}</ol>
+      <div class="ahorro"><p>Ahorras <b>${fmt(e.gap)}</b> en ${empatan.length > 1 ? empatan.slice(0, -1).join(', ') + ' o ' + empatan.slice(-1) : empatan[0]}${window.CMC ? CMC.pago(e.best) : ''}<span class="baja">↓ ${baja}%</span></p><a class="btnVer" href="${esc(e.href)}">Ver precios</a></div>
+    </div>`;
+  };
+  if (OFERTAS.length) ruleta(OFERTAS, diapo);
+  else { $('ficha').classList.remove('carga'); $('ficha').querySelector('.prod h2').textContent = 'Hoy no hay diferencias de precio entre tiendas. Entra a una categoría del menú.'; }
 
-  // ---------- Riel: donde más ahorras ----------
-  const riel = conDif(TODO).slice(1, 15);
+  // ---------- Riel: donde más ahorras (sin repetir los de la tarjeta de arriba) ----------
+  const yaArriba = new Set(OFERTAS.map(o => o.e));
+  const riel = conDif(TODO).filter(e => !yaArriba.has(e)).slice(0, 14);
   $('riel').innerHTML = riel.map(e => `<a class="of" href="${e.href}">
     <span class="ofFoto">${foto(e, '', true)}<b>Ahorras ${fmt(e.gap)}<i>↓ ${Math.round(e.gap / e.worst.p * 100)}%</i></b></span>
     <span class="ofTxt"><h3>${esc(e.nombre)}</h3><span class="pr">${fmt(e.best.p)}${window.CMC ? CMC.pago(e.best) : ''}</span>
