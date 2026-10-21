@@ -4,7 +4,7 @@
 
 // ID de cliente de Google para "Continuar con Google". Es público (va en la página), no es una clave secreta.
 // También se puede poner en Cloudflare como variable GOOGLE_CLIENT_ID (tiene prioridad sobre este valor).
-export const GOOGLE_CLIENT_ID = '';
+export const GOOGLE_CLIENT_ID = '459759295645-cvcuqh31lo7bd05svkje37uk6bdm4sjd.apps.googleusercontent.com';
 
 // Cuentas que pueden moderar comentarios y abrir /panel. Se suman otras con la variable ADMIN_CORREOS (separadas por coma).
 const ADMINS = ['adictosdigitalesla@gmail.com'];
