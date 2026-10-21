@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fichas de equipos de ¿Cuál me conviene?: una página por notebook, celular, tablet y televisor.
+"""Fichas de equipos de ¿Cuál me conviene?: una página por notebook, celular, tablet, televisor y consola.
 
   python3 herramientas/fichas.py
       Crea o actualiza notebook/<nombre>.html y celular/<nombre>.html con los precios de
@@ -49,6 +49,10 @@ def pulg(v):
     return (f'{v:g}'.replace('.', ',')) + '"'
 
 
+def tflops(v):
+    return f"{v:g}".replace('.', ',') + ' TFLOPS' if v else None
+
+
 def gb(n):
     return f'{n // 1024} TB' if n and n >= 1024 else f'{n} GB'
 
@@ -76,6 +80,8 @@ def equipos():
         out.append(dict(k='tb', eq=p, id=p['id'], marca=p['brand'], nombre=f"{p['name']} {gb(p['gb'])}"))
     for p in extra.get('tv', (None, None, []))[2]:
         out.append(dict(k='tv', eq=p, id=p['id'], marca=p['brand'], nombre=p['name']))
+    for p in extra.get('cs', (None, None, []))[2]:
+        out.append(dict(k='cs', eq=p, id=p['id'], marca=p['plat'], nombre=p['name']))
     for x in out:
         x['os'] = visibles(x['eq'])
     return out
@@ -85,7 +91,7 @@ def historial():
     """Precio más bajo de cada equipo por día, leído de las versiones guardadas en git."""
     h = {}
     try:
-        log = subprocess.run(['git', '-C', RAIZ, 'log', '--format=%H %cI', '--', 'notebooks.html', 'celulares.html', 'tablets.html', 'televisores.html'],
+        log = subprocess.run(['git', '-C', RAIZ, 'log', '--format=%H %cI', '--', 'notebooks.html', 'celulares.html', 'tablets.html', 'televisores.html', 'consolas.html'],
                              capture_output=True, text=True, check=True).stdout.split('\n')
     except Exception:
         return h
@@ -93,7 +99,8 @@ def historial():
         sha, cuando = linea.split(' ', 1)
         dia = datetime.datetime.fromisoformat(cuando).astimezone(datetime.timezone(datetime.timedelta(hours=-3))).date()
         for archivo, ini, fin in (('notebooks.html', 'const NOTEBOOKS = ', '\n];'), ('celulares.html', 'const PHONES = ', ';\n'),
-                                  ('tablets.html', 'const EQUIPOS = ', ';\n'), ('televisores.html', 'const EQUIPOS = ', ';\n')):
+                                  ('tablets.html', 'const EQUIPOS = ', ';\n'), ('televisores.html', 'const EQUIPOS = ', ';\n'),
+                                  ('consolas.html', 'const EQUIPOS = ', ';\n')):
             try:
                 t = subprocess.run(['git', '-C', RAIZ, 'show', f'{sha}:{archivo}'], capture_output=True, text=True, check=True).stdout
                 i = t.index(ini) + len(ini); j = t.index(fin, i) + (2 if fin.startswith('\n]') else 0)
@@ -127,6 +134,8 @@ def categoria(x):
         return 'Portátil hasta 14"' if q.get('size', 15) <= 14.5 else 'Uso general'
     if x['k'] == 'tv':
         return ' '.join(t for t in ['Televisor', q.get('panel'), q.get('res')] if t)
+    if x['k'] == 'cs':
+        return {'tv': 'Consola para el TV', 'hibrida': 'Consola para el TV y portátil', 'portatil': 'Consola portátil'}.get(q.get('tipo'), 'Consola')
     if q.get('refurb'): return 'Reacondicionado'
     p = x['os'][0]['p'] if x['os'] else 0
     return 'Gama de entrada' if p <= 250000 else 'Gama media' if p <= 600000 else 'Gama alta'
@@ -138,6 +147,8 @@ def specs_cortas(x):
         return ', '.join(t for t in [q.get('cpu'), q.get('gpu') if q.get('gpuTier') else 'gráficos integrados', f"{q.get('ram')} GB RAM", gb(q.get('ssd', 0)) + ' SSD', f"{q.get('size')}\""] if t)
     if x['k'] == 'tv':
         return ', '.join(t for t in [pulg(q.get('size')), q.get('res'), q.get('panel'), f"{q['hz']} Hz" if q.get('hz') else None, q.get('os')] if t)
+    if x['k'] == 'cs':
+        return ', '.join(t for t in [gb(q.get('gb')), tflops(q.get('tf')), f"incluye {q['juego']}" if q.get('juego') else None] if t)
     return ', '.join(t for t in [q.get('chip'), f"{q['ram']} GB RAM" if q.get('ram') else None, gb(q['gb']), f"{q['size']}\"" if q.get('size') else None,
                                  f"{q['bat']:,} mAh".replace(',', '.') if q.get('bat') else None, q.get('net') if x['k'] == 'tb' else None] if t)
 
@@ -153,6 +164,12 @@ def tabla_tecnica(x):
         filas += [('Tamaño', pulg(q.get('size'))), ('Resolución', q.get('res')), ('Tipo de panel', q.get('panel')),
                   ('Tasa de refresco', f"{q['hz']} Hz" if q.get('hz') else None), ('Sistema', q.get('os')), ('Modelo', q.get('model')),
                   ('Precio por pulgada', plata(x['os'][0]['p'] / q['size']) if x['os'] and q.get('size') else None)]
+    elif x['k'] == 'cs':
+        filas += [('Marca', q.get('plat')), ('Modelo', q.get('fam')), ('Cómo se juega', {'tv': 'Se conecta al TV', 'hibrida': 'En el TV y portátil', 'portatil': 'Solo portátil'}.get(q.get('tipo'))),
+                  ('Potencia gráfica', (tflops(q.get('tf')) + (' en el TV' if q.get('tfp') else '') + (f" · {tflops(q['tfp'])} en modo portátil" if q.get('tfp') else '') + (' (estimada)' if q.get('fam') == 'Nintendo Switch 2' else '')) if q.get('tf') else None),
+                  ('Almacenamiento', gb(q.get('gb'))), ('Juegos físicos', 'Lector de discos' if q.get('disco') else 'Cartuchos o digitales' if q.get('plat') == 'Nintendo' else 'Solo digitales'),
+                  ('Resolución máxima', q.get('res')), ('Cuadros por segundo', f"hasta {q['fps']}" if q.get('fps') else None), ('Pantalla propia', q.get('pant')),
+                  ('Juego incluido', q.get('juego')), ('Salió al mercado', q.get('year'))]
     elif x['k'] == 'tb':
         filas += [('Procesador', q.get('chip')), ('Almacenamiento', gb(q['gb'])), ('Memoria RAM', f"{q['ram']} GB" if q.get('ram') else None),
                   ('Pantalla', ' '.join(t for t in [f"{q['size']}\"" if q.get('size') else '', f"({q['res']})" if q.get('res') else ''] if t) or None),
@@ -226,7 +243,7 @@ def tarjeta(x, fotos, url_ficha):
 
 def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
     q, os_ = x['eq'], x['os']
-    tipo = {'nb': 'Notebooks', 'ph': 'Celulares', 'tb': 'Tablets', 'tv': 'Televisores'}[x['k']]
+    tipo = {'nb': 'Notebooks', 'ph': 'Celulares', 'tb': 'Tablets', 'tv': 'Televisores', 'cs': 'Consolas'}[x['k']]
     lista = '/' + tipo.lower()
     f_rel, f_abs = foto_de(x['id'], fotos)
     nombre = x['nombre']
@@ -242,7 +259,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
         desc = f'{nombre}: hoy no lo encontramos con stock en las tiendas que revisamos. Mira equipos parecidos y sus precios.'
     # Datos para Google
     ld = {'@context': 'https://schema.org', '@graph': [
-        {'@type': 'Product', 'name': nombre, 'brand': {'@type': 'Brand', 'name': x['marca']}, 'category': {'nb': 'Notebook', 'ph': 'Celular', 'tb': 'Tablet', 'tv': 'Televisor'}[x['k']],
+        {'@type': 'Product', 'name': nombre, 'brand': {'@type': 'Brand', 'name': x['marca']}, 'category': {'nb': 'Notebook', 'ph': 'Celular', 'tb': 'Tablet', 'tv': 'Televisor', 'cs': 'Consola de videojuegos'}[x['k']],
          'description': f'{nombre}: {specs}.', 'url': SITIO + url, **({'image': f_abs} if f_abs else {}),
          **({'offers': {'@type': 'AggregateOffer', 'priceCurrency': 'CLP', 'lowPrice': os_[0]['p'], 'highPrice': os_[-1]['p'], 'offerCount': len(os_),
                         'availability': 'https://schema.org/InStock', **({'itemCondition': 'https://schema.org/RefurbishedCondition'} if q.get('refurb') else {'itemCondition': 'https://schema.org/NewCondition'})}} if os_ else {})},
@@ -269,6 +286,8 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
         cands = [y for y in cands if (y['eq'].get('gpuTier', 0) >= 2) == (q.get('gpuTier', 0) >= 2)]
     elif x['k'] == 'ph':
         cands = [y for y in cands if bool(y['eq'].get('refurb')) == bool(q.get('refurb'))]
+    elif x['k'] == 'cs':
+        cands = [y for y in cands if (y['eq'].get('tipo') == 'tv') == (q.get('tipo') == 'tv')] or cands
     if x['k'] == 'tv':
         cands.sort(key=lambda y: (abs((y['eq'].get('size') or 0) - (q.get('size') or 0)) > 5, abs(y['os'][0]['p'] - ref)))
     else:
@@ -319,7 +338,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
 <header class="hd"><div class="hd-in wrap">
   <a class="hd-logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="36" height="36" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
   <form class="search" action="{lista}" role="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input name="q" type="search" placeholder="Buscar {tipo.lower()}" aria-label="Buscar {tipo.lower()}" autocomplete="off"></form>
-  <nav class="hd-cats" aria-label="Categorías">{''.join(f'<a href="/{c.lower()}"' + (' aria-current="page"' if c == tipo else '') + '>' + (f'<span class="lg">{c}</span><span class="sm">TV</span>' if c == 'Televisores' else c) + '</a>' for c in ('Notebooks', 'Celulares', 'Tablets', 'Televisores'))}</nav>
+  <nav class="hd-cats" aria-label="Categorías">{''.join(f'<a href="/{c.lower()}"' + (' aria-current="page"' if c == tipo else '') + '>' + (f'<span class="lg">{c}</span><span class="sm">TV</span>' if c == 'Televisores' else c) + '</a>' for c in ('Notebooks', 'Celulares', 'Tablets', 'Televisores', 'Consolas'))}</nav>
 </div></header>
 <main class="wrap">
   <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a><span aria-hidden="true">›</span><a href="{lista}">{tipo}</a><span aria-hidden="true">›</span><span aria-current="page">{e(nombre)}</span></nav>
@@ -346,7 +365,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
   <section class="bloque" aria-labelledby="t3">
     <h2 id="t3">Características</h2>
     <dl class="tec">{tabla_tecnica(x)}</dl>
-    <p class="nota"><a href="{lista}?ver={e(x['id'])}">Compararlo con otros {tipo.lower()} en el comparador</a></p>
+    <p class="nota"><a href="{lista}?ver={e(x['id'])}">{'Compararla con otras' if x['k'] in ('cs', 'tb') else 'Compararlo con otros'} {tipo.lower()} en el comparador</a></p>
   </section>
   {f'<section class="bloque" aria-labelledby="t4"><h2 id="t4">Otros que te pueden convenir</h2><div class="pars">{parecidos}</div></section>' if parecidos else ''}
 </main>
@@ -475,7 +494,7 @@ def main():
         while s in usados: s, k = f'{base}-{k}', k + 1
         slugs[x['id']] = s; usados.add(s)
     json.dump(slugs, open(SLUGS, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    CARP = {'nb': '/notebook/', 'ph': '/celular/', 'tb': '/tablet/', 'tv': '/televisor/'}
+    CARP = {'nb': '/notebook/', 'ph': '/celular/', 'tb': '/tablet/', 'tv': '/televisor/', 'cs': '/consola/'}
     urls = {x['id']: CARP[x['k']] + slugs[x['id']] for x in todos}
     n_og = generar_og(todos)
     hist = historial()
@@ -486,7 +505,7 @@ def main():
         hoy = datetime.datetime.strptime(hoy_txt, '%d-%m-%Y').date()
     except ValueError:
         pass
-    for carpeta in ('notebook', 'celular', 'tablet', 'televisor'):
+    for carpeta in ('notebook', 'celular', 'tablet', 'televisor', 'consola'):
         os.makedirs(os.path.join(RAIZ, carpeta), exist_ok=True)
     escritas = 0
     for x in todos:
@@ -512,7 +531,8 @@ def main():
              f'  <url><loc>{SITIO}/notebooks</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
              f'  <url><loc>{SITIO}/celulares</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
              f'  <url><loc>{SITIO}/tablets</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
-             f'  <url><loc>{SITIO}/televisores</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>']
+             f'  <url><loc>{SITIO}/televisores</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
+             f'  <url><loc>{SITIO}/consolas</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>']
     filas += [f'  <url><loc>{SITIO}{urls[x["id"]]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>' for x in todos if x['os']]
     open(os.path.join(RAIZ, 'sitemap.xml'), 'w', encoding='utf-8').write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + '\n'.join(filas) + '\n</urlset>\n')

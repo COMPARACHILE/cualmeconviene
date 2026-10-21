@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Actualización de precios de ¿Cuál me conviene? (notebooks.html, celulares.html, tablets.html y televisores.html).
+"""Actualización de precios de ¿Cuál me conviene? (notebooks.html, celulares.html, tablets.html, televisores.html y consolas.html).
 
   python3 herramientas/precios.py lista
       Muestra, por tienda, qué abrir y qué rutas leer con herramientas/leer_precios.js.
@@ -30,11 +30,11 @@ NOTA_ESTANDAR = re.compile(r'^(Con tarjeta CMR|Precio Internet|Con Tarjeta Cenco
 
 
 # Categorías nuevas: mismo formato que celulares (lista JSON en una línea, "const EQUIPOS = [...];")
-EXTRA = {'tb': ('tablets.html', 'tablet'), 'tv': ('televisores.html', 'televisor')}
+EXTRA = {'tb': ('tablets.html', 'tablet'), 'tv': ('televisores.html', 'televisor'), 'cs': ('consolas.html', 'consola')}
 
 
 def cargar_extra():
-    """{k: (html, (inicio, fin), lista)} de tablets y televisores (solo las que existen)."""
+    """{k: (html, (inicio, fin), lista)} de tablets, televisores y consolas (solo las que existen)."""
     out = {}
     for k, (archivo, _) in EXTRA.items():
         ruta_a = os.path.join(RAIZ, archivo)
