@@ -1,12 +1,3 @@
-Fotos nuevas: 9 · con error: 2 · total en la carpeta: 613
-ok	cs1	11 KB	media.falabella.com
-ok	cs2	11 KB	media.falabella.com
-ok	cs3	6 KB	media.falabella.com
-ok	cs4	16 KB	media.falabella.com
-ok	cs5	20 KB	media.falabella.com
-ERROR	cs6	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/626979999/variant/6acfb8328716b99c1b36ba43/images/ac83677e-06f7-4e9f-b849-1b26b3f7acac/626979999-0000-001.jpg
-ok	cs7	20 KB	media.falabella.com
-ok	cs8	27 KB	media.falabella.com
-ok	cs9	4 KB	media.falabella.com
-ERROR	cs10	HTTP Error 400: Bad Request	https://cl-cenco-pim-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/prd-cl/product-medias/87af48a6-7dac-49f6-a507-9d44ad4ad5f8/MK6GNRPWH6/MK6GNRPWH6-1/1790631016382-MK6GNRPWH6-1-1.jpg
-ok	cs11	11 KB	media.falabella.com
+Fotos nuevas: 2 · con error: 0 · total en la carpeta: 615
+ok	cs6	17 KB	media.falabella.com
+ok	cs10	11 KB	media.falabella.com
