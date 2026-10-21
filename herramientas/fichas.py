@@ -10,7 +10,7 @@ No hace falta correrlo a mano: el flujo .github/workflows/fichas.yml lo corre ca
 cambian los precios. Las direcciones de cada ficha quedan fijas en herramientas/fichas.json
 para que los enlaces compartidos no se rompan si el nombre del equipo cambia.
 """
-import datetime, html, json, os, re, subprocess, sys, unicodedata
+import datetime, hashlib, html, json, os, re, subprocess, sys, unicodedata
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -253,6 +253,23 @@ def tarjeta(x, fotos, url_ficha):
             f'<span class="parP">{plata(o["p"])}{pago(o)}</span><span class="parE">en {TIENDAS[o["s"]][0]}</span></a>')
 
 
+CAMPANA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>'
+
+
+def avisame(sin_stock):
+    """Botón para pedir aviso por correo. Queda oculto hasta que assets/comentarios.js confirma que el inicio de sesión está activo."""
+    txt = 'Avísame cuando vuelva a tener stock' if sin_stock else 'Avísame si baja de precio'
+    return f'<button type="button" class="avisa" data-avisame{" data-sin" if sin_stock else ""} hidden>{CAMPANA}<span>{txt}</span></button><p class="avisaMsg" aria-live="polite" hidden></p>'
+
+
+def comentarios(clave, nombre):
+    """Sección de comentarios: se llena desde /api/comentarios con la dirección fija de la ficha."""
+    return (f'<section class="bloque com" id="comentarios" aria-labelledby="t5" data-producto="{e(clave)}" data-nombre="{e(nombre)}">'
+            f'<h2 id="t5">Comentarios <span class="comN"></span></h2>'
+            f'<div class="comApp"><p class="comCarga">Cargando comentarios…</p></div>'
+            f'<noscript><p class="nota">Activa JavaScript para leer y escribir comentarios.</p></noscript></section>')
+
+
 def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
     q, os_ = x['eq'], x['os']
     tipo = {'nb': 'Notebooks', 'ph': 'Celulares', 'tb': 'Tablets', 'tv': 'Televisores', 'cs': 'Consolas'}[x['k']]
@@ -314,9 +331,9 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
                   (f'<p class="ah neutro">Mismo precio en {len(os_)} tiendas</p>' if len(os_) > 1 else '<p class="ah neutro">Lo encontramos en una tienda</p>'))
         mejor = (f'<div class="mejor"><p class="et">Precio más bajo hoy</p><p class="precio">{plata(b["p"])}{pago(b)}</p>'
                  f'<p class="donde"><i style="background:{TIENDAS[b["s"]][1]}"></i>en {e(donde)}{(" · " + e(b["note"])) if b.get("note") else ""}</p>{ahorro}'
-                 f'<a class="ir" href="{e(b["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{b["s"]}">Ir a {TIENDAS[b["s"]][0]}</a></div>')
+                 f'<a class="ir" href="{e(b["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{b["s"]}">Ir a {TIENDAS[b["s"]][0]}</a>{avisame(False)}</div>')
     else:
-        mejor = '<div class="mejor sin"><p class="et">Sin stock hoy</p><p>No lo encontramos disponible en las tiendas que revisamos. Abajo tienes equipos parecidos.</p></div>'
+        mejor = f'<div class="mejor sin"><p class="et">Sin stock hoy</p><p>No lo encontramos disponible en las tiendas que revisamos. Abajo tienes equipos parecidos.</p>{avisame(True)}</div>'
     ref_txt = ('<p class="aviso">Equipo reacondicionado: usado y revisado. Confirma garantía, estado y batería en la ficha de la tienda.</p>' if q.get('refurb') else '')
     img = (f'<img src="{e(f_rel)}" alt="{e(nombre)}" width="480" height="480" fetchpriority="high" decoding="async" referrerpolicy="no-referrer">' if f_rel else '')
     og = (f'{SITIO}/assets/og/{x["id"]}.jpg' if os.path.exists(os.path.join(OG_DIR, x['id'] + '.jpg')) else (f_abs or f'{SITIO}/assets/og.png'))
@@ -345,6 +362,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
 <link rel="stylesheet" href="/assets/ficha.css">
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False).replace('</', '<\\/')}</script>
 <script defer src="/assets/cmc.js"></script>
+<script defer src="/assets/comentarios.js"></script>
 </head>
 <body>
 <header class="hd"><div class="hd-in wrap">
@@ -379,6 +397,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
     <dl class="tec">{tabla_tecnica(x)}</dl>
     <p class="nota"><a href="{lista}?ver={e(x['id'])}">{'Compararla con otras' if x['k'] in ('cs', 'tb') else 'Compararlo con otros'} {tipo.lower()} en el comparador</a></p>
   </section>
+  {comentarios(url.lstrip('/'), nombre)}
   {f'<section class="bloque" aria-labelledby="t4"><h2 id="t4">Otros que te pueden convenir</h2><div class="pars">{parecidos}</div></section>' if parecidos else ''}
 </main>
 <footer class="pie"><div class="wrap">
@@ -495,6 +514,11 @@ def main():
     slugs = json.load(open(SLUGS, encoding='utf-8')) if os.path.exists(SLUGS) else {}
     fotos = json.load(open(FOTOS, encoding='utf-8')) if os.path.exists(FOTOS) else {}
     usados = set(slugs.values())
+    CARP = {'nb': '/notebook/', 'ph': '/celular/', 'tb': '/tablet/', 'tv': '/televisor/', 'cs': '/consola/'}
+    # Equipos que salieron de las listas: si el mismo equipo vuelve con otro id, recupera su dirección,
+    # y con ella sus comentarios y los avisos de precio que la gente pidió (se guardan por dirección).
+    actuales = {x['id'] for x in todos}
+    retirados = {s: i for i, s in slugs.items() if i not in actuales}
     for x in todos:
         if x['id'] in slugs:
             continue
@@ -502,11 +526,16 @@ def main():
         if x['k'] == 'tv' and x['eq'].get('model') and slugify(x['eq']['model']) not in base:
             base = slugify(base + ' ' + x['eq']['model'])
         if x['eq'].get('refurb') and 'reacond' not in base: base += '-reacondicionado'
+        if base in retirados and os.path.exists(os.path.join(RAIZ, CARP[x['k']].strip('/'), base + '.html')):
+            viejo = retirados.pop(base)
+            del slugs[viejo]
+            slugs[x['id']] = base
+            print(f'Volvió {x["nombre"]}: usa la dirección de antes (/{base}, id anterior {viejo}) con sus comentarios.')
+            continue
         s, k = base, 2
         while s in usados: s, k = f'{base}-{k}', k + 1
         slugs[x['id']] = s; usados.add(s)
     json.dump(slugs, open(SLUGS, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    CARP = {'nb': '/notebook/', 'ph': '/celular/', 'tb': '/tablet/', 'tv': '/televisor/', 'cs': '/consola/'}
     urls = {x['id']: CARP[x['k']] + slugs[x['id']] for x in todos}
     n_og = generar_og(todos)
     hist = historial()
@@ -537,6 +566,24 @@ def main():
         q['offers'] = [{k: o[k] for k in ('s', 'p', 'c', 'x') if k in o} for o in x['eq']['offers']]
         port.append({'k': x['k'], **q})
     open(os.path.join(RAIZ, 'assets', 'portada.json'), 'w', encoding='utf-8').write(json.dumps(port, ensure_ascii=False, separators=(',', ':')))
+    # Precio de hoy de cada ficha y bajadas del día, para los avisos por correo (functions/api/revisar-avisos.js).
+    # Se ordena por dirección de ficha: así los avisos y comentarios siguen al equipo aunque cambie su id.
+    eqs = {urls[x['id']].lstrip('/'): [x['os'][0]['p'] if x['os'] else None, x['nombre'], x['id'], TIENDAS[x['os'][0]['s']][0] if x['os'] else '']
+           for x in todos}
+    baj = []
+    for x in todos:
+        h = hist.get(x['id'], {})
+        previos = [d for d in h if d < hoy]
+        if not x['os'] or not previos:
+            continue
+        antes, ahora = h[max(previos)], x['os'][0]['p']
+        # Al menos 3% y $3.000 menos que en la revisión anterior; una caída de más de 60% suele ser un error de la tienda
+        if antes and ahora <= antes * 0.97 and antes - ahora >= 3000 and ahora >= antes * 0.4:
+            baj.append(((antes - ahora) / antes, urls[x['id']].lstrip('/'), antes, ahora))
+    baj.sort(key=lambda b: -b[0])
+    av = {'dia': hoy.isoformat(), 'equipos': eqs, 'bajadas': [[c, a, n] for _, c, a, n in baj[:12]]}
+    av = {'v': hashlib.md5(json.dumps(av, sort_keys=True).encode()).hexdigest()[:12], **av}
+    open(os.path.join(RAIZ, 'assets', 'avisos.json'), 'w', encoding='utf-8').write(json.dumps(av, ensure_ascii=False, separators=(',', ':')))
     # Mapa del sitio para Google
     lm = hoy.isoformat()
     filas = [f'  <url><loc>{SITIO}/</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>',
@@ -548,7 +595,7 @@ def main():
     filas += [f'  <url><loc>{SITIO}{urls[x["id"]]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>' for x in todos if x['os']]
     open(os.path.join(RAIZ, 'sitemap.xml'), 'w', encoding='utf-8').write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + '\n'.join(filas) + '\n</urlset>\n')
-    print(f'Fichas: {len(todos)} equipos, {escritas} páginas nuevas o cambiadas. Imágenes para compartir nuevas: {n_og}. Historial: {len(hist)} equipos con datos.')
+    print(f'Fichas: {len(todos)} equipos, {escritas} páginas nuevas o cambiadas. Imágenes para compartir nuevas: {n_og}. Historial: {len(hist)} equipos con datos. Bajadas del día: {len(baj)}.')
 
 
 if __name__ == '__main__':

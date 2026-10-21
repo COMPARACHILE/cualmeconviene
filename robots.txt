@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /panel
+Disallow: /mi-cuenta
 
 Sitemap: https://cualmeconviene.cl/sitemap.xml

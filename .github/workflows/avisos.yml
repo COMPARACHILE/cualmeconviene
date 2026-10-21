@@ -1,0 +1,34 @@
+# Avisos de precio por correo de ¿Cuál me conviene?
+# Después de cada actualización de precios (cuando termina "Fotos y fichas") espera a que Cloudflare publique
+# la página nueva y llama a /api/revisar-avisos. Esa función compara los precios, arma los avisos de quienes
+# siguen un equipo y el resumen diario, y envía los correos de a 25 por llamada.
+# Si no hubo cambios de precios, la función no hace nada (es seguro llamarla de más).
+name: Avisos de precio
+on:
+  workflow_run:
+    workflows: ["Fotos y fichas"]
+    types: [completed]
+  schedule:
+    - cron: '20 14 * * *'   # respaldo diario a las 11:20 de Chile (horario de verano)
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: avisos
+  cancel-in-progress: false
+jobs:
+  avisos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Esperar a que Cloudflare publique los precios nuevos
+        if: github.event_name == 'workflow_run'
+        run: sleep 210
+      - name: Revisar avisos y enviar correos
+        run: |
+          for i in $(seq 1 40); do
+            r=$(curl -sS -X POST --max-time 60 -H 'Content-Type: application/json' -H 'User-Agent: cualmeconviene-avisos/1.0' \
+                https://cualmeconviene.cl/api/revisar-avisos || echo '{}')
+            echo "$r"
+            [ "$(echo "$r" | jq -r '.seguir // false' 2>/dev/null)" = "true" ] || break
+            sleep 2
+          done
