@@ -49,6 +49,16 @@ def pulg(v):
     return (f'{v:g}'.replace('.', ',')) + '"'
 
 
+def imagen_tv(q):
+    """Puntaje de imagen de un televisor, igual que en /televisores: tecnología, gama de la serie, Hz y resolución."""
+    base = {'LED': 35, 'QLED': 50, 'NanoCell': 50, 'QNED': 58, 'Mini LED': 70, 'OLED': 85, 'Micro RGB': 90, 'Micro LED': 95}.get(q.get('panel'), 35)
+    base += {'e': -5, 'a': 4, 't': 8}.get(q.get('gama'), 0)
+    hz = q.get('hz') or 0
+    base += 7 if hz >= 144 else 5 if hz >= 120 else 0
+    base += {'8K': 3, '4K': 0, 'Full HD': -12}.get(q.get('res'), -20)
+    return max(5, min(100, base))
+
+
 def tflops(v):
     return f"{v:g}".replace('.', ',') + ' TFLOPS' if v else None
 
@@ -162,6 +172,8 @@ def tabla_tecnica(x):
                   ('Pantalla', f"{q.get('size')}\"" + (f", {q['hz']} Hz" if q.get('hz') else '')), ('Tipo', categoria(x))]
     elif x['k'] == 'tv':
         filas += [('Tamaño', pulg(q.get('size'))), ('Resolución', q.get('res')), ('Tipo de panel', q.get('panel')),
+                  ('Gama de la serie', {'e': 'Gama de entrada', 'm': 'Gama media', 'a': 'Gama alta', 't': 'Tope de línea'}.get(q.get('gama'))),
+                  ('Puntaje de imagen', f"{imagen_tv(q)} de 100"),
                   ('Tasa de refresco', f"{q['hz']} Hz" if q.get('hz') else None), ('Sistema', q.get('os')), ('Modelo', q.get('model')),
                   ('Precio por pulgada', plata(x['os'][0]['p'] / q['size']) if x['os'] and q.get('size') else None)]
     elif x['k'] == 'cs':

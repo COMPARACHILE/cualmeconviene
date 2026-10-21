@@ -669,7 +669,8 @@ fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch((
   const potPeso = (f, L = PH) => L.filter(e => !e.raw.refurb && e.raw.gb6 && f(e.best.p)).sort((a, b) => gbm(b) / b.best.p - gbm(a) / a.best.p)[0];
   // Puntaje de imagen, igual que en /televisores: tecnología del panel, Hz y resolución
   const PANEL_N = { 'LED': 35, 'QLED': 50, 'NanoCell': 50, 'QNED': 58, 'Mini LED': 70, 'OLED': 85, 'Micro RGB': 90, 'Micro LED': 95 };
-  const calTv = e => Math.max(5, Math.min(100, (PANEL_N[e.raw.panel] || 35) + (e.raw.hz >= 144 ? 7 : e.raw.hz >= 120 ? 5 : 0) + (e.raw.res === '8K' ? 3 : e.raw.res === '4K' ? 0 : e.raw.res === 'Full HD' ? -12 : -20)));
+  const GAMA_N = { e: -5, m: 0, a: 4, t: 8 };
+  const calTv = e => Math.max(5, Math.min(100, (PANEL_N[e.raw.panel] || 35) + (GAMA_N[e.raw.gama] || 0) + (e.raw.hz >= 144 ? 7 : e.raw.hz >= 120 ? 5 : 0) + (e.raw.res === '8K' ? 3 : e.raw.res === '4K' ? 0 : e.raw.res === 'Full HD' ? -12 : -20)));
   const tvTam = f => TV.filter(e => f(e.raw.size)).sort((a, b) => calTv(b) ** 2 / b.best.p - calTv(a) ** 2 / a.best.p)[0];
   const recos = [
     ['Para estudiar y trabajar', masBarato(NB, e => !e.raw.gpuTier && e.raw.ram >= 16), e => `El más barato con 16 GB de RAM`],
