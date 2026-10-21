@@ -497,6 +497,11 @@ body.hasTray { padding-bottom: 96px; }
 .paneles div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
 .paneles dt { font-weight: 700; }
 .paneles dd { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+.c3-tags span.okimg { background: var(--deal-soft); color: var(--deal); }
+.tvAlt { margin: 8px 0 0; font-size: 13px; color: var(--muted); line-height: 1.4; }
+.tvAlt button { font: inherit; font-weight: 700; color: var(--ink); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; text-align: left; }
+.veredicto { margin: 0 0 12px; padding: 12px 14px; border-radius: 12px; background: var(--deal-soft); border: 1px solid var(--line); line-height: 1.45; }
+.veredicto b { color: var(--deal); }
 </style>
 <link rel="stylesheet" href="/assets/cmc.css?v=4b984d02">
 <script src="/assets/cmc-ui.js?v=5593f45e"></script>
@@ -554,7 +559,7 @@ body.hasTray { padding-bottom: 96px; }
         </div>
       </fieldset>
       <fieldset>
-        <legend>Tipo de panel</legend>
+        <legend>Tecnología de imagen <small style="font-weight:500;color:var(--muted)">de básica a mejor</small></legend>
         <div class="chips" id="panelChips"></div>
       </fieldset>
       <fieldset>
@@ -567,7 +572,7 @@ body.hasTray { padding-bottom: 96px; }
     <section class="results" id="compara" aria-live="polite">
       <div class="bar">
         <p class="count" id="count"></p>
-        <label class="sortBox">Ordenar por <select id="sortF"><option value="pasc" selected>Menor precio</option><option value="pdesc">Mayor precio</option><option value="grande">Pantalla más grande</option><option value="ppul">Precio por pulgada</option></select></label>
+        <label class="sortBox">Ordenar por <select id="sortF"><option value="pasc" selected>Menor precio</option><option value="pdesc">Mayor precio</option><option value="grande">Pantalla más grande</option><option value="ppul">Precio por pulgada</option><option value="img">Mejor imagen</option><option value="vimg">Mejor imagen por tu plata</option></select></label>
       </div>
       <p class="astnote"><b>*</b> Precio pagando con la tarjeta de la tienda o con transferencia. Sin ese medio de pago puede ser más alto.</p>
       <div id="list" class="grid"></div>
@@ -598,21 +603,22 @@ body.hasTray { padding-bottom: 96px; }
         <tr><th scope="row">3 m o más</th><td>75" o más</td><td><a href="?tam=xl" data-tam="xl">70 a 77"</a> · <a href="?tam=xxl" data-tam="xxl">83" o más</a></td></tr>
       </tbody>
     </table></div>
-    <div class="secHead" style="margin-top:24px"><h3 class="sec" style="font-size:1.2rem">Tipos de panel, del más simple al más avanzado</h3></div>
+    <div class="secHead" style="margin-top:24px"><h3 class="sec" style="font-size:1.2rem" id="tecnologias">Tecnologías de imagen, de la más básica a la mejor</h3>
+    <p>Cada televisor tiene un puntaje de imagen según su tecnología. Con 120 Hz o más suma 5 puntos (7 desde 144 Hz); en Full HD resta 12 y en HD resta 20. Si dos cuestan lo mismo, te conviene el de más puntos.</p></div>
     <dl class="paneles">
-      <div><dt>LED</dt><dd>Panel LCD con luz LED: el más común y económico.</dd></div>
-      <div><dt>QLED y NanoCell</dt><dd>LCD con puntos cuánticos (QLED) o con un filtro de color de LG (NanoCell): colores más vivos que un LED común.</dd></div>
-      <div><dt>QNED</dt><dd>LCD de LG con puntos cuánticos; según el modelo, con retroiluminación Mini LED.</dd></div>
-      <div><dt>Mini LED</dt><dd>LCD con miles de LED pequeños detrás: más brillo y negros más profundos. Muy bueno para piezas con luz.</dd></div>
-      <div><dt>OLED</dt><dd>Cada punto de la pantalla se ilumina solo: negros perfectos y el mejor contraste. Ideal para ver películas a oscuras.</dd></div>
-      <div><dt>Micro RGB</dt><dd>LCD de Samsung con luces LED rojas, verdes y azules muy pequeñas: su gama más alta.</dd></div>
+      <div><dt>1. LED · 35 pts</dt><dd>Panel LCD con luz LED: el más común y económico.</dd></div>
+      <div><dt>2. QLED y NanoCell · 50 pts</dt><dd>LCD con puntos cuánticos (QLED) o con un filtro de color de LG (NanoCell): colores más vivos que un LED común.</dd></div>
+      <div><dt>3. QNED · 58 pts</dt><dd>LCD de LG con puntos cuánticos; según el modelo, con retroiluminación Mini LED.</dd></div>
+      <div><dt>4. Mini LED · 70 pts</dt><dd>LCD con miles de LED pequeños detrás: más brillo y negros más profundos. Muy bueno para piezas con luz.</dd></div>
+      <div><dt>5. OLED · 85 pts</dt><dd>Cada punto de la pantalla se ilumina solo: negros perfectos y el mejor contraste. Ideal para ver películas a oscuras.</dd></div>
+      <div><dt>6. Micro RGB · 90 pts</dt><dd>LCD de Samsung con luces LED rojas, verdes y azules muy pequeñas: su gama más alta. No es lo mismo que Micro LED, una tecnología más cara que hoy no aparece en las tiendas que revisamos.</dd></div>
     </dl>
     <p class="modeHint">Para juegos en PlayStation 5 o Xbox Series X conviene un televisor de 120 Hz o más. Los de 60 Hz sirven bien para series, fútbol y películas.</p>
   </section>
 
   <footer class="note">
     <p><strong>Cómo leer los precios.</strong> Mostramos el precio más bajo que aparecía en la ficha de cada tienda el <span class="seenTxt"></span>. Falabella, Paris y Ripley tienen precios menores con su tarjeta (CMR, Tarjeta Cencosud Scotiabank y Tarjeta Ripley) y PCFactory con transferencia o débito; los marcamos con asterisco. No incluimos Mercado Libre.</p>
-    <p><strong>Mejor calidad-precio.</strong> En cada tamaño elegimos el televisor con la mejor relación entre calidad de imagen y precio. La calidad la estimamos por el tipo de panel, la resolución (4K) y la tasa de refresco (Hz). Es una guía, no una prueba de laboratorio.</p>
+    <p><strong>Mejor calidad-precio.</strong> En cada tamaño elegimos el televisor con la mejor relación entre calidad de imagen y precio. La calidad es el puntaje de imagen: lo estimamos por la tecnología del panel, la resolución y la tasa de refresco (Hz). Es una guía, no una prueba de laboratorio: dentro de una misma tecnología también hay modelos mejores que otros.</p>
     <p>Aviso de afiliados: cuando los enlaces generen comisión, se indicará aquí. El precio para quien compra es el mismo.</p>
     <details class="legal"><summary>Privacidad y términos de uso</summary>
     <div class="legalBody">
@@ -652,17 +658,27 @@ const $ = id => document.getElementById(id);
 const fmt = n => '$' + Math.round(n).toLocaleString('es-CL');
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const PMAX = 6000000;
-/* Calidad de imagen según el tipo de panel. Solo se usa para ordenar el "mejor calidad-precio". */
+/* Calidad de imagen según la tecnología del panel, de la más básica a la mejor.
+   pts = puntaje base de imagen (de 100). Con 120 Hz o más suma 5 (7 desde 144 Hz); Full HD resta 12 y HD resta 20. */
 const PANEL = {
-  'OLED': { n: 5, t: 'Cada punto de la pantalla se ilumina solo: negros perfectos y mucho contraste.' },
-  'Micro RGB': { n: 5, t: 'LCD con luces LED rojas, verdes y azules muy pequeñas detrás: la gama más alta de Samsung.' },
-  'Mini LED': { n: 4, t: 'LCD con miles de LED pequeños detrás: más brillo y negros más profundos que un LED común.' },
-  'QNED': { n: 3.5, t: 'LCD de LG con puntos cuánticos: colores más intensos que un LED común.' },
-  'QLED': { n: 3, t: 'LCD con puntos cuánticos: colores más vivos que un LED común.' },
-  'NanoCell': { n: 3, t: 'LCD de LG con un filtro que mejora el color frente a un LED común.' },
-  'LED': { n: 2, t: 'Panel LCD con luz LED: el más común y económico.' }
+  'LED':       { nivel: 1, pts: 35, t: 'Panel LCD con luz LED: el más común y económico.' },
+  'QLED':      { nivel: 2, pts: 50, t: 'LCD con puntos cuánticos: colores más vivos que un LED común.' },
+  'NanoCell':  { nivel: 2, pts: 50, t: 'LCD de LG con un filtro que mejora el color frente a un LED común.' },
+  'QNED':      { nivel: 3, pts: 58, t: 'LCD de LG con puntos cuánticos: colores más intensos que un QLED o NanoCell básico.' },
+  'Mini LED':  { nivel: 4, pts: 70, t: 'LCD con miles de LED pequeños detrás: más brillo y negros más profundos.' },
+  'OLED':      { nivel: 5, pts: 85, t: 'Cada punto de la pantalla se ilumina solo: negros perfectos y el mejor contraste.' },
+  'Micro RGB': { nivel: 6, pts: 90, t: 'Luces LED rojas, verdes y azules muy pequeñas detrás del panel: la gama más alta de Samsung.' },
+  'Micro LED': { nivel: 6, pts: 95, t: 'Cada punto es un LED diminuto que se ilumina solo: la tecnología más avanzada y cara.' }
 };
-const calidad = p => ((PANEL[p.panel] || { n: 2 }).n + (p.hz >= 120 ? 1 : 0)) * (p.res === '4K' || p.res === '8K' ? 1 : 0.6);
+const imagen = p => {
+  const base = (PANEL[p.panel] || PANEL.LED).pts;
+  const hz = p.hz >= 144 ? 7 : p.hz >= 120 ? 5 : 0;
+  const res = p.res === '8K' ? 3 : p.res === '4K' ? 0 : p.res === 'Full HD' ? -12 : -20;
+  return Math.max(5, Math.min(100, base + hz + res));
+};
+const calidad = imagen;
+/* Imagen por tu plata: el puntaje al cuadrado dividido por el precio (premia la mejor imagen sin ignorar el precio) */
+const valorImg = p => imagen(p) ** 2 / bestOf(p).p;
 const porPulgada = p => bestOf(p).p / p.size;
 const pulg = v => (v % 1 ? String(v).replace('.', ',') : v) + '"';
 
@@ -691,7 +707,7 @@ function passes(p) {
 }
 function sorted(list) {
   const pr = p => bestOf(p).p;
-  const f = { pasc: (a, b) => pr(a) - pr(b), pdesc: (a, b) => pr(b) - pr(a), grande: (a, b) => b.size - a.size || pr(a) - pr(b), ppul: (a, b) => porPulgada(a) - porPulgada(b) }[st.sort];
+  const f = { pasc: (a, b) => pr(a) - pr(b), pdesc: (a, b) => pr(b) - pr(a), grande: (a, b) => b.size - a.size || pr(a) - pr(b), ppul: (a, b) => porPulgada(a) - porPulgada(b), img: (a, b) => imagen(b) - imagen(a) || pr(a) - pr(b), vimg: (a, b) => valorImg(b) - valorImg(a) }[st.sort];
   return list.slice().sort(f);
 }
 
@@ -734,12 +750,15 @@ const ELEGIDO = {};
 function card(p) {
   const os = offersOf(p).slice().sort((a, b) => a.p - b.p);
   const tags = [];
+  if (MEJOR_IMG.has(p.id)) tags.push('<span class="okimg">Mejor imagen a este precio</span>');
   if (p.panel) tags.push(`<span>${esc(p.panel)}</span>`); if (p.hz >= 120) tags.push(`<span class="g4">${p.hz} Hz</span>`);
+  const alt = ALT[p.id], ap = alt && bestOf(alt).p;
   return CMC.tarjeta({
     dataId: 'c-' + p.id, anchor: 'c-' + p.id, ficha: fichaDe(p.id), art: art(p, 170), nombre: p.name, spec: specLine(p), tags,
-    nota: `<span class="nota">${fmt(porPulgada(p))} por pulgada</span>`,
+    nota: CMC.medidor('Imagen', imagen(p) + ' pts', imagen(p), 'Puntaje de imagen según la tecnología del panel (' + p.panel + '), la resolución y los Hz') + `<span class="nota">${fmt(porPulgada(p))} por pulgada</span>`,
     sello: ELEGIDO[p.id] || false, os, tiendas: STORES,
-    extra: `<label class="cmpBox"><input type="checkbox" data-cmp="${p.id}"${cmp.includes(p.id) ? ' checked' : ''}> Comparar</label>`
+    extra: (alt ? `<p class="tvAlt">${ap < bestOf(p).p * 0.95 ? 'Más barato y con mejor imagen' : 'Por un precio parecido, mejor imagen'}: <button type="button" data-open="${alt.id}">${esc(alt.name)}</button> · ${esc(alt.panel)} · ${fmt(ap)}</p>` : '')
+      + `<label class="cmpBox"><input type="checkbox" data-cmp="${p.id}"${cmp.includes(p.id) ? ' checked' : ''}> Comparar</label>`
   });
 }
 
@@ -758,6 +777,18 @@ function render() {
   $('moreBtn').textContent = `Ver ${Math.min(24, list.length - limit)} más`;
 }
 function refresh() { limit = 24; render(); window.cmcSync && cmcSync(); }
+
+/* A precio parecido (±10 %) y tamaño parecido (±3"), ¿cuál tiene mejor imagen?
+   MEJOR_IMG: el de mejor imagen entre sus pares. ALT: otro del mismo tamaño que cuesta hasta 5 % más (o menos) y se ve al menos 10 pts mejor. */
+const MEJOR_IMG = new Set(), ALT = {};
+PHONES.forEach(p => {
+  const pp = bestOf(p).p, mi = imagen(p);
+  const pares = PHONES.filter(q => q !== p && Math.abs(q.size - p.size) <= 3 && Math.abs(bestOf(q).p - pp) <= pp * 0.1);
+  if (pares.length && pares.every(q => imagen(q) < mi)) MEJOR_IMG.add(p.id);
+  const alt = PHONES.filter(q => q !== p && Math.abs(q.size - p.size) <= 3 && bestOf(q).p <= pp * 1.05 && imagen(q) >= mi + 10)
+    .sort((a, b) => valorImg(b) - valorImg(a))[0];
+  if (alt) ALT[p.id] = alt;
+});
 
 /* Mejor calidad-precio por tamaño: calidad de imagen (panel, 4K y Hz) al cuadrado dividida por el precio */
 const PICKS = [
@@ -782,7 +813,7 @@ function renderPick() {
     <h3>${esc(c.name)}</h3>
     <span class="t4price">${fmt(o.p)}</span>
     <span class="t4at"><i class="dot" style="background:${STORES[o.s].color}"></i>en ${STORES[o.s].name}${c.offers.length > 1 ? ` · en ${c.offers.length} tiendas` : ''}</span>
-    <ul class="why"><li>${esc([c.res, c.panel, c.hz ? c.hz + ' Hz' : ''].filter(Boolean).join(', '))}: la mejor combinación de imagen y precio entre ${n} televisores de este tamaño</li><li>${fmt(porPulgada(c))} por pulgada${c.os ? ' · ' + esc(c.os) : ''}</li></ul>
+    <ul class="why"><li>${esc([c.res, c.panel, c.hz ? c.hz + ' Hz' : ''].filter(Boolean).join(', '))} (${imagen(c)} pts de imagen): la mejor combinación de imagen y precio entre ${n} televisores de este tamaño</li><li>${fmt(porPulgada(c))} por pulgada${c.os ? ' · ' + esc(c.os) : ''}</li></ul>
     <button type="button" class="cta" data-open="${c.id}">Ver precios</button></div>`;
 }
 
@@ -804,6 +835,7 @@ function renderCmp() {
     ['Tamaño', p => p.size, v => pulg(v), null],
     ['Resolución', p => p.res, v => esc(v)],
     ['Tipo de panel', p => p.panel, v => esc(v)],
+    ['Puntaje de imagen', p => imagen(p), v => v + ' pts', 'max'],
     ['Tasa de refresco', p => p.hz, v => v + ' Hz', 'max'],
     ['Sistema', p => p.os, v => esc(v)],
     ['Modelo', p => p.model, v => esc(v)],
@@ -816,7 +848,20 @@ function renderCmp() {
     const target = best === 'min' ? Math.min(...nums) : best === 'max' ? Math.max(...nums) : null;
     return `<tr><th scope="row">${lab}</th>${vals.map(v => `<td class="${best && nums.length > 1 && v === target ? 'win' : ''}">${v == null ? '—' : show(v)}</td>`).join('')}</tr>`;
   }).join('') + `<tr><th scope="row">Ir a la tienda</th>${ps.map(p => `<td><a href="${esc(p.offers[0].url)}" target="_blank" rel="noopener nofollow">Ver en ${STORES[p.offers[0].s].name} ↗</a></td>`).join('')}</tr>`;
-  $('cmpTable').innerHTML = `<table class="cmp">${head}<tbody>${body}</tbody></table>`;
+  $('cmpTable').innerHTML = veredicto(ps) + `<table class="cmp">${head}<tbody>${body}</tbody></table>`;
+}
+/* ¿Cuál me conviene? entre los que se comparan: el de mejor imagen por tu plata, y por qué frente al segundo */
+function veredicto(ps) {
+  const [w, r] = ps.slice().sort((a, b) => valorImg(b) - valorImg(a));
+  const pw = bestOf(w).p, prr = bestOf(r).p, dp = pw - prr, di = imagen(w) - imagen(r);
+  let por;
+  if (di > 0 && dp < 0) por = `tiene mejor imagen (${w.panel}, ${imagen(w)} pts, contra ${r.panel}, ${imagen(r)} pts) y además cuesta ${fmt(-dp)} menos`;
+  else if (di > 0 && dp <= prr * 0.1) por = `a un precio parecido tiene mejor imagen: ${w.panel} (${imagen(w)} pts) contra ${r.panel} (${imagen(r)} pts)`;
+  else if (di > 0) por = `cuesta ${fmt(dp)} más, pero su imagen es bastante mejor: ${w.panel} (${imagen(w)} pts) contra ${r.panel} (${imagen(r)} pts)`;
+  else if (di === 0) por = dp < 0 ? `tiene la misma calidad de imagen (${imagen(w)} pts) y cuesta ${fmt(-dp)} menos` : `tiene la misma imagen y el mismo precio; elige por tamaño o marca`;
+  else por = `cuesta ${fmt(-dp)} menos y el ${r.name} se ve solo un poco mejor (${imagen(r)} contra ${imagen(w)} pts): no justifica la diferencia`;
+  const ojo = Math.abs(w.size - r.size) > 5 ? ' Ojo: no son del mismo tamaño.' : '';
+  return `<p class="veredicto"><b>Te conviene el ${esc(w.name)}</b>: ${esc(por)}.${ojo}</p>`;
 }
 function toggleCmp(id, on) {
   const i = cmp.indexOf(id);
