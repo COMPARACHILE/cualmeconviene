@@ -25,6 +25,18 @@
   /* Sello del puma: solo para el mejor calidad-precio de cada grupo */
   CMC.sello = extra => `<span class="sello"><img src="${PUMA}" alt="" width="26" height="26" decoding="async"><span>Elegido por el puma${extra ? `<small>${esc(extra)}</small>` : ''}</span></span>`;
 
+  /* Sello "Mínimo histórico": el equipo está en su precio más bajo desde que lo seguimos.
+     Los datos vienen de assets/fichas.js (CMC_MINIMOS, lo arma herramientas/fichas.py con cada cambio de precios).
+     Si el precio de la tarjeta ya es mayor que el del mínimo, no se muestra. */
+  const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic'];
+  CMC.minimo = (ficha, precio) => {
+    const m = window.CMC_MINIMOS && window.CMC_MINIMOS[ficha];
+    if (!m || !(precio > 0) || precio > m[0]) return '';
+    const [, mo, d] = String(m[1]).split('-');
+    const f = `${+d} ${MES[+mo - 1] || ''}`.trim();
+    return `<span class="minimo" title="El precio más bajo que hemos visto para este equipo desde el ${esc(f)}"><img src="${PUMA}" alt="" width="26" height="26" decoding="async"><span>Mínimo histórico<small>El más bajo desde el ${esc(f)}</small></span></span>`;
+  };
+
   /* Nota de potencia de 1 a 10: el puesto del equipo entre todos los del sitio (10 = de los más potentes) */
   CMC.escala = vals => {
     const s = vals.filter(v => v > 0).sort((a, b) => a - b);
@@ -54,6 +66,7 @@
       <a class="c3-foto pvA" href="${esc(e.ficha)}" tabindex="-1" aria-hidden="true">${e.art}</a>
       <div class="c3-info">
         ${e.sello ? CMC.sello(e.sello === true ? '' : e.sello) : ''}
+        ${CMC.minimo(e.ficha, b.p)}
         ${e.tags && e.tags.length ? `<p class="c3-tags">${e.tags.join('')}</p>` : ''}
         <h3><a class="aFicha" href="${esc(e.ficha)}">${esc(e.nombre)}</a></h3>
         <p class="c3-spec">${esc(e.spec)}</p>

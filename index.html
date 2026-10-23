@@ -157,6 +157,7 @@ button, input { font: inherit; color: inherit; }
 .prod .foto img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
 .prod h2 { font-size: 1.2rem; line-height: 1.2; letter-spacing: -0.015em; }
 .prod p { margin-top: 4px; font-size: 14px; color: #566082; }
+.prod .minimo { margin-top: 8px; }
 .prod:hover h2 { text-decoration: underline; text-underline-offset: 3px; }
 .escalera { margin-top: 14px; border-top: 1px solid #E4E8F2; }
 .escalera li { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "t p" "b b"; gap: 4px 12px; align-items: baseline; padding: 10px 2px; border-bottom: 1px solid #EEF1F7; }
@@ -366,10 +367,10 @@ button, input { font: inherit; color: inherit; }
 .ficha.carga .rulFlecha, .rulFlecha[hidden] { display: none; }
 @media (max-width: 420px) { .rulTab { padding: 0 12px; font-size: 13.5px; } }
 </style>
-<link rel="stylesheet" href="/assets/cmc.css?v=af6facc2">
-<script src="/assets/cmc-ui.js?v=5593f45e"></script>
+<link rel="stylesheet" href="/assets/cmc.css?v=5437a36f">
+<script src="/assets/cmc-ui.js?v=ffb2f532"></script>
 <script defer src="/assets/fotos.js?v=c1f7f148"></script>
-<script defer src="/assets/fichas.js?v=8bbab92b"></script>
+<script defer src="/assets/fichas.js?v=9673a4e0"></script>
 <script defer src="/assets/cmc.js?v=d7c8fc65"></script>
 </head>
 <body>
@@ -795,7 +796,7 @@ fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch((
     const empatan = e.os.filter(o => o.p === e.best.p).map(o => sn(o.s));
     const baja = Math.round(e.gap / e.worst.p * 100);
     return `<div class="rulSlide" role="tabpanel" id="rulP-${k}" aria-labelledby="rulT-${k}">
-      <a class="prod" href="${esc(e.href)}"><span class="foto">${foto(e, '', true, true)}</span><span><h2>${esc(e.nombre)}</h2><p>${esc(e.spec)}</p></span></a>
+      <a class="prod" href="${esc(e.href)}"><span class="foto">${foto(e, '', true, true)}</span><span><h2>${esc(e.nombre)}</h2><p>${esc(e.spec)}</p>${window.CMC && CMC.minimo ? CMC.minimo(e.href, e.best.p) : ''}</span></a>
       <ol class="escalera" aria-label="Precio en cada tienda">${filas}</ol>
       <div class="ahorro"><p>Ahorras <b>${fmt(e.gap)}</b> en ${empatan.length > 1 ? empatan.slice(0, -1).join(', ') + ' o ' + empatan.slice(-1) : empatan[0]}${window.CMC ? CMC.pago(e.best) : ''}<span class="baja">↓ ${baja}%</span></p><a class="btnVer" href="${esc(e.href)}">Ver precios</a></div>
     </div>`;

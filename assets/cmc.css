@@ -368,6 +368,11 @@ article.c3.elegido { border: 2px solid var(--puma-y); }
 .sello { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; max-width: 100%; padding: 3px 12px 3px 3px; border-radius: 999px; background: var(--puma-y); color: var(--puma-y-ink); font: 700 13px/1.15 var(--f-body); }
 .sello img { width: 26px; height: 26px; border-radius: 50%; flex: none; background: #fff; }
 .sello small { display: block; font-weight: 600; font-size: 11.5px; opacity: .8; }
+/* Sello "Mínimo histórico" (23-10-2026): mismo formato que el del puma, con los colores de la cabecera */
+.minimo { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; max-width: 100%; padding: 3px 12px 3px 3px; border-radius: 999px; background: var(--nav-bg, #0D1330); color: var(--puma-y, #FFD84D); box-shadow: inset 0 0 0 1px rgba(255, 216, 77, .5); font: 700 13px/1.15 var(--f-body); }
+.minimo img { width: 26px; height: 26px; border-radius: 50%; flex: none; background: #fff; }
+.minimo small { display: block; font-weight: 600; font-size: 11.5px; color: var(--nav-fg, #F2F5FF); opacity: .85; }
+.mejor > .minimo { margin-bottom: 10px; }
 
 /* ---------- Estado vacío con el puma ---------- */
 .empty { position: relative; padding-left: 96px !important; min-height: 120px; }

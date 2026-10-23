@@ -10,7 +10,7 @@ No hace falta correrlo a mano: el flujo .github/workflows/fichas.yml lo corre ca
 cambian los precios. Las direcciones de cada ficha quedan fijas en herramientas/fichas.json
 para que los enlaces compartidos no se rompan si el nombre del equipo cambia.
 """
-import datetime, hashlib, html, json, os, re, subprocess, sys, unicodedata
+import datetime, hashlib, html, json, os, re, statistics, subprocess, sys, unicodedata
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -124,6 +124,32 @@ def historial():
             except Exception:
                 continue
     return h
+
+
+def minimos_historicos(todos, hist, hoy):
+    """Equipos que hoy están en su precio más bajo desde que los seguimos: {id: (precio, primer día con precio)}.
+    Pide al menos 2 días anteriores con precio, que nunca haya estado más barato y que hoy esté al menos 3% y
+    $3.000 bajo su precio habitual (la mediana de los días anteriores). Así no se marca un equipo cuyo precio
+    nunca se movió, y el sello se va solo cuando el precio sube o cuando el precio bajo pasa a ser el de siempre."""
+    out = {}
+    for x in todos:
+        if not x['os']:
+            continue
+        h = hist.get(x['id'], {})
+        antes = [v for d, v in h.items() if d < hoy]
+        if len(antes) < 2:
+            continue
+        p, med = x['os'][0]['p'], statistics.median(antes)
+        if p <= min(antes) and med - p >= max(med * 0.03, 3000):
+            out[x['id']] = (p, min(h))
+    return out
+
+
+def sello_minimo(desde):
+    """Sello "Mínimo histórico": mismo formato que el del puma (assets/cmc.css, clase minimo)."""
+    return (f'<span class="minimo" title="El precio más bajo que hemos visto para este equipo desde el {fecha_larga(desde)}">'
+            f'<img src="/assets/puma-sello.webp" alt="" width="26" height="26" decoding="async">'
+            f'<span>Mínimo histórico<small>El más bajo desde el {fecha_larga(desde)}</small></span></span>')
 
 
 # ---------------- Piezas de la página ----------------
@@ -270,7 +296,7 @@ def comentarios(clave, nombre):
             f'<noscript><p class="nota">Activa JavaScript para leer y escribir comentarios.</p></noscript></section>')
 
 
-def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
+def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
     q, os_ = x['eq'], x['os']
     tipo = {'nb': 'Notebooks', 'ph': 'Celulares', 'tb': 'Tablets', 'tv': 'Televisores', 'cs': 'Consolas'}[x['k']]
     lista = '/' + tipo.lower()
@@ -329,7 +355,8 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy):
         donde = ' o '.join([', '.join(empatan[:-1]), empatan[-1]]) if len(empatan) > 1 else empatan[0]
         ahorro = (f'<p class="ah">Ahorras <b>{plata(w["p"] - b["p"])}</b> frente a {TIENDAS[w["s"]][0]}</p>' if w['p'] > b['p'] else
                   (f'<p class="ah neutro">Mismo precio en {len(os_)} tiendas</p>' if len(os_) > 1 else '<p class="ah neutro">Lo encontramos en una tienda</p>'))
-        mejor = (f'<div class="mejor"><p class="et">Precio más bajo hoy</p><p class="precio">{plata(b["p"])}{pago(b)}</p>'
+        mh = (mins or {}).get(x['id'])
+        mejor = (f'<div class="mejor">{sello_minimo(mh[1]) if mh and mh[0] >= b["p"] else ""}<p class="et">Precio más bajo hoy</p><p class="precio">{plata(b["p"])}{pago(b)}</p>'
                  f'<p class="donde"><i style="background:{TIENDAS[b["s"]][1]}"></i>en {e(donde)}{(" · " + e(b["note"])) if b.get("note") else ""}</p>{ahorro}'
                  f'<a class="ir" href="{e(b["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{b["s"]}">Ir a {TIENDAS[b["s"]][0]}</a>{avisame(False)}</div>')
     else:
@@ -853,12 +880,13 @@ def main():
         hoy = datetime.datetime.strptime(hoy_txt, '%d-%m-%Y').date()
     except ValueError:
         pass
+    mins = minimos_historicos(todos, hist, hoy)
     for carpeta in ('notebook', 'celular', 'tablet', 'televisor', 'consola'):
         os.makedirs(os.path.join(RAIZ, carpeta), exist_ok=True)
     escritas = 0
     for x in todos:
         ruta = os.path.join(RAIZ, urls[x['id']].lstrip('/') + '.html')
-        nuevo = pagina(x, urls[x['id']], fotos, hist, todos, urls, hoy_txt, hoy)
+        nuevo = pagina(x, urls[x['id']], fotos, hist, todos, urls, hoy_txt, hoy, mins)
         viejo = open(ruta, encoding='utf-8').read() if os.path.exists(ruta) else ''
         if nuevo != viejo:
             open(ruta, 'w', encoding='utf-8').write(nuevo); escritas += 1
@@ -879,8 +907,10 @@ def main():
         escritas += 1
     # Enlaces para las páginas que se arman en el navegador
     open(os.path.join(RAIZ, 'assets', 'fichas.js'), 'w', encoding='utf-8').write(
-        '/* Generado por herramientas/fichas.py: dirección de la ficha de cada equipo. */\n'
-        'window.CMC_FICHAS = ' + json.dumps(urls, ensure_ascii=False, separators=(',', ':')) + ';\n')
+        '/* Generado por herramientas/fichas.py: dirección de la ficha de cada equipo y equipos en su mínimo histórico. */\n'
+        'window.CMC_FICHAS = ' + json.dumps(urls, ensure_ascii=False, separators=(',', ':')) + ';\n'
+        '/* Mínimo histórico: {ficha: [precio, primer día con precio]} (sello en las tarjetas, assets/cmc-ui.js) */\n'
+        'window.CMC_MINIMOS = ' + json.dumps({urls[i]: [p, d.isoformat()] for i, (p, d) in mins.items()}, ensure_ascii=False, separators=(',', ':')) + ';\n')
     # Datos livianos para la portada: todas las categorías en un solo archivo (sin enlaces ni notas)
     port = []
     for x in todos:
@@ -918,7 +948,7 @@ def main():
     filas += [f'  <url><loc>{SITIO}{urls[x["id"]]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>' for x in todos if x['os']]
     open(os.path.join(RAIZ, 'sitemap.xml'), 'w', encoding='utf-8').write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + '\n'.join(filas) + '\n</urlset>\n')
-    print(f'Fichas: {len(todos)} equipos, {escritas} páginas nuevas o cambiadas. Imágenes para compartir nuevas: {n_og}. Historial: {len(hist)} equipos con datos. Bajadas del día: {len(baj)}.')
+    print(f'Fichas: {len(todos)} equipos, {escritas} páginas nuevas o cambiadas. Imágenes para compartir nuevas: {n_og}. Historial: {len(hist)} equipos con datos. Bajadas del día: {len(baj)}. Mínimos históricos: {len(mins)}.')
 
 
 if __name__ == '__main__':
