@@ -11,7 +11,11 @@
 
   python3 herramientas/precios.py aplicar resultados/
       Lee los archivos <tienda>.json de esa carpeta (lo que devolvió leer_precios.js),
-      actualiza precios, notas y fechas, y muestra el resumen.
+      actualiza precios, notas y fechas, y muestra el resumen, con los equipos que hoy
+      marcan su precio más bajo desde que los seguimos (mínimos históricos).
+
+  python3 herramientas/precios.py minimos
+      Solo la lista de mínimos históricos con los precios que están en las páginas.
 """
 import json, re, sys, os, glob, datetime
 from urllib.parse import urlparse
@@ -161,6 +165,43 @@ def aplicar(carpeta):
     print('Cambios más grandes:\n  ' + '\n  '.join(c[1] for c in cambios[:5]))
     print(f'Ocultos por falta de stock ({len(ocultos)}):\n  ' + '\n  '.join(ocultos))
     print(f'No revisados ({len(sin)}):\n  ' + '\n  '.join(sin))
+    minimos_historicos()
+
+
+def minimos_historicos():
+    """Equipos cuyo precio más bajo de hoy (entre las ofertas visibles) es menor que el más bajo
+    de todos los días anteriores. El historial sale de las versiones guardadas en git (fichas.historial)."""
+    import subprocess
+    try:
+        if subprocess.run(['git', '-C', RAIZ, 'rev-parse', '--is-shallow-repository'], capture_output=True, text=True).stdout.strip() == 'true':
+            subprocess.run(['git', '-C', RAIZ, 'fetch', '-q', '--depth=1000', 'origin', 'main'], capture_output=True, timeout=300)
+        import fichas
+        hist = fichas.historial()
+    except Exception as err:
+        print(f'Mínimos históricos: no pude leer el historial ({err}).')
+        return
+    if not hist:
+        print('Mínimos históricos: no hay historial en git (copia sin historia).')
+        return
+    nb_h, _, nbs, ph_h, _, phs = cargar()
+    m = re.search(r"const SEEN_GAMER = '(\d\d)-(\d\d)-(\d{4})'", nb_h)
+    hoy = datetime.date(int(m.group(3)), int(m.group(2)), int(m.group(1)))
+    grupos = [('notebook', nbs), ('celular', phs)] + [(EXTRA[k][1], l) for k, (_, _, l) in cargar_extra().items()]
+    out = []
+    for grupo, lst in grupos:
+        for eq in lst:
+            vis = [o for o in eq['offers'] if not o.get('x') and o.get('p')]
+            antes = {d: v for d, v in hist.get(eq['id'], {}).items() if d < hoy}
+            if not vis or len(antes) < 2:
+                continue  # sin precio hoy o muy poca historia para hablar de "mínimo histórico"
+            b = min(vis, key=lambda o: o['p'])
+            lo = min(antes.values())
+            # Igual que el resumen diario de avisos: al menos 3% y $3.000 bajo el mínimo anterior (evita bajadas de $10)
+            if b['p'] <= lo * 0.97 and lo - b['p'] >= 3000:
+                nombre = eq['name'] + (f" {eq['gb']} GB" if grupo in ('celular', 'tablet') else '')
+                out.append((lo - b['p'], f"{nombre} · {b['s']}: {b['p']:,} (antes lo más bajo fue {lo:,}; seguido desde el {min(antes):%d-%m})".replace(',', '.')))
+    out.sort(reverse=True)
+    print(f'Mínimos históricos de hoy ({len(out)}):' + ('\n  ' + '\n  '.join(t for _, t in out) if out else ' ninguno'))
 
 
 def escribir_rutas():
@@ -171,4 +212,5 @@ if __name__ == '__main__':
     if len(sys.argv) >= 2 and sys.argv[1] == 'lista': lista()
     elif len(sys.argv) >= 2 and sys.argv[1] == 'rutas': escribir_rutas()
     elif len(sys.argv) >= 3 and sys.argv[1] == 'aplicar': aplicar(sys.argv[2])
+    elif len(sys.argv) >= 2 and sys.argv[1] == 'minimos': minimos_historicos()
     else: print(__doc__)
