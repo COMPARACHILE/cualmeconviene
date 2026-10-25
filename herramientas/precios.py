@@ -10,7 +10,8 @@
       El flujo de GitHub lo rehace solo cada vez que cambian los equipos.
 
   python3 herramientas/precios.py aplicar resultados/
-      Lee los archivos <tienda>.json de esa carpeta (lo que devolvió leer_precios.js),
+      Lee los archivos <tienda>.json de esa carpeta (lo que devolvió leer_precios.js), o <tienda>.txt
+      con solo lo que cambió (lo que devuelve cambios() de leer_precios.js),
       actualiza precios, notas y fechas, y muestra el resumen, con los equipos que hoy
       marcan su precio más bajo desde que los seguimos (mínimos históricos).
 
@@ -112,6 +113,16 @@ def aplicar(carpeta):
             if not p and res.get((t, u), {}).get('p'):
                 continue  # otra tanda ya trajo el precio
             res[(t, u)] = {'e': x or 'sin precio'} if not p else {'p': p, 'c': c, 'n': nota(t, c, x)}
+    # <tienda>.txt: solo lo que cambió, como lo devuelve cambios() de leer_precios.js ("i:precio:c:extra;" o "i:E:motivo;").
+    # Las rutas que no aparecen se leyeron y siguen igual que en la página.
+    for f in sorted(glob.glob(os.path.join(carpeta, '*.txt'))):
+        t = os.path.basename(f)[:-4].split('-')[0]
+        for u in RT[t]:
+            res.setdefault((t, u), {'igual': 1})
+        for parte in [x for x in open(f, encoding='utf-8').read().replace('\n', '').split(';') if x.strip()]:
+            i, a, *r = parte.strip().split(':')
+            u = RT[t][int(i)]
+            res[(t, u)] = {'e': ':'.join(r) or 'sin precio'} if a == 'E' else {'p': int(a), 'c': int(r[0]), 'n': nota(t, int(r[0]), int(r[1]))}
     hoy = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-3))).strftime('%d-%m-%Y')
     cambios, bajos, sin, ocultos = [], [], [], []
     grupos = [('notebook', nbs), ('celular', phs)] + [(EXTRA[k][1], l) for k, (_, _, l) in extra.items()]
@@ -122,6 +133,8 @@ def aplicar(carpeta):
                 r = res.get((o['s'], ruta(o)))
                 if r is None:
                     sin.append(f"{nombre} · {o['s']}: no apareció en la lectura"); continue
+                if r.get('igual'):
+                    continue
                 if r.get('e') in AGOTADO:
                     o['x'] = 1; ocultos.append(f"{nombre} · {o['s']}: {r['e']}"); continue
                 if r.get('e') or not r.get('p'):
@@ -130,8 +143,13 @@ def aplicar(carpeta):
                 nuevo, viejo = int(r['p']), o['p']
                 if nuevo != viejo:
                     cambios.append((abs(nuevo - viejo), f"{nombre} · {o['s']}: {viejo:,} → {nuevo:,}".replace(',', '.')))
-                    if nuevo < viejo * 0.5:
-                        bajos.append(f"{nombre} · {o['s']}: {viejo:,} → {nuevo:,}".replace(',', '.'))
+                    otros = sorted(x['p'] for x in eq['offers'] if x is not o and not x.get('x') and x.get('p'))
+                    med = otros[len(otros) // 2] if otros else None
+                    motivo = []
+                    if nuevo <= viejo * 0.75: motivo.append(f"bajó {round((1 - nuevo / viejo) * 100)}%")
+                    if med and nuevo < med * 0.7: motivo.append(f"{round((1 - nuevo / med) * 100)}% bajo las otras tiendas ({med:,})")
+                    if motivo:
+                        bajos.append(f"{nombre} · {o['s']}: {viejo:,} → {nuevo:,} ({'; '.join(motivo)})".replace(',', '.'))
                 o['p'] = nuevo
                 if r['c'] or o['s'] in ('falabella', 'paris', 'ripley', 'pcfactory'):
                     if r['c']: o['c'] = 1
@@ -161,7 +179,7 @@ def aplicar(carpeta):
         open(os.path.join(RAIZ, EXTRA[k][0]), 'w', encoding='utf-8').write(h)
     cambios.sort(reverse=True)
     print(f'Fecha: {hoy}. Precios que cambiaron: {len(cambios)}')
-    if bajos: print('REVISAR, bajaron a menos de la mitad:\n  ' + '\n  '.join(bajos))
+    print(f'REVISAR, precios sospechosamente bajos ({len(bajos)}): bajaron 25% o más, o quedaron 30% bajo las otras tiendas' + ('\n  ' + '\n  '.join(bajos) if bajos else ': ninguno'))
     print('Cambios más grandes:\n  ' + '\n  '.join(c[1] for c in cambios[:5]))
     print(f'Ocultos por falta de stock ({len(ocultos)}):\n  ' + '\n  '.join(ocultos))
     print(f'No revisados ({len(sin)}):\n  ' + '\n  '.join(sin))

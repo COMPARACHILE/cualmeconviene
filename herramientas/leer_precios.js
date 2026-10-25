@@ -121,6 +121,47 @@ async function leerWom(rutas) {
   return JSON.stringify(best);
 }
 
+/* ---------- Solo lo que cambió (25-10-2026) ----------
+   Compara lo leído con lo publicado (las páginas en GitHub) y devuelve solo las diferencias, en un texto corto:
+   "i:precio:c:extra;" o "i:E:motivo;". Se guarda como <tienda>.txt y "precios.py aplicar" lo entiende
+   (lo que no aparece en el texto queda igual). Así no hay que copiar los 1.200 precios en cada actualización.
+     await cambios('falabella', R.falabella, await leer('falabella', R.falabella))
+     await cambios('pcfactory', R.pcfactory, leerListado('pcfactory', R.pcfactory), soloEstaTanda)
+   La ruta se arma igual que en precios.py (urlparse(url).path), sin volver a codificar tildes ni espacios. */
+const _GH = 'https://raw.githubusercontent.com/COMPARACHILE/cualmeconviene/main/';
+const _ruta = (s, url) => {
+  const p = url.replace(/^[a-z]+:\/\/[^/]+/i, '').split(/[?#]/)[0];
+  return s === 'pcfactory' ? '/producto/' + p.split('/producto/')[1].split('-')[0] : p;
+};
+async function publicados(tienda, rutas) {
+  const hojas = [['notebooks.html', 'const NOTEBOOKS = ', '\n];'], ['celulares.html', 'const PHONES = ', ';\n'],
+    ['tablets.html', 'const EQUIPOS = ', ';\n'], ['televisores.html', 'const EQUIPOS = ', ';\n'], ['consolas.html', 'const EQUIPOS = ', ';\n']];
+  const pos = new Map(rutas.map((u, i) => [u, i])), exp = rutas.map(() => null);
+  for (const [f, a, b] of hojas) {
+    const t = await (await fetch(_GH + f, { cache: 'no-store' })).text();
+    const i = t.indexOf(a) + a.length, j = t.indexOf(b, i) + (b === '\n];' ? 2 : 0);
+    for (const eq of JSON.parse(t.slice(i, j))) for (const o of eq.offers) {
+      if (o.s !== tienda) continue;
+      const k = pos.get(_ruta(o.s, o.url));
+      if (k == null || exp[k]) continue;
+      const m = /(?:sin tarjeta|otros medios) \$([\d.]+)/.exec(o.note || '');
+      exp[k] = [o.p, o.c ? 1 : 0, m && (tienda === 'ripley' || tienda === 'pcfactory') ? _num(m[1]) : 0, o.x ? 1 : 0];
+    }
+  }
+  return exp;
+}
+async function cambios(tienda, rutas, res, solo) {
+  const exp = await publicados(tienda, rutas), AG = ['sin stock', 'error 404', 'error 410'], out = [];
+  for (const [i, p, c, x] of typeof res === 'string' ? JSON.parse(res) : res) {
+    if (solo && !solo.has(i)) continue;
+    const e = exp[i];
+    if (!e) { out.push(i + ':E:no publicado'); continue; }
+    if (!p) { if (!(AG.includes(x) && e[3])) out.push(i + ':E:' + x); }
+    else if (e[3] || p !== e[0] || c !== e[1] || (x || 0) !== e[2]) out.push(i + ':' + p + ':' + c + ':' + (x || 0));
+  }
+  return out.join(';') + (out.length ? ';' : '');
+}
+
 /* Listados: abrir primero la página indicada y esperar a que cargue.
    claro: https://tienda.clarochile.cl/CategoryDisplay?...facetName_1=Liberados... (ver precios.py)
    wom:   https://store.wom.cl/equipos/?modalidad-de-compra=prepago  (bajar hasta el final para que carguen todos)
