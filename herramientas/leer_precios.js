@@ -84,9 +84,20 @@ function _ldOferta(h) {
     if (!hit) continue;
     let of = [].concat(hit.offers)[0] || {};
     if (of.offers) of = Object.assign({}, of, [].concat(of.offers)[0] || {});
-    const n = v => typeof v === 'number' ? Math.round(v) : _num(String(v || '').replace(/[,.]\d{2}$/, ''));
+    const n = v => {
+      if (typeof v === 'number') return Math.round(v);
+      const t = String(v || '').trim();
+      return /^\d+(\.\d+)?$/.test(t) ? Math.round(parseFloat(t)) : _num(t.replace(/,\d{1,2}$/, ''));
+    };
     const p = n(of.price) || n(of.lowPrice);
     if (/OutOfStock|SoldOut|Discontinued/i.test(String(of.availability || ''))) return { e: 'sin stock' };
+    return p ? { p, c: 0, n: '' } : { e: 'sin precio' };
+  }
+  // Sin JSON-LD: etiqueta "product:price:amount" (Magento, Jumpseller y otras)
+  const mp = h.match(/<meta[^>]+property=["']product:price:amount["'][^>]*content=["']([\d.,]+)["']/i) || h.match(/<meta[^>]+content=["']([\d.,]+)["'][^>]*property=["']product:price:amount["']/i);
+  if (mp) {
+    if (/product:availability["'][^>]*content=["'](out of stock|oos)|class="stock unavailable|out-of-stock/i.test(h)) return { e: 'sin stock' };
+    const p = /^\d+(\.\d+)?$/.test(mp[1]) ? Math.round(parseFloat(mp[1])) : _num(mp[1].replace(/,\d{1,2}$/, ''));
     return p ? { p, c: 0, n: '' } : { e: 'sin precio' };
   }
   return { e: 'sin datos' };
@@ -101,7 +112,7 @@ async function _vtex(u) {
   return { p: Math.min(...ofs.map(o => Math.round(o.Price))), c: 0, n: '' };
 }
 // Tienda oficial -> forma de leerla. Abrir la portada de cada una (precios.py lista) y llamar a leer('<tienda>', RUTAS).
-const OFICIALES = { samsung: 'ld', lg: 'ld', midea: 'vtex', electrolux: 'vtex', mademsa: 'vtex', fensa: 'vtex' };
+const OFICIALES = { samsung: 'ld', lg: 'ld', midea: 'vtex', electrolux: 'vtex', mademsa: 'vtex', fensa: 'vtex', dyson: 'vtex', thomas: 'ld', ursus: 'ld' };
 for (const [t, k] of Object.entries(OFICIALES)) if (k === 'ld') LECTORES[t] = _ldOferta;
 
 const _corto = (i, r) => r.e ? [i, 0, 0, r.e] : [i, r.p, r.c ? 1 : 0, r.x || 0];
