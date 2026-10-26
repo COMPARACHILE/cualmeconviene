@@ -62,7 +62,7 @@ const LECTORES = {
     return p ? { p, c: 0, n: 'Precio oferta online Entel (solo equipo)' } : { e: 'sin precio' };
   },
   // Tiendas oficiales de cada marca (26-10-2026): precio público de la ficha, sin tarjeta
-  samsung: h => _oficial(h), lg: h => _oficial(h), hp: h => _oficial(h), nespresso: h => _oficial(h), dolcegusto: h => _oficial(h),
+  samsung: (h, u) => _samsung(h, u), lg: h => _oficial(h), hp: h => _oficial(h), nespresso: h => _oficial(h), dolcegusto: h => _oficial(h),
   apple: (h, u) => _apple(h, u),
   movistar(h) {
     if (/schema.org\/OutOfStock/.test(h)) return { e: 'sin stock' };
@@ -105,12 +105,18 @@ function _oficial(h) {
 }
 /* Apple: la página de compra trae "products":[{name, price:{fullPrice}}]; ?m= es el comienzo del nombre del modelo */
 function _apple(h, u) {
-  const m = decodeURIComponent((u.match(/[?&]m=([^&#]+)/) || [])[1] || '');
-  const i = h.indexOf('"products":['); if (i < 0) return { e: 'sin datos' };
-  let k = i + 11, n = 0;
-  for (; k < h.length; k++) { if (h[k] === '[') n++; else if (h[k] === ']' && !--n) break; }
-  let ps; try { ps = JSON.parse(h.slice(i + 11, k + 1)); } catch (e) { return { e: 'sin datos' }; }
-  const v = ps.filter(x => x && x.name && x.name.startsWith(m)).map(x => _precio(x.price && (x.price.fullPrice || x.price.currentPrice))).filter(Boolean);
+  // La página trae varios bloques "products":[...] (uno por modelo: Pro y Pro Max, 11" y 13"); se juntan todos.
+  // Apple escribe "Wi‑Fi" con un guion que no corta (U+2011): se comparan los nombres con guiones y espacios normales.
+  const pl = t => String(t).replace(/[\u2010-\u2015]/g, '-').replace(/\s+/g, ' ');
+  const m = pl(decodeURIComponent((u.match(/[?&]m=([^&#]+)/) || [])[1] || ''));
+  const ps = [];
+  for (let i = h.indexOf('"products":['); i >= 0; i = h.indexOf('"products":[', i + 12)) {
+    let k = i + 11, n = 0;
+    for (; k < h.length; k++) { if (h[k] === '[') n++; else if (h[k] === ']' && !--n) break; }
+    try { ps.push(...JSON.parse(h.slice(i + 11, k + 1))); } catch (e) {}
+  }
+  if (!ps.length) return { e: 'sin datos' };
+  const v = ps.filter(x => x && x.name && pl(x.name).startsWith(m)).map(x => _precio(x.price && (x.price.fullPrice || x.price.currentPrice))).filter(Boolean);
   return v.length ? { p: Math.min(...v), c: 0 } : { e: 'sin precio' };
 }
 /* Xiaomi (mi.com/cl): el precio lo trae su API, no el HTML. Ruta /cl/product/<tag>/?gb=256 (gb solo en celulares y tablets) */
@@ -121,13 +127,36 @@ async function _xiaomi(u) {
   const d = (await r.json()).data;
   const items = ((d && d.item_detail && d.item_detail.spu_list) || []).flatMap(x => x.item_list || []);
   if (!items.length) return { e: 'sin producto' };
-  const ok = items.filter(x => !gb || new RegExp('\\+\\s*' + gb + '\\s*GB', 'i').test(x.item_name) || new RegExp('\\b' + gb + '\\s*GB', 'i').test(x.item_name));
+  // "8GB+256GB" o "4G RAM 256G ROM": la versión es el número seguido de G o GB (la RAM nunca llega a 64)
+  const ok = items.filter(x => !gb || new RegExp('(?:\\+|\\b)\\s*' + gb + '\\s*GB?(?![a-z])', 'i').test(x.item_name));
   if (!ok.length) return { e: 'sin esa versión' };
   const hay = ok.filter(x => x.is_sale !== false && !x.is_out_of_stock);
   if (!hay.length) return { e: 'sin stock' };
   return { p: Math.min(...hay.map(x => _precio(x.price)).filter(Boolean)), c: 0 };
 }
 const DIRECTOS = { xiaomi: _xiaomi };
+/* Samsung: algunas fichas de celulares no traen el precio en el HTML. Ahí se busca el modelo (sm-xxxx al final
+   de la ruta) en el buscador de Samsung, que da el precio de oferta y el stock. Se pide una vez por pestaña. */
+let _samsungLista = null;
+async function _samsung(h, u) {
+  const r = _oficial(h);
+  if (r.p || r.e === 'sin stock') return r;
+  const m = (u.split(/[?#]/)[0].replace(/\/$/, '').split('/').pop().match(/(?:^|-)sm-([a-z0-9]+)$/i) || [])[1];
+  if (!m) return r;
+  if (!_samsungLista) _samsungLista = (async () => {
+    const todos = [];
+    for (const t of ['01010000', '01020000']) {
+      const j = await (await fetch('https://searchapi.samsung.com/v6/front/b2c/product/finder/newhybris?type=' + t + '&siteCode=cl&start=1&num=200&sort=newest&onlyFilterInfoYN=N&keySummaryYN=N')).json();
+      todos.push(...((j.response && j.response.resultData && j.response.resultData.productList) || []).flatMap(p => p.modelList || []));
+    }
+    return todos;
+  })();
+  const x = (await _samsungLista).find(y => String(y.modelCode).toUpperCase() === 'SM-' + m.toUpperCase());
+  if (!x) return r;
+  if (x.stockStatusText && x.stockStatusText !== 'inStock') return { e: 'sin stock' };
+  const p = _precio(x.promotionPrice) || _precio(x.price);
+  return p ? { p, c: 0 } : r;
+}
 
 const _corto = (i, r) => r.e ? [i, 0, 0, r.e] : [i, r.p, r.c ? 1 : 0, r.x || 0];
 async function leer(tienda, rutas, grupo = 6) {
