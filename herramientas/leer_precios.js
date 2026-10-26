@@ -136,7 +136,7 @@ const VISIBLE = {
     return { p, c: 0, n: '' };
   }
 };
-function _visible(tienda, u, ms = 20000) {
+function _visible(tienda, u, ms = 35000) {
   return new Promise(res => {
     const f = document.createElement('iframe');
     f.setAttribute('sandbox', 'allow-scripts allow-same-origin');
@@ -226,7 +226,9 @@ const _ruta = (s, url) => {
 };
 async function publicados(tienda, rutas) {
   const hojas = [['notebooks.html', 'const NOTEBOOKS = ', '\n];'], ['celulares.html', 'const PHONES = ', ';\n'],
-    ['tablets.html', 'const EQUIPOS = ', ';\n'], ['televisores.html', 'const EQUIPOS = ', ';\n'], ['consolas.html', 'const EQUIPOS = ', ';\n']];
+    ['tablets.html', 'const EQUIPOS = ', ';\n'], ['televisores.html', 'const EQUIPOS = ', ';\n'], ['consolas.html', 'const EQUIPOS = ', ';\n'],
+    ['lavadoras.html', 'const EQUIPOS = ', ';\n'], ['aspiradoras.html', 'const EQUIPOS = ', ';\n'], ['batidoras.html', 'const EQUIPOS = ', ';\n'],
+    ['cafeteras.html', 'const EQUIPOS = ', ';\n']];
   const pos = new Map(rutas.map((u, i) => [u, i])), exp = rutas.map(() => null);
   for (const [f, a, b] of hojas) {
     const t = await (await fetch(_GH + f, { cache: 'no-store' })).text();

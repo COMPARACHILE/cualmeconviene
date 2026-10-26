@@ -177,3 +177,10 @@
   try { if (Date.now() - (+localStorage.getItem('cmc-fb') || 0) < 2592e6) btn.querySelector('.t').remove(); } catch (_) {}
 })();
 
+
+/* Menú de categorías: en pantallas chicas se desliza; deja a la vista la categoría actual (26-10-2026) */
+(() => {
+  const nav = document.querySelector('.hd-cats'), a = nav && nav.querySelector('[aria-current="page"]');
+  if (!a || nav.scrollWidth <= nav.clientWidth) return;
+  nav.scrollLeft += a.getBoundingClientRect().left - nav.getBoundingClientRect().left - (nav.clientWidth - a.offsetWidth) / 2;
+})();

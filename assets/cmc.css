@@ -228,7 +228,11 @@ h3 .aFicha:hover { text-decoration: underline; text-underline-offset: 3px; }
 .hd .search input { width: 100%; font: inherit; font-size: 16px; border: 0; border-radius: 10px; padding: 11px 14px 11px 40px; background: #fff; color: #10152B; }
 .hd .search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; stroke: #566082; fill: none; stroke-width: 2; }
 .hd .search input:focus-visible { outline: 3px solid var(--puma-y); outline-offset: 1px; }
-.hd-cats { display: flex; gap: 2px; margin-left: auto; }
+/* 26-10-2026: con 9 categorías el menú va en su propia fila, bajo el logo y el buscador, y se desliza con el dedo si no cabe */
+.hd-cats { display: flex; gap: 2px; order: 3; width: 100%; margin: 0; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.hd-cats::-webkit-scrollbar { display: none; }
+.hd-cats a { flex: none; }
+@media (max-width: 1100px) { .hd-cats { -webkit-mask-image: linear-gradient(90deg, #000 90%, transparent); mask-image: linear-gradient(90deg, #000 90%, transparent); } }
 .hd-cats a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: var(--nav-muted); text-decoration: none; font-weight: 600; font-size: 15px; white-space: nowrap; }
 .hd-cats a:hover { color: #fff; background: rgba(255, 255, 255, .06); }
 .hd-cats a[aria-current="page"] { color: #fff; box-shadow: inset 0 -3px 0 var(--puma-y); border-radius: 10px 10px 0 0; }
@@ -238,7 +242,7 @@ h3 .aFicha:hover { text-decoration: underline; text-underline-offset: 3px; }
   .hd-in { padding-block: 6px 0; gap: 6px 12px; }
   .hd .search { flex-basis: 100%; order: 2; max-width: none; }
   .hd-cats { order: 3; width: 100%; margin: 0; }
-  .hd-cats a { flex: 1; justify-content: center; padding: 0 4px; font-size: 14px; }
+  .hd-cats a { flex: none; justify-content: center; padding: 0 10px; font-size: 14px; }
   .hd-cats .lg { display: none; }
   .hd-cats .sm { display: inline; }
 }
@@ -452,3 +456,6 @@ img.foto.ok { background: #fff; }
 .guiaT > span { font-size: 15px; color: var(--muted); }
 .guiaT b { margin-top: 4px; color: var(--accent); font-weight: 700; font-size: 15px; }
 @media (prefers-reduced-motion: reduce) { .guiaC, .idxGuias a { transition: none; } .guiaC:active { transform: none; } }
+
+/* Tiendas oficiales de las marcas (26-10-2026) */
+.ofi { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 700; letter-spacing: .02em; color: var(--deal); background: var(--deal-soft); border-radius: 4px; padding: 0 5px; vertical-align: 1px; }

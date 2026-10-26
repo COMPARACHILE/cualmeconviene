@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="google-site-verification" content="L51KwufKwaYuXL2v9TcTonapFhVG9qji_ImofzYBAdE" />
-<meta name="description" content="Compara el precio del mismo notebook, celular, tablet, televisor o consola en Falabella, Paris, Ripley, PCFactory, Entel, Movistar, Claro y WOM. Precios revisados a diario y la recomendación del puma según lo que necesitas.">
-<title>¿Cuál me conviene? Compara precios de notebooks, celulares, tablets, televisores y consolas en Chile</title>
+<meta name="description" content="Compara el precio del mismo notebook, celular, tablet, televisor, consola, lavadora, aspiradora, batidora o cafetera en Falabella, Paris, Ripley, PCFactory, las operadoras y las tiendas oficiales de las marcas. Precios revisados a diario y la recomendación del puma.">
+<title>¿Cuál me conviene? Compara precios de tecnología y electrodomésticos en Chile</title>
 <link rel="canonical" href="https://cualmeconviene.cl/">
 <meta name="theme-color" content="#0E1533">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CL">
 <meta property="og:site_name" content="¿Cuál me conviene?">
 <meta property="og:title" content="¿Cuál me conviene? El mismo equipo, en la tienda más barata">
-<meta property="og:description" content="Compara el precio del mismo notebook, celular, tablet, televisor o consola en las tiendas y operadoras de Chile. Precios revisados a diario.">
+<meta property="og:description" content="Compara el precio del mismo notebook, celular, televisor, lavadora, aspiradora o cafetera en las tiendas, operadoras y tiendas oficiales de Chile. Precios revisados a diario.">
 <meta property="og:url" content="https://cualmeconviene.cl/">
 <meta property="og:image" content="https://cualmeconviene.cl/assets/og.png">
 <meta property="og:image:width" content="1200">
@@ -192,6 +192,7 @@ button, input { font: inherit; color: inherit; }
 .tiendas { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; padding-block: 28px 30px; margin-top: 36px; border-top: 1px solid rgba(255, 255, 255, .1); font-size: 14px; color: #A5AFD6; }
 .tiendas span { display: inline-flex; align-items: center; gap: 7px; color: #E3E7FA; font-weight: 600; }
 .tiendas span i { width: 9px; height: 9px; border-radius: 3px; }
+.tiendas span.tOfi { color: #A5AFD6; font-weight: 500; }
 
 /* ---------- Secciones ---------- */
 .sec { padding-block: 56px 8px; }
@@ -309,7 +310,7 @@ button, input { font: inherit; color: inherit; }
 .ficha .pago { color: #566082; border-color: #DCE1EE; }
 .of .ofFoto b { display: inline-flex; gap: 6px; }
 .of .ofFoto b i { font-style: normal; opacity: .85; }
-/* Las cuatro categorías con foto, arriba */
+/* Las categorías con foto, arriba (en dos filas; en el celular, una fila que se desliza) */
 .catsH { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-top: 18px; max-width: 680px; }
 .catsH a { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px 10px; border-radius: 14px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .14); color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; text-align: center; transition: background-color 150ms var(--ease); }
 .catsH a:hover { background: rgba(255, 255, 255, .13); }
@@ -320,7 +321,10 @@ button, input { font: inherit; color: inherit; }
 @media (max-width: 559px) {
   .bajada { display: none; }
   .portada h1 { font-size: 2rem; }
-  .catsH a { font-size: 13px; padding: 8px 4px; }
+  .catsH { display: flex; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; scroll-snap-type: x proximity; margin-inline: -16px; padding-inline: 16px; scroll-padding-inline: 16px;
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent); }
+  .catsH::-webkit-scrollbar { display: none; }
+  .catsH a { flex: none; width: 84px; font-size: 13px; padding: 8px 4px; scroll-snap-align: start; }
   .catsH .cf { width: 48px; height: 48px; }
   .portadaIn { gap: 24px; }
 }
@@ -377,7 +381,7 @@ button, input { font: inherit; color: inherit; }
 <header class="hd">
   <div class="hd-in wrap">
     <a class="hd-logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="36" height="36" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
-    <nav class="hd-cats" aria-label="Categorías"><a href="/notebooks">Notebooks</a><a href="/celulares">Celulares</a><a href="/tablets">Tablets</a><a href="/televisores"><span class="lg">Televisores</span><span class="sm">TV</span></a><a href="/consolas">Consolas</a></nav>
+    <nav class="hd-cats" aria-label="Categorías"><a href="/notebooks">Notebooks</a><a href="/celulares">Celulares</a><a href="/tablets">Tablets</a><a href="/televisores"><span class="lg">Televisores</span><span class="sm">TV</span></a><a href="/consolas">Consolas</a><a href="/lavadoras">Lavado</a><a href="/aspiradoras">Aspiradoras</a><a href="/batidoras">Batidoras</a><a href="/cafeteras">Cafeteras</a></nav>
   </div>
 </header>
 
@@ -386,17 +390,17 @@ button, input { font: inherit; color: inherit; }
     <div>
       <p class="fresco"><i aria-hidden="true"></i><span id="fresco">Precios revisados a diario</span></p>
       <h1 id="titulo">El mismo equipo, en la tienda más barata.</h1>
-      <p class="bajada" id="bajada">Revisamos cada día los precios de notebooks, celulares, tablets, televisores y consolas en 8 tiendas y operadoras de Chile, y te mostramos dónde cuestan menos.</p>
+      <p class="bajada" id="bajada">Revisamos cada día los precios de tecnología y electrodomésticos en las tiendas, operadoras y tiendas oficiales de las marcas en Chile, y te mostramos dónde cuestan menos.</p>
       <form class="busca" role="search" action="/notebooks" id="busca">
-        <label class="sr" for="q">Busca un notebook, celular, tablet, televisor o consola</label>
+        <label class="sr" for="q">Busca un notebook, celular, televisor, lavadora, aspiradora o cafetera</label>
         <div class="buscaCaja">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-          <input id="q" name="q" type="search" placeholder="Ej.: iPhone 17, Samsung 55 o RTX 4060" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="sug" aria-expanded="false">
+          <input id="q" name="q" type="search" placeholder="Ej.: iPhone 17, Samsung 55 o lavadora 19 kg" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="sug" aria-expanded="false">
           <button type="submit">Buscar</button>
         </div>
         <div class="sug" id="sug" role="listbox" aria-label="Sugerencias" hidden></div>
       </form>
-      <nav class="catsH" id="catsH" aria-label="Categorías"><a href="/notebooks"><span class="cf" data-k="nb"></span>Notebooks<small data-n="nb"></small></a><a href="/celulares"><span class="cf" data-k="ph"></span>Celulares<small data-n="ph"></small></a><a href="/tablets"><span class="cf" data-k="tb"></span>Tablets<small data-n="tb"></small></a><a href="/televisores"><span class="cf" data-k="tv"></span>TV<small data-n="tv"></small></a><a href="/consolas"><span class="cf" data-k="cs"></span>Consolas<small data-n="cs"></small></a></nav>
+      <nav class="catsH" id="catsH" aria-label="Categorías"><a href="/notebooks"><span class="cf" data-k="nb"></span>Notebooks<small data-n="nb"></small></a><a href="/celulares"><span class="cf" data-k="ph"></span>Celulares<small data-n="ph"></small></a><a href="/tablets"><span class="cf" data-k="tb"></span>Tablets<small data-n="tb"></small></a><a href="/televisores"><span class="cf" data-k="tv"></span>TV<small data-n="tv"></small></a><a href="/consolas"><span class="cf" data-k="cs"></span>Consolas<small data-n="cs"></small></a><a href="/lavadoras"><span class="cf" data-k="lv"></span>Lavado<small data-n="lv"></small></a><a href="/aspiradoras"><span class="cf" data-k="as"></span>Aspiradoras<small data-n="as"></small></a><a href="/batidoras"><span class="cf" data-k="bt"></span>Batidoras<small data-n="bt"></small></a><a href="/cafeteras"><span class="cf" data-k="cf"></span>Cafeteras<small data-n="cf"></small></a></nav>
     </div>
 
     <div class="escena">
@@ -405,7 +409,7 @@ button, input { font: inherit; color: inherit; }
         <!-- Una oferta por categoría. Pestañas, deslizar con el dedo, flechas y cambio automático que se puede pausar -->
         <div class="rulBar">
           <div class="rulTabs" id="rulTabs" role="tablist" aria-label="Categoría">
-            <button type="button" class="rulTab" role="tab" aria-selected="true" tabindex="0">Notebooks</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Celulares</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Tablets</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">TV</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Consolas</button>
+            <button type="button" class="rulTab" role="tab" aria-selected="true" tabindex="0">Notebooks</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Celulares</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Tablets</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">TV</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Consolas</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Lavado</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Aspiradoras</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Batidoras</button><button type="button" class="rulTab" role="tab" aria-selected="false" tabindex="-1">Cafeteras</button>
           </div>
           <button type="button" class="rulPausa" id="rulPausa" aria-label="Pausar el cambio automático" hidden>
             <svg class="ipa" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.6" height="12" rx="1"/><rect x="9.4" y="2" width="3.6" height="12" rx="1"/></svg>
@@ -437,6 +441,7 @@ button, input { font: inherit; color: inherit; }
     <span><i style="background:#00A9E0"></i>Movistar</span>
     <span><i style="background:#DA291C"></i>Claro</span>
     <span><i style="background:#8E24AA"></i>WOM</span>
+    <span class="tOfi">y las tiendas oficiales de Samsung, LG, Xiaomi, Midea, Electrolux, Nespresso y otras marcas</span>
   </div>
 </section>
 
@@ -519,6 +524,58 @@ button, input { font: inherit; color: inherit; }
         </div>
         <div class="fan" id="fanCs" aria-hidden="true"></div>
       </div>
+      <div class="cat">
+        <div>
+          <h3><a href="/lavadoras">Lavadoras y secadoras</a></h3>
+          <p class="cuenta" id="cuentaLv">Lavadoras, lavadora-secadoras y secadoras.</p>
+          <ul>
+            <li><a href="/lavadoras?tipo=lav">Lavadoras</a></li>
+            <li><a href="/lavadoras?tipo=ls">Lavadora-secadoras</a></li>
+            <li><a href="/lavadoras?tipo=sec">Secadoras</a></li>
+            <li><a href="/lavadoras?tam=k20">20 kg o más</a></li>
+          </ul>
+        </div>
+        <div class="fan" id="fanLv" aria-hidden="true"></div>
+      </div>
+      <div class="cat">
+        <div>
+          <h3><a href="/aspiradoras">Aspiradoras</a></h3>
+          <p class="cuenta" id="cuentaAs">Robot, verticales y de arrastre.</p>
+          <ul>
+            <li><a href="/aspiradoras?tipo=robot">Robot</a></li>
+            <li><a href="/aspiradoras?tipo=vertical">Verticales</a></li>
+            <li><a href="/aspiradoras?tipo=arrastre">De arrastre</a></li>
+            <li><a href="/aspiradoras?uso=base">Se vacían solas</a></li>
+          </ul>
+        </div>
+        <div class="fan" id="fanAs" aria-hidden="true"></div>
+      </div>
+      <div class="cat">
+        <div>
+          <h3><a href="/batidoras">Batidoras</a></h3>
+          <p class="cuenta" id="cuentaBt">De pedestal, de mano y de inmersión.</p>
+          <ul>
+            <li><a href="/batidoras?tipo=pedestal">De pedestal</a></li>
+            <li><a href="/batidoras?tipo=mano">De mano</a></li>
+            <li><a href="/batidoras?tipo=inmersion">De inmersión</a></li>
+            <li><a href="/batidoras?uso=bowl5">Bowl de 5 L o más</a></li>
+          </ul>
+        </div>
+        <div class="fan" id="fanBt" aria-hidden="true"></div>
+      </div>
+      <div class="cat">
+        <div>
+          <h3><a href="/cafeteras">Cafeteras de cápsulas</a></h3>
+          <p class="cuenta" id="cuentaCf">Nespresso, Dolce Gusto y multicápsula.</p>
+          <ul>
+            <li><a href="/cafeteras?tipo=original">Nespresso Original</a></li>
+            <li><a href="/cafeteras?tipo=vertuo">Nespresso Vertuo</a></li>
+            <li><a href="/cafeteras?tipo=dolce">Dolce Gusto</a></li>
+            <li><a href="/cafeteras?uso=leche">Con espumador</a></li>
+          </ul>
+        </div>
+        <div class="fan" id="fanCf" aria-hidden="true"></div>
+      </div>
     </div>
   </section>
 
@@ -542,10 +599,11 @@ button, input { font: inherit; color: inherit; }
     <div class="secCab"><div><h2 id="faqT">Lo que conviene saber</h2></div></div>
     <div class="faq">
       <details><summary>¿Ustedes venden los equipos?</summary><p>No. ¿Cuál me conviene? es un comparador: reúne los precios que publican las tiendas y te lleva a ellas. La compra, el despacho y la garantía son con la tienda u operadora que elijas.</p></details>
-      <details><summary>¿Qué tiendas revisan?</summary><p>Falabella, Paris, Ripley y PCFactory. En celulares también Entel, Movistar, Claro y WOM, y en tablets, Movistar. No incluimos Mercado Libre.</p></details>
+      <details><summary>¿Qué tiendas revisan?</summary><p>Falabella, Paris, Ripley y PCFactory. En celulares también Entel, Movistar, Claro y WOM, y en tablets, Movistar. Además revisamos las tiendas oficiales de las marcas (Samsung, LG, Xiaomi, Midea, Electrolux, Mademsa, Fensa, Dyson, Thomas, Ursus Trotter, Oster, Nespresso y Dolce Gusto, entre otras) y las marcamos como «tienda oficial». No incluimos Mercado Libre.</p></details>
       <details><summary>¿Cada cuánto se actualizan los precios?</summary><p>Los revisamos a diario. Cada equipo indica la fecha de revisión. Los precios cambian rápido, así que confirma siempre en la tienda antes de pagar.</p></details>
       <details><summary>¿Qué significa "con tarjeta" o "transferencia" junto a un precio?</summary><p>Que ese precio exige un medio de pago: la tarjeta de la tienda (CMR, Cencosud, Ripley) o transferencia. Sin ese medio, el precio puede ser más alto.</p></details>
       <details><summary>¿Qué es un celular reacondicionado?</summary><p>Un equipo usado que fue revisado y se vende con garantía, a menor precio que uno nuevo. Siempre lo marcamos con una etiqueta amarilla para que no te confundas.</p></details>
+      <details><summary>¿Cómo eligen la mejor lavadora, aspiradora o cafetera?</summary><p>Con lo que más importa en cada una: los kilos por carga y la clase de eficiencia energética en lavadoras y secadoras; la succión (en pascales o airwatts) en aspiradoras; la potencia y el tamaño del bowl en batidoras, y en cafeteras, cómo extrae el café (presión de 19 o 15 bar, o centrifusión) y cuánto café prepara por taza. Comparamos solo equipos del mismo tipo.</p></details>
       <details><summary>¿Qué son los benchmarks?</summary><p>Pruebas que miden la potencia del procesador con un número. Mientras más alto, más rápido. Te sirven para saber si un equipo más caro realmente rinde más.</p></details>
     </div>
   </section>
@@ -555,12 +613,12 @@ button, input { font: inherit; color: inherit; }
   <div class="wrap pieIn">
     <div>
       <a class="marca" href="/"><img src="/assets/puma-icono-96.png" alt="" width="40" height="40" loading="lazy"><span>¿Cuál me <em>conviene?</em></span></a>
-      <p>Comparamos el precio del mismo equipo en las tiendas y operadoras de Chile para que compres donde más te conviene.</p>
+      <p>Comparamos el precio del mismo equipo en las tiendas, operadoras y tiendas oficiales de las marcas en Chile para que compres donde más te conviene.</p>
       <p class="aviso">Aviso de afiliados: cuando los enlaces generen comisión, se indicará aquí. El precio para quien compra es el mismo.</p>
     </div>
     <div>
       <h2>Explora</h2>
-      <ul><li><a href="/notebooks">Notebooks</a></li><li><a href="/celulares">Celulares</a></li><li><a href="/tablets">Tablets</a></li><li><a href="/televisores">Televisores</a></li><li><a href="/consolas">Consolas</a></li><li><a href="/notebooks?uso=juegos">Notebooks gamer</a></li><li><a href="/celulares?gama=ref">Celulares reacondicionados</a></li></ul>
+      <ul><li><a href="/notebooks">Notebooks</a></li><li><a href="/celulares">Celulares</a></li><li><a href="/tablets">Tablets</a></li><li><a href="/televisores">Televisores</a></li><li><a href="/consolas">Consolas</a></li><li><a href="/lavadoras">Lavadoras y secadoras</a></li><li><a href="/aspiradoras">Aspiradoras</a></li><li><a href="/batidoras">Batidoras</a></li><li><a href="/cafeteras">Cafeteras</a></li><li><a href="/notebooks?uso=juegos">Notebooks gamer</a></li><li><a href="/celulares?gama=ref">Celulares reacondicionados</a></li></ul>
     </div>
     <div>
       <h2>El sitio</h2>
@@ -569,9 +627,9 @@ button, input { font: inherit; color: inherit; }
     <details class="legal" id="privacidad"><summary>Privacidad y términos de uso</summary>
 <div class="legalBody">
 <h3>Quién está a cargo</h3>
-<p>Este sitio es administrado por <strong>Adictos Digitales</strong>, una persona natural domiciliada en Chile. Contacto para consultas, reclamos y solicitudes sobre tus datos: <strong>adictosdigitalesla@gmail.com</strong>. Última actualización: 21 de octubre de 2026.</p>
+<p>Este sitio es administrado por <strong>Adictos Digitales</strong>, una persona natural domiciliada en Chile. Contacto para consultas, reclamos y solicitudes sobre tus datos: <strong>adictosdigitalesla@gmail.com</strong>. Última actualización: 26 de octubre de 2026.</p>
 <h3>Qué es este sitio</h3>
-<p>¿Cuál me conviene? es una guía para comparar notebooks, celulares, tablets, televisores y consolas. Reúne información que las tiendas publican en sus páginas y te lleva a ellas con un enlace. No es una tienda: no vendemos productos, no recibimos pagos y no despachamos pedidos. No tenemos representación de ninguna de las tiendas ni de las marcas que aparecen.</p>
+<p>¿Cuál me conviene? es una guía para comparar notebooks, celulares, tablets, televisores, consolas y electrodomésticos (lavadoras, secadoras, aspiradoras, batidoras y cafeteras). Reúne información que las tiendas publican en sus páginas y te lleva a ellas con un enlace. No es una tienda: no vendemos productos, no recibimos pagos y no despachamos pedidos. No tenemos representación de ninguna de las tiendas ni de las marcas que aparecen.</p>
 <h3>Los precios son referenciales</h3>
 <p>Los precios y las características son información de referencia tomada de las fichas públicas de cada tienda en la fecha indicada. No constituyen una oferta ni una invitación a contratar, y no los fijamos nosotros. Pueden cambiar, agotarse o contener errores. Antes de comprar, confirma en la tienda el precio final, el stock, las condiciones del medio de pago, el despacho y la garantía. El precio que mostramos es el más bajo publicado en la ficha: algunos exigen pagar con una tarjeta de la tienda, y los precios no incluyen despacho. Si la tienda cobra otro valor, vale el de la tienda.</p>
 <p>Hacemos nuestro mejor esfuerzo por mantener la información al día, pero no garantizamos que esté completa ni libre de errores.</p>
@@ -584,7 +642,7 @@ button, input { font: inherit; color: inherit; }
 <h3>Privacidad</h3>
 <p>Para mirar y comparar precios no necesitas cuenta: no te pedimos nombre, correo ni datos de pago, y no cobramos nada. No usamos cookies propias, salvo la de sesión si inicias sesión para comentar (más abajo). Para saber cuántas personas visitan el sitio usamos Cloudflare Web Analytics, una herramienta de medición que no usa cookies ni almacena datos en tu dispositivo y entrega cifras agregadas (páginas vistas, país, tipo de dispositivo y navegador), sin crear un perfil tuyo. Lo que escribes en el buscador y los filtros que eliges se procesan en tu navegador y no los guardamos. Además contamos cuántas veces se toca el precio de cada equipo en cada tienda: solo guardamos el equipo, la tienda, el día y el total, sin cookies, sin tu dirección IP y sin nada que te identifique.</p>
 <p>La plataforma donde se aloja la página puede registrar datos técnicos de la visita, como la dirección IP, el navegador y la fecha, para su funcionamiento y seguridad. Nosotros no accedemos a esos datos para identificarte. Si más adelante agregamos cookies no esenciales u otras herramientas de medición, te pediremos tu consentimiento cuando corresponda y actualizaremos este texto.</p>
-<p>Algunas fotos se muestran directamente desde el sitio de la tienda; en ese caso tu navegador se conecta con ella para cargar la imagen. Al tocar el enlace de un equipo sales a la tienda (Falabella, Paris, Ripley, PCFactory) o a la operadora (Entel, Movistar, Claro, WOM). Desde ese momento rigen la política de privacidad y las condiciones de esa tienda, y no nos hacemos responsables de lo que ocurra en ella.</p>
+<p>Algunas fotos se muestran directamente desde el sitio de la tienda; en ese caso tu navegador se conecta con ella para cargar la imagen. Al tocar el enlace de un equipo sales a la tienda (Falabella, Paris, Ripley, PCFactory), a la operadora (Entel, Movistar, Claro, WOM) o a la tienda oficial de la marca. Desde ese momento rigen la política de privacidad y las condiciones de esa tienda, y no nos hacemos responsables de lo que ocurra en ella.</p>
 <h3>Cuentas, comentarios y avisos por correo</h3>
 <p>Solo si quieres comentar un equipo o recibir avisos de precio, puedes iniciar sesión con tu cuenta de Google. Google nos entrega tu nombre, tu correo y tu foto de perfil; nunca recibimos tu contraseña. Junto a tu comentario mostramos tu nombre (nombre e inicial del apellido) y tu foto. Tu correo no se publica. Para mantener la sesión abierta usamos una cookie propia y necesaria, que dura hasta 180 días o hasta que cierres sesión. Cuando llegas a la sección de comentarios sin haber iniciado sesión, tu navegador carga el botón de Google desde sus servidores, y en el inicio de sesión rige también la política de privacidad de Google.</p>
 <p>Solo te enviamos correos si los pides: cuando tocas «Avísame si baja de precio» en un equipo (te escribimos si baja o si vuelve a tener stock) o si activas el resumen diario con las mayores bajadas. Guardamos la fecha y lo que elegiste. Cada correo trae un enlace para darte de baja con un clic, y en «Mi cuenta» puedes cambiar tus avisos o borrar tu cuenta con tus comentarios cuando quieras. No vendemos ni cedemos tu correo; para enviar los correos usamos un servicio de envío que los procesa solo por encargo nuestro. Guardamos tus datos mientras tengas la cuenta.</p>
@@ -607,7 +665,10 @@ const norm = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 const ST = {
   falabella: ['Falabella', '#5FA21A'], paris: ['Paris', '#1B8FD6'], ripley: ['Ripley', '#7A3FA0'], pcfactory: ['PCFactory', '#E8590C'],
-  entel: ['Entel', '#0047BB'], movistar: ['Movistar', '#00A9E0'], claro: ['Claro', '#DA291C'], wom: ['WOM', '#8E24AA']
+  entel: ['Entel', '#0047BB'], movistar: ['Movistar', '#00A9E0'], claro: ['Claro', '#DA291C'], wom: ['WOM', '#8E24AA'],
+  samsung: ['Samsung', '#1428A0'], lg: ['LG', '#A50034'], xiaomi: ['Xiaomi', '#FF6900'], midea: ['Midea', '#00A0E9'], electrolux: ['Electrolux', '#011E41'],
+  mademsa: ['Mademsa', '#D7262E'], fensa: ['Fensa', '#0071BC'], dyson: ['Dyson', '#6B6B6B'], thomas: ['Thomas', '#B5121B'], ursus: ['Ursus Trotter', '#2E7D32'],
+  oster: ['Oster', '#003A70'], nespresso: ['Nespresso', '#2B2118'], dolcegusto: ['Dolce Gusto', '#C4122F']
 };
 const sn = s => (ST[s] || [s])[0];
 const sc = s => (ST[s] || [, '#888'])[1];
@@ -616,7 +677,11 @@ const SIN = {
   ph: '<svg viewBox="0 0 80 60" aria-hidden="true" class="sinFoto"><rect x="30" y="6" width="20" height="48" rx="4" fill="#C9D0E4"/></svg>',
   tb: '<svg viewBox="0 0 80 60" aria-hidden="true" class="sinFoto"><rect x="14" y="10" width="52" height="40" rx="5" fill="#C9D0E4"/></svg>',
   tv: '<svg viewBox="0 0 80 60" aria-hidden="true" class="sinFoto"><rect x="8" y="8" width="64" height="38" rx="3" fill="#C9D0E4"/><path d="M30 54h20M40 46v8" stroke="#AEB7D4" stroke-width="3"/></svg>',
-  cs: '<svg viewBox="0 0 80 60" aria-hidden="true" class="sinFoto"><path d="M22 18h36c8 0 12 6 14 15l2 10c1 6-5 9-9 5l-6-6H25l-6 6c-4 4-10 1-9-5l2-10c2-9 6-15 14-15z" fill="#C9D0E4"/></svg>'
+  cs: '<svg viewBox="0 0 80 60" aria-hidden="true" class="sinFoto"><path d="M22 18h36c8 0 12 6 14 15l2 10c1 6-5 9-9 5l-6-6H25l-6 6c-4 4-10 1-9-5l2-10c2-9 6-15 14-15z" fill="#C9D0E4"/></svg>',
+  lv: '<svg viewBox="0 0 80 60" aria-hidden="true" class="sinFoto"><rect x="20" y="4" width="40" height="52" rx="4" fill="#C9D0E4"/><circle cx="40" cy="33" r="14" fill="#AEB7D4"/></svg>',
+  as: '<svg viewBox="0 0 80 60" aria-hidden="true" class="sinFoto"><circle cx="40" cy="32" r="22" fill="#C9D0E4"/><circle cx="40" cy="32" r="7" fill="#AEB7D4"/></svg>',
+  bt: '<svg viewBox="0 0 80 60" aria-hidden="true" class="sinFoto"><path d="M22 10h30c6 0 8 4 8 8v6H30v30h-8z" fill="#C9D0E4"/><path d="M34 34h24l-3 18H37z" fill="#AEB7D4"/></svg>',
+  cf: '<svg viewBox="0 0 80 60" aria-hidden="true" class="sinFoto"><rect x="24" y="4" width="32" height="52" rx="4" fill="#C9D0E4"/><path d="M33 32h14v10c0 3-2 5-5 5h-4c-3 0-5-2-5-5z" fill="#AEB7D4"/></svg>'
 };
 // Foto del equipo: la propia si existe, la de la tienda si no, y un dibujo simple si nada carga
 function foto(e, cls, alt, ya) {
@@ -636,17 +701,26 @@ async function datos(url, ini, fin) {
   return JSON.parse(t.slice(i + ini.length, j + (fin.startsWith('\n]') ? 2 : 0)));
 }
 const gb = n => n >= 1024 ? n / 1024 + ' TB' : n + ' GB';
+const dec = v => String(v).replace('.', ',');
+/* Resumen corto de los equipos de hogar (mismos datos que en cada categoría) */
+const HOGAR = {
+  lv: e => [{ lav: 'Lavadora', ls: 'Lavadora-secadora', sec: 'Secadora' }[e.tipo], e.tipo === 'sec' ? 'seca ' + dec(e.kgs) + ' kg' : e.tipo === 'ls' ? `lava ${dec(e.kg)} y seca ${dec(e.kgs)} kg` : 'lava ' + dec(e.kg) + ' kg', e.ef ? 'eficiencia ' + e.ef : null].filter(Boolean).join(', '),
+  as: e => [{ robot: 'Robot', vertical: 'Vertical', arrastre: 'De arrastre' }[e.tipo], e.pa ? `succión ${e.pa.toLocaleString('es-CL')} Pa` : e.aw ? `succión ${e.aw} AW` : e.w ? e.w.toLocaleString('es-CL') + ' W' : null, e.mopa ? 'trapea' : null].filter(Boolean).join(', '),
+  bt: e => [{ pedestal: 'De pedestal', mano: 'De mano', inmersion: 'De inmersión' }[e.tipo], e.w ? e.w + ' W' : null, e.l ? 'bowl de ' + dec(e.l) + ' L' : null].filter(Boolean).join(', '),
+  cf: e => [{ original: 'Nespresso Original', vertuo: 'Nespresso Vertuo', dolce: 'Dolce Gusto', multi: 'Multicápsula' }[e.sis], { original: '19 bar', vertuo: 'centrifusión', dolce: '15 bar' }[e.sis] || (e.bar ? e.bar + ' bar' : null), e.tazas ? 'hasta ' + Math.max(...e.tazas) + ' ml' : null, e.leche ? 'con leche' : null].filter(Boolean).join(', ')
+};
 function prepara(e, k) {
   const os = e.offers.filter(o => !o.x && o.p > 0).sort((a, b) => a.p - b.p);
   if (!os.length) return null;
   const marca = k === 'nb' ? (e.name.split(' ')[0] === 'MacBook' ? 'Apple' : e.name.split(' ')[0]) : e.brand;
-  const LISTA = { nb: '/notebooks', ph: '/celulares', tb: '/tablets', tv: '/televisores', cs: '/consolas' };
+  const LISTA = { nb: '/notebooks', ph: '/celulares', tb: '/tablets', tv: '/televisores', cs: '/consolas', lv: '/lavadoras', as: '/aspiradoras', bt: '/batidoras', cf: '/cafeteras' };
   return {
     id: e.id, k, raw: e, os, best: os[0], worst: os[os.length - 1], gap: os[os.length - 1].p - os[0].p, marca,
-    nombre: k === 'nb' || k === 'tv' || k === 'cs' ? e.name : `${e.name} ${gb(e.gb)}`,
+    nombre: k === 'ph' || k === 'tb' ? `${e.name} ${gb(e.gb)}` : e.name,
     spec: k === 'nb' ? [e.cpu, e.gpuTier ? e.gpu : null, e.ram + ' GB RAM', gb(e.ssd)].filter(Boolean).join(', ')
         : k === 'tv' ? [e.res, e.panel, e.hz ? e.hz + ' Hz' : null, e.os].filter(Boolean).join(', ')
         : k === 'cs' ? [gb(e.gb), e.tf ? String(e.tf).replace('.', ',') + ' TFLOPS' : null, e.juego ? 'incluye ' + e.juego : null].filter(Boolean).join(', ')
+        : k in HOGAR ? HOGAR[k](e)
         : [e.chip, e.ram ? e.ram + ' GB RAM' : null, e.size ? e.size + '"' : null].filter(Boolean).join(', '),
     href: (window.CMC_FICHAS && CMC_FICHAS[e.id]) || LISTA[k] + '?ver=' + encodeURIComponent(e.id)
   };
@@ -744,8 +818,8 @@ function ruleta(OF, diapo) {
 fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch(() => []).then(ALL => {
   const NBraw = ALL.filter(e => e.k === 'nb');
   const de = k => ALL.filter(e => e.k === k).map(e => prepara(e, k)).filter(Boolean);
-  const NB = de('nb'), PH = de('ph'), TB = de('tb'), TV = de('tv'), CS = de('cs');
-  const TODO = NB.concat(PH, TB, TV, CS);
+  const NB = de('nb'), PH = de('ph'), TB = de('tb'), TV = de('tv'), CS = de('cs'), LV = de('lv'), AS = de('as'), BT = de('bt'), CF = de('cf');
+  const TODO = NB.concat(PH, TB, TV, CS, LV, AS, BT, CF);
   if (!TODO.length) { $('ficha').classList.remove('carga'); $('ficha').querySelector('.prod h2').textContent = 'No pudimos cargar los precios. Entra a una categoría del menú.'; return; }
 
   // Textos con los números reales
@@ -759,32 +833,40 @@ fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch((
     $('recoFecha').textContent = `Mejor calidad-precio con los precios del ${+d} de ${MES[+m - 1]}.`;
   }
   const nTiendas = new Set(TODO.flatMap(e => e.os.map(o => o.s))).size;
-  $('bajada').innerHTML = `Revisamos cada día el precio de <b>${TODO.length} notebooks, celulares, tablets, televisores y consolas</b> en ${nTiendas} tiendas y operadoras de Chile, y te mostramos dónde cuestan menos.`;
+  $('bajada').innerHTML = `Revisamos cada día el precio de <b>${TODO.length} equipos de tecnología y electrodomésticos</b> en ${nTiendas} tiendas, operadoras y tiendas oficiales de Chile, y te mostramos dónde cuestan menos.`;
   const desde = l => fmt(Math.min(...l.map(e => e.best.p)));
   if (NB.length) $('cuentaNb').innerHTML = `<b>${NB.length}</b> equipos desde <b>${desde(NB)}</b>`;
   const nRef = PH.filter(e => e.raw.refurb).length;
   if (PH.length) $('cuentaPh').innerHTML = `<b>${PH.length - nRef}</b> nuevos y <b>${nRef}</b> reacondicionados, desde <b>${desde(PH.filter(e => !e.raw.refurb))}</b>`;
   if (TB.length) $('cuentaTb').innerHTML = `<b>${TB.length}</b> tablets desde <b>${desde(TB)}</b>`;
   if (CS.length) $('cuentaCs').innerHTML = `<b>${CS.length}</b> consolas de PlayStation, Nintendo y Xbox, desde <b>${desde(CS)}</b>`;
+  if (LV.length) $('cuentaLv').innerHTML = `<b>${LV.length}</b> lavadoras, lavadora-secadoras y secadoras, desde <b>${desde(LV)}</b>`;
+  if (AS.length) $('cuentaAs').innerHTML = `<b>${AS.length}</b> aspiradoras robot, verticales y de arrastre, desde <b>${desde(AS)}</b>`;
+  if (BT.length) $('cuentaBt').innerHTML = `<b>${BT.length}</b> batidoras de pedestal, de mano y de inmersión, desde <b>${desde(BT)}</b>`;
+  if (CF.length) $('cuentaCf').innerHTML = `<b>${CF.length}</b> cafeteras Nespresso, Dolce Gusto y multicápsula, desde <b>${desde(CF)}</b>`;
   if (TV.length) $('cuentaTv').innerHTML = `<b>${TV.length}</b> televisores de ${Math.min(...TV.map(e => e.raw.size))}" a ${Math.max(...TV.map(e => e.raw.size))}", desde <b>${desde(TV)}</b>`;
 
   // Abanico de fotos en cada categoría
   const pinta = (id, l) => { $(id).innerHTML = l.map(e => `<span>${foto(e)}</span>`).join(''); };
   const porId = (l, ids) => ids.map(i => l.find(e => e.id === i)).filter(Boolean);
   const abanico = (l, ids) => { const a = porId(l, ids); return a.length === 3 ? a : l.filter(e => window.cmcFoto && cmcFoto(e.id)).sort((x, y) => y.gap - x.gap).slice(0, 3); };
-  const LST = { nb: NB, ph: PH, tb: TB, tv: TV, cs: CS };
+  const LST = { nb: NB, ph: PH, tb: TB, tv: TV, cs: CS, lv: LV, as: AS, bt: BT, cf: CF };
+  const FAN = { lv: ['lv23', 'lv11', 'lv45'], as: ['as17', 'as2', 'as30'], bt: ['bt18', 'bt1', 'bt11'], cf: ['cf16', 'cf1', 'cf13'] };
   const PRIMERO = { nb: abanico(NB, ['a11', 'g38', 'n5'])[1], ph: abanico(PH, ['s26u', 'ip17p', 'rn17p'])[1], tb: abanico(TB, ['tb383370', 'tb271963', 'tb280328'])[1], tv: abanico(TV, ['tv392864', 'tv393545', 'tv385084'])[1], cs: abanico(CS, ['cs1', 'cs4', 'cs10'])[1] };
+  for (const k in FAN) if (LST[k].length) PRIMERO[k] = abanico(LST[k], FAN[k])[1] || LST[k][0];
   document.querySelectorAll('#catsH [data-k]').forEach(s => { const e = PRIMERO[s.dataset.k]; if (e) s.innerHTML = foto(e); });
-  document.querySelectorAll('#catsH [data-n]').forEach(s => { s.textContent = LST[s.dataset.n].length + ' equipos'; });
+  document.querySelectorAll('#catsH [data-n]').forEach(s => { const n = LST[s.dataset.n].length; s.textContent = n ? n + ' equipos' : ''; });
   pinta('fanNb', abanico(NB, ['a11', 'g38', 'n5']));
   pinta('fanPh', abanico(PH, ['s26u', 'ip17p', 'rn17p']));
   pinta('fanTb', abanico(TB, ['tb383370', 'tb271963', 'tb280328']));
   pinta('fanTv', abanico(TV, ['tv392864', 'tv393545', 'tv385084']));
   if (CS.length) pinta('fanCs', abanico(CS, ['cs1', 'cs4', 'cs10']));
+  for (const k in FAN) if (LST[k].length) pinta('fan' + k[0].toUpperCase() + k[1], abanico(LST[k], FAN[k]));
 
   // ---------- La oferta del día: en cada categoría, el equipo con la mayor diferencia entre tiendas ----------
   const conDif = l => l.filter(e => e.os.length > 1 && e.gap > 0).sort((a, b) => b.gap - a.gap);
-  const OFERTAS = [['nb', 'Notebooks', NB], ['ph', 'Celulares', PH], ['tb', 'Tablets', TB], ['tv', 'TV', TV], ['cs', 'Consolas', CS]]
+  const OFERTAS = [['nb', 'Notebooks', NB], ['ph', 'Celulares', PH], ['tb', 'Tablets', TB], ['tv', 'TV', TV], ['cs', 'Consolas', CS],
+    ['lv', 'Lavado', LV], ['as', 'Aspiradoras', AS], ['bt', 'Batidoras', BT], ['cf', 'Cafeteras', CF]]
     .map(([k, t, l]) => ({ k, t, e: conDif(l)[0] })).filter(o => o.e);
   const diapo = ({ k, e }) => {
     const max = e.worst.p - e.best.p || 1;
@@ -827,6 +909,9 @@ fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch((
   const PANEL_N = { 'LED': 35, 'QLED': 50, 'NanoCell': 50, 'QNED': 58, 'Mini LED': 70, 'OLED': 85, 'Micro RGB': 90, 'Micro LED': 95 };
   const GAMA_N = { e: -5, m: 0, a: 4, t: 8 };
   const calTv = e => Math.max(5, Math.min(100, (PANEL_N[e.raw.panel] || 35) + (GAMA_N[e.raw.gama] || 0) + (e.raw.hz >= 144 ? 7 : e.raw.hz >= 120 ? 5 : 0) + (e.raw.res === '8K' ? 3 : e.raw.res === '4K' ? 0 : e.raw.res === 'Full HD' ? -12 : -20)));
+  // Electrodomésticos: lo que más importa de cada uno dividido por el precio, comparando solo equipos del mismo tipo
+  const EFN = { 'A+++': 1.3, 'A++': 1.25, 'A+': 1.2, A: 1.15, B: 1.1, C: 1.05, D: 1, E: 0.95, F: 0.9, G: 0.85 };
+  const porPlata = (l, f, v) => l.filter(f).sort((a, b) => v(b) / b.best.p - v(a) / a.best.p)[0];
   const tvTam = f => TV.filter(e => f(e.raw.size)).sort((a, b) => calTv(b) ** 2 / b.best.p - calTv(a) ** 2 / a.best.p)[0];
   const recos = [
     ['Para estudiar y trabajar', masBarato(NB, e => !e.raw.gpuTier && e.raw.ram >= 16), e => `El más barato con 16 GB de RAM`],
@@ -838,7 +923,12 @@ fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch((
     ['Tablet hasta $300.000', potPeso(p => p <= 300000, TB), e => `Más potencia por peso en este rango`],
     ['Televisor de 50 a 55"', tvTam(x => x >= 48 && x <= 55), e => `Mejor imagen por su precio en este tamaño`],
     ['Televisor de 58 a 65"', tvTam(x => x >= 58 && x <= 65), e => `Mejor imagen por su precio en este tamaño`],
-    ['Consola para el TV', CS.filter(e => e.raw.tipo === 'tv').sort((a, b) => Math.sqrt(b.raw.tf) / b.best.p - Math.sqrt(a.raw.tf) / a.best.p)[0], e => `Más potencia por tu plata`]
+    ['Consola para el TV', CS.filter(e => e.raw.tipo === 'tv').sort((a, b) => Math.sqrt(b.raw.tf) / b.best.p - Math.sqrt(a.raw.tf) / a.best.p)[0], e => `Más potencia por tu plata`],
+    ['Lavadora', porPlata(LV, e => e.raw.tipo === 'lav', e => e.raw.kg * (EFN[e.raw.ef] || 1)), e => `Más kilos por tu plata`],
+    ['Lavadora-secadora', porPlata(LV, e => e.raw.tipo === 'ls', e => e.raw.kg * (EFN[e.raw.ef] || 1)), e => `Más kilos por tu plata`],
+    ['Aspiradora robot', porPlata(AS, e => e.raw.tipo === 'robot' && e.raw.pa, e => e.raw.pa), e => `Más succión por tu plata`],
+    ['Batidora de pedestal', porPlata(BT, e => e.raw.tipo === 'pedestal' && e.raw.w, e => Math.sqrt(e.raw.w) * (e.raw.l || 4)), e => `Más potencia y bowl por tu plata`],
+    ['Cafetera para espresso', masBarato(CF, e => e.raw.sis === 'original' && !e.raw.leche), e => `La más barata con 19 bar de presión`]
   ].filter(r => r[1]);
   $('recos').innerHTML = recos.map(([para, e, porque]) => `<a class="reco" href="${e.href}"><span class="rf">${foto(e, '', true)}</span><span>
     <span class="para">${para}</span><h3>${esc(e.nombre)}</h3><span class="porque">${porque(e)}, ${esc(e.spec.split(', ').slice(0, 2).join(', '))}</span>
@@ -847,16 +937,20 @@ fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch((
   // ---------- Buscador con fotos ----------
   const PAL = { nb: e => 'notebook laptop ' + (e.raw.gpuTier ? 'gamer' : ''), ph: e => 'celular telefono smartphone ' + (e.raw.refurb ? 'reacondicionado' : ''),
                 tb: e => 'tablet tableta ' + (e.marca === 'Apple' ? 'ipad' : ''), tv: e => `televisor tele tv smart ${e.raw.size} pulgadas ${e.raw.model || ''}`,
-                cs: e => `consola videojuegos ${e.raw.plat} ${e.raw.fam} ${(e.raw.fam || '').replace('PlayStation ', 'ps')} ${e.raw.juego || ''}` };
+                cs: e => `consola videojuegos ${e.raw.plat} ${e.raw.fam} ${(e.raw.fam || '').replace('PlayStation ', 'ps')} ${e.raw.juego || ''}`,
+                lv: e => `lavadora secadora ropa ${e.raw.model || ''} ${e.raw.kg || e.raw.kgs} kg ${e.raw.tipo === 'ls' ? 'lavaseca lava seca' : ''} ${e.raw.carga ? 'carga ' + e.raw.carga : ''}`,
+                as: e => `aspiradora aspirador ${e.raw.tipo === 'robot' ? 'robot' : e.raw.tipo === 'vertical' ? 'vertical escoba inalambrica' : 'arrastre'} ${e.raw.mopa ? 'trapea mopa' : ''}`,
+                bt: e => `batidora ${e.raw.tipo === 'pedestal' ? 'pedestal planetaria amasadora' : e.raw.tipo === 'inmersion' ? 'inmersion minipimer' : 'mano'}`,
+                cf: e => `cafetera cafe capsulas ${e.raw.sis === 'dolce' ? 'nescafe dolce gusto' : e.raw.sis === 'multi' ? 'multicapsula' : 'nespresso'} ${e.raw.leche ? 'leche espumador' : ''}` };
   TODO.forEach(e => { e.hay = norm([e.nombre, e.marca, e.spec, PAL[e.k](e)].join(' ')); e.flat = e.hay.replace(/\s+/g, ''); });
   const busca = q => { const ts = norm(q).split(/\s+/).filter(Boolean); return TODO.filter(e => ts.every(t => e.hay.includes(t) || e.flat.includes(t))).sort((a, b) => a.best.p - b.best.p); };
   const q = $('q'), sug = $('sug');
   let idx = -1;
   const cierra = () => { sug.hidden = true; q.setAttribute('aria-expanded', 'false'); idx = -1; };
   const destino = (txt, l) => {
-    const c = { nb: 0, ph: 0, tb: 0, tv: 0, cs: 0 }; l.forEach(e => { c[e.k]++; });
+    const c = { nb: 0, ph: 0, tb: 0, tv: 0, cs: 0, lv: 0, as: 0, bt: 0, cf: 0 }; l.forEach(e => { c[e.k]++; });
     const k = Object.keys(c).sort((a, b) => c[b] - c[a])[0];
-    return { nb: '/notebooks?q=', ph: '/celulares?q=', tb: '/tablets?q=', tv: '/televisores?q=', cs: '/consolas?q=' }[k] + encodeURIComponent(txt);
+    return { nb: '/notebooks?q=', ph: '/celulares?q=', tb: '/tablets?q=', tv: '/televisores?q=', cs: '/consolas?q=', lv: '/lavadoras?q=', as: '/aspiradoras?q=', bt: '/batidoras?q=', cf: '/cafeteras?q=' }[k] + encodeURIComponent(txt);
   };
   function sugiere() {
     const t = q.value.trim();
@@ -865,7 +959,7 @@ fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch((
     let h = '';
     if (l.length) {
       const grupo = (k, tit) => { const g = l.filter(e => e.k === k).slice(0, 4); return g.length ? `<span class="sgT">${tit}</span>` + g.map(e => `<a class="sg" role="option" href="${e.href}">${foto(e)}<span><span class="sgN">${esc(e.nombre)}</span><span class="sgK">${esc(e.spec)}</span></span><span class="sgP">${fmt(e.best.p)}<small>en ${sn(e.best.s)}</small></span></a>`).join('') : ''; };
-      h = grupo('nb', 'Notebooks') + grupo('ph', 'Celulares') + grupo('tb', 'Tablets') + grupo('tv', 'Televisores') + grupo('cs', 'Consolas') + `<a class="sgTodo" role="option" href="${destino(t, l)}">Ver ${l.length === 1 ? 'el resultado' : 'los ' + l.length + ' resultados'} para "${esc(t)}"</a>`;
+      h = grupo('nb', 'Notebooks') + grupo('ph', 'Celulares') + grupo('tb', 'Tablets') + grupo('tv', 'Televisores') + grupo('cs', 'Consolas') + grupo('lv', 'Lavadoras y secadoras') + grupo('as', 'Aspiradoras') + grupo('bt', 'Batidoras') + grupo('cf', 'Cafeteras') + `<a class="sgTodo" role="option" href="${destino(t, l)}">Ver ${l.length === 1 ? 'el resultado' : 'los ' + l.length + ' resultados'} para "${esc(t)}"</a>`;
     } else h = `<p class="sgNada">No encontramos "${esc(t)}". Prueba con la marca o el modelo, por ejemplo Lenovo, RTX 4060 o Galaxy.</p>`;
     sug.innerHTML = h; sug.hidden = false; q.setAttribute('aria-expanded', 'true'); idx = -1;
   }

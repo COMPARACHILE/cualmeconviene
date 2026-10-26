@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Actualización de precios de ¿Cuál me conviene? (notebooks.html, celulares.html, tablets.html, televisores.html y consolas.html).
+"""Actualización de precios de ¿Cuál me conviene? (notebooks.html, celulares.html, tablets.html, televisores.html, consolas.html,
+lavadoras.html, aspiradoras.html, batidoras.html y cafeteras.html), en tiendas, operadoras y tiendas oficiales de las marcas.
 
   python3 herramientas/precios.py lista
       Muestra, por tienda, qué abrir y qué rutas leer con herramientas/leer_precios.js.
@@ -28,18 +29,28 @@ LISTADOS = {
     'wom': 'https://store.wom.cl/equipos/?modalidad-de-compra=prepago',
 }
 PORTADAS = {'falabella': 'https://www.falabella.com/falabella-cl', 'paris': 'https://www.paris.cl/', 'ripley': 'https://simple.ripley.cl/',
-            'entel': 'https://miportal.entel.cl/personas/catalogo/celulares', 'movistar': 'https://catalogo.movistar.cl/tienda/'}
+            'entel': 'https://miportal.entel.cl/personas/catalogo/celulares', 'movistar': 'https://catalogo.movistar.cl/tienda/',
+            # Tiendas oficiales de las marcas (26-10-2026): se abre la portada y se lee con leer('<tienda>', RUTAS)
+            'samsung': 'https://www.samsung.com/cl/', 'lg': 'https://www.lg.com/cl/', 'xiaomi': 'https://www.mi.com/cl/',
+            'midea': 'https://www.mideastore.cl/', 'electrolux': 'https://www.electrolux.cl/', 'mademsa': 'https://www.tiendamademsa.cl/',
+            'fensa': 'https://www.tiendafensa.cl/', 'dyson': 'https://www.dysonchile.com/', 'thomas': 'https://www.thomas.cl/',
+            'ursus': 'https://www.ursustrotter.cl/', 'oster': 'https://www.oster.cl/', 'nespresso': 'https://www.nespresso.com/cl/es/',
+            'dolcegusto': 'https://www.dolce-gusto.cl/'}
+# Tiendas que arman el precio con JavaScript: leer() abre cada ficha en un iframe y tarda más (unos 10 s por equipo)
+LENTAS = {'xiaomi', 'nespresso'}
 # Sin stock o ficha borrada: la oferta se oculta en la página (x:1) hasta que vuelva
 AGOTADO = {'sin stock', 'error 404', 'error 410'}
 NOTA_ESTANDAR = re.compile(r'^(Con tarjeta CMR|Precio Internet|Con Tarjeta Cencosud|Con tarjeta Ripley|Transferencia o débito|Con transferencia o débito|Modalidad Prepago)')
 
 
 # Categorías nuevas: mismo formato que celulares (lista JSON en una línea, "const EQUIPOS = [...];")
-EXTRA = {'tb': ('tablets.html', 'tablet'), 'tv': ('televisores.html', 'televisor'), 'cs': ('consolas.html', 'consola')}
+EXTRA = {'tb': ('tablets.html', 'tablet'), 'tv': ('televisores.html', 'televisor'), 'cs': ('consolas.html', 'consola'),
+         'lv': ('lavadoras.html', 'lavadora'), 'as': ('aspiradoras.html', 'aspiradora'), 'bt': ('batidoras.html', 'batidora'),
+         'cf': ('cafeteras.html', 'cafetera')}
 
 
 def cargar_extra():
-    """{k: (html, (inicio, fin), lista)} de tablets, televisores y consolas (solo las que existen)."""
+    """{k: (html, (inicio, fin), lista)} de tablets, televisores, consolas y las categorías de hogar (solo las que existen)."""
     out = {}
     for k, (archivo, _) in EXTRA.items():
         ruta_a = os.path.join(RAIZ, archivo)
@@ -88,6 +99,8 @@ def lista():
             print(f'## wom · abrir {LISTADOS[t]} · luego await leerWom(RUTAS)')
         elif t in LISTADOS:
             print(f'## {t} · abrir {LISTADOS[t]} · bajar hasta el final · luego leerListado("{t}", RUTAS)')
+        elif t in LENTAS:
+            print(f'## {t} · abrir {PORTADAS[t]} · luego await leer("{t}", RUTAS) (lento: abre cada ficha; usar la forma en segundo plano)')
         else:
             print(f'## {t} · abrir {PORTADAS[t]} · luego await leer("{t}", RUTAS)')
         print(f'RUTAS ({len(rs)}) =', json.dumps(rs, ensure_ascii=False, separators=(',', ':')))

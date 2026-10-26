@@ -61,7 +61,7 @@
       : hi.p === b.p ? `Mismo precio en ${os.length} tiendas`
       : `${nom(b.s)}${empate > 1 ? ' y ' + (empate - 1) + ' más' : ''} · ${os.length} tiendas`;
     const ir = `class="offer c3-ir" data-id="${esc(e.dataId)}" data-store="${b.s}" href="${esc(b.url)}" target="_blank" rel="noopener nofollow sponsored"`;
-    const fila = o => `<li><a class="offer${o.p === b.p ? ' best' : ''}" data-id="${esc(e.dataId)}" data-store="${o.s}" href="${esc(o.url)}" target="_blank" rel="noopener nofollow sponsored"><i class="dot" style="background:${col(o.s)}"></i><span class="oname">${nom(o.s)}${o.note || o.seller ? `<small>${esc([o.note, o.seller].filter(Boolean).join(' · '))}</small>` : ''}</span><span class="oprice">${fmt(o.p)}${o.p > b.p ? `<small>+${fmt(o.p - b.p)}</small>` : ''}</span></a></li>`;
+    const fila = o => `<li><a class="offer${o.p === b.p ? ' best' : ''}" data-id="${esc(e.dataId)}" data-store="${o.s}" href="${esc(o.url)}" target="_blank" rel="noopener nofollow sponsored"><i class="dot" style="background:${col(o.s)}"></i><span class="oname">${nom(o.s)}${(T[o.s] || {}).t === 'oficial' ? '<span class="ofi">tienda oficial</span>' : ''}${o.note || o.seller ? `<small>${esc([o.note, o.seller].filter(Boolean).join(' · '))}</small>` : ''}</span><span class="oprice">${fmt(o.p)}${o.p > b.p ? `<small>+${fmt(o.p - b.p)}</small>` : ''}</span></a></li>`;
     return `<article class="c3${e.sello ? ' elegido' : ''}"${e.anchor ? ` id="${esc(e.anchor)}"` : ''}>
       <a class="c3-foto pvA" href="${esc(e.ficha)}" tabindex="-1" aria-hidden="true">${e.art}</a>
       <div class="c3-info">
