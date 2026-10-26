@@ -112,17 +112,58 @@ async function _vtex(u) {
   return { p: Math.min(...ofs.map(o => Math.round(o.Price))), c: 0, n: '' };
 }
 // Tienda oficial -> forma de leerla. Abrir la portada de cada una (precios.py lista) y llamar a leer('<tienda>', RUTAS).
-const OFICIALES = { samsung: 'ld', lg: 'ld', midea: 'vtex', electrolux: 'vtex', mademsa: 'vtex', fensa: 'vtex', dyson: 'vtex', thomas: 'ld', ursus: 'ld' };
+const OFICIALES = { samsung: 'ld', lg: 'ld', midea: 'vtex', electrolux: 'vtex', mademsa: 'vtex', fensa: 'vtex', dyson: 'vtex', thomas: 'ld', ursus: 'ld',
+  oster: 'vtex', dolcegusto: 'ld', xiaomi: 'visible', nespresso: 'visible' };
+
+/* Tiendas que arman el precio con JavaScript (Xiaomi, Nespresso): cada ficha se abre en un iframe oculto
+   de la misma tienda y se lee el precio que ve el comprador. El iframe va con "sandbox" para que la página
+   no pueda cambiar la pestaña principal. */
+const VISIBLE = {
+  // Xiaomi: el primer precio de la ficha es el del producto; "Avísame"/"Agotado" = sin stock
+  xiaomi(t) {
+    if (/Página no encontrada|404/.test(t.slice(0, 400))) return { e: 'error 404' };
+    const m = t.match(/\$\s?([\d.]{5,})/);
+    if (!m) return null;
+    if (/Agotado|Avísame cuando|Notificarme/i.test(t.slice(0, 3000))) return { e: 'sin stock' };
+    return { p: _num(m[1]), c: 0, n: '' };
+  },
+  // Nespresso: precios solos en su línea; si hay precio anterior ("old price"), el segundo es el de hoy
+  nespresso(t) {
+    const ps = (t.match(/^\s*\$\s?[\d.,]{5,}\s*$/gm) || []).map(_num);
+    if (!ps.length) return null;
+    if (/agotad|sin stock/i.test(t.slice(0, 4000))) return { e: 'sin stock' };
+    const p = /old price|precio anterior/i.test(t) && ps.length > 1 ? ps[1] : ps[0];
+    return { p, c: 0, n: '' };
+  }
+};
+function _visible(tienda, u, ms = 20000) {
+  return new Promise(res => {
+    const f = document.createElement('iframe');
+    f.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+    f.style.cssText = 'position:fixed;left:-3000px;top:0;width:1300px;height:2200px';
+    f.src = u; const t0 = Date.now();
+    const tick = () => {
+      let txt = ''; try { txt = f.contentDocument.body.innerText; } catch (e) {}
+      const r = txt.length > 800 ? VISIBLE[tienda](txt) : null;
+      if (r) { f.remove(); res(r); }
+      else if (Date.now() - t0 > ms) { f.remove(); res({ e: 'sin precio' }); }
+      else setTimeout(tick, 800);
+    };
+    document.body.appendChild(f); setTimeout(tick, 2500);
+  });
+}
 for (const [t, k] of Object.entries(OFICIALES)) if (k === 'ld') LECTORES[t] = _ldOferta;
 
 const _corto = (i, r) => r.e ? [i, 0, 0, r.e] : [i, r.p, r.c ? 1 : 0, r.x || 0];
 async function leer(tienda, rutas, grupo = 6) {
   const out = [];
+  if (OFICIALES[tienda] === 'visible') grupo = Math.min(grupo, 3);
   for (let i = 0; i < rutas.length; i += grupo) {
     await Promise.all(rutas.slice(i, i + grupo).map(async (u, k) => {
       const j = i + k;
       try {
         if (OFICIALES[tienda] === 'vtex') { out.push(_corto(j, await _vtex(u))); return; }
+        if (OFICIALES[tienda] === 'visible') { out.push(_corto(j, await _visible(tienda, u))); return; }
         const r = await fetch(u);
         if (!r.ok) { out.push([j, 0, 0, 'error ' + r.status]); return; }
         out.push(_corto(j, LECTORES[tienda](await r.text(), u)));
