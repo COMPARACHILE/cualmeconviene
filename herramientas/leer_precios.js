@@ -30,6 +30,7 @@ const LECTORES = {
     if (v.isPurchaseable === false) return { e: 'sin stock' };
     if (pr.cmrPrice) return { p: pr.cmrPrice, c: 1, n: 'Con tarjeta CMR' };
     if (pr.internetPrice) return { p: pr.internetPrice, c: 0, n: 'Precio Internet' };
+    if (pr.eventPrice) return { p: pr.eventPrice, c: 0, n: 'Precio Internet' };  // precio de evento (Cyber, etc.): es el que paga cualquiera
     if (pr.normalPrice) return { p: pr.normalPrice, c: 0, n: 'Precio Internet' };
     return { e: 'sin precio' };
   },
@@ -66,6 +67,43 @@ const LECTORES = {
   }
 };
 
+/* Tiendas oficiales de las marcas (26-10-2026). La mayoría publica el precio en los datos para Google (JSON-LD
+   "Product" con "offers"): se lee igual en todas. Las tiendas hechas con VTEX se leen desde su catálogo público
+   (/api/catalog_system/pub/products/search/<producto>/p), que dice precio y unidades disponibles. */
+function _ldOferta(h) {
+  for (const m of h.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)) {
+    let j; try { j = JSON.parse(m[1].trim()); } catch (e) { continue; }
+    let hit = null;
+    const walk = x => {
+      if (hit || !x || typeof x !== 'object') return;
+      if (Array.isArray(x)) { x.forEach(walk); return; }
+      if ([].concat(x['@type'] || []).includes('Product') && x.offers) { hit = x; return; }
+      for (const k in x) walk(x[k]);
+    };
+    walk(j);
+    if (!hit) continue;
+    let of = [].concat(hit.offers)[0] || {};
+    if (of.offers) of = Object.assign({}, of, [].concat(of.offers)[0] || {});
+    const n = v => typeof v === 'number' ? Math.round(v) : _num(String(v || '').replace(/[,.]\d{2}$/, ''));
+    const p = n(of.price) || n(of.lowPrice);
+    if (/OutOfStock|SoldOut|Discontinued/i.test(String(of.availability || ''))) return { e: 'sin stock' };
+    return p ? { p, c: 0, n: '' } : { e: 'sin precio' };
+  }
+  return { e: 'sin datos' };
+}
+async function _vtex(u) {
+  const r = await fetch('/api/catalog_system/pub/products/search' + u.replace(/[?#].*$/, ''));
+  if (!r.ok) return { e: 'error ' + r.status };
+  const j = await r.json();
+  if (!j.length) return { e: 'error 404' };
+  const ofs = j[0].items.flatMap(it => it.sellers.map(s => s.commertialOffer)).filter(o => o.AvailableQuantity > 0 && o.Price > 0);
+  if (!ofs.length) return { e: 'sin stock' };
+  return { p: Math.min(...ofs.map(o => Math.round(o.Price))), c: 0, n: '' };
+}
+// Tienda oficial -> forma de leerla. Abrir la portada de cada una (precios.py lista) y llamar a leer('<tienda>', RUTAS).
+const OFICIALES = { samsung: 'ld', lg: 'ld', midea: 'vtex', electrolux: 'vtex', mademsa: 'vtex', fensa: 'vtex' };
+for (const [t, k] of Object.entries(OFICIALES)) if (k === 'ld') LECTORES[t] = _ldOferta;
+
 const _corto = (i, r) => r.e ? [i, 0, 0, r.e] : [i, r.p, r.c ? 1 : 0, r.x || 0];
 async function leer(tienda, rutas, grupo = 6) {
   const out = [];
@@ -73,6 +111,7 @@ async function leer(tienda, rutas, grupo = 6) {
     await Promise.all(rutas.slice(i, i + grupo).map(async (u, k) => {
       const j = i + k;
       try {
+        if (OFICIALES[tienda] === 'vtex') { out.push(_corto(j, await _vtex(u))); return; }
         const r = await fetch(u);
         if (!r.ok) { out.push([j, 0, 0, 'error ' + r.status]); return; }
         out.push(_corto(j, LECTORES[tienda](await r.text(), u)));
