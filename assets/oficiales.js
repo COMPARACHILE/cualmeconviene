@@ -1,0 +1,2 @@
+/* Generado por herramientas/fichas.py desde precios.OFICIALES: tiendas oficiales de cada marca. */
+window.CMC_OFICIALES = {"samsung":{"name":"Tienda Samsung","color":"#1428A0","t":"tienda"},"lg":{"name":"Tienda LG","color":"#A50034","t":"tienda"},"xiaomi":{"name":"Tienda Xiaomi","color":"#FF6900","t":"tienda"},"apple":{"name":"Apple Store","color":"#555","t":"tienda"},"hp":{"name":"Tienda HP","color":"#0096D6","t":"tienda"},"nespresso":{"name":"Nespresso","color":"#8C6A4A","t":"tienda"},"dolcegusto":{"name":"Dolce Gusto","color":"#B5121B","t":"tienda"}};

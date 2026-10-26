@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Actualización de precios de ¿Cuál me conviene? (notebooks.html, celulares.html, tablets.html, televisores.html y consolas.html).
+"""Actualización de precios de ¿Cuál me conviene? (notebooks, celulares, tablets, televisores, consolas, lavadoras,
+aspiradoras, batidoras y cafeteras; incluye las tiendas oficiales de cada marca).
 
   python3 herramientas/precios.py lista
       Muestra, por tienda, qué abrir y qué rutas leer con herramientas/leer_precios.js.
@@ -28,18 +29,33 @@ LISTADOS = {
     'wom': 'https://store.wom.cl/equipos/?modalidad-de-compra=prepago',
 }
 PORTADAS = {'falabella': 'https://www.falabella.com/falabella-cl', 'paris': 'https://www.paris.cl/', 'ripley': 'https://simple.ripley.cl/',
-            'entel': 'https://miportal.entel.cl/personas/catalogo/celulares', 'movistar': 'https://catalogo.movistar.cl/tienda/'}
+            'entel': 'https://miportal.entel.cl/personas/catalogo/celulares', 'movistar': 'https://catalogo.movistar.cl/tienda/',
+            'samsung': 'https://www.samsung.com/cl/', 'lg': 'https://www.lg.com/cl/', 'xiaomi': 'https://www.mi.com/cl/',
+            'apple': 'https://www.apple.com/cl/shop', 'hp': 'https://www.hp.com/cl-es/shop/', 'nespresso': 'https://www.nespresso.com/cl/es',
+            'dolcegusto': 'https://www.dolce-gusto.cl/'}
+# Tiendas oficiales de cada marca (26-10-2026). fichas.py escribe assets/oficiales.js con esto y todas las páginas lo cargan.
+OFICIALES = {
+    'samsung': {'name': 'Tienda Samsung', 'color': '#1428A0', 't': 'tienda'},
+    'lg': {'name': 'Tienda LG', 'color': '#A50034', 't': 'tienda'},
+    'xiaomi': {'name': 'Tienda Xiaomi', 'color': '#FF6900', 't': 'tienda'},
+    'apple': {'name': 'Apple Store', 'color': '#555', 't': 'tienda'},
+    'hp': {'name': 'Tienda HP', 'color': '#0096D6', 't': 'tienda'},
+    'nespresso': {'name': 'Nespresso', 'color': '#8C6A4A', 't': 'tienda'},
+    'dolcegusto': {'name': 'Dolce Gusto', 'color': '#B5121B', 't': 'tienda'},
+}
 # Sin stock o ficha borrada: la oferta se oculta en la página (x:1) hasta que vuelva
 AGOTADO = {'sin stock', 'error 404', 'error 410'}
 NOTA_ESTANDAR = re.compile(r'^(Con tarjeta CMR|Precio Internet|Con Tarjeta Cencosud|Con tarjeta Ripley|Transferencia o débito|Con transferencia o débito|Modalidad Prepago)')
 
 
 # Categorías nuevas: mismo formato que celulares (lista JSON en una línea, "const EQUIPOS = [...];")
-EXTRA = {'tb': ('tablets.html', 'tablet'), 'tv': ('televisores.html', 'televisor'), 'cs': ('consolas.html', 'consola')}
+EXTRA = {'tb': ('tablets.html', 'tablet'), 'tv': ('televisores.html', 'televisor'), 'cs': ('consolas.html', 'consola'),
+         'lv': ('lavadoras.html', 'lavadora'), 'as': ('aspiradoras.html', 'aspiradora'), 'bt': ('batidoras.html', 'batidora'),
+         'cf': ('cafeteras.html', 'cafetera')}
 
 
 def cargar_extra():
-    """{k: (html, (inicio, fin), lista)} de tablets, televisores y consolas (solo las que existen)."""
+    """{k: (html, (inicio, fin), lista)} de las categorías con "const EQUIPOS = [...]" (solo las que existen)."""
     out = {}
     for k, (archivo, _) in EXTRA.items():
         ruta_a = os.path.join(RAIZ, archivo)
@@ -63,6 +79,8 @@ def ruta(o):
     u = urlparse(o['url'])
     if o['s'] == 'pcfactory':
         return '/producto/' + u.path.split('/producto/')[1].split('-')[0]
+    if o['s'] in ('xiaomi', 'apple') and u.query:
+        return u.path + '?' + u.query  # la versión va en la ruta: ?gb=256 (Xiaomi) o ?m=iPhone 18 Pro 256GB (Apple)
     return u.path
 
 

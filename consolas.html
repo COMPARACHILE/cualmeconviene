@@ -24,7 +24,8 @@
 <link rel="preload" href="/assets/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/dmsans.woff2" as="font" type="font/woff2" crossorigin>
 <script src="/assets/fotos.js?v=c1f7f148"></script>
-<script src="/assets/fichas.js?v=430a7598"></script>
+<script src="/assets/fichas.js?v=c68e4240"></script>
+<script src="/assets/oficiales.js?v=2f03c0aa"></script>
 <style>
 /* Layout: tienda. Barra de aviso, cabecera fija con buscador, portada con atajos por uso y la mayor diferencia de precio, luego filtros a la izquierda y grilla de productos. Lo más fuerte de la página es el precio y la tienda más barata de cada tarjeta. */
 :root {
@@ -503,16 +504,16 @@ body.hasTray { padding-bottom: 96px; }
 .veredicto { margin: 0 0 12px; padding: 12px 14px; border-radius: 12px; background: var(--deal-soft); border: 1px solid var(--line); line-height: 1.45; }
 .veredicto b { color: var(--deal); }
 </style>
-<link rel="stylesheet" href="/assets/cmc.css?v=5437a36f">
+<link rel="stylesheet" href="/assets/cmc.css?v=7e087dca">
 <script src="/assets/cmc-ui.js?v=ffb2f532"></script>
-<script defer src="/assets/cmc.js?v=d7c8fc65"></script>
+<script defer src="/assets/cmc.js?v=82f3f5e3"></script>
 </head>
 <body>
 <header class="hd full">
   <div class="hd-in">
     <a class="hd-logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="36" height="36" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
     <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Ej.: PS5, Switch 2 o Xbox" autocomplete="off" aria-label="Buscar consola"></label>
-    <nav class="hd-cats" aria-label="Categorías"><a href="/notebooks">Notebooks</a><a href="/celulares">Celulares</a><a href="/tablets">Tablets</a><a href="/televisores"><span class="lg">Televisores</span><span class="sm">TV</span></a><a href="/consolas" aria-current="page">Consolas</a></nav>
+    <nav class="hd-cats" aria-label="Categorías"><a href="/notebooks">Notebooks</a><a href="/celulares">Celulares</a><a href="/tablets">Tablets</a><a href="/televisores"><span class="lg">Televisores</span><span class="sm">TV</span></a><a href="/consolas" aria-current="page">Consolas</a><a href="/lavadoras">Lavado</a><a href="/aspiradoras">Aspiradoras</a><a href="/batidoras">Batidoras</a><a href="/cafeteras">Cafeteras</a></nav>
   </div>
 </header>
 
@@ -630,6 +631,8 @@ const STORES = {
   ripley:    { name: 'Ripley',    color: '#7A3FA0', t: 'tienda' },
   pcfactory: { name: 'PCFactory', color: '#E8590C', t: 'tienda' }
 };
+// Tiendas oficiales de cada marca (assets/oficiales.js)
+Object.assign(STORES, window.CMC_OFICIALES || {});
 const $ = id => document.getElementById(id);
 const fmt = n => '$' + Math.round(n).toLocaleString('es-CL');
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

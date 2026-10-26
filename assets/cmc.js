@@ -12,6 +12,10 @@
   setHdr();
   addEventListener('resize', setHdr, { passive: true });
 
+  /* ---------- Menú de categorías: en el celular se desliza de lado; mostrar la categoría actual ---------- */
+  const cat = document.querySelector('.hd-cats [aria-current]');
+  if (cat && cat.parentElement.scrollWidth > cat.parentElement.clientWidth) cat.parentElement.scrollLeft = Math.max(0, cat.offsetLeft - cat.parentElement.offsetLeft - 24);
+
   /* ---------- Resaltar la sección a la que se salta ---------- */
   const flash = el => {
     if (!el) return;

@@ -2,7 +2,8 @@
    Se pega en la consola (javascript_tool) de una pestaña abierta en la tienda que corresponde.
    Uso (RUTAS = la lista que imprime "python3 herramientas/precios.py lista" para esa tienda):
      1) Pega este archivo completo una vez por pestaña.
-     2) await leer('falabella', RUTAS)        // fichas una por una (falabella, paris, ripley, movistar)
+     2) await leer('falabella', RUTAS)        // fichas una por una (falabella, paris, ripley, movistar y las
+                                            // tiendas oficiales: samsung, lg, xiaomi, apple, hp, nespresso, dolcegusto)
         await leerEntel(RUTAS)               // entel: abre cada ficha en un iframe y lee el precio dibujado
         leerListado('claro', RUTAS)          // claro y pcfactory leen un listado ya abierto
         await leerWom(RUTAS)                 // wom: recorre las páginas del listado
@@ -29,6 +30,7 @@ const LECTORES = {
     const pr = Object.fromEntries((v.prices || []).map(p => [p.type, _num((p.price || [])[0])]));
     if (v.isPurchaseable === false) return { e: 'sin stock' };
     if (pr.cmrPrice) return { p: pr.cmrPrice, c: 1, n: 'Con tarjeta CMR' };
+    if (pr.eventPrice) return { p: pr.eventPrice, c: 0, n: 'Precio Internet' };
     if (pr.internetPrice) return { p: pr.internetPrice, c: 0, n: 'Precio Internet' };
     if (pr.normalPrice) return { p: pr.normalPrice, c: 0, n: 'Precio Internet' };
     return { e: 'sin precio' };
@@ -59,12 +61,73 @@ const LECTORES = {
     const p = _num((h.match(/"offers"\s*:\s*\{[\s\S]{0,300}?"price"\s*:\s*"?([\d.]+)/) || [])[1]);
     return p ? { p, c: 0, n: 'Precio oferta online Entel (solo equipo)' } : { e: 'sin precio' };
   },
+  // Tiendas oficiales de cada marca (26-10-2026): precio público de la ficha, sin tarjeta
+  samsung: h => _oficial(h), lg: h => _oficial(h), hp: h => _oficial(h), nespresso: h => _oficial(h), dolcegusto: h => _oficial(h),
+  apple: (h, u) => _apple(h, u),
   movistar(h) {
     if (/schema.org\/OutOfStock/.test(h)) return { e: 'sin stock' };
     const p = _num((h.match(/"price"\s*:\s*"?(\d{4,})/) || [])[1]);
     return p ? { p, c: 0 } : { e: 'sin precio' };
   }
 };
+
+/* Precio escrito como número (938990, "938990.00") o con puntos de miles ("938.990") */
+const _precio = v => {
+  if (v == null || v === '') return null;
+  if (typeof v === 'number') return Math.round(v) || null;
+  const t = String(v).replace(/[^\d.,]/g, '');
+  if (/^\d{1,3}([.,]\d{3})+$/.test(t)) return +t.replace(/[.,]/g, '') || null;
+  return Math.round(parseFloat(t.replace(',', '.'))) || null;
+};
+const _agotado = a => /OutOfStock|SoldOut|Discontinued|out of stock|agotado/i.test(String(a || ''));
+/* Ficha de tienda oficial: 1) JSON-LD (offers), 2) meta product:price:amount, 3) "price"/"inStock" (Nespresso) */
+function _oficial(h) {
+  const ofertas = [];
+  const junta = x => {
+    if (!x || typeof x !== 'object') return;
+    if (Array.isArray(x)) { x.forEach(junta); return; }
+    if (x.offers) [].concat(x.offers).forEach(o => { if (o && typeof o === 'object') ofertas.push(o); });
+    if (x['@graph']) junta(x['@graph']);
+  };
+  for (const m of h.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g)) { try { junta(JSON.parse(m[1])); } catch (e) {} }
+  const conPrecio = ofertas.map(o => ({ p: _precio(o.price != null ? o.price : o.lowPrice), a: o.availability })).filter(o => o.p > 1000);
+  if (conPrecio.length) {
+    const hay = conPrecio.filter(o => !_agotado(o.a));
+    if (!hay.length) return { e: 'sin stock' };
+    return { p: Math.min(...hay.map(o => o.p)), c: 0 };
+  }
+  const meta = k => (h.match(new RegExp('<meta[^>]+(?:property|name)="' + k + '"[^>]+content="([^"]*)"')) || h.match(new RegExp('<meta[^>]+content="([^"]*)"[^>]+(?:property|name)="' + k + '"')) || [])[1];
+  const mp = _precio(meta('product:price:amount'));
+  if (mp > 1000) return _agotado(meta('product:availability')) ? { e: 'sin stock' } : { p: mp, c: 0 };
+  const np = _precio((h.match(/"price"\s*:\s*"?([\d.]+)/) || [])[1]);
+  if (np > 1000) return /"inStock"\s*:\s*false/.test(h) ? { e: 'sin stock' } : { p: np, c: 0 };
+  return { e: 'sin precio' };
+}
+/* Apple: la página de compra trae "products":[{name, price:{fullPrice}}]; ?m= es el comienzo del nombre del modelo */
+function _apple(h, u) {
+  const m = decodeURIComponent((u.match(/[?&]m=([^&#]+)/) || [])[1] || '');
+  const i = h.indexOf('"products":['); if (i < 0) return { e: 'sin datos' };
+  let k = i + 11, n = 0;
+  for (; k < h.length; k++) { if (h[k] === '[') n++; else if (h[k] === ']' && !--n) break; }
+  let ps; try { ps = JSON.parse(h.slice(i + 11, k + 1)); } catch (e) { return { e: 'sin datos' }; }
+  const v = ps.filter(x => x && x.name && x.name.startsWith(m)).map(x => _precio(x.price && (x.price.fullPrice || x.price.currentPrice))).filter(Boolean);
+  return v.length ? { p: Math.min(...v), c: 0 } : { e: 'sin precio' };
+}
+/* Xiaomi (mi.com/cl): el precio lo trae su API, no el HTML. Ruta /cl/product/<tag>/?gb=256 (gb solo en celulares y tablets) */
+async function _xiaomi(u) {
+  const tag = (u.match(/\/product\/([^/?#]+)/) || [])[1], gb = (u.match(/[?&]gb=(\d+)/) || [])[1];
+  const r = await fetch('https://go.buy.mi.com/cl/v2/item/productdetail?tag=' + encodeURIComponent(tag), { credentials: 'include' });
+  if (!r.ok) return { e: 'error ' + r.status };
+  const d = (await r.json()).data;
+  const items = ((d && d.item_detail && d.item_detail.spu_list) || []).flatMap(x => x.item_list || []);
+  if (!items.length) return { e: 'sin producto' };
+  const ok = items.filter(x => !gb || new RegExp('\\+\\s*' + gb + '\\s*GB', 'i').test(x.item_name) || new RegExp('\\b' + gb + '\\s*GB', 'i').test(x.item_name));
+  if (!ok.length) return { e: 'sin esa versión' };
+  const hay = ok.filter(x => x.is_sale !== false && !x.is_out_of_stock);
+  if (!hay.length) return { e: 'sin stock' };
+  return { p: Math.min(...hay.map(x => _precio(x.price)).filter(Boolean)), c: 0 };
+}
+const DIRECTOS = { xiaomi: _xiaomi };
 
 const _corto = (i, r) => r.e ? [i, 0, 0, r.e] : [i, r.p, r.c ? 1 : 0, r.x || 0];
 async function leer(tienda, rutas, grupo = 6) {
@@ -73,9 +136,10 @@ async function leer(tienda, rutas, grupo = 6) {
     await Promise.all(rutas.slice(i, i + grupo).map(async (u, k) => {
       const j = i + k;
       try {
+        if (DIRECTOS[tienda]) { out.push(_corto(j, await DIRECTOS[tienda](u))); return; }
         const r = await fetch(u);
         if (!r.ok) { out.push([j, 0, 0, 'error ' + r.status]); return; }
-        out.push(_corto(j, LECTORES[tienda](await r.text(), u)));
+        out.push(_corto(j, await LECTORES[tienda](await r.text(), u)));
       } catch (err) { out.push([j, 0, 0, String(err).slice(0, 40)]); }
     }));
   }
@@ -130,12 +194,14 @@ async function leerWom(rutas) {
    La ruta se arma igual que en precios.py (urlparse(url).path), sin volver a codificar tildes ni espacios. */
 const _GH = 'https://raw.githubusercontent.com/COMPARACHILE/cualmeconviene/main/';
 const _ruta = (s, url) => {
-  const p = url.replace(/^[a-z]+:\/\/[^/]+/i, '').split(/[?#]/)[0];
+  // Xiaomi y Apple guardan la versión en la ruta (?gb=256, ?m=iPhone 18 Pro 256GB): igual que precios.ruta()
+  const p = url.replace(/^[a-z]+:\/\/[^/]+/i, '').split(s === 'xiaomi' || s === 'apple' ? '#' : /[?#]/)[0];
   return s === 'pcfactory' ? '/producto/' + p.split('/producto/')[1].split('-')[0] : p;
 };
 async function publicados(tienda, rutas) {
   const hojas = [['notebooks.html', 'const NOTEBOOKS = ', '\n];'], ['celulares.html', 'const PHONES = ', ';\n'],
-    ['tablets.html', 'const EQUIPOS = ', ';\n'], ['televisores.html', 'const EQUIPOS = ', ';\n'], ['consolas.html', 'const EQUIPOS = ', ';\n']];
+    ['tablets.html', 'const EQUIPOS = ', ';\n'], ['televisores.html', 'const EQUIPOS = ', ';\n'], ['consolas.html', 'const EQUIPOS = ', ';\n'],
+    ['lavadoras.html', 'const EQUIPOS = ', ';\n'], ['aspiradoras.html', 'const EQUIPOS = ', ';\n'], ['batidoras.html', 'const EQUIPOS = ', ';\n'], ['cafeteras.html', 'const EQUIPOS = ', ';\n']];
   const pos = new Map(rutas.map((u, i) => [u, i])), exp = rutas.map(() => null);
   for (const [f, a, b] of hojas) {
     const t = await (await fetch(_GH + f, { cache: 'no-store' })).text();

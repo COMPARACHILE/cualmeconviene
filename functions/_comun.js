@@ -14,7 +14,7 @@ export const CONTACTO = 'adictosdigitalesla@gmail.com';
 
 // Dirección fija de la ficha de cada equipo (ej. notebook/acer-aspire-14). Comentarios y avisos se atan a ella,
 // así que siguen ahí aunque el equipo se agote y vuelva.
-export const CLAVE_OK = /^(notebook|celular|tablet|televisor|consola)\/[a-z0-9-]{2,100}$/;
+export const CLAVE_OK = /^(notebook|celular|tablet|televisor|consola|lavadora|aspiradora|batidora|cafetera)\/[a-z0-9-]{2,100}$/;
 
 export const hoyChile = (d = new Date()) => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Santiago' }).format(d);
 export const ahora = () => new Date().toISOString();

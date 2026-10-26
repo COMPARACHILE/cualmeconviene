@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Fichas de equipos de ¿Cuál me conviene?: una página por notebook, celular, tablet, televisor y consola.
+"""Fichas de equipos de ¿Cuál me conviene?: una página por notebook, celular, tablet, televisor, consola,
+lavadora o secadora, aspiradora, batidora y cafetera.
 
   python3 herramientas/fichas.py
       Crea o actualiza notebook/<nombre>.html y celular/<nombre>.html con los precios de
@@ -25,6 +26,48 @@ TIENDAS = {
     'entel': ('Entel', '#0047BB', 'operadora'), 'movistar': ('Movistar', '#00A9E0', 'operadora'),
     'claro': ('Claro', '#DA291C', 'operadora'), 'wom': ('WOM', '#8E24AA', 'operadora'),
 }
+# Tiendas oficiales de cada marca (Samsung, LG, Xiaomi, Apple, HP, Nespresso, Dolce Gusto): se definen en precios.OFICIALES
+TIENDAS.update({k: (v['name'], v['color'], 'tienda') for k, v in precios.OFICIALES.items()})
+# Categorías: k -> (título, página de la lista, carpeta de las fichas, nombre en el menú, femenino)
+CATS = {
+    'nb': ('Notebooks', 'notebooks', 'notebook', 'Notebooks', False), 'ph': ('Celulares', 'celulares', 'celular', 'Celulares', False),
+    'tb': ('Tablets', 'tablets', 'tablet', 'Tablets', True), 'tv': ('Televisores', 'televisores', 'televisor', 'Televisores', False),
+    'cs': ('Consolas', 'consolas', 'consola', 'Consolas', True), 'lv': ('Lavadoras y secadoras', 'lavadoras', 'lavadora', 'Lavado', True),
+    'as': ('Aspiradoras', 'aspiradoras', 'aspiradora', 'Aspiradoras', True), 'bt': ('Batidoras', 'batidoras', 'batidora', 'Batidoras', True),
+    'cf': ('Cafeteras', 'cafeteras', 'cafetera', 'Cafeteras', True),
+}
+
+
+def menu(actual):
+    """Menú de categorías de la cabecera (actual = página de la lista: 'notebooks', 'lavadoras'...)."""
+    return ''.join(f'<a href="/{c[1]}"' + (' aria-current="page"' if c[1] == actual else '') + '>'
+                   + ('<span class="lg">Televisores</span><span class="sm">TV</span>' if c[3] == 'Televisores' else c[3]) + '</a>' for c in CATS.values())
+
+
+# Lavado, aspiradoras, batidoras y cafeteras
+TIPO_LV = {'superior': 'Lavadora de carga superior', 'frontal': 'Lavadora de carga frontal', 'lavaseca': 'Lavadora-secadora',
+           'torre': 'Lavadora-secadora en torre', 'secadora': 'Secadora'}
+TIPO_AS = {'robot': 'Aspiradora robot', 'vertical': 'Aspiradora vertical', 'arrastre': 'Aspiradora de arrastre'}
+TIPO_BT = {'pedestal': 'Batidora de pedestal', 'mano': 'Batidora de mano', 'inmersion': 'Batidora de inmersión'}
+
+
+def tipo_lv(q):
+    return q.get('carga') if q.get('tipo') == 'lavadora' else q.get('tipo')
+
+
+def num(v):
+    return f'{v:g}'.replace('.', ',') if isinstance(v, (int, float)) else str(v)
+
+
+def cap_lv(q):
+    if q.get('tipo') == 'secadora': return f"seca {num(q['kgs'])} kg"
+    if q.get('kgs'): return f"lava {num(q['kg'])} kg y seca {num(q['kgs'])} kg"
+    return f"{num(q['kg'])} kg"
+
+
+def ext_cf(q):
+    return 'Centrifusión (la cápsula gira)' if q.get('ext') == 'centrifusion' else f"Presión de {q.get('bar')} bar"
+
 CATN = {'Entrada': 'Gamer de entrada', 'Media': 'Gamer gama media', 'Alta': 'Gamer gama alta', 'Muy alta': 'Gamer gama muy alta'}
 MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
 e = lambda t: html.escape(str(t), quote=True)
@@ -92,6 +135,9 @@ def equipos():
         out.append(dict(k='tv', eq=p, id=p['id'], marca=p['brand'], nombre=p['name']))
     for p in extra.get('cs', (None, None, []))[2]:
         out.append(dict(k='cs', eq=p, id=p['id'], marca=p['plat'], nombre=p['name']))
+    for k in ('lv', 'as', 'bt', 'cf'):
+        for p in extra.get(k, (None, None, []))[2]:
+            out.append(dict(k=k, eq=p, id=p['id'], marca=p['brand'], nombre=p['name']))
     for x in out:
         x['os'] = visibles(x['eq'])
     return out
@@ -101,16 +147,15 @@ def historial():
     """Precio más bajo de cada equipo por día, leído de las versiones guardadas en git."""
     h = {}
     try:
-        log = subprocess.run(['git', '-C', RAIZ, 'log', '--format=%H %cI', '--', 'notebooks.html', 'celulares.html', 'tablets.html', 'televisores.html', 'consolas.html'],
+        log = subprocess.run(['git', '-C', RAIZ, 'log', '--format=%H %cI', '--', 'notebooks.html', 'celulares.html'] + [a for a, _ in precios.EXTRA.values()],
                              capture_output=True, text=True, check=True).stdout.split('\n')
     except Exception:
         return h
     for linea in reversed([l for l in log if l.strip()]):
         sha, cuando = linea.split(' ', 1)
         dia = datetime.datetime.fromisoformat(cuando).astimezone(datetime.timezone(datetime.timedelta(hours=-3))).date()
-        for archivo, ini, fin in (('notebooks.html', 'const NOTEBOOKS = ', '\n];'), ('celulares.html', 'const PHONES = ', ';\n'),
-                                  ('tablets.html', 'const EQUIPOS = ', ';\n'), ('televisores.html', 'const EQUIPOS = ', ';\n'),
-                                  ('consolas.html', 'const EQUIPOS = ', ';\n')):
+        for archivo, ini, fin in [('notebooks.html', 'const NOTEBOOKS = ', '\n];'), ('celulares.html', 'const PHONES = ', ';\n')] + \
+                                 [(a, 'const EQUIPOS = ', ';\n') for a, _ in precios.EXTRA.values()]:
             try:
                 t = subprocess.run(['git', '-C', RAIZ, 'show', f'{sha}:{archivo}'], capture_output=True, text=True, check=True).stdout
                 i = t.index(ini) + len(ini); j = t.index(fin, i) + (2 if fin.startswith('\n]') else 0)
@@ -172,6 +217,10 @@ def categoria(x):
         return ' '.join(t for t in ['Televisor', q.get('panel'), q.get('res')] if t)
     if x['k'] == 'cs':
         return {'tv': 'Consola para el TV', 'hibrida': 'Consola para el TV y portátil', 'portatil': 'Consola portátil'}.get(q.get('tipo'), 'Consola')
+    if x['k'] == 'lv': return TIPO_LV.get(tipo_lv(q), 'Lavadora')
+    if x['k'] == 'as': return TIPO_AS.get(q.get('tipo'), 'Aspiradora')
+    if x['k'] == 'bt': return TIPO_BT.get(q.get('tipo'), 'Batidora')
+    if x['k'] == 'cf': return 'Cafetera de cápsulas ' + q.get('sis', '')
     if q.get('refurb'): return 'Reacondicionado'
     p = x['os'][0]['p'] if x['os'] else 0
     return 'Gama de entrada' if p <= 250000 else 'Gama media' if p <= 600000 else 'Gama alta'
@@ -185,6 +234,20 @@ def specs_cortas(x):
         return ', '.join(t for t in [pulg(q.get('size')), q.get('res'), q.get('panel'), f"{q['hz']} Hz" if q.get('hz') else None, q.get('os')] if t)
     if x['k'] == 'cs':
         return ', '.join(t for t in [gb(q.get('gb')), tflops(q.get('tf')), f"incluye {q['juego']}" if q.get('juego') else None] if t)
+    if x['k'] == 'lv':
+        return ', '.join(t for t in [cap_lv(q), f"eficiencia {q['ef']}" if q.get('ef') else None, 'motor inverter' if q.get('inv') else None,
+                                     f"{q['rpm']} rpm" if q.get('rpm') else None, 'vapor' if q.get('vapor') else None] if t)
+    if x['k'] == 'as':
+        return ', '.join(t for t in [q.get('sub'), f"succión {miles(q['pa'])} Pa" if q.get('pa') else None, f"succión {q['aw']} AW" if q.get('aw') else None,
+                                     f"motor {miles(q['w'])} W" if q.get('w') else None, f"depósito {num(q['dep'])} L" if q.get('dep') else None,
+                                     f"hasta {q['aut']} min" if q.get('aut') else None] if t)
+    if x['k'] == 'bt':
+        return ', '.join(t for t in [f"{miles(q['w'])} W" if q.get('w') else None, f"{q['vel']} velocidades" if q.get('vel') else None,
+                                     (('vaso ' if q.get('tipo') == 'inmersion' else 'bol ') + num(q['bowl']) + ' L') if q.get('bowl') else None,
+                                     'bol de acero' if q.get('metal') else None] if t)
+    if x['k'] == 'cf':
+        return ', '.join(t for t in [ext_cf(q), f"tazas de hasta {q['ml']} ml" if q.get('ml') else 'tamaño según la cápsula',
+                                     f"estanque {num(q['dep'])} L" if q.get('dep') else None, q.get('leche')] if t)
     return ', '.join(t for t in [q.get('chip'), f"{q['ram']} GB RAM" if q.get('ram') else None, gb(q['gb']), f"{q['size']}\"" if q.get('size') else None,
                                  f"{q['bat']:,} mAh".replace(',', '.') if q.get('bat') else None, q.get('net') if x['k'] == 'tb' else None] if t)
 
@@ -208,6 +271,33 @@ def tabla_tecnica(x):
                   ('Almacenamiento', gb(q.get('gb'))), ('Juegos físicos', 'Lector de discos' if q.get('disco') else 'Cartuchos o digitales' if q.get('plat') == 'Nintendo' else 'Solo digitales'),
                   ('Resolución máxima', q.get('res')), ('Cuadros por segundo', f"hasta {q['fps']}" if q.get('fps') else None), ('Pantalla propia', q.get('pant')),
                   ('Juego incluido', q.get('juego')), ('Salió al mercado', q.get('year'))]
+    elif x['k'] == 'lv':
+        cap = q.get('kg') or q.get('kgs')
+        filas += [('Tipo', TIPO_LV.get(tipo_lv(q))), ('Capacidad de lavado', f"{num(q['kg'])} kg" if q.get('kg') else None),
+                  ('Capacidad de secado', f"{num(q['kgs'])} kg" if q.get('kgs') else None),
+                  ('Precio por kilo', plata(x['os'][0]['p'] / cap) if x['os'] and cap else None),
+                  ('Eficiencia energética', f"Clase {q['ef']}" if q.get('ef') else 'La tienda no la informa'),
+                  ('Motor', 'Inverter' if q.get('inv') else 'Convencional' if q.get('inv') == 0 else None),
+                  ('Centrifugado', f"{q['rpm']} rpm" if q.get('rpm') else None), ('Cómo seca', q.get('sec')),
+                  ('Funcionamiento', 'Semiautomática' if q.get('auto') == 0 else None),
+                  ('Vapor', 'Sí' if q.get('vapor') else None), ('Wi-Fi', 'Sí' if q.get('wifi') else None), ('Modelo', q.get('model'))]
+    elif x['k'] == 'as':
+        filas += [('Tipo', TIPO_AS.get(q.get('tipo'))), ('Formato', q.get('sub')),
+                  ('Succión (pascales)', f"{miles(q['pa'])} Pa" if q.get('pa') else None), ('Succión (air watts)', f"{q['aw']} AW" if q.get('aw') else None),
+                  ('Potencia del motor', f"{miles(q['w'])} W" if q.get('w') else None), ('Depósito', f"{num(q['dep'])} L" if q.get('dep') else None),
+                  ('Autonomía', f"hasta {q['aut']} min" if q.get('aut') else None), ('Trapea', 'Sí' if q.get('mopa') else None),
+                  ('Base', q.get('base')), ('Cómo se ubica', q.get('nav')), ('Modelo', q.get('model'))]
+    elif x['k'] == 'bt':
+        filas += [('Tipo', TIPO_BT.get(q.get('tipo'))), ('Potencia', f"{miles(q['w'])} W" if q.get('w') else None),
+                  ('Velocidades', q.get('vel')), ('Bol o vaso', f"{num(q['bowl'])} L" if q.get('bowl') else None),
+                  ('Bol de acero', 'Sí' if q.get('metal') else None), ('Turbo', 'Sí' if q.get('turbo') else None), ('Modelo', q.get('model'))]
+    elif x['k'] == 'cf':
+        filas += [('Sistema', q.get('sis')), ('Cómo extrae el café', ext_cf(q)),
+                  ('Taza más grande', f"{q['ml']} ml" if q.get('ml') else 'Según la cápsula'), ('Tamaños de taza', q.get('tam')),
+                  ('Estanque de agua', f"{num(q['dep'])} L" if q.get('dep') else None), ('Leche', q.get('leche') or 'No'),
+                  ('Cápsulas', q.get('compat') or {'Nespresso Original': 'Nespresso Original y compatibles de otras marcas', 'Nespresso Vertuo': 'Solo Nespresso Vertuo',
+                                                   'Dolce Gusto': 'Nescafé Dolce Gusto y compatibles'}.get(q.get('sis'))),
+                  ('Modelo', q.get('model'))]
     elif x['k'] == 'tb':
         filas += [('Procesador', q.get('chip')), ('Almacenamiento', gb(q['gb'])), ('Memoria RAM', f"{q['ram']} GB" if q.get('ram') else None),
                   ('Pantalla', ' '.join(t for t in [f"{q['size']}\"" if q.get('size') else '', f"({q['res']})" if q.get('res') else ''] if t) or None),
@@ -298,8 +388,7 @@ def comentarios(clave, nombre):
 
 def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
     q, os_ = x['eq'], x['os']
-    tipo = {'nb': 'Notebooks', 'ph': 'Celulares', 'tb': 'Tablets', 'tv': 'Televisores', 'cs': 'Consolas'}[x['k']]
-    lista = '/' + tipo.lower()
+    tipo, lista = CATS[x['k']][0], '/' + CATS[x['k']][1]
     f_rel, f_abs = foto_de(x['id'], fotos)
     nombre = x['nombre']
     cat = categoria(x)
@@ -314,7 +403,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
         desc = f'{nombre}: hoy no lo encontramos con stock en las tiendas que revisamos. Mira equipos parecidos y sus precios.'
     # Datos para Google
     ld = {'@context': 'https://schema.org', '@graph': [
-        {'@type': 'Product', 'name': nombre, 'brand': {'@type': 'Brand', 'name': x['marca']}, 'category': {'nb': 'Notebook', 'ph': 'Celular', 'tb': 'Tablet', 'tv': 'Televisor', 'cs': 'Consola de videojuegos'}[x['k']],
+        {'@type': 'Product', 'name': nombre, 'brand': {'@type': 'Brand', 'name': x['marca']}, 'category': {'nb': 'Notebook', 'ph': 'Celular', 'tb': 'Tablet', 'tv': 'Televisor', 'cs': 'Consola de videojuegos'}.get(x['k']) or categoria(x),
          'description': f'{nombre}: {specs}.', 'url': SITIO + url, **({'image': f_abs} if f_abs else {}),
          **({'offers': {'@type': 'AggregateOffer', 'priceCurrency': 'CLP', 'lowPrice': os_[0]['p'], 'highPrice': os_[-1]['p'], 'offerCount': len(os_),
                         'availability': 'https://schema.org/InStock', **({'itemCondition': 'https://schema.org/RefurbishedCondition'} if q.get('refurb') else {'itemCondition': 'https://schema.org/NewCondition'})}} if os_ else {})},
@@ -343,6 +432,8 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
         cands = [y for y in cands if bool(y['eq'].get('refurb')) == bool(q.get('refurb'))]
     elif x['k'] == 'cs':
         cands = [y for y in cands if (y['eq'].get('tipo') == 'tv') == (q.get('tipo') == 'tv')] or cands
+    elif x['k'] in ('lv', 'as', 'bt', 'cf'):
+        cands = [y for y in cands if categoria(y) == categoria(x)] or cands
     if x['k'] == 'tv':
         cands.sort(key=lambda y: (abs((y['eq'].get('size') or 0) - (q.get('size') or 0)) > 5, abs(y['os'][0]['p'] - ref)))
     else:
@@ -395,7 +486,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
 <header class="hd"><div class="hd-in wrap">
   <a class="hd-logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="36" height="36" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
   <form class="search" action="{lista}" role="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input name="q" type="search" placeholder="Buscar {tipo.lower()}" aria-label="Buscar {tipo.lower()}" autocomplete="off"></form>
-  <nav class="hd-cats" aria-label="Categorías">{''.join(f'<a href="/{c.lower()}"' + (' aria-current="page"' if c == tipo else '') + '>' + (f'<span class="lg">{c}</span><span class="sm">TV</span>' if c == 'Televisores' else c) + '</a>' for c in ('Notebooks', 'Celulares', 'Tablets', 'Televisores', 'Consolas'))}</nav>
+  <nav class="hd-cats" aria-label="Categorías">{menu(lista.strip('/'))}</nav>
 </div></header>
 <main class="wrap">
   <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a><span aria-hidden="true">›</span><a href="{lista}">{tipo}</a><span aria-hidden="true">›</span><span aria-current="page">{e(nombre)}</span></nav>
@@ -422,7 +513,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
   <section class="bloque" aria-labelledby="t3">
     <h2 id="t3">Características</h2>
     <dl class="tec">{tabla_tecnica(x)}</dl>
-    <p class="nota"><a href="{lista}?ver={e(x['id'])}">{'Compararla con otras' if x['k'] in ('cs', 'tb') else 'Compararlo con otros'} {tipo.lower()} en el comparador</a></p>
+    <p class="nota"><a href="{lista}?ver={e(x['id'])}">{'Compararla con otras' if CATS[x['k']][4] else 'Compararlo con otros'} {tipo.lower()} en el comparador</a></p>
   </section>
   {comentarios(url.lstrip('/'), nombre)}
   {f'<section class="bloque" aria-labelledby="t4"><h2 id="t4">Otros que te pueden convenir</h2><div class="pars">{parecidos}</div></section>' if parecidos else ''}
@@ -556,8 +647,7 @@ GUIAS = [
         ],
     },
 ]
-TIPOS = {'nb': ('Notebooks', 'notebook', 'notebooks'), 'ph': ('Celulares', 'celular', 'celulares'), 'tb': ('Tablets', 'tablet', 'tablets'),
-         'tv': ('Televisores', 'televisor', 'televisores'), 'cs': ('Consolas', 'consola', 'consolas')}
+TIPOS = {k: (c[0], c[2], c[1]) for k, c in CATS.items()}
 
 
 def miles(n):
@@ -734,7 +824,7 @@ def pagina_guia(g, cands, fotos, urls, hoy_txt, hoy):
 <header class="hd"><div class="hd-in wrap">
   <a class="hd-logo" href="/" aria-label="¿Cuál me conviene? Inicio"><img src="/assets/puma-icono-96.png" alt="" width="36" height="36" decoding="async"><span>¿Cuál me <em>conviene?</em></span></a>
   <form class="search" action="{lista}" role="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input name="q" type="search" placeholder="Buscar {tipo.lower()}" aria-label="Buscar {tipo.lower()}" autocomplete="off"></form>
-  <nav class="hd-cats" aria-label="Categorías">{''.join(f'<a href="/{c.lower()}"' + (' aria-current="page"' if c == tipo else '') + '>' + (f'<span class="lg">{c}</span><span class="sm">TV</span>' if c == 'Televisores' else c) + '</a>' for c in ('Notebooks', 'Celulares', 'Tablets', 'Televisores', 'Consolas'))}</nav>
+  <nav class="hd-cats" aria-label="Categorías">{menu(lista.strip('/'))}</nav>
 </div></header>
 <main class="wrap gPag">
   <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a><span aria-hidden="true">›</span><a href="{lista}">{tipo}</a><span aria-hidden="true">›</span><span aria-current="page">Guía</span></nav>
@@ -848,7 +938,7 @@ def main():
     slugs = json.load(open(SLUGS, encoding='utf-8')) if os.path.exists(SLUGS) else {}
     fotos = json.load(open(FOTOS, encoding='utf-8')) if os.path.exists(FOTOS) else {}
     usados = set(slugs.values())
-    CARP = {'nb': '/notebook/', 'ph': '/celular/', 'tb': '/tablet/', 'tv': '/televisor/', 'cs': '/consola/'}
+    CARP = {k: '/' + c[2] + '/' for k, c in CATS.items()}
     # Equipos que salieron de las listas: si el mismo equipo vuelve con otro id, recupera su dirección,
     # y con ella sus comentarios y los avisos de precio que la gente pidió (se guardan por dirección).
     actuales = {x['id'] for x in todos}
@@ -881,7 +971,7 @@ def main():
     except ValueError:
         pass
     mins = minimos_historicos(todos, hist, hoy)
-    for carpeta in ('notebook', 'celular', 'tablet', 'televisor', 'consola'):
+    for carpeta in [c[2] for c in CATS.values()]:
         os.makedirs(os.path.join(RAIZ, carpeta), exist_ok=True)
     escritas = 0
     for x in todos:
@@ -911,6 +1001,10 @@ def main():
         'window.CMC_FICHAS = ' + json.dumps(urls, ensure_ascii=False, separators=(',', ':')) + ';\n'
         '/* Mínimo histórico: {ficha: [precio, primer día con precio]} (sello en las tarjetas, assets/cmc-ui.js) */\n'
         'window.CMC_MINIMOS = ' + json.dumps({urls[i]: [p, d.isoformat()] for i, (p, d) in mins.items()}, ensure_ascii=False, separators=(',', ':')) + ';\n')
+    # Tiendas oficiales de cada marca, para todas las páginas (nombre y color; ver precios.OFICIALES)
+    open(os.path.join(RAIZ, 'assets', 'oficiales.js'), 'w', encoding='utf-8').write(
+        '/* Generado por herramientas/fichas.py desde precios.OFICIALES: tiendas oficiales de cada marca. */\n'
+        'window.CMC_OFICIALES = ' + json.dumps(precios.OFICIALES, ensure_ascii=False, separators=(',', ':')) + ';\n')
     # Datos livianos para la portada: todas las categorías en un solo archivo (sin enlaces ni notas)
     port = []
     for x in todos:
@@ -939,11 +1033,7 @@ def main():
     # Mapa del sitio para Google
     lm = hoy.isoformat()
     filas = [f'  <url><loc>{SITIO}/</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>',
-             f'  <url><loc>{SITIO}/notebooks</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
-             f'  <url><loc>{SITIO}/celulares</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
-             f'  <url><loc>{SITIO}/tablets</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
-             f'  <url><loc>{SITIO}/televisores</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
-             f'  <url><loc>{SITIO}/consolas</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>']
+            ] + [f'  <url><loc>{SITIO}/{c[1]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>' for c in CATS.values()]
     filas += [f'  <url><loc>{SITIO}/guia/{g["slug"]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>' for g in GUIAS]
     filas += [f'  <url><loc>{SITIO}{urls[x["id"]]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>' for x in todos if x['os']]
     open(os.path.join(RAIZ, 'sitemap.xml'), 'w', encoding='utf-8').write(
