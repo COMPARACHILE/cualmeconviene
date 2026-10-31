@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actualización de precios de ¿Cuál me conviene? (notebooks, celulares, tablets, televisores, consolas, lavadoras,
-aspiradoras, batidoras y cafeteras; incluye las tiendas oficiales de cada marca).
+aspiradoras, batidoras, cafeteras y aires acondicionados; incluye las tiendas oficiales de cada marca).
 
   python3 herramientas/precios.py lista
       Muestra, por tienda, qué abrir y qué rutas leer con herramientas/leer_precios.js.
@@ -51,7 +51,7 @@ NOTA_ESTANDAR = re.compile(r'^(Con tarjeta CMR|Precio Internet|Con Tarjeta Cenco
 # Categorías nuevas: mismo formato que celulares (lista JSON en una línea, "const EQUIPOS = [...];")
 EXTRA = {'tb': ('tablets.html', 'tablet'), 'tv': ('televisores.html', 'televisor'), 'cs': ('consolas.html', 'consola'),
          'lv': ('lavadoras.html', 'lavadora'), 'as': ('aspiradoras.html', 'aspiradora'), 'bt': ('batidoras.html', 'batidora'),
-         'cf': ('cafeteras.html', 'cafetera')}
+         'cf': ('cafeteras.html', 'cafetera'), 'ac': ('aires-acondicionados.html', 'aire-acondicionado')}
 
 
 def cargar_extra():

@@ -16,6 +16,7 @@ on:
       - 'aspiradoras.html'
       - 'batidoras.html'
       - 'cafeteras.html'
+      - 'aires-acondicionados.html'
       - 'herramientas/fotos.json'
       - 'herramientas/fotos.py'
       - 'herramientas/fichas.py'
@@ -52,7 +53,7 @@ jobs:
         run: |
           git config user.name "sitio-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add *.html assets/p assets/og assets/fotos.js assets/fichas.js assets/oficiales.js assets/portada.json assets/avisos.json herramientas/fotos-log.txt herramientas/fichas.json herramientas/rutas.json notebook celular tablet televisor consola lavadora aspiradora batidora cafetera guia sitemap.xml
+          git add *.html assets/p assets/og assets/fotos.js assets/fichas.js assets/oficiales.js assets/portada.json assets/avisos.json herramientas/fotos-log.txt herramientas/fichas.json herramientas/rutas.json notebook celular tablet televisor consola lavadora aspiradora batidora cafetera aire-acondicionado guia sitemap.xml
           if git diff --cached --quiet; then echo "Sin cambios"; exit 0; fi
           git commit -m "Fotos y fichas actualizadas (automático)"
           for i in 1 2 3; do git pull --rebase origin "${GITHUB_REF_NAME}" && git push && exit 0; sleep 5; done
