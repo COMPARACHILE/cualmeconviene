@@ -36,6 +36,9 @@ const LECTORES = {
     return { e: 'sin precio' };
   },
   paris(h) {
+    // Sin stock (01-11-2026): los botones "Comprar ahora" / "Agregar al carro" vienen deshabilitados en el HTML
+    const bs = [...new DOMParser().parseFromString(h, 'text/html').querySelectorAll('button')].filter(b => /Comprar ahora|Agregar al carro/i.test(b.textContent));
+    if (bs.length && bs.every(b => b.hasAttribute('disabled'))) return { e: 'sin stock' };
     const ps = [];
     for (const x of h.matchAll(/\$([\d.]{5,})/g)) {
       const pre = h.slice(Math.max(0, x.index - 500), x.index);
