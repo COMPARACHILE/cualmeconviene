@@ -230,7 +230,8 @@ const _ruta = (s, url) => {
 async function publicados(tienda, rutas) {
   const hojas = [['notebooks.html', 'const NOTEBOOKS = ', '\n];'], ['celulares.html', 'const PHONES = ', ';\n'],
     ['tablets.html', 'const EQUIPOS = ', ';\n'], ['televisores.html', 'const EQUIPOS = ', ';\n'], ['consolas.html', 'const EQUIPOS = ', ';\n'],
-    ['lavadoras.html', 'const EQUIPOS = ', ';\n'], ['aspiradoras.html', 'const EQUIPOS = ', ';\n'], ['batidoras.html', 'const EQUIPOS = ', ';\n'], ['cafeteras.html', 'const EQUIPOS = ', ';\n']];
+    ['lavadoras.html', 'const EQUIPOS = ', ';\n'], ['aspiradoras.html', 'const EQUIPOS = ', ';\n'], ['batidoras.html', 'const EQUIPOS = ', ';\n'], ['cafeteras.html', 'const EQUIPOS = ', ';\n'],
+    ['aires-acondicionados.html', 'const EQUIPOS = ', ';\n']];
   const pos = new Map(rutas.map((u, i) => [u, i])), exp = rutas.map(() => null);
   for (const [f, a, b] of hojas) {
     const t = await (await fetch(_GH + f, { cache: 'no-store' })).text();
@@ -250,7 +251,8 @@ async function cambios(tienda, rutas, res, solo) {
   for (const [i, p, c, x] of typeof res === 'string' ? JSON.parse(res) : res) {
     if (solo && !solo.has(i)) continue;
     const e = exp[i];
-    if (!e) { out.push(i + ':E:no publicado'); continue; }
+    // Ruta que no está en las páginas leídas arriba (categoría nueva): se manda lo leído tal cual
+    if (!e) { out.push(p ? i + ':' + p + ':' + c + ':' + (x || 0) : i + ':E:' + x); continue; }
     if (!p) { if (!(AG.includes(x) && e[3])) out.push(i + ':E:' + x); }
     else if (e[3] || p !== e[0] || c !== e[1] || (x || 0) !== e[2]) out.push(i + ':' + p + ':' + c + ':' + (x || 0));
   }
