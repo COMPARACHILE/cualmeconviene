@@ -4,6 +4,7 @@
      __RUN('falabella', 'leer')      // modo: leer | entel | wom | listado ('pcfactory-2' para la tanda 2 de PCFactory)
    Luego se consulta JOB (fase, resumen) hasta que JOB.done. JOB.diff es lo que cambió (formato de cambios()),
    se guarda como <tienda>.txt y se aplica con "python3 herramientas/precios.py aplicar <carpeta>".
+   JOB.cupones (Falabella y Paris) se guarda como <tienda>.cup en la misma carpeta.
    Los errores 403/429/5xx y de red se reintentan solos (hasta 6 vueltas, más lentas cada vez). */
 window.__RUN = function (T, MODO) {
   const GH = 'https://raw.githubusercontent.com/COMPARACHILE/cualmeconviene/main/';
@@ -11,7 +12,7 @@ window.__RUN = function (T, MODO) {
   (async () => {
     try {
       const s = await (await fetch(GH + 'herramientas/leer_precios.js?' + Date.now(), { cache: 'no-store' })).text();
-      (0, eval)(s + '\n;window.__L={leer,leerEntel,leerWom,leerListado,cambios};');
+      (0, eval)(s + '\n;window.__L={leer,leerEntel,leerWom,leerListado,cambios,CUPONES};');
       const R = (await (await fetch(GH + 'herramientas/rutas.json?' + Date.now(), { cache: 'no-store' })).json())[T.split('-')[0]];
       JOB.n = R.length; JOB.fase = 'leyendo';
       let raw;
@@ -46,6 +47,16 @@ window.__RUN = function (T, MODO) {
       const vistos = solo ? res.filter(r => solo.has(r[0])) : res;
       JOB.resumen = { total: vistos.length, conPrecio: vistos.filter(r => r[1]).length,
         errores: vistos.filter(r => !r[1]).reduce((a, r) => (a[r[3]] = (a[r[3]] || 0) + 1, a), {}) };
+      // Cupones: t = {etiqueta: [i...]} (Paris); g = {"código|etiqueta|vence": {i: precio sin tarjeta}} (Falabella)
+      if (T === 'falabella' || T === 'paris') {
+        const cup = { t: {}, g: {} };
+        R.forEach((u, i) => {
+          const q = __L.CUPONES[u]; if (!q) return;
+          (q.t || []).forEach(t => (cup.t[t] = cup.t[t] || []).push(i));
+          if (q.c) { const k = [q.c, q.l, q.v].join('|'); (cup.g[k] = cup.g[k] || {})[i] = q.b; }
+        });
+        JOB.cupones = JSON.stringify(cup);
+      }
       JOB.fase = 'listo'; JOB.done = true; JOB.seg = Math.round((Date.now() - JOB.ini) / 1000);
     } catch (e) { JOB.err = String(e && e.stack || e).slice(0, 400); JOB.done = true; }
   })();

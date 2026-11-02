@@ -13,10 +13,14 @@
    Devuelve un texto JSON corto: [[i, precio, c, extra], ...] donde i es la posición en RUTAS,
    c = 1 si el precio pide tarjeta o transferencia, y extra es el precio sin tarjeta (Ripley),
    el de otros medios (PCFactory) o el motivo del error cuando precio = 0.
-   Solo lee precios públicos. No usar en Mercado Libre. */
+   Solo lee precios públicos. No usar en Mercado Libre.
+   Cupones (02-11-2026): Falabella trae el cupón en los datos de la ficha (variants[].coupons: código, etiqueta y
+   vencimiento). Paris dibuja el cupón con JavaScript, así que aquí solo se anotan las etiquetas "tag-...-dp-N" de la
+   ficha, y herramientas/cupones.json dice qué cupón corresponde a cada etiqueta. Quedan en CUPONES, por ruta. */
 
 const _num = s => s == null ? null : +String(s).replace(/[^\d]/g, '') || null;
 const _fmt = n => '$' + n.toLocaleString('es-CL');
+const CUPONES = {};
 
 const LECTORES = {
   falabella(h, u) {
@@ -29,13 +33,19 @@ const LECTORES = {
     const v = (pd.variants || []).find(x => x.id === sku) || pd.variants[0];
     const pr = Object.fromEntries((v.prices || []).map(p => [p.type, _num((p.price || [])[0])]));
     if (v.isPurchaseable === false) return { e: 'sin stock' };
+    const cu = (v.coupons || []).find(x => x && x.code);
+    if (cu) CUPONES[u] = { c: cu.code, l: cu.label || 'Cupón', v: cu.endDate, b: pr.eventPrice || pr.internetPrice || pr.normalPrice || 0 };
+    else delete CUPONES[u];
     if (pr.cmrPrice) return { p: pr.cmrPrice, c: 1, n: 'Con tarjeta CMR' };
     if (pr.eventPrice) return { p: pr.eventPrice, c: 0, n: 'Precio Internet' };
     if (pr.internetPrice) return { p: pr.internetPrice, c: 0, n: 'Precio Internet' };
     if (pr.normalPrice) return { p: pr.normalPrice, c: 0, n: 'Precio Internet' };
     return { e: 'sin precio' };
   },
-  paris(h) {
+  paris(h, u) {
+    const tags = [...new Set(h.match(/tag-[a-z0-9-]+-dp-\d+/gi) || [])];
+    if (tags.length) CUPONES[u] = { t: tags };
+    else delete CUPONES[u];
     // Sin stock (01-11-2026): los botones "Comprar ahora" / "Agregar al carro" vienen deshabilitados en el HTML
     const bs = [...new DOMParser().parseFromString(h, 'text/html').querySelectorAll('button')].filter(b => /Comprar ahora|Agregar al carro/i.test(b.textContent));
     if (bs.length && bs.every(b => b.hasAttribute('disabled'))) return { e: 'sin stock' };

@@ -15,6 +15,7 @@ aspiradoras, batidoras, cafeteras y aires acondicionados; incluye las tiendas of
       con solo lo que cambió (lo que devuelve cambios() de leer_precios.js),
       actualiza precios, notas y fechas, y muestra el resumen, con los equipos que hoy
       marcan su precio más bajo desde que los seguimos (mínimos históricos).
+      Si hay <tienda>.cup (JOB.cupones de correr.js), actualiza también los cupones de esa tienda.
 
   python3 herramientas/precios.py minimos
       Solo la lista de mínimos históricos con los precios que están en las páginas.
@@ -120,6 +121,60 @@ def nota(t, c, x):
     return None
 
 
+def aplicar_cupones(carpeta, grupos, RT):
+    """Pone el cupón vigente en cada oferta (o['cup']) y quita los vencidos.
+    <tienda>.cup trae lo leído: g = {"código|etiqueta|vence": {i: precio sin tarjeta}} (el cupón viene en la ficha)
+    y t = {etiqueta: [i...]} (Paris: herramientas/cupones.json dice qué cupón es cada etiqueta).
+    Una tienda sin .cup conserva sus cupones hasta que venzan. Devuelve las líneas del resumen."""
+    ruta_c = os.path.join(RAIZ, 'herramientas', 'cupones.json')
+    conocidos = json.load(open(ruta_c, encoding='utf-8')) if os.path.exists(ruta_c) else {}
+    ahora = datetime.datetime.now(datetime.timezone.utc)
+    vence = lambda v: datetime.datetime.fromisoformat(v.replace('Z', '+00:00'))
+    por, leidas, sin_dato, vencidos = {}, set(), {}, set()
+    for f in sorted(glob.glob(os.path.join(carpeta, '*.cup'))):
+        t = os.path.basename(f)[:-4]
+        leidas.add(t)
+        d = json.load(open(f, encoding='utf-8'))
+        for clave, filas in d.get('g', {}).items():
+            c, l, v = clave.split('|', 2)
+            for i, base in filas.items():
+                por[(t, RT[t][int(i)])] = {'c': c, 'l': l, 'v': v, 'b': base}
+        for tag, idx in d.get('t', {}).items():
+            k = conocidos.get(t, {}).get(tag)
+            if k is None:
+                sin_dato[f'{t}: {tag}'] = len(idx)
+            elif k.get('c') and vence(k['v']) <= ahora:
+                vencidos.add(f"{k['c']} ({t}: {tag})")
+            elif k.get('c'):
+                for i in idx:
+                    por.setdefault((t, RT[t][i]), k)
+    cuenta = {}
+    for _, lst in grupos:
+        for eq in lst:
+            for o in eq['offers']:
+                if o['s'] in leidas:
+                    q = por.get((o['s'], ruta(o)))
+                    o.pop('cup', None)
+                    if q:
+                        cup = {'c': q['c'], 'l': q.get('l') or 'Cupón', 'v': q['v']}
+                        if q.get('app'): cup['app'] = 1
+                        pct = re.search(r'(\d+)\s*%', cup['l'])
+                        # Sobre el precio sin tarjeta: no sabemos si el cupón se suma al precio con tarjeta
+                        base = q.get('b') or o.get('p')
+                        if pct and base and round(base * (100 - int(pct.group(1))) / 100) < o['p']:
+                            cup['pc'] = round(base * (100 - int(pct.group(1))) / 100)
+                        o['cup'] = cup
+                if o.get('cup') and vence(o['cup']['v']) <= ahora:
+                    vencidos.add(o['cup']['c'])
+                    o.pop('cup')
+                if o.get('cup') and not o.get('x'):
+                    cuenta[o['cup']['c']] = cuenta.get(o['cup']['c'], 0) + 1
+    out = ['Cupones vigentes: ' + (', '.join(f'{c} ({n} ofertas)' for c, n in sorted(cuenta.items())) or 'ninguno')]
+    if vencidos: out.append('Cupones vencidos, abrir una ficha y actualizar herramientas/cupones.json: ' + ', '.join(sorted(vencidos)))
+    if sin_dato: out.append('Etiquetas sin dato, abrir una ficha y anotarlas en herramientas/cupones.json: ' + ', '.join(f'{k} ({n})' for k, n in sorted(sin_dato.items())))
+    return out
+
+
 def aplicar(carpeta):
     nb_h, (s, e), nbs, ph_h, (s2, e2), phs = cargar()
     extra = cargar_extra()
@@ -181,6 +236,7 @@ def aplicar(carpeta):
                 eq['seen'] = hoy
             else:
                 eq['offers'].sort(key=lambda x: x['p'])
+    resumen_cupones = aplicar_cupones(carpeta, grupos, RT)
     nb_txt = '[\n' + ',\n'.join('  ' + json.dumps(n, ensure_ascii=False) for n in nbs) + '\n]'
     nb_h = nb_h[:s] + nb_txt + nb_h[e:]
     nb_h = re.sub(r"const SEEN_GAMER = '[\d-]+', SEEN_OTHER = '[\d-]+';", f"const SEEN_GAMER = '{hoy}', SEEN_OTHER = '{hoy}';", nb_h)
@@ -201,6 +257,7 @@ def aplicar(carpeta):
     print('Cambios más grandes:\n  ' + '\n  '.join(c[1] for c in cambios[:5]))
     print(f'Ocultos por falta de stock ({len(ocultos)}):\n  ' + '\n  '.join(ocultos))
     print(f'No revisados ({len(sin)}):\n  ' + '\n  '.join(sin))
+    print('\n'.join(resumen_cupones))
     minimos_historicos()
 
 
