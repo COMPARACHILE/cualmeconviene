@@ -21,7 +21,7 @@ window.__RUN = function (T, MODO) {
       else if (MODO === 'listado') raw = __L.leerListado(T.split('-')[0], R);
       else raw = await __L.leer(T, R);
       const res = JSON.parse(raw);
-      const malo = r => !r[1] && /error (403|429|5\d\d)|Failed|TypeError|NetworkError|abort/i.test(String(r[3]));
+      const malo = r => !r[1] && /error (403|429|5\d\d)|Failed|TypeError|NetworkError|abort|timeout|timed out/i.test(String(r[3]));
       const sleep = ms => new Promise(r => setTimeout(r, ms));
       if (MODO === 'leer') {
         for (let vuelta = 0; vuelta < 6 && res.some(malo); vuelta++) {

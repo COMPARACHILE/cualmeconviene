@@ -379,6 +379,30 @@ def grafico(hist, hoy_precio, hoy):
     return svg, frase
 
 
+def cupon(o):
+    """Línea del cupón de la oferta (mismo texto que CMC.cupon de assets/cmc-ui.js). cmc.js la quita al vencer."""
+    q = o.get('cup')
+    if not q or not q.get('c'):
+        return ''
+    lim = datetime.datetime.fromisoformat(q['v'].replace('Z', '+00:00'))
+    if lim <= datetime.datetime.now(datetime.timezone.utc):
+        return ''
+    cl = lim.astimezone(datetime.timezone(datetime.timedelta(hours=-3)))
+    meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic']
+    if cl.hour == 0 and cl.minute == 0:
+        d = cl - datetime.timedelta(minutes=1)
+        fecha = f'hasta el {d.day} {meses[d.month - 1]}'
+    else:
+        fecha = f'vence el {cl.day} {meses[cl.month - 1]}, {cl.hour}:{cl.minute:02d}'
+    tienda = TIENDAS[o['s']][0]
+    que = f'Cupón de la app de {tienda}' if q.get('app') else f"{q.get('l') or 'Cupón'} en {tienda}"
+    if q.get('pc'):
+        que += ' · baja a ≈' + plata(q['pc'])
+    base = 'Calculado sobre el precio sin tarjeta. ' if q.get('pc') and o.get('c') else ('Calculado sobre el precio publicado. ' if q.get('pc') else '')
+    return (f'<span class="c3-cupon" data-vence="{e(q["v"])}"><button type="button" class="cupon" data-cupon="{e(q["c"])}" aria-label="Copiar cupón {e(q["c"])}" title="Copiar">{e(q["c"])}</button>'
+            f'<span title="{e(base + "El descuento se aplica al pagar y se confirma en la tienda.")}">{e(que)} · {fecha}</span></span>')
+
+
 def pago(o):
     """Etiqueta corta del medio de pago ("con tarjeta" o "transferencia") en vez de un asterisco."""
     if not o.get('c'):
@@ -445,7 +469,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
         extra = ' · '.join(t for t in [o.get('note'), ('Vende: ' + o['seller']) if o.get('seller') else None] if t)
         etiqueta = '<b class="gana">Más barato</b>' if k == 0 or dif == 0 else f'<b class="mas">+{plata(dif)}</b>'
         filas += (f'<li class="{"g" if dif == 0 else ""}"><span class="tn"><i style="background:{color}"></i><span><strong>{nom}</strong>'
-                  f'{" <small>operadora</small>" if canal == "operadora" else ""}{f"<em>{e(extra)}</em>" if extra else ""}</span></span>'
+                  f'{" <small>operadora</small>" if canal == "operadora" else ""}{f"<em>{e(extra)}</em>" if extra else ""}{cupon(o)}</span></span>'
                   f'<span class="tp">{plata(o["p"])}{pago(o)}{etiqueta}</span>'
                   f'<a class="tb" href="{e(o["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{o["s"]}">Ver en {nom}</a></li>')
     svg, frase = grafico(hist.get(x['id'], {}), os_[0]['p'] if os_ else None, hoy)
@@ -476,7 +500,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
                   (f'<p class="ah neutro">Mismo precio en {len(os_)} tiendas</p>' if len(os_) > 1 else '<p class="ah neutro">Lo encontramos en una tienda</p>'))
         mh = (mins or {}).get(x['id'])
         mejor = (f'<div class="mejor">{sello_minimo(mh[1]) if mh and mh[0] >= b["p"] else ""}<p class="et">Precio más bajo hoy</p><p class="precio">{plata(b["p"])}{pago(b)}</p>'
-                 f'<p class="donde"><i style="background:{TIENDAS[b["s"]][1]}"></i>en {e(donde)}{(" · " + e(b["note"])) if b.get("note") else ""}</p>{ahorro}'
+                 f'<p class="donde"><i style="background:{TIENDAS[b["s"]][1]}"></i>en {e(donde)}{(" · " + e(b["note"])) if b.get("note") else ""}</p>{next((c for c in map(cupon, os_) if c), "")}{ahorro}'
                  f'<a class="ir" href="{e(b["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{b["s"]}">Ir a {TIENDAS[b["s"]][0]}</a>{avisame(False)}</div>')
     else:
         mejor = f'<div class="mejor sin"><p class="et">Sin stock hoy</p><p>No lo encontramos disponible en las tiendas que revisamos. Abajo tienes equipos parecidos.</p>{avisame(True)}</div>'

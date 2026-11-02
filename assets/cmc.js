@@ -16,6 +16,17 @@
   const cat = document.querySelector('.hd-cats [aria-current]');
   if (cat && cat.parentElement.scrollWidth > cat.parentElement.clientWidth) cat.parentElement.scrollLeft = Math.max(0, cat.offsetLeft - cat.parentElement.offsetLeft - 24);
 
+  /* ---------- Cupones: copiar el código; en las fichas (páginas fijas) quitar los vencidos ---------- */
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.cupon[data-cupon]');
+    if (!b || !navigator.clipboard) return;
+    navigator.clipboard.writeText(b.dataset.cupon).then(() => {
+      b.textContent = 'Copiado';
+      setTimeout(() => { b.textContent = b.dataset.cupon; }, 1500);
+    }, () => {});
+  });
+  document.querySelectorAll('[data-vence]').forEach(el => { if (Date.parse(el.dataset.vence) <= Date.now()) el.remove(); });
+
   /* ---------- Resaltar la sección a la que se salta ---------- */
   const flash = el => {
     if (!el) return;

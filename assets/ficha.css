@@ -72,6 +72,8 @@ img { display: block; max-width: 100%; }
 .tn i { width: 12px; height: 12px; border-radius: 4px; flex: none; margin-top: 6px; }
 .tn strong { font-weight: 700; }
 .tn small { font-size: 12px; color: var(--gris); margin-left: 4px; }
+.tn .c3-cupon { margin-top: 6px; }
+.mejor .c3-cupon { margin-top: 8px; }
 .tn em { display: block; font-style: normal; font-size: 13px; color: var(--gris); margin-top: 2px; }
 .tp { grid-area: p; text-align: right; font: 800 1.2rem/1.2 var(--f-display); font-variant-numeric: tabular-nums; }
 .tp abbr { text-decoration: none; color: var(--gris); }

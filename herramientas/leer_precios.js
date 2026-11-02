@@ -179,7 +179,7 @@ async function leer(tienda, rutas, grupo = 6) {
       const j = i + k;
       try {
         if (DIRECTOS[tienda]) { out.push(_corto(j, await DIRECTOS[tienda](u))); return; }
-        const r = await fetch(u);
+        const r = await fetch(u, { signal: AbortSignal.timeout(45000) });  // una lectura colgada no debe detener toda la tienda
         if (!r.ok) { out.push([j, 0, 0, 'error ' + r.status]); return; }
         out.push(_corto(j, await LECTORES[tienda](await r.text(), u)));
       } catch (err) { out.push([j, 0, 0, String(err).slice(0, 40)]); }

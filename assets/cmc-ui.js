@@ -37,6 +37,21 @@
     return `<span class="minimo" title="El precio más bajo que hemos visto para este equipo desde el ${esc(f)}"><img src="${PUMA}" alt="" width="26" height="26" decoding="async"><span>Mínimo histórico<small>El más bajo desde el ${esc(f)}</small></span></span>`;
   };
 
+  /* Cupón de una tienda (o.cup: c código, l etiqueta, app, v vencimiento, pc precio aproximado con cupón).
+     Lo arma herramientas/precios.py. Al vencer deja de mostrarse solo, aunque la página no se haya actualizado. */
+  const cupFecha = v => {
+    const z = { timeZone: 'America/Santiago' }, d = new Date(v);
+    const dia = x => `${x.toLocaleDateString('es-CL', { ...z, day: 'numeric' })} ${MES[+x.toLocaleDateString('es-CL', { ...z, month: 'numeric' }) - 1]}`;
+    const h = d.toLocaleTimeString('es-CL', { ...z, hour: 'numeric', minute: '2-digit', hour12: false }).replace(/^0(\d)/, '$1');
+    return /^(0|00|24):00$/.test(h) ? `hasta el ${dia(new Date(d - 6e4))}` : `vence el ${dia(d)}, ${h}`;
+  };
+  CMC.cuponVivo = o => !!(o && o.cup && o.cup.c) && !(Date.parse(o.cup.v) <= Date.now());
+  CMC.cupon = (o, tienda) => {
+    const q = o.cup, base = q.pc && o.c ? 'Calculado sobre el precio sin tarjeta. ' : q.pc ? 'Calculado sobre el precio publicado. ' : '';
+    const que = q.app ? `Cupón de la app de ${tienda}` : `${q.l || 'Cupón'} en ${tienda}`;
+    return `<p class="c3-cupon"><button type="button" class="cupon" data-cupon="${esc(q.c)}" aria-label="Copiar cupón ${esc(q.c)}" title="Copiar">${esc(q.c)}</button><span title="${esc(base + 'El descuento se aplica al pagar y se confirma en la tienda.')}">${esc(que)}${q.pc ? ` · baja a ≈${fmt(q.pc)}` : ''} · ${esc(cupFecha(q.v))}</span></p>`;
+  };
+
   /* Nota de potencia de 1 a 10: el puesto del equipo entre todos los del sitio (10 = de los más potentes) */
   CMC.escala = vals => {
     const s = vals.filter(v => v > 0).sort((a, b) => a - b);
@@ -60,8 +75,9 @@
     const donde = !multi ? `Solo en ${nom(b.s)}`
       : hi.p === b.p ? `Mismo precio en ${os.length} tiendas`
       : `${nom(b.s)}${empate > 1 ? ' y ' + (empate - 1) + ' más' : ''} · ${os.length} tiendas`;
+    const conCupon = os.find(CMC.cuponVivo);
     const ir = `class="offer c3-ir" data-id="${esc(e.dataId)}" data-store="${b.s}" href="${esc(b.url)}" target="_blank" rel="noopener nofollow sponsored"`;
-    const fila = o => `<li><a class="offer${o.p === b.p ? ' best' : ''}" data-id="${esc(e.dataId)}" data-store="${o.s}" href="${esc(o.url)}" target="_blank" rel="noopener nofollow sponsored"><i class="dot" style="background:${col(o.s)}"></i><span class="oname">${nom(o.s)}${o.note || o.seller ? `<small>${esc([o.note, o.seller].filter(Boolean).join(' · '))}</small>` : ''}</span><span class="oprice">${fmt(o.p)}${o.p > b.p ? `<small>+${fmt(o.p - b.p)}</small>` : ''}</span></a></li>`;
+    const fila = o => `<li><a class="offer${o.p === b.p ? ' best' : ''}" data-id="${esc(e.dataId)}" data-store="${o.s}" href="${esc(o.url)}" target="_blank" rel="noopener nofollow sponsored"><i class="dot" style="background:${col(o.s)}"></i><span class="oname">${nom(o.s)}${o.note || o.seller || CMC.cuponVivo(o) ? `<small>${esc([CMC.cuponVivo(o) ? 'Cupón ' + o.cup.c : '', o.note, o.seller].filter(Boolean).join(' · '))}</small>` : ''}</span><span class="oprice">${fmt(o.p)}${o.p > b.p ? `<small>+${fmt(o.p - b.p)}</small>` : ''}</span></a></li>`;
     return `<article class="c3${e.sello ? ' elegido' : ''}"${e.anchor ? ` id="${esc(e.anchor)}"` : ''}>
       <a class="c3-foto pvA" href="${esc(e.ficha)}" tabindex="-1" aria-hidden="true">${e.art}</a>
       <div class="c3-info">
@@ -73,6 +89,7 @@
         ${e.nota || ''}
         <p class="c3-precio"><span class="price">${fmt(b.p)}</span>${CMC.pago(b)}</p>
         <p class="c3-donde"><i class="dot" style="background:${col(b.s)}"></i>${esc(donde)}</p>
+        ${conCupon ? CMC.cupon(conCupon, nom(conCupon.s)) : ''}
         ${multi && hi.p > b.p ? `<p class="c3-ahorro">Ahorras ${fmt(hi.p - b.p)}</p>` : ''}
         <div class="c3-acc"><a ${ir}>Ir a ${nom(b.s)}</a>${multi ? `<button type="button" class="c3-ver" aria-expanded="false">${os.length} precios</button>` : ''}</div>
         ${multi ? `<ul class="c3-tiendas" hidden aria-label="Precio en cada tienda">${os.map(fila).join('')}</ul>` : ''}
