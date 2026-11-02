@@ -47,12 +47,13 @@ window.__RUN = function (T, MODO) {
       const vistos = solo ? res.filter(r => solo.has(r[0])) : res;
       JOB.resumen = { total: vistos.length, conPrecio: vistos.filter(r => r[1]).length,
         errores: vistos.filter(r => !r[1]).reduce((a, r) => (a[r[3]] = (a[r[3]] || 0) + 1, a), {}) };
-      // Cupones: t = {etiqueta: [i...]} (Paris); g = {"código|etiqueta|vence": {i: precio sin tarjeta}} (Falabella)
+      // Cupones: t = {etiqueta: [i...]} y b = {i: precio sin tarjeta} (Paris); g = {"código|etiqueta|vence": {i: precio sin tarjeta}} (Falabella)
       if (T === 'falabella' || T === 'paris') {
-        const cup = { t: {}, g: {} };
+        const cup = { t: {}, g: {}, b: {} };
         R.forEach((u, i) => {
           const q = __L.CUPONES[u]; if (!q) return;
           (q.t || []).forEach(t => (cup.t[t] = cup.t[t] || []).push(i));
+          if (q.t && q.b) cup.b[i] = q.b;
           if (q.c) { const k = [q.c, q.l, q.v].join('|'); (cup.g[k] = cup.g[k] || {})[i] = q.b; }
         });
         JOB.cupones = JSON.stringify(cup);

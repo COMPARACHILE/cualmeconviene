@@ -124,8 +124,11 @@ def nota(t, c, x):
 def aplicar_cupones(carpeta, grupos, RT):
     """Pone el cupón vigente en cada oferta (o['cup']) y quita los vencidos.
     <tienda>.cup trae lo leído: g = {"código|etiqueta|vence": {i: precio sin tarjeta}} (el cupón viene en la ficha)
-    y t = {etiqueta: [i...]} (Paris: herramientas/cupones.json dice qué cupón es cada etiqueta).
-    Una tienda sin .cup conserva sus cupones hasta que venzan. Devuelve las líneas del resumen."""
+    y t = {etiqueta: [i...]} con b = {i: precio sin tarjeta} (Paris: herramientas/cupones.json dice qué cupón es
+    cada etiqueta). Si la etiqueta no trae el porcentaje, vale el número final del código: CUPON10 = 10%, TV20 = 20%.
+    El descuento se calcula sobre el precio sin tarjeta (en el carro de Paris CUPON10 y TV10 dieron eso, y el total
+    es el mismo con cualquier medio de pago). Una tienda sin .cup conserva sus cupones hasta que venzan.
+    Devuelve las líneas del resumen."""
     ruta_c = os.path.join(RAIZ, 'herramientas', 'cupones.json')
     conocidos = json.load(open(ruta_c, encoding='utf-8')) if os.path.exists(ruta_c) else {}
     ahora = datetime.datetime.now(datetime.timezone.utc)
@@ -135,6 +138,7 @@ def aplicar_cupones(carpeta, grupos, RT):
         t = os.path.basename(f)[:-4]
         leidas.add(t)
         d = json.load(open(f, encoding='utf-8'))
+        bases = d.get('b', {})
         for clave, filas in d.get('g', {}).items():
             c, l, v = clave.split('|', 2)
             for i, base in filas.items():
@@ -147,7 +151,7 @@ def aplicar_cupones(carpeta, grupos, RT):
                 vencidos.add(f"{k['c']} ({t}: {tag})")
             elif k.get('c'):
                 for i in idx:
-                    por.setdefault((t, RT[t][i]), k)
+                    por.setdefault((t, RT[t][i]), {**k, 'b': bases.get(str(i))})
     cuenta = {}
     for _, lst in grupos:
         for eq in lst:
@@ -158,11 +162,13 @@ def aplicar_cupones(carpeta, grupos, RT):
                     if q:
                         cup = {'c': q['c'], 'l': q.get('l') or 'Cupón', 'v': q['v']}
                         if q.get('app'): cup['app'] = 1
-                        pct = re.search(r'(\d+)\s*%', cup['l'])
-                        # Sobre el precio sin tarjeta: no sabemos si el cupón se suma al precio con tarjeta
+                        pct = re.search(r'(\d+)\s*%', cup['l']) or re.search(r'(\d{1,2})$', q['c'])
+                        dcto = int(pct.group(1)) if pct else 0
                         base = q.get('b') or o.get('p')
-                        if pct and base and round(base * (100 - int(pct.group(1))) / 100) < o['p']:
-                            cup['pc'] = round(base * (100 - int(pct.group(1))) / 100)
+                        if 0 < dcto < 100:
+                            if '%' not in cup['l']: cup['l'] = f'Cupón {dcto}%'
+                            if base and round(base * (100 - dcto) / 100) < o['p']:
+                                cup['pc'] = round(base * (100 - dcto) / 100)
                         o['cup'] = cup
                 if o.get('cup') and vence(o['cup']['v']) <= ahora:
                     vencidos.add(o['cup']['c'])

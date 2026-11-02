@@ -56,6 +56,8 @@ const LECTORES = {
       if (ps.length >= 2) break;
     }
     if (!ps.length) return { e: 'sin precio' };
+    // El cupón se descuenta del precio sin tarjeta (probado en el carro el 02-11-2026)
+    if (ps.length >= 2 && ps[0] < ps[1] && CUPONES[u]) CUPONES[u].b = ps[1];
     return ps.length >= 2 && ps[0] < ps[1] ? { p: ps[0], c: 1, n: 'Con Tarjeta Cencosud Scotiabank' } : { p: ps[0], c: 0, n: '' };
   },
   ripley(h0) {
