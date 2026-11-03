@@ -1119,6 +1119,14 @@ def picks_as(todos):
 
 
 QUE_COMPRAR = [
+    {'slug': 'que-notebook-comprar', 'k': 'nb', 'picks': lambda t: picks_nb(t), 'h1': '¿Qué notebook comprar en Chile?', 'corto': 'notebook',
+     'intro': 'Elegir bien depende de qué vas a hacer con él y cuánto quieres gastar. Aquí tienes qué mirar y los que más rinden por su precio hoy, según tu presupuesto y uso.',
+     'consejos': [('Memoria RAM: 8 GB mínimo, 16 GB cómodo', 'Con 8 GB funcionan Word, clases en línea y el navegador. Para programar o diseñar, 16 GB.'),
+                  ('Almacenamiento: siempre SSD', 'Un SSD enciende el equipo y abre programas en segundos. 256 GB alcanzan con la nube; 512 GB dan más tranquilidad.'),
+                  ('Procesador según el uso', 'Ryzen 3 o Core i3 para lo básico, Ryzen 5 o Core i5 para estudiar y trabajar varios años, Ryzen 7 o Core i7 para programar o editar.'),
+                  ('Tarjeta de video solo si juegas o diseñas', 'Para juegos o edición de video necesitas una tarjeta dedicada (RTX o similar). Para todo lo demás bastan los gráficos integrados.'),
+                  ('Tamaño y peso', '14 pulgadas para llevarlo todos los días, 15,6 para dejarlo en casa.')],
+     'preguntas': [('¿Cuánto debo gastar?', 'Para estudiar y trabajar, entre $400.000 y $700.000 alcanza para uno que dure varios años. Bajo $400.000 sirve para lo básico.')]},
     {'slug': 'que-smart-tv-comprar', 'k': 'tv', 'picks': picks_tv, 'h1': '¿Qué smart TV comprar en Chile?', 'corto': 'smart TV',
      'intro': 'La pantalla correcta depende del tamaño de tu pieza, de cuánto te alejas y de si ves cine o fútbol. Aquí tienes qué mirar y el más barato de cada tipo, con los precios de hoy.',
      'consejos': [('Tamaño según la distancia', 'A unos 2 metros sirve un televisor de 43 a 50 pulgadas. A 3 metros, uno de 55 a 65. Más grande solo vale la pena si tienes espacio.'),
@@ -1160,6 +1168,84 @@ QUE_COMPRAR = [
                   ('Estación de vaciado', 'Algunos se vacían solos y se friegan solos. Cuestan más, pero te olvidas por semanas.'),
                   ('Mascotas', 'Si tienes perro o gato, busca cepillo antienredo y filtro HEPA.')],
      'preguntas': []},
+]
+
+
+def _rank_nb(todos, uso, a, b, n=3):
+    c = [r for r in ranking_guia({'k': 'nb', 'uso': uso, 'hasta': b}, todos, datos_nb()) if r['p'] > a]
+    return [(f'N° {i}', r['x']) for i, r in enumerate(c[:n], 1)]
+
+
+def picks_nb(todos):
+    g = []
+    for t, uso, a, b in [('Hasta $400.000: estudio y oficina', 'estudio', 0, 400000), ('De $400.000 a $700.000: estudio y trabajo', 'estudio', 400000, 700000),
+                         ('De $700.000 a $1.200.000: rendimiento de sobra', 'estudio', 700000, 1200000),
+                         ('Para jugar: los que más rinden por precio', 'juegos', 0, 10 ** 9), ('Para programar: los que más rinden por precio', 'prog', 0, 10 ** 9)]:
+        r = _rank_nb(todos, uso, a, b)
+        if r:
+            g.append((t, r))
+    return g
+
+
+PANEL = {'OLED': 4, 'Mini LED': 3, 'QLED': 3, 'QNED': 3, 'Micro RGB': 4, 'NanoCell': 2, 'LED': 1}
+
+
+def _tope(xs, clave, n=5):
+    return [(f'N° {i}', x) for i, x in enumerate(_unicos(sorted(xs, key=clave), n), 1)]
+
+
+def _presup(k, filtro, clave, n=5, titulo=None):
+    def f(todos):
+        xs = [x for x in _nuevos(todos, k) if filtro(x)]
+        r = _tope(xs, clave, n)
+        return [(titulo or 'Los que más convienen hoy', r)] if r else []
+    return f
+
+
+_p = lambda x: x['os'][0]['p']
+
+
+def _tv_tamano(tam):
+    def f(todos):
+        xs = [x for x in _nuevos(todos, 'tv') if x['eq']['size'] == tam and x['eq'].get('res') == '4K']
+        r = []
+        for et, ps in [('El más barato: LED', ('LED',)), ('El más barato: QLED, QNED o NanoCell', ('QLED', 'QNED', 'NanoCell')),
+                       ('El más barato: Mini LED', ('Mini LED',)), ('El más barato: OLED', ('OLED',))]:
+            x = _barato([y for y in xs if y['eq'].get('panel') in ps])
+            if x:
+                r.append((et, x))
+        return [('El más barato de cada tipo de pantalla', r)] if r else []
+    return f
+_nbp = lambda a, b: (lambda todos: [(('Los 5 que más rinden por su precio'), _rank_nb(todos, 'estudio', a, b, 5))])
+
+
+def _pres(slug, k, h1, corto, intro, picks, base_slug):
+    base = next(c for c in QUE_COMPRAR if c['slug'] == base_slug)
+    return {'slug': slug, 'k': k, 'picks': picks, 'h1': h1, 'corto': corto, 'intro': intro, 'consejos': base['consejos'][:4], 'preguntas': []}
+
+
+QUE_COMPRAR += [
+    _pres('mejor-notebook-gamer-hasta-1-millon', 'nb', 'Mejor notebook gamer hasta $1.000.000 en Chile', 'notebook gamer hasta $1.000.000',
+          'Para jugar necesitas tarjeta de video dedicada. Estos son los notebooks que más rinden para juegos por su precio hoy, hasta $1.000.000.',
+          lambda t: [('Los 5 que más rinden para jugar', _rank_nb(t, 'juegos', 0, 1000000, 5))], 'que-notebook-comprar'),
+    _pres('mejor-celular-hasta-200-mil', 'ph', 'Mejor celular hasta $200.000 en Chile', 'celular hasta $200.000',
+          'Bajo $200.000 hay celulares que cumplen para WhatsApp, redes, fotos y videos. Estos son los que más rinden por su precio hoy, según su puntaje AnTuTu.',
+          _presup('ph', lambda x: _p(x) <= 200000 and x['eq'].get('antutu'), lambda x: -_pot2(x, 'antutu'), 5), 'que-celular-comprar'),
+    _pres('mejor-celular-hasta-400-mil', 'ph', 'Mejor celular hasta $400.000 en Chile', 'celular hasta $400.000',
+          'Entre $200.000 y $400.000 están los celulares con mejor relación entre precio, cámara y batería. Estos son los que más rinden por su precio hoy.',
+          _presup('ph', lambda x: 200000 < _p(x) <= 400000 and x['eq'].get('antutu'), lambda x: -_pot2(x, 'antutu'), 5), 'que-celular-comprar'),
+    _pres('mejor-smart-tv-55-pulgadas', 'tv', 'Mejor smart TV de 55 pulgadas en Chile', 'smart TV de 55 pulgadas',
+          'El de 55 pulgadas es el tamaño más vendido. Aquí tienes el más barato de cada tipo de pantalla (LED, QLED, Mini LED y OLED) para que compares cuánto cuesta cada salto.',
+          _tv_tamano(55), 'que-smart-tv-comprar'),
+    _pres('mejor-smart-tv-65-pulgadas', 'tv', 'Mejor smart TV de 65 pulgadas en Chile', 'smart TV de 65 pulgadas',
+          'Los 65 pulgadas se ven muy bien desde 3 metros. Aquí tienes el más barato de cada tipo de pantalla (LED, QLED, Mini LED y OLED) para que compares cuánto cuesta cada salto.',
+          _tv_tamano(65), 'que-smart-tv-comprar'),
+    _pres('mejor-lavadora-hasta-250-mil', 'lv', 'Mejor lavadora hasta $250.000 en Chile', 'lavadora hasta $250.000',
+          'Con este presupuesto hay lavadoras de buena capacidad. Las ordenamos por kilos de ropa que lavan por cada peso.',
+          _presup('lv', lambda x: x['eq']['tipo'] == 'lavadora' and _p(x) <= 250000 and x['eq'].get('kg'), lambda x: -x['eq']['kg'] / _p(x), 5), 'que-lavadora-comprar'),
+    _pres('mejor-aspiradora-robot-hasta-200-mil', 'as', 'Mejor aspiradora robot hasta $200.000 en Chile', 'aspiradora robot hasta $200.000',
+          'Bajo $200.000 ya hay robots que friegan y hasta con mapeo láser. Los ordenamos primero por cómo se orientan y luego por precio.',
+          _presup('as', lambda x: x['eq'].get('tipo') == 'robot' and _p(x) <= 200000, lambda x: (0 if 'Láser' in (x['eq'].get('nav') or '') else 1, -(x['eq'].get('mopa') or 0), _p(x)), 5), 'que-aspiradora-robot-comprar'),
 ]
 
 
