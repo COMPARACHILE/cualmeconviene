@@ -182,6 +182,9 @@ def equipos():
     return out
 
 
+SERIE_TIENDA = {}  # (id del equipo, tienda) -> {día: precio sin cupón}; la llena historial()
+
+
 def historial():
     """Precio más bajo de cada equipo por día, leído de las versiones guardadas en git."""
     h = {}
@@ -205,6 +208,9 @@ def historial():
                     os_ = [o['p'] for o in x.get('offers', []) if not o.get('x') and o.get('p')]
                     if os_:
                         h.setdefault(x['id'], {})[d_rev] = min(os_)
+                    for o in x.get('offers', []):
+                        if not o.get('x') and o.get('p'):
+                            SERIE_TIENDA.setdefault((x['id'], o['s']), {})[d_rev] = o['p']
             except Exception:
                 continue
     return h
@@ -1035,7 +1041,7 @@ def _sobre_base(base, tit, desc, url, cuerpo, ld):
     return _cabecera(h, '', None)
 
 
-def pagina_ofertas_reales(base, r, fotos, hoy_txt, hoy):
+def pagina_ofertas_reales(base, r, fotos, hoy_txt, hoy, mov=None):
     """Página /ofertas-reales: qué equipos están hoy de verdad en el precio más bajo que hemos visto.
     No publica una lista de "equipos caros": un precio más alto suele ser que la tienda más barata se quedó sin stock, no un precio inflado."""
     url = '/ofertas-reales'
@@ -1057,6 +1063,17 @@ def pagina_ofertas_reales(base, r, fotos, hoy_txt, hoy):
                 f'<div class="rkP"><p class="precio">{plata(d["ahora"])}</p><p class="donde"><i style="background:{TIENDAS[o["s"]][1]}"></i>en {TIENDAS[o["s"]][0]}</p>'
                 f'<a class="tb" href="{u}">Ver precios</a></div></li>')
 
+    bloque_mov = ''
+    if mov:
+        t = mov['tot']
+        pc = lambda v, n: round(v * 100 / n)
+        filas = ''.join(f'<tr><td>{e(CATS[k][0])}</td><td>{v["n"]}</td><td>{pc(v["sube"], v["n"])}%</td><td>{pc(v["baja"], v["n"])}%</td><td>{pc(v["igual"], v["n"])}%</td></tr>' for k, v in mov['por'].items())
+        bloque_mov = (f'<section class="bloque"><h2>Qué pasó con los precios desde el {e(fecha_larga(mov["ini"]))}</h2>'
+                      f'<p>Comparamos el precio de <b>{t["n"]} equipos en la misma tienda</b> (sin cupones) entre el {e(fecha_larga(mov["ini"]))} y hoy: '
+                      f'<b>{pc(t["sube"], t["n"])}% subió</b>, <b>{pc(t["baja"], t["n"])}% bajó</b> y <b>{pc(t["igual"], t["n"])}% sigue igual</b>. '
+                      f'Seguimos esto cada día hasta el Black Friday (27 al 30 de noviembre) para ver cómo cambian los precios.</p>'
+                      + (f'<table class="tabla"><thead><tr><th>Categoría</th><th>Equipos</th><th>Subió</th><th>Bajó</th><th>Igual</th></tr></thead><tbody>{filas}</tbody></table>' if filas else '') +
+                      '<p class="nota">Solo cuenta equipos que ya seguíamos el primer día y que hoy siguen con stock en esa tienda. Es una muestra, no todo el mercado.</p></section>')
     pct_r = round(len(reales) * 100 / n) if n else 0
     lista = (f'<ol class="rk">{"".join(fila(d) for d in reales)}</ol>' if reales
              else '<p>Hoy ningún equipo está en su precio más bajo con al menos 5% bajo lo habitual. Vuelve mañana.</p>')
@@ -1066,6 +1083,7 @@ def pagina_ofertas_reales(base, r, fotos, hoy_txt, hoy):
               f'De {n} equipos con historial, <b>{len(reales)}</b> ({pct_r}%) están en su precio más bajo y al menos 5% bajo lo habitual. '
               f'Revisado el {e(hoy_txt)}.</p>'
               f'<p class="gBtns">{compartir(txt, url, "Ofertas reales hoy en Chile")}</p>'
+              f'{bloque_mov}'
               f'<section class="bloque"><h2>{len(reales)} equipos en su precio más bajo</h2>{lista}</section>'
               '<section class="bloque"><h2>Cómo calculamos esto</h2><ul class="gRaz">'
               '<li><b>Precio habitual:</b> la mediana de los precios más bajos que vimos de ese equipo en cada revisión, sin cupones ni tarjeta.</li>'
@@ -1079,6 +1097,28 @@ def pagina_ofertas_reales(base, r, fotos, hoy_txt, hoy):
             {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': SITIO + '/'},
             {'@type': 'ListItem', 'position': 2, 'name': 'Ofertas reales', 'item': SITIO + url}]}]}
     return _sobre_base(base, tit, desc, url, cuerpo, ld)
+
+
+def movimiento(todos, hoy, margen=0.005):
+    """Cómo cambió el precio de cada equipo en la MISMA tienda entre el primer día del historial y hoy (sin cupones).
+    Comparar tienda contra tienda evita confundir un alza con que la tienda más barata se quedó sin stock."""
+    if not SERIE_TIENDA:
+        return None
+    ini = min(d for v in SERIE_TIENDA.values() for d in v)
+    k_de = {x['id']: x['k'] for x in todos}
+    pares = []
+    for (i, t), v in SERIE_TIENDA.items():
+        if ini in v and hoy in v and i in k_de and v[ini]:
+            pares.append((k_de[i], (v[hoy] - v[ini]) / v[ini]))
+    if len(pares) < 30:
+        return None
+
+    def cuenta(xs):
+        return {'n': len(xs), 'sube': sum(c > margen for _, c in xs), 'baja': sum(c < -margen for _, c in xs),
+                'igual': sum(abs(c) <= margen for _, c in xs), 'mediana': statistics.median(c for _, c in xs)}
+    tot = cuenta(pares)
+    por = {k: cuenta([p for p in pares if p[0] == k]) for k in dict.fromkeys(k for k, _ in pares)}
+    return {'ini': ini, 'tot': tot, 'por': {k: v for k, v in por.items() if v['n'] >= 15}}
 
 
 def pagina_bajones(base, baj, urls, fotos, hoy_txt, hoy):
@@ -1683,7 +1723,7 @@ def main():
     ruta = os.path.join(RAIZ, 'bajones.html')
     if bj != (open(ruta, encoding='utf-8').read() if os.path.exists(ruta) else ''):
         open(ruta, 'w', encoding='utf-8').write(bj); escritas += 1
-    orl = pagina_ofertas_reales(pagina_guia(g0, rankings[g0['slug']], fotos, urls, hoy_txt, hoy), ofertas_reales(todos, hist, hoy, urls), fotos, hoy_txt, hoy)
+    orl = pagina_ofertas_reales(pagina_guia(g0, rankings[g0['slug']], fotos, urls, hoy_txt, hoy), ofertas_reales(todos, hist, hoy, urls), fotos, hoy_txt, hoy, movimiento(todos, hoy))
     ruta = os.path.join(RAIZ, 'ofertas-reales.html')
     if orl != (open(ruta, encoding='utf-8').read() if os.path.exists(ruta) else ''):
         open(ruta, 'w', encoding='utf-8').write(orl); escritas += 1

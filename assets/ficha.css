@@ -338,3 +338,9 @@ img { display: block; max-width: 100%; }
 .comp:hover { background: var(--surface-2); }
 .comp:active { transform: scale(.98); }
 .gBtns .comp { display: inline-flex; margin-top: 0; }
+
+/* Tabla simple (ofertas reales: movimiento de precios) */
+.tabla { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 15px; font-variant-numeric: tabular-nums; }
+.tabla th, .tabla td { padding: 10px 8px; text-align: right; border-bottom: 1px solid var(--borde); }
+.tabla th:first-child, .tabla td:first-child { text-align: left; }
+.tabla th { font-weight: 700; color: var(--gris); font-size: 13px; }
