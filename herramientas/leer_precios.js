@@ -36,9 +36,10 @@ const LECTORES = {
     const cu = (v.coupons || []).find(x => x && x.code);
     if (cu) CUPONES[u] = { c: cu.code, l: cu.label || 'Cupón', v: cu.endDate, b: pr.eventPrice || pr.internetPrice || pr.normalPrice || 0 };
     else delete CUPONES[u];
-    if (pr.cmrPrice) return { p: pr.cmrPrice, c: 1, n: 'Con tarjeta CMR' };
-    if (pr.eventPrice) return { p: pr.eventPrice, c: 0, n: 'Precio Internet' };
-    if (pr.internetPrice) return { p: pr.internetPrice, c: 0, n: 'Precio Internet' };
+    const L = p => pr.normalPrice > p ? { l: pr.normalPrice } : {};  // precio "normal" que tacha la tienda (04-11-2026), para ver si el descuento es real
+    if (pr.cmrPrice) return { p: pr.cmrPrice, c: 1, n: 'Con tarjeta CMR', ...L(pr.cmrPrice) };
+    if (pr.eventPrice) return { p: pr.eventPrice, c: 0, n: 'Precio Internet', ...L(pr.eventPrice) };
+    if (pr.internetPrice) return { p: pr.internetPrice, c: 0, n: 'Precio Internet', ...L(pr.internetPrice) };
     if (pr.normalPrice) return { p: pr.normalPrice, c: 0, n: 'Precio Internet' };
     return { e: 'sin precio' };
   },
@@ -49,16 +50,18 @@ const LECTORES = {
     // Sin stock (01-11-2026): los botones "Comprar ahora" / "Agregar al carro" vienen deshabilitados en el HTML
     const bs = [...new DOMParser().parseFromString(h, 'text/html').querySelectorAll('button')].filter(b => /Comprar ahora|Agregar al carro/i.test(b.textContent));
     if (bs.length && bs.every(b => b.hasAttribute('disabled'))) return { e: 'sin stock' };
-    const ps = [];
+    const ps = [], tachados = [];
     for (const x of h.matchAll(/\$([\d.]{5,})/g)) {
       const pre = h.slice(Math.max(0, x.index - 500), x.index);
       if (!/line-through/.test(pre.slice(pre.lastIndexOf('<')))) ps.push(_num(x[1]));
+      else tachados.push(_num(x[1]));  // precio anterior que tacha la tienda (04-11-2026)
       if (ps.length >= 2) break;
     }
     if (!ps.length) return { e: 'sin precio' };
     // El cupón se descuenta del precio sin tarjeta (probado en el carro el 02-11-2026)
     if (ps.length >= 2 && ps[0] < ps[1] && CUPONES[u]) CUPONES[u].b = ps[1];
-    return ps.length >= 2 && ps[0] < ps[1] ? { p: ps[0], c: 1, n: 'Con Tarjeta Cencosud Scotiabank' } : { p: ps[0], c: 0, n: '' };
+    const ant = Math.max(0, ...tachados), L = p => ant > p ? { l: ant } : {};
+    return ps.length >= 2 && ps[0] < ps[1] ? { p: ps[0], c: 1, n: 'Con Tarjeta Cencosud Scotiabank', ...L(ps[0]) } : { p: ps[0], c: 0, n: '', ...L(ps[0]) };
   },
   ripley(h0) {
     const h = h0.replace(/\\"/g, '"');
@@ -66,9 +69,10 @@ const LECTORES = {
     const i = h.indexOf('"price":{"master"'); if (i < 0) return { e: 'sin precio' };
     const seg = h.slice(i, i + 600);
     const g = k => _num((seg.match(new RegExp('"' + k + '":\\{[^}]*?"valueNumber":(\\d+)')) || [])[1]);
-    const sale = g('sale') || g('master'), rip = g('ripley');
-    if (rip && rip < sale) return { p: rip, c: 1, x: sale, n: 'Con tarjeta Ripley · sin tarjeta ' + _fmt(sale) };
-    return sale ? { p: sale, c: 0, n: 'Precio Internet' } : { e: 'sin precio' };
+    const sale = g('sale') || g('master'), rip = g('ripley'), lista = g('master');
+    const L = p => lista > p ? { l: lista } : {};  // precio de lista de Ripley (04-11-2026)
+    if (rip && rip < sale) return { p: rip, c: 1, x: sale, n: 'Con tarjeta Ripley · sin tarjeta ' + _fmt(sale), ...L(rip) };
+    return sale ? { p: sale, c: 0, n: 'Precio Internet', ...L(sale) } : { e: 'sin precio' };
   },
   entel(h) {
     // Respaldo: el "price" del JSON-LD a veces es el precio del equipo CON plan (ej. Moto G35 $59.990).
@@ -173,7 +177,8 @@ async function _samsung(h, u) {
   return p ? { p, c: 0 } : r;
 }
 
-const _corto = (i, r) => r.e ? [i, 0, 0, r.e] : [i, r.p, r.c ? 1 : 0, r.x || 0];
+/* [posición, precio, tarjeta, extra] y, solo si la tienda tacha un precio anterior, un quinto valor: ese precio de lista (precios.py aplicar lo guarda como "l") */
+const _corto = (i, r) => r.e ? [i, 0, 0, r.e] : (r.l ? [i, r.p, r.c ? 1 : 0, r.x || 0, r.l] : [i, r.p, r.c ? 1 : 0, r.x || 0]);
 async function leer(tienda, rutas, grupo = 6) {
   const out = [];
   for (let i = 0; i < rutas.length; i += grupo) {

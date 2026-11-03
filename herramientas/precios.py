@@ -188,11 +188,11 @@ def aplicar(carpeta):
     res, RT = {}, rutas_por_tienda()
     for f in sorted(glob.glob(os.path.join(carpeta, '*.json'))):
         t = os.path.basename(f)[:-5].split('-')[0]  # pcfactory-1.json, pcfactory-2.json... = pcfactory
-        for i, p, c, x in json.load(open(f, encoding='utf-8')):
+        for i, p, c, x, *l in json.load(open(f, encoding='utf-8')):  # l: precio de lista que tacha la tienda (opcional)
             u = RT[t][i]
             if not p and res.get((t, u), {}).get('p'):
                 continue  # otra tanda ya trajo el precio
-            res[(t, u)] = {'e': x or 'sin precio'} if not p else {'p': p, 'c': c, 'n': nota(t, c, x)}
+            res[(t, u)] = {'e': x or 'sin precio'} if not p else {'p': p, 'c': c, 'n': nota(t, c, x), 'l': l[0] if l else 0}
     # <tienda>.txt: solo lo que cambió, como lo devuelve cambios() de leer_precios.js ("i:precio:c:extra;" o "i:E:motivo;").
     # Las rutas que no aparecen se leyeron y siguen igual que en la página.
     for f in sorted(glob.glob(os.path.join(carpeta, '*.txt'))):
@@ -231,6 +231,9 @@ def aplicar(carpeta):
                     if motivo:
                         bajos.append(f"{nombre} · {o['s']}: {viejo:,} → {nuevo:,} ({'; '.join(motivo)})".replace(',', '.'))
                 o['p'] = nuevo
+                # Precio de lista que tacha la tienda: solo se guarda si es mayor al precio; sirve para ver si el descuento es real
+                if r.get('l') and int(r['l']) > nuevo: o['l'] = int(r['l'])
+                else: o.pop('l', None)
                 if r['c'] or o['s'] in ('falabella', 'paris', 'ripley', 'pcfactory'):
                     if r['c']: o['c'] = 1
                     else: o.pop('c', None)
