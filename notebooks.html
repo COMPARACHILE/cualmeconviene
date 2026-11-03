@@ -831,6 +831,7 @@ const NOTEBOOKS = [
 ];
 // Ofertas agotadas (x:1): se guardan para revisarlas mañana, pero no se muestran
 NOTEBOOKS.forEach(n => { n.offers = n.offers.filter(o => !o.x); });
+CMC.usarCupones(NOTEBOOKS);  // el precio con cupón pasa a ser el precio principal
 NOTEBOOKS.splice(0, NOTEBOOKS.length, ...NOTEBOOKS.filter(n => n.offers.length));
 
 /* ---------- Contenido del notebook interactivo ---------- */

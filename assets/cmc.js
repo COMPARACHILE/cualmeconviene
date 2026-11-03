@@ -26,6 +26,8 @@
     }, () => {});
   });
   document.querySelectorAll('[data-vence]').forEach(el => { if (Date.parse(el.dataset.vence) <= Date.now()) el.remove(); });
+  // Precio con cupón en una página fija: al vencer vuelve el precio de la tienda hasta que se rehaga la página
+  document.querySelectorAll('[data-hasta]').forEach(el => { if (Date.parse(el.dataset.hasta) <= Date.now()) el.textContent = el.dataset.sin; });
 
   /* ---------- Resaltar la sección a la que se salta ---------- */
   const flash = el => {

@@ -5,6 +5,8 @@
 name: Fotos y fichas
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '17 */3 * * *'   # cada 3 horas: un cupón vencido no debe seguir como precio principal en fichas y guías
   push:
     paths:
       - 'notebooks.html'

@@ -647,6 +647,7 @@ const EQUIPOS = [{"id":"tv391621","name":"Hisense U7ESG 55\"","brand":"Hisense",
 const PHONES = EQUIPOS;
 // Ofertas agotadas (x:1): se guardan para revisarlas mañana, pero no se muestran
 PHONES.forEach(n => { n.offers = n.offers.filter(o => !o.x); });
+CMC.usarCupones(PHONES);  // el precio con cupón pasa a ser el precio principal
 PHONES.splice(0, PHONES.length, ...PHONES.filter(n => n.offers.length));
 
 const SEEN = '03-11-2026';

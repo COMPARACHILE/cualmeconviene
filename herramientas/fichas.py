@@ -130,8 +130,33 @@ def marca_nb(n):
 
 
 # ---------------- Datos ----------------
+def cupon_vigente(q):
+    return bool(q and q.get('c')) and datetime.datetime.fromisoformat(q['v'].replace('Z', '+00:00')) > datetime.datetime.now(datetime.timezone.utc)
+
+
+def con_cupon(o):
+    """El precio con cupón es el precio principal (igual que CMC.usarCupones de assets/cmc-ui.js).
+    p0 guarda el precio de la tienda: historial, mínimos y avisos siguen con ese."""
+    q = o.get('cup')
+    if not cupon_vigente(q) or not q.get('pc') or q['pc'] >= o['p']:
+        return o
+    n = {k: v for k, v in o.items() if k != 'c'}
+    n.update(p=q['pc'], p0=o['p'], c0=o.get('c'), note=f"Con cupón {q['c']}")
+    return n
+
+
 def visibles(eq):
-    return sorted([o for o in eq['offers'] if not o.get('x') and o.get('p')], key=lambda o: o['p'])
+    return sorted([con_cupon(o) for o in eq['offers'] if not o.get('x') and o.get('p')], key=lambda o: o['p'])
+
+
+def de_tienda(x):
+    """La oferta más barata sin contar cupones (historial, mínimos históricos y avisos)."""
+    return min(x['os'], key=lambda o: o.get('p0', o['p']))
+
+
+def precio_tienda(x):
+    o = de_tienda(x)
+    return o.get('p0', o['p'])
 
 
 def equipos():
@@ -198,7 +223,7 @@ def minimos_historicos(todos, hist, hoy):
         antes = [v for d, v in h.items() if d < hoy]
         if len(antes) < 2:
             continue
-        p, med = x['os'][0]['p'], statistics.median(antes)
+        p, med = precio_tienda(x), statistics.median(antes)
         if p <= min(antes) and med - p >= max(med * 0.03, 3000):
             out[x['id']] = (p, min(h))
     return out
@@ -237,7 +262,7 @@ def categoria(x):
     if x['k'] == 'cf': return 'Cafetera de cápsulas ' + q.get('sis', '')
     if x['k'] == 'ac': return TIPO_AC.get(q.get('tipo'), 'Aire acondicionado')
     if q.get('refurb'): return 'Reacondicionado'
-    p = x['os'][0]['p'] if x['os'] else 0
+    p = precio_tienda(x) if x['os'] else 0
     return 'Gama de entrada' if p <= 250000 else 'Gama media' if p <= 600000 else 'Gama alta'
 
 
@@ -398,19 +423,29 @@ def cupon(o):
         fecha = 'la tienda no informa hasta cuándo'
     tienda = TIENDAS[o['s']][0]
     que = f'Cupón de la app de {tienda}' if q.get('app') else f"{q.get('l') or 'Cupón'} en {tienda}"
-    if q.get('pc'):
-        que += ' · baja a ≈' + plata(q['pc'])
-    base = 'Calculado sobre el precio sin tarjeta. ' if q.get('pc') and o.get('c') else ('Calculado sobre el precio publicado. ' if q.get('pc') else '')
+    if o.get('p0'):
+        que += ' · sin cupón ' + plata(o['p0'])
+    base = 'Calculado sobre el precio sin tarjeta. ' if o.get('p0') and o.get('c0') else ('Calculado sobre el precio publicado. ' if o.get('p0') else '')
     return (f'<span class="c3-cupon" data-vence="{e(q["v"])}"><button type="button" class="cupon" data-cupon="{e(q["c"])}" aria-label="Copiar cupón {e(q["c"])}" title="Copiar">{e(q["c"])}</button>'
             f'<span title="{e(base + "El descuento se aplica al pagar y se confirma en la tienda.")}">{e(que)} · {fecha}</span></span>')
 
 
 def pago(o):
     """Etiqueta corta del medio de pago ("con tarjeta" o "transferencia") en vez de un asterisco."""
+    if o.get('p0'):
+        q = o['cup']
+        return f' <span class="pago cup" data-vence="{e(q["v"])}" title="{e("Precio con el cupón " + q["c"] + ". Sin cupón " + plata(o["p0"]))}">con cupón</span>'
     if not o.get('c'):
         return ''
     t = 'transferencia' if 'transfer' in (o.get('note') or '').lower() else 'con tarjeta'
     return f' <span class="pago" title="{e(o.get("note") or "")}">{t}</span>'
+
+
+def precio_html(o):
+    """Precio de la oferta. Si es con cupón, cmc.js vuelve al precio de la tienda cuando el cupón vence."""
+    if o.get('p0'):
+        return f'<span data-hasta="{e(o["cup"]["v"])}" data-sin="{plata(o["p0"])}">{plata(o["p"])}</span>'
+    return plata(o['p'])
 
 
 def tarjeta(x, fotos, url_ficha):
@@ -418,7 +453,7 @@ def tarjeta(x, fotos, url_ficha):
     img = f'<img src="{e(f)}" alt="" width="480" height="480" loading="lazy" decoding="async" referrerpolicy="no-referrer">' if f else ''
     o = x['os'][0]
     return (f'<a class="par" href="{url_ficha}"><span class="parF">{img}</span><span class="parT">{e(x["nombre"])}</span>'
-            f'<span class="parP">{plata(o["p"])}{pago(o)}</span><span class="parE">en {TIENDAS[o["s"]][0]}</span></a>')
+            f'<span class="parP">{precio_html(o)}{pago(o)}</span><span class="parE">en {TIENDAS[o["s"]][0]}</span></a>')
 
 
 CAMPANA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>'
@@ -472,9 +507,11 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
         etiqueta = '<b class="gana">Más barato</b>' if k == 0 or dif == 0 else f'<b class="mas">+{plata(dif)}</b>'
         filas += (f'<li class="{"g" if dif == 0 else ""}"><span class="tn"><i style="background:{color}"></i><span><strong>{nom}</strong>'
                   f'{" <small>operadora</small>" if canal == "operadora" else ""}{f"<em>{e(extra)}</em>" if extra else ""}{cupon(o)}</span></span>'
-                  f'<span class="tp">{plata(o["p"])}{pago(o)}{etiqueta}</span>'
+                  f'<span class="tp">{precio_html(o)}{pago(o)}{etiqueta}</span>'
                   f'<a class="tb" href="{e(o["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{o["s"]}">Ver en {nom}</a></li>')
-    svg, frase = grafico(hist.get(x['id'], {}), os_[0]['p'] if os_ else None, hoy)
+    svg, frase = grafico(hist.get(x['id'], {}), precio_tienda(x) if os_ else None, hoy)
+    if os_ and os_[0].get('p0'):
+        frase += ' El gráfico no incluye cupones.'
     # Parecidos: misma familia y precio cercano
     ref = os_[0]['p'] if os_ else (list(hist.get(x['id'], {}).values()) or [0])[-1]
     cands = [y for y in todos if y['id'] != x['id'] and y['k'] == x['k'] and y['os']]
@@ -501,7 +538,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
         ahorro = (f'<p class="ah">Ahorras <b>{plata(w["p"] - b["p"])}</b> frente a {TIENDAS[w["s"]][0]}</p>' if w['p'] > b['p'] else
                   (f'<p class="ah neutro">Mismo precio en {len(os_)} tiendas</p>' if len(os_) > 1 else '<p class="ah neutro">Lo encontramos en una tienda</p>'))
         mh = (mins or {}).get(x['id'])
-        mejor = (f'<div class="mejor">{sello_minimo(mh[1]) if mh and mh[0] >= b["p"] else ""}<p class="et">Precio más bajo hoy</p><p class="precio">{plata(b["p"])}{pago(b)}</p>'
+        mejor = (f'<div class="mejor">{sello_minimo(mh[1]) if mh and mh[0] >= b["p"] else ""}<p class="et">Precio más bajo hoy</p><p class="precio">{precio_html(b)}{pago(b)}</p>'
                  f'<p class="donde"><i style="background:{TIENDAS[b["s"]][1]}"></i>en {e(donde)}{(" · " + e(b["note"])) if b.get("note") else ""}</p>{next((c for c in map(cupon, os_) if c), "")}{ahorro}'
                  f'<a class="ir" href="{e(b["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{b["s"]}">Ir a {TIENDAS[b["s"]][0]}</a>{avisame(False)}</div>')
     else:
@@ -820,7 +857,7 @@ def pagina_guia(g, cands, fotos, urls, hoy_txt, hoy):
     def precio(c):
         o = c['x']['os']
         n = len(dict.fromkeys(z['s'] for z in o))
-        return (f'<p class="precio">{plata(o[0]["p"])}{pago(o[0])}</p>'
+        return (f'<p class="precio">{precio_html(o[0])}{pago(o[0])}</p>'
                 f'<p class="donde"><i style="background:{TIENDAS[o[0]["s"]][1]}"></i>en {TIENDAS[o[0]["s"]][0]}'
                 f'{f" · {n} tiendas" if n > 1 else ""}</p>')
 
@@ -951,7 +988,7 @@ def bloque_categoria(k, todos, urls, rankings):
                     f'<span><strong>{e(g["titulo"])}</strong>'
                     + (f'<small>Hoy gana el {e(rankings[g["slug"]][0]["x"]["nombre"])}</small>' if rankings.get(g['slug']) else '')
                     + '</span></a></li>' for g in GUIAS if g['k'] == k)
-    items = ''.join(f'<li><a href="{urls[x["id"]]}">{e(x["nombre"])}</a> <span>{plata(x["os"][0]["p"])}</span></li>' for x in eqs)
+    items = ''.join(f'<li><a href="{urls[x["id"]]}">{e(x["nombre"])}</a> <span>{precio_html(x["os"][0])}</span></li>' for x in eqs)
     return (f'<section class="indice" aria-label="Guías y lista completa de {tipo.lower()}">'
             + (f'<h2 class="idxT">Guías del puma</h2><ul class="idxGuias">{guias}</ul>' if guias else '')
             + f'<details class="idxTodos"><summary>Lista completa: {len(eqs)} {tipo.lower()} con su precio más bajo de hoy</summary>'
@@ -969,7 +1006,7 @@ def bloque_portada(rankings, fotos, urls):
         img = f'<img src="{e(f)}" alt="" width="480" height="480" loading="lazy" decoding="async" referrerpolicy="no-referrer">' if f else ''
         tarjetas += (f'<a class="guiaC" href="/guia/{g["slug"]}"><span class="guiaF">{img}</span><span class="guiaT">'
                      f'<small>{TIPOS[g["k"]][0]} · Guía del puma</small><strong>{e(g["titulo"])}</strong>'
-                     f'<span>Hoy gana el {e(u["x"]["nombre"])}, a {plata(u["p"])}{pago(u["x"]["os"][0])} en {TIENDAS[u["x"]["os"][0]["s"]][0]}.</span>'
+                     f'<span>Hoy gana el {e(u["x"]["nombre"])}, a {precio_html(u["x"]["os"][0])}{pago(u["x"]["os"][0])} en {TIENDAS[u["x"]["os"][0]["s"]][0]}.</span>'
                      f'<b>Ver los {min(len(r), g["n"])} que más convienen</b></span></a>')
     if not tarjetas:
         return ''
@@ -1063,12 +1100,13 @@ def main():
     port = []
     for x in todos:
         q = {k: v for k, v in x['eq'].items() if k != 'offers'}
-        q['offers'] = [{k: o[k] for k in ('s', 'p', 'c', 'x') if k in o} for o in x['eq']['offers']]
+        q['offers'] = [{k: o[k] for k in ('s', 'p', 'c', 'x', 'cup') if k in o} for o in x['eq']['offers']]
         port.append({'k': x['k'], **q})
     open(os.path.join(RAIZ, 'assets', 'portada.json'), 'w', encoding='utf-8').write(json.dumps(port, ensure_ascii=False, separators=(',', ':')))
     # Precio de hoy de cada ficha y bajadas del día, para los avisos por correo (functions/api/revisar-avisos.js).
     # Se ordena por dirección de ficha: así los avisos y comentarios siguen al equipo aunque cambie su id.
-    eqs = {urls[x['id']].lstrip('/'): [x['os'][0]['p'] if x['os'] else None, x['nombre'], x['id'], TIENDAS[x['os'][0]['s']][0] if x['os'] else '']
+    # Los avisos siguen el precio de la tienda: un cupón no manda correos, porque el correo no explica el cupón
+    eqs = {urls[x['id']].lstrip('/'): [precio_tienda(x) if x['os'] else None, x['nombre'], x['id'], TIENDAS[de_tienda(x)['s']][0] if x['os'] else '']
            for x in todos}
     baj = []
     for x in todos:
@@ -1076,7 +1114,7 @@ def main():
         previos = [d for d in h if d < hoy]
         if not x['os'] or not previos:
             continue
-        antes, ahora = h[max(previos)], x['os'][0]['p']
+        antes, ahora = h[max(previos)], precio_tienda(x)
         # Al menos 3% y $3.000 menos que en la revisión anterior; una caída de más de 60% suele ser un error de la tienda
         if antes and ahora <= antes * 0.97 and antes - ahora >= 3000 and ahora >= antes * 0.4:
             baj.append(((antes - ahora) / antes, urls[x['id']].lstrip('/'), antes, ahora))

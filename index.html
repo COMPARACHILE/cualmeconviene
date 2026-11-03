@@ -718,6 +718,7 @@ async function datos(url, ini, fin) {
 }
 const gb = n => n >= 1024 ? n / 1024 + ' TB' : n + ' GB';
 function prepara(e, k) {
+  if (window.CMC) CMC.usarCupones([e]);  // el precio con cupón pasa a ser el precio principal
   const os = e.offers.filter(o => !o.x && o.p > 0).sort((a, b) => a.p - b.p);
   if (!os.length) return null;
   const marca = k === 'nb' ? (e.name.split(' ')[0] === 'MacBook' ? 'Apple' : e.name.split(' ')[0]) : e.brand;

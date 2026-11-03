@@ -20,7 +20,7 @@
   CMC.corto = n => n >= 1e6 ? '$' + (n / 1e6).toLocaleString('es-CL', { maximumFractionDigits: 1 }) + ' M' : '$' + Math.round(n / 1000) + ' mil';
 
   /* Medio de pago del precio: etiqueta corta en vez de asterisco */
-  CMC.pago = o => !o || !o.c ? '' : `<span class="pago" title="${esc(o.note || 'Precio con un medio de pago de la tienda')}">${/transfer/i.test(o.note || '') ? 'transferencia' : 'con tarjeta'}</span>`;
+  CMC.pago = o => o && o.p0 ? `<span class="pago cup" title="Precio con el cupón ${esc(o.cup.c)}. Sin cupón ${fmt(o.p0)}">con cupón</span>` : !o || !o.c ? '' : `<span class="pago" title="${esc(o.note || 'Precio con un medio de pago de la tienda')}">${/transfer/i.test(o.note || '') ? 'transferencia' : 'con tarjeta'}</span>`;
 
   /* Sello del puma: solo para el mejor calidad-precio de cada grupo */
   CMC.sello = extra => `<span class="sello"><img src="${PUMA}" alt="" width="26" height="26" decoding="async"><span>Elegido por el puma${extra ? `<small>${esc(extra)}</small>` : ''}</span></span>`;
@@ -46,10 +46,23 @@
     return /^(0|00|24):00$/.test(h) ? `hasta el ${dia(new Date(d - 6e4))}` : `vence el ${dia(d)}, ${h}`;
   };
   CMC.cuponVivo = o => !!(o && o.cup && o.cup.c) && !(Date.parse(o.cup.v) <= Date.now());
+  /* El precio con cupón es el precio principal: ordena, filtra y compara como cualquier otro. Se calcula al abrir la
+     página, así que al vencer el cupón vuelve solo el precio de la tienda. p0 guarda ese precio y c0 si pedía tarjeta.
+     En los datos, p sigue siendo el precio de la tienda (lectura diaria, historial, mínimos y avisos). */
+  CMC.usarCupones = lista => {
+    lista.forEach(e => {
+      e.offers.forEach(o => {
+        if (!CMC.cuponVivo(o) || !o.cup.pc || o.cup.pc >= o.p) return;
+        o.p0 = o.p; o.c0 = o.c; o.p = o.cup.pc; delete o.c;
+        o.note = 'Con cupón ' + o.cup.c;
+      });
+      e.offers.sort((a, b) => a.p - b.p);
+    });
+  };
   CMC.cupon = (o, tienda) => {
-    const q = o.cup, base = q.pc && o.c ? 'Calculado sobre el precio sin tarjeta. ' : q.pc ? 'Calculado sobre el precio publicado. ' : '';
+    const q = o.cup, base = o.p0 && o.c0 ? 'Calculado sobre el precio sin tarjeta. ' : o.p0 ? 'Calculado sobre el precio publicado. ' : '';
     const que = q.app ? `Cupón de la app de ${tienda}` : `${q.l || 'Cupón'} en ${tienda}`;
-    return `<p class="c3-cupon"><button type="button" class="cupon" data-cupon="${esc(q.c)}" aria-label="Copiar cupón ${esc(q.c)}" title="Copiar">${esc(q.c)}</button><span title="${esc(base + 'El descuento se aplica al pagar y se confirma en la tienda.')}">${esc(que)}${q.pc ? ` · baja a ≈${fmt(q.pc)}` : ''} · ${q.sf ? 'la tienda no informa hasta cuándo' : esc(cupFecha(q.v))}</span></p>`;
+    return `<p class="c3-cupon"><button type="button" class="cupon" data-cupon="${esc(q.c)}" aria-label="Copiar cupón ${esc(q.c)}" title="Copiar">${esc(q.c)}</button><span title="${esc(base + 'El descuento se aplica al pagar y se confirma en la tienda.')}">${esc(que)}${o.p0 ? ` · sin cupón ${fmt(o.p0)}` : ''} · ${q.sf ? 'la tienda no informa hasta cuándo' : esc(cupFecha(q.v))}</span></p>`;
   };
 
   /* Nota de potencia de 1 a 10: el puesto del equipo entre todos los del sitio (10 = de los más potentes) */
@@ -77,7 +90,7 @@
       : `${nom(b.s)}${empate > 1 ? ' y ' + (empate - 1) + ' más' : ''} · ${os.length} tiendas`;
     const conCupon = os.find(CMC.cuponVivo);
     const ir = `class="offer c3-ir" data-id="${esc(e.dataId)}" data-store="${b.s}" href="${esc(b.url)}" target="_blank" rel="noopener nofollow sponsored"`;
-    const fila = o => `<li><a class="offer${o.p === b.p ? ' best' : ''}" data-id="${esc(e.dataId)}" data-store="${o.s}" href="${esc(o.url)}" target="_blank" rel="noopener nofollow sponsored"><i class="dot" style="background:${col(o.s)}"></i><span class="oname">${nom(o.s)}${o.note || o.seller || CMC.cuponVivo(o) ? `<small>${esc([CMC.cuponVivo(o) ? 'Cupón ' + o.cup.c : '', o.note, o.seller].filter(Boolean).join(' · '))}</small>` : ''}</span><span class="oprice">${fmt(o.p)}${o.p > b.p ? `<small>+${fmt(o.p - b.p)}</small>` : ''}</span></a></li>`;
+    const fila = o => `<li><a class="offer${o.p === b.p ? ' best' : ''}" data-id="${esc(e.dataId)}" data-store="${o.s}" href="${esc(o.url)}" target="_blank" rel="noopener nofollow sponsored"><i class="dot" style="background:${col(o.s)}"></i><span class="oname">${nom(o.s)}${o.note || o.seller || CMC.cuponVivo(o) ? `<small>${esc([CMC.cuponVivo(o) && !o.p0 ? 'Cupón ' + o.cup.c : '', o.note, o.seller].filter(Boolean).join(' · '))}</small>` : ''}</span><span class="oprice">${fmt(o.p)}${o.p > b.p ? `<small>+${fmt(o.p - b.p)}</small>` : ''}</span></a></li>`;
     return `<article class="c3${e.sello ? ' elegido' : ''}"${e.anchor ? ` id="${esc(e.anchor)}"` : ''}>
       <a class="c3-foto pvA" href="${esc(e.ficha)}" tabindex="-1" aria-hidden="true">${e.art}</a>
       <div class="c3-info">
