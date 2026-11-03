@@ -1,3 +1,2 @@
-Fotos nuevas: 1 · con error: 1 · total en la carpeta: 830
+Fotos nuevas: 0 · con error: 1 · total en la carpeta: 830
 ERROR	lv53	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110007281_01/w=600,h=600,fit=pad
-ok	ac60	6 KB	cl-dam-resizer.ecomm.cencosud.com
