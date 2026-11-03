@@ -1118,6 +1118,8 @@ def picks_as(todos):
     return [('Aspiradoras robot', pares)] if pares else []
 
 
+CALCULADORAS = [('ac', '/calculadora-btu', '¿Cuántos BTU necesito?'), ('tv', '/calculadora-tamano-tv', '¿Qué tamaño de TV me sirve?')]
+
 QUE_COMPRAR = [
     {'slug': 'que-notebook-comprar', 'k': 'nb', 'picks': lambda t: picks_nb(t), 'h1': '¿Qué notebook comprar en Chile?', 'corto': 'notebook',
      'intro': 'Elegir bien depende de qué vas a hacer con él y cuánto quieres gastar. Aquí tienes qué mirar y los que más rinden por su precio hoy, según tu presupuesto y uso.',
@@ -1249,6 +1251,41 @@ QUE_COMPRAR += [
 ]
 
 
+
+def _picks_lavado(todos):
+    lv = _nuevos(todos, 'lv')
+    r = [('Lavadora-secadora más barata (2 en 1)', _barato([x for x in lv if x['eq']['tipo'] == 'lavaseca'])),
+         ('Lavadora más barata (para combinar)', _barato([x for x in lv if x['eq']['tipo'] == 'lavadora'])),
+         ('Secadora más barata (para combinar)', _barato([x for x in lv if x['eq']['tipo'] == 'secadora']))]
+    return [('Cuánto cuesta cada opción hoy', [(a, x) for a, x in r if x])]
+
+
+QUE_COMPRAR += [
+    {'slug': 'oled-qled-o-mini-led', 'k': 'tv', 'picks': _tv_tamano(65), 'h1': '¿OLED, QLED o Mini LED? Cuál conviene en un smart TV', 'corto': 'televisor OLED, QLED o Mini LED',
+     'intro': 'Los tres son pantallas 4K, pero se ven y cuestan distinto. Te explicamos la diferencia y cuánto cuesta cada tipo hoy en 65 pulgadas.',
+     'consejos': [('OLED: los mejores negros', 'Cada punto de la pantalla se enciende solo, por eso el negro es negro de verdad. Es el mejor para películas con la luz apagada, pero es el más caro y brilla menos en una pieza muy iluminada.'),
+                  ('QLED: color y brillo a buen precio', 'Usa una capa de puntos cuánticos delante de una luz LED. Se ve brillante y colorida, y cuesta menos que un OLED.'),
+                  ('Mini LED: más brillo y mejor contraste', 'Tiene miles de luces diminutas atrás que se apagan por zonas. Se acerca al contraste del OLED con mucho más brillo, ideal para living con ventanales.'),
+                  ('LED común', 'Es el más barato. Sirve para ver series y noticias, pero sus negros se ven grises y el contraste es menor.'),
+                  ('Qué elegir', 'Pieza oscura y cine: OLED. Living con mucha luz: Mini LED o QLED. Presupuesto ajustado: QLED o LED.')],
+     'preguntas': [('¿El OLED se quema?', 'Puede quedar marcado si dejas la misma imagen fija durante miles de horas, como el logo de un canal. Con uso normal, los OLED actuales lo evitan con funciones propias.')]},
+    {'slug': 'ps5-o-switch-2', 'k': 'cs', 'picks': lambda t: [(a, [(f, x) for f, x in r if f in ('PlayStation 5', 'PlayStation 5 Pro', 'Nintendo Switch 2')]) for a, r in picks_cs(t)], 'h1': 'PS5 o Nintendo Switch 2: cuál conviene comprar', 'corto': 'consola PS5 o Switch 2',
+     'intro': 'Son dos formas distintas de jugar: potencia en la tele o juegos para toda la familia que también se llevan de viaje. Mira sus diferencias y cuánto cuesta cada una hoy.',
+     'consejos': [('PS5: más potencia y juegos grandes', 'Es más potente y sus juegos se ven mejor en una tele 4K. Tiene los exclusivos de PlayStation y un catálogo muy grande de juegos de acción y deportes.'),
+                  ('Switch 2: portátil y familiar', 'Se juega en la tele o en la mano, y tiene los juegos de Mario, Zelda y Pokémon que no salen en otras consolas. Es ideal para jugar en familia.'),
+                  ('Precio de los juegos', 'Los juegos de Nintendo suelen mantener su precio por más tiempo. Los de PlayStation bajan más rápido con ofertas.'),
+                  ('Qué elegir', 'Si quieres la mejor imagen en la tele y juegos de acción, PS5. Si juegas con niños o quieres llevarla de viaje, Switch 2.')],
+     'preguntas': []},
+    {'slug': 'lavadora-secadora-o-por-separado', 'k': 'lv', 'picks': _picks_lavado, 'h1': '¿Lavadora-secadora o lavadora y secadora por separado?', 'corto': 'lavadora-secadora',
+     'intro': 'La lavadora-secadora ocupa un solo espacio, pero tiene límites. Te contamos cuándo conviene cada opción y cuánto cuesta hoy.',
+     'consejos': [('Lavadora-secadora: ideal si falta espacio', 'Lava y seca en el mismo tambor. Sirve en departamentos chicos, y te ahorras mover la ropa.'),
+                  ('Su límite: la carga al secar', 'Seca menos ropa de la que lava (por ejemplo, 14 kg lava y 8 kg seca) y demora más, a veces más de 3 horas por ciclo.'),
+                  ('Por separado: más rápido y para más ropa', 'Mientras una seca, la otra puede lavar. Sirve para familias numerosas, pero necesitas el doble de espacio y conexiones.'),
+                  ('Qué elegir', 'Una o dos personas y poco espacio: lavadora-secadora. Familia de 3 o más: lavadora y secadora por separado.')],
+     'preguntas': []},
+]
+
+
 def _cabecera(h, lista_slug, tipo):
     """Las guías nuevas parten del HTML de la guía de notebooks: ajusta buscador y menú a la categoría de cada una (tipo=None: sin categoría)."""
     t = tipo.lower() if tipo else 'equipos'
@@ -1346,6 +1383,8 @@ def bloque_categoria(k, todos, urls, rankings):
                     + '</span></a></li>' for g in GUIAS if g['k'] == k)
     guias = ('<li><a href="/black-friday"><img src="/assets/puma-sello.webp" alt="" width="32" height="32" loading="lazy" decoding="async">'
              '<span><strong>Black Friday 2026: fechas y precios de referencia</strong><small>Del 27 al 30 de noviembre</small></span></a></li>') + guias
+    guias += ''.join(f'<li><a href="{u}"><img src="/assets/puma-sello.webp" alt="" width="32" height="32" loading="lazy" decoding="async"><span><strong>{e(t)}</strong><small>Calculadora gratis</small></span></a></li>'
+                     for kk, u, t in CALCULADORAS if kk == k)
     guias += ''.join(f'<li><a href="/guia/{c["slug"]}"><img src="/assets/puma-sello.webp" alt="" width="32" height="32" loading="lazy" decoding="async">'
                      f'<span><strong>{e(c["h1"])}</strong><small>Qué mirar y cuál conviene hoy</small></span></a></li>' for c in QUE_COMPRAR if c['k'] == k)
     items = ''.join(f'<li><a href="{urls[x["id"]]}">{e(x["nombre"])}</a> <span>{precio_html(x["os"][0])}</span></li>' for x in eqs)
@@ -1499,6 +1538,7 @@ def main():
     lm = hoy.isoformat()
     filas = [f'  <url><loc>{SITIO}/</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>',
             ] + [f'  <url><loc>{SITIO}/{c[1]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>' for c in CATS.values()]
+    filas += [f'  <url><loc>{SITIO}{u}</loc><lastmod>{lm}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>' for _, u, _ in CALCULADORAS]
     filas += [f'  <url><loc>{SITIO}/black-friday</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>']
     filas += [f'  <url><loc>{SITIO}/guia/{c["slug"]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>' for c in QUE_COMPRAR]
     filas += [f'  <url><loc>{SITIO}/guia/{g["slug"]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>' for g in GUIAS]
