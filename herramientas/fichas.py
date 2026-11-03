@@ -959,6 +959,69 @@ document.addEventListener('click', ev => {{
 # ---------------- Bloques escritos en las páginas que se arman en el navegador ----------------
 # La portada y las categorías muestran los equipos con JavaScript. Estos bloques dejan escritos en el HTML
 # los enlaces a cada ficha y a las guías, para que Google los encuentre sin esperar a que corra el código.
+def pagina_black_friday(base, todos, hist, urls, fotos, hoy_txt):
+    """Página /black-friday: fechas y precios de referencia de cada día. Usa como plantilla el HTML de una guía (base)."""
+    url = '/black-friday'
+    tit = 'Black Friday 2026 Chile: fechas y cómo saber si la oferta es real | ¿Cuál me conviene?'
+    desc = ('El Black Friday 2026 en Chile es del 27 al 30 de noviembre. Revisa el precio habitual y el más bajo que hemos visto '
+            f'en notebooks, celulares y televisores para saber si la oferta es real. Precios revisados el {hoy_txt}.')
+
+    def fila(x):
+        h, o, u = hist[x['id']], x['os'][0], urls[x['id']]
+        f, _ = foto_de(x['id'], fotos)
+        img = f'<img src="{e(f)}" alt="" width="480" height="480" loading="lazy" decoding="async" referrerpolicy="no-referrer">' if f else ''
+        return (f'<li class="rkI"><a class="rkF" href="{u}" tabindex="-1" aria-hidden="true">{img}</a>'
+                f'<div class="rkT"><h3><a href="{u}">{e(x["nombre"])}</a></h3><p class="sp">{e(specs_cortas(x))}</p>'
+                f'<ul class="gRaz"><li>Precio habitual: {plata(statistics.median(h.values()))}</li>'
+                f'<li>Lo más bajo que vimos sin cupón: {plata(min(h.values()))}, desde el {fecha_larga(min(h))}</li></ul></div>'
+                f'<div class="rkP"><p class="precio">{precio_html(o)}{pago(o)}</p><p class="donde"><i style="background:{TIENDAS[o["s"]][1]}"></i>en {TIENDAS[o["s"]][0]}</p>'
+                f'<a class="tb" href="{u}">Ver precios</a></div></li>')
+
+    grupos, lista_ld = '', []
+    for k in ('nb', 'ph', 'tv', 'cs', 'lv', 'ac'):
+        eqs = [x for x in todos if x['k'] == k and x['os'] and not x['eq'].get('refurb') and len(hist.get(x['id'], {})) >= 3]
+        eqs.sort(key=lambda x: (-len(dict.fromkeys(o['s'] for o in x['os'])), x['os'][0]['p']))
+        if eqs[:5]:
+            tipo, _, slug = TIPOS[k]
+            lista_ld += [urls[x['id']] for x in eqs[:5]]
+            grupos += (f'<section class="bloque"><h2>{e(tipo)}: precios de referencia</h2><ol class="rk">{"".join(fila(x) for x in eqs[:5])}</ol>'
+                       f'<p><a href="/{slug}">Ver y comparar todos</a></p></section>')
+    consejos = [('Mira el precio de antes, no el porcentaje', 'Un descuento grande no sirve si se calcula sobre un precio que casi nunca se cobró. Compáralo con el precio habitual de esta página.'),
+                ('Compara el mismo equipo en otras tiendas', 'La misma oferta puede costar menos en otra tienda. En cada ficha ves el precio de todas las que revisamos.'),
+                ('Revisa si pide tarjeta o cupón', 'Te indicamos si un precio es con tarjeta o con cupón, y cuánto cuesta sin ellos. Confirma el total antes de pagar.'),
+                ('Activa el aviso de precio', 'En la ficha de cada equipo puedes pedir un correo cuando baje de precio.')]
+    preguntas = [('¿Cuándo es el Black Friday 2026 en Chile?', 'Parte el viernes 27 de noviembre a las 00:00 y termina el lunes 30 de noviembre a las 23:59. Las fechas las confirmó la Cámara de Comercio de Santiago.'),
+                 ('¿Cuántos días dura?', 'Son cuatro días, con ofertas en línea y en tiendas físicas.'),
+                 ('¿Conviene esperar al Black Friday?', 'Depende del equipo. Si hoy ya está cerca del precio más bajo que hemos visto, esperar puede no cambiar mucho. Si está sobre su precio habitual, conviene seguirlo y activar el aviso.')]
+    cuerpo = (f'<h1>Black Friday 2026 en Chile: fechas y cómo saber si la oferta es real</h1>'
+              f'<p class="sp">Parte el viernes 27 de noviembre y termina el lunes 30. Aquí tienes el precio habitual y el más bajo que hemos visto, para comparar antes de comprar. Precios revisados el {e(hoy_txt)}.</p>'
+              '<section class="bloque"><h2>Cómo saber si un descuento es real</h2><ul class="gRaz">'
+              + ''.join(f'<li><b>{e(a)}.</b> {e(b)}</li>' for a, b in consejos) + '</ul></section>' + grupos +
+              '<section class="bloque"><h2>Preguntas frecuentes</h2>' + ''.join(f'<h3>{e(a)}</h3><p>{e(b)}</p>' for a, b in preguntas) + '</section>')
+    ld = {'@context': 'https://schema.org', '@graph': [
+        {'@type': 'ItemList', 'name': 'Precios de referencia para el Black Friday 2026', 'url': SITIO + url, 'numberOfItems': len(lista_ld),
+         'itemListElement': [{'@type': 'ListItem', 'position': k, 'url': SITIO + u} for k, u in enumerate(lista_ld, 1)]},
+        {'@type': 'BreadcrumbList', 'itemListElement': [
+            {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': SITIO + '/'},
+            {'@type': 'ListItem', 'position': 2, 'name': 'Black Friday 2026', 'item': SITIO + url}]}]}
+    h = base
+    for patron, nuevo in [(r'<title>.*?</title>', f'<title>{e(tit)}</title>'),
+                          (r'<meta name="description" content=".*?">', f'<meta name="description" content="{e(desc)}">'),
+                          (r'<link rel="canonical" href=".*?">', f'<link rel="canonical" href="{SITIO}{url}">'),
+                          (r'<meta property="og:title" content=".*?">', f'<meta property="og:title" content="{e(tit)}">'),
+                          (r'<meta property="og:description" content=".*?">', f'<meta property="og:description" content="{e(desc)}">'),
+                          (r'<meta property="og:url" content=".*?">', f'<meta property="og:url" content="{SITIO}{url}">'),
+                          (r'<script type="application/ld\+json">.*?</script>', '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False).replace('</', '<\\/') + '</script>'),
+                          (r'(?s)(<main[^>]*>).*(</main>)', None)]:
+        if nuevo is None:
+            h, n = re.subn(patron, lambda m: m.group(1) + cuerpo + m.group(2), h, count=1)
+        else:
+            h, n = re.subn(patron, lambda m: nuevo, h, count=1, flags=re.S)
+        if not n:
+            raise ValueError('plantilla de guía sin ' + patron)
+    return h
+
+
 def _poner_bloque(archivo, nombre, contenido, antes_de):
     ruta = os.path.join(RAIZ, archivo)
     if not os.path.exists(ruta):
@@ -988,6 +1051,8 @@ def bloque_categoria(k, todos, urls, rankings):
                     f'<span><strong>{e(g["titulo"])}</strong>'
                     + (f'<small>Hoy gana el {e(rankings[g["slug"]][0]["x"]["nombre"])}</small>' if rankings.get(g['slug']) else '')
                     + '</span></a></li>' for g in GUIAS if g['k'] == k)
+    guias = ('<li><a href="/black-friday"><img src="/assets/puma-sello.webp" alt="" width="32" height="32" loading="lazy" decoding="async">'
+             '<span><strong>Black Friday 2026: fechas y precios de referencia</strong><small>Del 27 al 30 de noviembre</small></span></a></li>') + guias
     items = ''.join(f'<li><a href="{urls[x["id"]]}">{e(x["nombre"])}</a> <span>{precio_html(x["os"][0])}</span></li>' for x in eqs)
     return (f'<section class="indice" aria-label="Guías y lista completa de {tipo.lower()}">'
             + (f'<h2 class="idxT">Guías del puma</h2><ul class="idxGuias">{guias}</ul>' if guias else '')
@@ -996,7 +1061,9 @@ def bloque_categoria(k, todos, urls, rankings):
 
 
 def bloque_portada(rankings, fotos, urls):
-    tarjetas = ''
+    tarjetas = ('<a class="guiaC" href="/black-friday"><span class="guiaF"><img src="/assets/puma-sello.webp" alt="" width="480" height="480" loading="lazy" decoding="async"></span>'
+                '<span class="guiaT"><small>Del 27 al 30 de noviembre</small><strong>Black Friday 2026: fechas y precios de referencia</strong>'
+                '<span>Mira el precio habitual y el más bajo que hemos visto antes de comprar.</span><b>Ver precios de referencia</b></span></a>')
     for g in GUIAS:
         r = rankings.get(g['slug'])
         if not r:
@@ -1081,6 +1148,11 @@ def main():
         viejo = open(ruta, encoding='utf-8').read() if os.path.exists(ruta) else ''
         if nuevo != viejo:
             open(ruta, 'w', encoding='utf-8').write(nuevo); escritas += 1
+    g0 = GUIAS[0]
+    bf = pagina_black_friday(pagina_guia(g0, rankings[g0['slug']], fotos, urls, hoy_txt, hoy), todos, hist, urls, fotos, hoy_txt)
+    ruta = os.path.join(RAIZ, 'black-friday.html')
+    if bf != (open(ruta, encoding='utf-8').read() if os.path.exists(ruta) else ''):
+        open(ruta, 'w', encoding='utf-8').write(bf); escritas += 1
     for k, (_, _, archivo) in TIPOS.items():
         if _poner_bloque(archivo + '.html', 'lista', bloque_categoria(k, todos, urls, rankings), '  <footer class="note">'):
             escritas += 1
@@ -1126,6 +1198,7 @@ def main():
     lm = hoy.isoformat()
     filas = [f'  <url><loc>{SITIO}/</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>',
             ] + [f'  <url><loc>{SITIO}/{c[1]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>' for c in CATS.values()]
+    filas += [f'  <url><loc>{SITIO}/black-friday</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>']
     filas += [f'  <url><loc>{SITIO}/guia/{g["slug"]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>' for g in GUIAS]
     filas += [f'  <url><loc>{SITIO}{urls[x["id"]]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>' for x in todos if x['os']]
     open(os.path.join(RAIZ, 'sitemap.xml'), 'w', encoding='utf-8').write(
