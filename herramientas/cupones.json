@@ -19,9 +19,8 @@
     "tag-electro-dscto-adicional-samsung-dp-1": {
       "c": "SAMSUNG10",
       "l": "Cupón 10%",
-      "v": "2026-11-05T03:00:00Z",
-      "sf": 1,
-      "revisado": "03-11-2026: la ficha muestra \"Cupón APP\" sin \"Expira\"; v es solo el límite interno (fin del 4 nov)"
+      "v": "2026-11-10T09:00:00Z",
+      "revisado": "03-11-2026: en la ficha de escritorio Paris muestra \"Expira el 10/11 6:00 AM\" (09:00Z); en el celular no lo muestra"
     },
     "tag-linea-blanca-dscto-samsung-dp-1": {
       "c": "SMS10",
