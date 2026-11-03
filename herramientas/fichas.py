@@ -1019,7 +1019,214 @@ def pagina_black_friday(base, todos, hist, urls, fotos, hoy_txt):
             h, n = re.subn(patron, lambda m: nuevo, h, count=1, flags=re.S)
         if not n:
             raise ValueError('plantilla de guía sin ' + patron)
-    return h
+    return _cabecera(h, '', None)
+
+
+# ---------------- Guías "qué comprar": una por categoría, con los precios de hoy ----------------
+# Cada una explica en pocas líneas qué mirar y muestra qué conviene hoy según el presupuesto o el tamaño.
+# Los equipos salen de los datos del sitio (sin fórmulas inventadas): el más barato de cada tipo, o el de mejor rendimiento por precio.
+def _unicos(xs, n):
+    out, vistos = [], set()
+    for x in xs:
+        c = slugify(x['nombre'])
+        if c not in vistos:
+            vistos.add(c); out.append(x)
+        if len(out) == n:
+            break
+    return out
+
+
+def _nuevos(todos, k):
+    return [x for x in todos if x['k'] == k and x['os'] and not x['eq'].get('refurb')]
+
+
+def _barato(xs):
+    return min(xs, key=lambda x: x['os'][0]['p']) if xs else None
+
+
+def picks_tv(todos):
+    tv = _nuevos(todos, 'tv')
+    g = []
+    for t, f in [('Hasta 43 pulgadas: pieza chica o dormitorio', lambda s: s <= 43), ('50 a 55 pulgadas: el tamaño más común', lambda s: 50 <= s <= 55),
+                 ('65 pulgadas: living cómodo', lambda s: s == 65), ('75 pulgadas o más: cine en casa', lambda s: s >= 75)]:
+        xs = [x for x in tv if f(x['eq']['size'])]
+        sel = [('El más barato', _barato(xs)),
+               ('El más barato con QLED, QNED o Mini LED', _barato([x for x in xs if x['eq'].get('panel') in ('QLED', 'QNED', 'Mini LED', 'NanoCell')])),
+               ('El más barato con OLED', _barato([x for x in xs if x['eq'].get('panel') == 'OLED']))]
+        pares, vistos = [], set()
+        for et, x in sel:
+            if x and x['id'] not in vistos:
+                vistos.add(x['id']); pares.append((et, x))
+        if pares:
+            g.append((t, pares))
+    return g
+
+
+def _pot2(x, clave):
+    return (x['eq'].get(clave) or 0) ** 2 / x['os'][0]['p']
+
+
+def picks_ph(todos):
+    ph = [x for x in _nuevos(todos, 'ph') if x['eq'].get('antutu')]
+    g = []
+    for t, a, b in [('Hasta $150.000', 0, 150000), ('De $150.000 a $300.000', 150000, 300000), ('De $300.000 a $600.000', 300000, 600000), ('Más de $600.000', 600000, 10 ** 9)]:
+        xs = sorted([x for x in ph if a < x['os'][0]['p'] <= b], key=lambda x: -_pot2(x, 'antutu'))
+        top = _unicos(xs, 3)
+        if top:
+            g.append((t, [(f'N° {i}', x) for i, x in enumerate(top, 1)]))
+    return g
+
+
+def picks_cs(todos):
+    cs = _nuevos(todos, 'cs')
+    fam = {}
+    for x in sorted(cs, key=lambda x: x['os'][0]['p']):
+        fam.setdefault(x['eq']['fam'], x)
+    return [('Cada consola, a su precio más bajo hoy', [(f, x) for f, x in sorted(fam.items(), key=lambda a: a[1]['os'][0]['p'])])]
+
+
+def picks_lv(todos):
+    lv = _nuevos(todos, 'lv')
+    g = []
+    for t, f in [('Lavadoras de carga superior', lambda x: x['eq']['tipo'] == 'lavadora' and x['eq'].get('carga') == 'superior'),
+                 ('Lavadoras de carga frontal', lambda x: x['eq']['tipo'] == 'lavadora' and x['eq'].get('carga') == 'frontal'),
+                 ('Lavadoras-secadoras (lavaseca)', lambda x: x['eq']['tipo'] == 'lavaseca')]:
+        xs = [x for x in lv if f(x)]
+        sel = [('La más barata', _barato(xs)), ('La más barata con motor inverter', _barato([x for x in xs if x['eq'].get('inv')])),
+               ('La de más capacidad bajo la mediana de precio',
+                max([x for x in xs if x['os'][0]['p'] <= statistics.median(y['os'][0]['p'] for y in xs)], key=lambda x: (x['eq'].get('kg') or 0, -x['os'][0]['p']), default=None) if xs else None)]
+        pares, vistos = [], set()
+        for et, x in sel:
+            if x and x['id'] not in vistos:
+                vistos.add(x['id']); pares.append((et, x))
+        if pares:
+            g.append((t, pares))
+    return g
+
+
+def picks_as(todos):
+    a = [x for x in _nuevos(todos, 'as') if x['eq'].get('tipo') == 'robot']
+    sel = [('El robot más barato', _barato(a)),
+           ('El más barato con mapeo láser (LiDAR)', _barato([x for x in a if 'LiDAR' in (x['eq'].get('nav') or '') or 'Láser' in (x['eq'].get('nav') or '')])),
+           ('El más barato que también friega (mopa)', _barato([x for x in a if x['eq'].get('mopa')])),
+           ('El más barato con mapeo láser y mopa', _barato([x for x in a if x['eq'].get('mopa') and 'Láser' in (x['eq'].get('nav') or '')])),
+           ('El de más succión', max([x for x in a if x['eq'].get('pa')], key=lambda x: x['eq']['pa'], default=None))]
+    pares, vistos = [], set()
+    for et, x in sel:
+        if x and x['id'] not in vistos:
+            vistos.add(x['id']); pares.append((et, x))
+    return [('Aspiradoras robot', pares)] if pares else []
+
+
+QUE_COMPRAR = [
+    {'slug': 'que-smart-tv-comprar', 'k': 'tv', 'picks': picks_tv, 'h1': '¿Qué smart TV comprar en Chile?', 'corto': 'smart TV',
+     'intro': 'La pantalla correcta depende del tamaño de tu pieza, de cuánto te alejas y de si ves cine o fútbol. Aquí tienes qué mirar y el más barato de cada tipo, con los precios de hoy.',
+     'consejos': [('Tamaño según la distancia', 'A unos 2 metros sirve un televisor de 43 a 50 pulgadas. A 3 metros, uno de 55 a 65. Más grande solo vale la pena si tienes espacio.'),
+                  ('LED, QLED, Mini LED u OLED', 'LED es el más barato. QLED y Mini LED se ven más brillantes y con mejor color, y sirven bien con luz de día. OLED tiene los negros más profundos y es el mejor para ver películas con la luz apagada.'),
+                  ('Frecuencia: 60 o 120 Hz', 'Para ver series y películas bastan 60 Hz. Si juegas en PS5 o Xbox, 120 Hz se nota más fluido.'),
+                  ('Sistema operativo', 'Google TV, webOS, Tizen y otros tienen las mismas aplicaciones principales. Cambia el menú y cuánto tiempo recibe actualizaciones.'),
+                  ('Resolución', 'Desde 43 pulgadas conviene 4K: casi todos los que se venden hoy lo son. Full HD solo en pantallas chicas.')],
+     'preguntas': [('¿Qué es mejor, OLED o QLED?', 'OLED muestra negros más profundos y mejor contraste, y QLED o Mini LED brillan más. Para una pieza oscura conviene OLED; para un living con mucha luz, QLED o Mini LED.'),
+                   ('¿Cuántas pulgadas necesito?', 'Una referencia simple: 43 pulgadas para 1,5 a 2 metros, 55 para 2 a 3 metros y 65 para más de 3 metros.')]},
+    {'slug': 'que-celular-comprar', 'k': 'ph', 'picks': picks_ph, 'h1': '¿Qué celular comprar en Chile?', 'corto': 'celular',
+     'intro': 'Elegir por presupuesto es lo más simple: dentro de cada rango te mostramos los tres que más rendimiento dan por lo que cuestan, según el puntaje AnTuTu, con los precios de hoy.',
+     'consejos': [('Memoria: 128 GB es lo mínimo hoy', 'Con fotos, videos y WhatsApp, 128 GB se llena rápido. Si puedes, 256 GB.'),
+                  ('RAM: 6 u 8 GB para que no se trabe', 'Con 4 GB funciona lo básico. Con 8 GB aguanta más años de actualizaciones.'),
+                  ('Cámara no es solo megapíxeles', 'Importa más el sensor y el procesado de la marca que el número. Mira fotos reales de ese modelo.'),
+                  ('Batería y carga', 'Desde 5.000 mAh dura todo el día. Revisa también la carga rápida y si el cargador viene en la caja.'),
+                  ('Operador o liberado', 'Comprarlo liberado te deja elegir plan. Con operador, revisa la permanencia y lo que pagas en total.')],
+     'preguntas': [('¿Qué significa el puntaje AnTuTu?', 'Es una prueba que mide la potencia del procesador. Mientras más alto, más rápido va el celular, pero no mide cámara ni batería.')]},
+    {'slug': 'que-consola-comprar', 'k': 'cs', 'picks': picks_cs, 'h1': '¿Qué consola comprar en Chile?', 'corto': 'consola',
+     'intro': 'PlayStation, Xbox o Nintendo: la mejor depende de qué juegos quieres y dónde juegas. Aquí tienes el precio de cada una hoy y cómo elegir.',
+     'consejos': [('Elige por los juegos que quieres', 'Los exclusivos mandan: Mario y Zelda solo en Nintendo, God of War y Spider-Man en PlayStation, Halo y Forza en Xbox.'),
+                  ('Si juegas en el sillón o viajas', 'Nintendo Switch 2 se usa en la tele y también como portátil.'),
+                  ('Si buscas la mejor imagen', 'PlayStation 5 y PS5 Pro son las más potentes para ver juegos en 4K y con buenos cuadros por segundo.'),
+                  ('La más barata para partir', 'Xbox Series S y Switch Lite son las más baratas. Revisa si incluyen juego, porque a veces el pack sale más conveniente.'),
+                  ('Juegos digitales o en disco', 'Las versiones sin lector de discos son más baratas, pero no puedes comprar ni vender juegos usados.')],
+     'preguntas': []},
+    {'slug': 'que-lavadora-comprar', 'k': 'lv', 'picks': picks_lv, 'h1': '¿Qué lavadora comprar en Chile?', 'corto': 'lavadora',
+     'intro': 'Antes de comparar marcas, decide el tipo y la capacidad. Después mira el motor y el consumo. Aquí tienes el más barato de cada tipo, con los precios de hoy.',
+     'consejos': [('Carga superior o frontal', 'La superior es más barata y fácil de cargar. La frontal gasta menos agua y cuida más la ropa, pero cuesta más.'),
+                  ('Capacidad según cuántos son', '8 a 9 kg para 1 o 2 personas, 10 a 12 kg para familias de 3 o 4 y 15 kg o más para familias grandes.'),
+                  ('Motor inverter', 'Es más silencioso, dura más y gasta menos electricidad. Vale la pena si la vas a usar a diario.'),
+                  ('Lavadora-secadora', 'Ocupa un solo espacio, pero seca más lento que una secadora aparte. Sirve en departamentos chicos.'),
+                  ('Eficiencia energética', 'En la etiqueta, A es la que menos gasta y G la que más. Con A o B ahorras en la cuenta.')],
+     'preguntas': [('¿Conviene una lavadora-secadora?', 'Si tienes poco espacio, sí. Si lavas mucho, una lavadora y una secadora por separado terminan más rápido.')]},
+    {'slug': 'que-aspiradora-robot-comprar', 'k': 'as', 'picks': picks_as, 'h1': '¿Qué aspiradora robot comprar en Chile?', 'corto': 'aspiradora robot',
+     'intro': 'No todos los robots son iguales: la diferencia está en cómo se orientan y si friegan. Aquí tienes el más barato según lo que necesitas, con los precios de hoy.',
+     'consejos': [('Cómo se orienta', 'Los de mapeo láser (LiDAR) hacen mapas y limpian en filas ordenadas. Los de sensores simples van más al azar y pasan dos veces por el mismo lugar.'),
+                  ('Con o sin mopa', 'Los que friegan sirven para piso flotante o cerámica. En alfombras suelen ser peores.'),
+                  ('Succión', 'Mientras más pascales (Pa), más recoge. Con 2.000 Pa alcanza para polvo y pelos; sobre 5.000 Pa se nota con mascotas.'),
+                  ('Estación de vaciado', 'Algunos se vacían solos y se friegan solos. Cuestan más, pero te olvidas por semanas.'),
+                  ('Mascotas', 'Si tienes perro o gato, busca cepillo antienredo y filtro HEPA.')],
+     'preguntas': []},
+]
+
+
+def _cabecera(h, lista_slug, tipo):
+    """Las guías nuevas parten del HTML de la guía de notebooks: ajusta buscador y menú a la categoría de cada una (tipo=None: sin categoría)."""
+    t = tipo.lower() if tipo else 'equipos'
+    h = re.sub(r'(<form class="search" action=")[^"]*(")', lambda m: m.group(1) + ('/' + lista_slug if tipo else '/notebooks') + m.group(2), h, count=1)
+    h = h.replace('placeholder="Buscar notebooks" aria-label="Buscar notebooks"', f'placeholder="Buscar {t}" aria-label="Buscar {t}"')
+    return re.sub(r'(<nav class="hd-cats" aria-label="Categorías">).*?(</nav>)', lambda m: m.group(1) + menu(lista_slug if tipo else '') + m.group(2), h, count=1, flags=re.S)
+
+
+def pagina_que_comprar(base, c, todos, urls, fotos, hoy_txt, hoy):
+    url = f'/guia/{c["slug"]}'
+    mes = f'{MESES[hoy.month - 1]} {hoy.year}'
+    tipo, _, lista_slug = TIPOS[c['k']]
+    grupos = c['picks'](todos)
+    nuevos = _nuevos(todos, c['k'])
+    tit = f'{c["h1"]} Guía {mes} | ¿Cuál me conviene?'
+    desde = min((x['os'][0]['p'] for x in nuevos), default=0)
+    desc = (f'Cómo elegir {c["corto"]} en Chile y cuál conviene hoy según tu presupuesto. Desde {plata(desde)}. Precios revisados el {hoy_txt}.')
+
+    def fila(et, x):
+        o, u = x['os'][0], urls[x['id']]
+        f, _ = foto_de(x['id'], fotos)
+        img = f'<img src="{e(f)}" alt="" width="480" height="480" loading="lazy" decoding="async" referrerpolicy="no-referrer">' if f else ''
+        return (f'<li class="rkI"><a class="rkF" href="{u}" tabindex="-1" aria-hidden="true">{img}</a>'
+                f'<div class="rkT"><p class="rkN">{e(et)}</p><h3><a href="{u}">{e(x["nombre"])}</a></h3><p class="sp">{e(specs_cortas(x))}</p></div>'
+                f'<div class="rkP"><p class="precio">{precio_html(o)}{pago(o)}</p><p class="donde"><i style="background:{TIENDAS[o["s"]][1]}"></i>en {TIENDAS[o["s"]][0]}</p>'
+                f'<a class="tb" href="{u}">Ver precios</a></div></li>')
+
+    secciones, lista_ld = '', []
+    for t, pares in grupos:
+        lista_ld += [urls[x['id']] for _, x in pares]
+        secciones += f'<section class="bloque"><h2>{e(t)}</h2><ol class="rk">{"".join(fila(et, x) for et, x in pares)}</ol></section>'
+    consejos = ''.join(f'<li><b>{e(a)}.</b> {e(b)}</li>' for a, b in c['consejos'])
+    preguntas = ''.join(f'<h3>{e(a)}</h3><p>{e(b)}</p>' for a, b in c['preguntas'])
+    otras = ''.join(f'<li><a href="/guia/{o["slug"]}">{e(o["h1"])}</a></li>' for o in QUE_COMPRAR if o['slug'] != c['slug'])
+    cuerpo = (f'<p class="mc">Guía del puma · Actualizada el {fecha_larga(hoy)} de {hoy.year}</p><h1>{e(c["h1"])}</h1><p class="sp">{e(c["intro"])}</p>'
+              f'<section class="bloque"><h2>Qué mirar antes de comprar</h2><ul class="gRaz">{consejos}</ul></section>'
+              + secciones
+              + (f'<section class="bloque"><h2>Preguntas frecuentes</h2>{preguntas}</section>' if preguntas else '')
+              + f'<section class="bloque"><h2>Cómo armamos esta guía</h2><p class="nota">Los equipos salen de las {len(nuevos)} opciones nuevas que hoy revisamos en las tiendas de Chile. Mostramos el precio más bajo publicado en cada una, que a veces exige tarjeta de la tienda o cupón. No es una prueba de laboratorio ni asesoría profesional: confirma siempre el precio y el stock en la tienda antes de pagar. Precios revisados el {e(hoy_txt)}.</p>'
+              f'<p class="nota"><a href="/{lista_slug}">Ver y comparar todos los equipos de {e(tipo.lower())}</a></p></section>'
+              f'<section class="bloque"><h2>Otras guías</h2><ul class="gOtras">{otras}<li><a href="/guia/{GUIAS[0]["slug"]}">{e(GUIAS[0]["titulo"])}</a></li><li><a href="/black-friday">Black Friday 2026</a></li></ul></section>')
+    ld = {'@context': 'https://schema.org', '@graph': [
+        {'@type': 'ItemList', 'name': c['h1'], 'url': SITIO + url, 'numberOfItems': len(lista_ld),
+         'itemListElement': [{'@type': 'ListItem', 'position': k, 'url': SITIO + u} for k, u in enumerate(lista_ld, 1)]},
+        {'@type': 'BreadcrumbList', 'itemListElement': [
+            {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': SITIO + '/'},
+            {'@type': 'ListItem', 'position': 2, 'name': tipo, 'item': SITIO + '/' + lista_slug},
+            {'@type': 'ListItem', 'position': 3, 'name': c['h1'], 'item': SITIO + url}]}]}
+    h = base
+    for patron, nuevo in [(r'<title>.*?</title>', f'<title>{e(tit)}</title>'),
+                          (r'<meta name="description" content=".*?">', f'<meta name="description" content="{e(desc)}">'),
+                          (r'<link rel="canonical" href=".*?">', f'<link rel="canonical" href="{SITIO}{url}">'),
+                          (r'<meta property="og:title" content=".*?">', f'<meta property="og:title" content="{e(c["h1"])}">'),
+                          (r'<meta property="og:description" content=".*?">', f'<meta property="og:description" content="{e(desc)}">'),
+                          (r'<meta property="og:url" content=".*?">', f'<meta property="og:url" content="{SITIO}{url}">'),
+                          (r'<script type="application/ld\+json">.*?</script>', '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False).replace('</', '<\\/') + '</script>'),
+                          (r'(?s)(<main[^>]*>).*(</main>)', None)]:
+        if nuevo is None:
+            h, n = re.subn(patron, lambda m: m.group(1) + cuerpo + m.group(2), h, count=1)
+        else:
+            h, n = re.subn(patron, lambda m: nuevo, h, count=1, flags=re.S)
+        if not n:
+            raise ValueError('plantilla de guía sin ' + patron)
+    return _cabecera(h, lista_slug, tipo)
 
 
 def _poner_bloque(archivo, nombre, contenido, antes_de):
@@ -1053,6 +1260,8 @@ def bloque_categoria(k, todos, urls, rankings):
                     + '</span></a></li>' for g in GUIAS if g['k'] == k)
     guias = ('<li><a href="/black-friday"><img src="/assets/puma-sello.webp" alt="" width="32" height="32" loading="lazy" decoding="async">'
              '<span><strong>Black Friday 2026: fechas y precios de referencia</strong><small>Del 27 al 30 de noviembre</small></span></a></li>') + guias
+    guias += ''.join(f'<li><a href="/guia/{c["slug"]}"><img src="/assets/puma-sello.webp" alt="" width="32" height="32" loading="lazy" decoding="async">'
+                     f'<span><strong>{e(c["h1"])}</strong><small>Qué mirar y cuál conviene hoy</small></span></a></li>' for c in QUE_COMPRAR if c['k'] == k)
     items = ''.join(f'<li><a href="{urls[x["id"]]}">{e(x["nombre"])}</a> <span>{precio_html(x["os"][0])}</span></li>' for x in eqs)
     return (f'<section class="indice" aria-label="Guías y lista completa de {tipo.lower()}">'
             + (f'<h2 class="idxT">Guías del puma</h2><ul class="idxGuias">{guias}</ul>' if guias else '')
@@ -1153,6 +1362,12 @@ def main():
     ruta = os.path.join(RAIZ, 'black-friday.html')
     if bf != (open(ruta, encoding='utf-8').read() if os.path.exists(ruta) else ''):
         open(ruta, 'w', encoding='utf-8').write(bf); escritas += 1
+    base_g = pagina_guia(g0, rankings[g0['slug']], fotos, urls, hoy_txt, hoy)
+    for c in QUE_COMPRAR:
+        ruta = os.path.join(RAIZ, 'guia', c['slug'] + '.html')
+        nuevo = pagina_que_comprar(base_g, c, todos, urls, fotos, hoy_txt, hoy)
+        if nuevo != (open(ruta, encoding='utf-8').read() if os.path.exists(ruta) else ''):
+            open(ruta, 'w', encoding='utf-8').write(nuevo); escritas += 1
     for k, (_, _, archivo) in TIPOS.items():
         if _poner_bloque(archivo + '.html', 'lista', bloque_categoria(k, todos, urls, rankings), '  <footer class="note">'):
             escritas += 1
@@ -1199,6 +1414,7 @@ def main():
     filas = [f'  <url><loc>{SITIO}/</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>',
             ] + [f'  <url><loc>{SITIO}/{c[1]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>' for c in CATS.values()]
     filas += [f'  <url><loc>{SITIO}/black-friday</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>']
+    filas += [f'  <url><loc>{SITIO}/guia/{c["slug"]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>' for c in QUE_COMPRAR]
     filas += [f'  <url><loc>{SITIO}/guia/{g["slug"]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>' for g in GUIAS]
     filas += [f'  <url><loc>{SITIO}{urls[x["id"]]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>' for x in todos if x['os']]
     open(os.path.join(RAIZ, 'sitemap.xml'), 'w', encoding='utf-8').write(
