@@ -989,6 +989,98 @@ def bajadas(todos, hist, hoy, urls):
     return baj
 
 
+def ofertas_reales(todos, hist, hoy, urls, min_dias=6):
+    """Compara el precio de hoy (sin cupones) con el historial de cada equipo nuevo.
+    reales: hoy está en el precio más bajo que hemos visto y al menos 5% bajo su precio habitual (la mediana).
+    caros: solo para análisis interno; no se publica (suele ser stock agotado en la tienda más barata). Equipos con al menos min_dias días de historial."""
+    reales, caros, n = [], [], 0
+    for x in todos:
+        h = hist.get(x['id'], {})
+        if not x['os'] or x['eq'].get('refurb') or len(h) < min_dias:
+            continue
+        previos = [p for d, p in h.items() if d < hoy]
+        if len(previos) < min_dias - 1:
+            continue
+        n += 1
+        ahora, habitual, minimo = precio_tienda(x), statistics.median(previos), min(previos)
+        d = {'x': x, 'ahora': ahora, 'habitual': habitual, 'minimo': minimo, 'ficha': urls[x['id']],
+             'desde': min(d for d in h if d < hoy), 'dias': len(previos)}
+        if ahora <= minimo and ahora <= habitual * 0.95 and habitual - ahora >= 3000:
+            d['pct'] = (habitual - ahora) / habitual
+            reales.append(d)
+        elif ahora >= habitual * 1.10 and ahora - habitual >= 3000:
+            d['pct'] = (ahora - habitual) / habitual
+            caros.append(d)
+    reales.sort(key=lambda d: -d['pct']); caros.sort(key=lambda d: -d['pct'])
+    return {'reales': reales, 'caros': caros, 'n': n}
+
+
+def _sobre_base(base, tit, desc, url, cuerpo, ld):
+    """Arma una página nueva a partir del HTML de una guía (cambia título, descripción, datos para Google y el contenido)."""
+    h = base
+    for patron, nuevo in [(r'<title>.*?</title>', f'<title>{e(tit)}</title>'),
+                          (r'<meta name="description" content=".*?">', f'<meta name="description" content="{e(desc)}">'),
+                          (r'<link rel="canonical" href=".*?">', f'<link rel="canonical" href="{SITIO}{url}">'),
+                          (r'<meta property="og:title" content=".*?">', f'<meta property="og:title" content="{e(tit)}">'),
+                          (r'<meta property="og:description" content=".*?">', f'<meta property="og:description" content="{e(desc)}">'),
+                          (r'<meta property="og:url" content=".*?">', f'<meta property="og:url" content="{SITIO}{url}">'),
+                          (r'<script type="application/ld\+json">.*?</script>', '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False).replace('</', '<\\/') + '</script>'),
+                          (r'(?s)(<main[^>]*>).*(</main>)', None)]:
+        if nuevo is None:
+            h, k = re.subn(patron, lambda m: m.group(1) + cuerpo + m.group(2), h, count=1)
+        else:
+            h, k = re.subn(patron, lambda m: nuevo, h, count=1, flags=re.S)
+        if not k:
+            raise ValueError('plantilla de guía sin ' + patron)
+    return _cabecera(h, '', None)
+
+
+def pagina_ofertas_reales(base, r, fotos, hoy_txt, hoy):
+    """Página /ofertas-reales: qué equipos están hoy de verdad en el precio más bajo que hemos visto.
+    No publica una lista de "equipos caros": un precio más alto suele ser que la tienda más barata se quedó sin stock, no un precio inflado."""
+    url = '/ofertas-reales'
+    reales, n = r['reales'], r['n']
+    inicio = min((d['desde'] for d in reales), default=None)
+    desde_txt = f'desde el {fecha_larga(inicio)}' if inicio else 'desde que empezamos a revisar'
+    tit = 'Ofertas reales hoy en Chile: equipos en su precio más bajo | ¿Cuál me conviene?'
+    desc = (f'De {n} equipos con historial de precios, {len(reales)} están hoy en el precio más bajo que hemos visto y al menos 5% bajo su precio habitual. '
+            f'Revisado el {hoy_txt}.')
+
+    def fila(d):
+        x, u = d['x'], d['ficha']
+        o = de_tienda(x)
+        f, _ = foto_de(x['id'], fotos)
+        img = f'<img src="{e(f)}" alt="" width="480" height="480" loading="lazy" decoding="async" referrerpolicy="no-referrer">' if f else ''
+        linea = f'<li>{round(d["pct"] * 100)}% bajo su precio habitual ({plata(d["habitual"])})</li><li>Es el más bajo que hemos visto ({d["dias"]} días revisados)</li>'
+        return (f'<li class="rkI"><a class="rkF" href="{u}" tabindex="-1" aria-hidden="true">{img}</a>'
+                f'<div class="rkT"><h3><a href="{u}">{e(x["nombre"])}</a></h3><p class="sp">{e(CATS[x["k"]][0])} · {e(specs_cortas(x))}</p><ul class="gRaz">{linea}</ul></div>'
+                f'<div class="rkP"><p class="precio">{plata(d["ahora"])}</p><p class="donde"><i style="background:{TIENDAS[o["s"]][1]}"></i>en {TIENDAS[o["s"]][0]}</p>'
+                f'<a class="tb" href="{u}">Ver precios</a></div></li>')
+
+    pct_r = round(len(reales) * 100 / n) if n else 0
+    lista = (f'<ol class="rk">{"".join(fila(d) for d in reales)}</ol>' if reales
+             else '<p>Hoy ningún equipo está en su precio más bajo con al menos 5% bajo lo habitual. Vuelve mañana.</p>')
+    txt = (f'Revisé {n} equipos en cualmeconviene.cl: {len(reales)} están hoy en el precio más bajo que hemos visto. Mira cuáles son ofertas reales:')
+    cuerpo = (f'<h1>Ofertas reales hoy: equipos en su precio más bajo</h1>'
+              f'<p class="sp">Comparamos el precio de hoy de cada equipo con todo lo que hemos visto {e(desde_txt)}. '
+              f'De {n} equipos con historial, <b>{len(reales)}</b> ({pct_r}%) están en su precio más bajo y al menos 5% bajo lo habitual. '
+              f'Revisado el {e(hoy_txt)}.</p>'
+              f'<p class="gBtns">{compartir(txt, url, "Ofertas reales hoy en Chile")}</p>'
+              f'<section class="bloque"><h2>{len(reales)} equipos en su precio más bajo</h2>{lista}</section>'
+              '<section class="bloque"><h2>Cómo calculamos esto</h2><ul class="gRaz">'
+              '<li><b>Precio habitual:</b> la mediana de los precios más bajos que vimos de ese equipo en cada revisión, sin cupones ni tarjeta.</li>'
+              '<li><b>En su precio más bajo:</b> hoy cuesta lo mismo o menos que lo más bajo que hemos visto, y al menos 5% menos que lo habitual.</li>'
+              f'<li><b>Solo con historial:</b> usamos equipos nuevos con al menos 6 días de precios revisados. Nuestro historial parte el {e(fecha_larga(inicio or hoy))}, así que un equipo pudo estar más barato antes de eso.</li>'
+              '<li><b>Una oferta que no aparece aquí no es necesariamente mala:</b> puede estar cerca de su mínimo, o no tener aún suficiente historial. Abre la ficha y mira el gráfico.</li></ul></section>')
+    ld = {'@context': 'https://schema.org', '@graph': [
+        {'@type': 'ItemList', 'name': 'Equipos en su precio más bajo hoy', 'url': SITIO + url, 'numberOfItems': min(len(reales), 40),
+         'itemListElement': [{'@type': 'ListItem', 'position': k, 'url': SITIO + d['ficha']} for k, d in enumerate(reales[:40], 1)]},
+        {'@type': 'BreadcrumbList', 'itemListElement': [
+            {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': SITIO + '/'},
+            {'@type': 'ListItem', 'position': 2, 'name': 'Ofertas reales', 'item': SITIO + url}]}]}
+    return _sobre_base(base, tit, desc, url, cuerpo, ld)
+
+
 def pagina_bajones(base, baj, urls, fotos, hoy_txt, hoy):
     """Página /bajones: lo que bajó de precio desde la revisión anterior. Usa como plantilla el HTML de una guía (base)."""
     url = '/bajones'
@@ -1088,6 +1180,7 @@ def pagina_black_friday(base, todos, hist, urls, fotos, hoy_txt):
     cuerpo = (f'<h1>Black Friday 2026 en Chile: fechas y cómo saber si la oferta es real</h1>'
               f'<p class="sp">Parte el viernes 27 de noviembre y termina el lunes 30. Aquí tienes el precio habitual y el más bajo que hemos visto, para comparar antes de comprar. Precios revisados el {e(hoy_txt)}.</p>'
               f'<p class="gBtns">{compartir("Black Friday 2026 en Chile es del 27 al 30 de noviembre. Mira el precio habitual de cada equipo para saber si la oferta es real:", url, "Black Friday 2026 en Chile")}</p>'
+              '<p><a href="/ofertas-reales">Mira qué equipos están hoy en el precio más bajo que hemos visto</a></p>'
               '<section class="bloque"><h2>Cómo saber si un descuento es real</h2><ul class="gRaz">'
               + ''.join(f'<li><b>{e(a)}.</b> {e(b)}</li>' for a, b in consejos) + '</ul></section>' + grupos +
               '<section class="bloque"><h2>Preguntas frecuentes</h2>' + ''.join(f'<h3>{e(a)}</h3><p>{e(b)}</p>' for a, b in preguntas) + '</section>')
@@ -1494,6 +1587,9 @@ def bloque_portada(rankings, fotos, urls):
     tarjetas += ('<a class="guiaC" href="/bajones"><span class="guiaF"><img src="/assets/puma-sello.webp" alt="" width="480" height="480" loading="lazy" decoding="async"></span>'
                  '<span class="guiaT"><small>Se actualiza cada día</small><strong>Bajones de precio de hoy</strong>'
                  '<span>Los equipos que cuestan menos que ayer, con lo que valían antes.</span><b>Ver los bajones</b></span></a>')
+    tarjetas += ('<a class="guiaC" href="/ofertas-reales"><span class="guiaF"><img src="/assets/puma-sello.webp" alt="" width="480" height="480" loading="lazy" decoding="async"></span>'
+                 '<span class="guiaT"><small>Detector de ofertas</small><strong>¿Es una oferta real o un precio inflado?</strong>'
+                 '<span>Qué equipos están hoy en el precio más bajo que hemos visto.</span><b>Ver ofertas reales</b></span></a>')
     for g in GUIAS:
         r = rankings.get(g['slug'])
         if not r:
@@ -1587,6 +1683,10 @@ def main():
     ruta = os.path.join(RAIZ, 'bajones.html')
     if bj != (open(ruta, encoding='utf-8').read() if os.path.exists(ruta) else ''):
         open(ruta, 'w', encoding='utf-8').write(bj); escritas += 1
+    orl = pagina_ofertas_reales(pagina_guia(g0, rankings[g0['slug']], fotos, urls, hoy_txt, hoy), ofertas_reales(todos, hist, hoy, urls), fotos, hoy_txt, hoy)
+    ruta = os.path.join(RAIZ, 'ofertas-reales.html')
+    if orl != (open(ruta, encoding='utf-8').read() if os.path.exists(ruta) else ''):
+        open(ruta, 'w', encoding='utf-8').write(orl); escritas += 1
     base_g = pagina_guia(g0, rankings[g0['slug']], fotos, urls, hoy_txt, hoy)
     for c in QUE_COMPRAR:
         ruta = os.path.join(RAIZ, 'guia', c['slug'] + '.html')
@@ -1629,6 +1729,7 @@ def main():
     filas = [f'  <url><loc>{SITIO}/</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>',
             ] + [f'  <url><loc>{SITIO}/{c[1]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>' for c in CATS.values()]
     filas += [f'  <url><loc>{SITIO}{u}</loc><lastmod>{lm}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>' for _, u, _ in CALCULADORAS]
+    filas += [f'  <url><loc>{SITIO}/ofertas-reales</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>']
     filas += [f'  <url><loc>{SITIO}/bajones</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>']
     filas += [f'  <url><loc>{SITIO}/black-friday</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>']
     filas += [f'  <url><loc>{SITIO}/guia/{c["slug"]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>' for c in QUE_COMPRAR]
