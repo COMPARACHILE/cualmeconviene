@@ -394,6 +394,8 @@ def cupon(o):
         fecha = f'hasta el {d.day} {meses[d.month - 1]}'
     else:
         fecha = f'vence el {cl.day} {meses[cl.month - 1]}, {cl.hour}:{cl.minute:02d}'
+    if q.get('sf'):
+        fecha = 'la tienda no informa hasta cuándo'
     tienda = TIENDAS[o['s']][0]
     que = f'Cupón de la app de {tienda}' if q.get('app') else f"{q.get('l') or 'Cupón'} en {tienda}"
     if q.get('pc'):

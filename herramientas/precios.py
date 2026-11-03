@@ -162,6 +162,7 @@ def aplicar_cupones(carpeta, grupos, RT):
                     if q:
                         cup = {'c': q['c'], 'l': q.get('l') or 'Cupón', 'v': q['v']}
                         if q.get('app'): cup['app'] = 1
+                        if q.get('sf'): cup['sf'] = 1  # la tienda no informa el vencimiento: v es solo el límite interno
                         pct = re.search(r'(\d+)\s*%', cup['l']) or re.search(r'(?<!\d)(\d{1,2})$', q['c'])
                         dcto = int(pct.group(1)) if pct else 0
                         base = q.get('b') or o.get('p')

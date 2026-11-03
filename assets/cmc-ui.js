@@ -37,7 +37,7 @@
     return `<span class="minimo" title="El precio más bajo que hemos visto para este equipo desde el ${esc(f)}"><img src="${PUMA}" alt="" width="26" height="26" decoding="async"><span>Mínimo histórico<small>El más bajo desde el ${esc(f)}</small></span></span>`;
   };
 
-  /* Cupón de una tienda (o.cup: c código, l etiqueta, app, v vencimiento, pc precio aproximado con cupón).
+  /* Cupón de una tienda (o.cup: c código, l etiqueta, app, v vencimiento, pc precio aproximado con cupón, sf = la tienda no informa el vencimiento).
      Lo arma herramientas/precios.py. Al vencer deja de mostrarse solo, aunque la página no se haya actualizado. */
   const cupFecha = v => {
     const z = { timeZone: 'America/Santiago' }, d = new Date(v);
@@ -49,7 +49,7 @@
   CMC.cupon = (o, tienda) => {
     const q = o.cup, base = q.pc && o.c ? 'Calculado sobre el precio sin tarjeta. ' : q.pc ? 'Calculado sobre el precio publicado. ' : '';
     const que = q.app ? `Cupón de la app de ${tienda}` : `${q.l || 'Cupón'} en ${tienda}`;
-    return `<p class="c3-cupon"><button type="button" class="cupon" data-cupon="${esc(q.c)}" aria-label="Copiar cupón ${esc(q.c)}" title="Copiar">${esc(q.c)}</button><span title="${esc(base + 'El descuento se aplica al pagar y se confirma en la tienda.')}">${esc(que)}${q.pc ? ` · baja a ≈${fmt(q.pc)}` : ''} · ${esc(cupFecha(q.v))}</span></p>`;
+    return `<p class="c3-cupon"><button type="button" class="cupon" data-cupon="${esc(q.c)}" aria-label="Copiar cupón ${esc(q.c)}" title="Copiar">${esc(q.c)}</button><span title="${esc(base + 'El descuento se aplica al pagar y se confirma en la tienda.')}">${esc(que)}${q.pc ? ` · baja a ≈${fmt(q.pc)}` : ''} · ${q.sf ? 'la tienda no informa hasta cuándo' : esc(cupFecha(q.v))}</span></p>`;
   };
 
   /* Nota de potencia de 1 a 10: el puesto del equipo entre todos los del sitio (10 = de los más potentes) */
