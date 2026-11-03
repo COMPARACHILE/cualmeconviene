@@ -29,6 +29,14 @@
   // Precio con cupón en una página fija: al vencer vuelve el precio de la tienda hasta que se rehaga la página
   document.querySelectorAll('[data-hasta]').forEach(el => { if (Date.parse(el.dataset.hasta) <= Date.now()) el.textContent = el.dataset.sin; });
 
+  /* ---------- Compartir: en el celular abre el menú del teléfono (WhatsApp, Instagram...); si no existe, queda el enlace de WhatsApp ---------- */
+  document.addEventListener('click', e => {
+    const b = e.target.closest('a[data-compartir]');
+    if (!b || !navigator.share || !matchMedia('(pointer: coarse)').matches) return;
+    e.preventDefault();
+    navigator.share({ title: b.dataset.titulo, text: b.dataset.texto, url: b.dataset.url }).catch(() => {});
+  });
+
   /* ---------- Resaltar la sección a la que se salta ---------- */
   const flash = el => {
     if (!el) return;

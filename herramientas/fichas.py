@@ -11,7 +11,7 @@ No hace falta correrlo a mano: el flujo .github/workflows/fichas.yml lo corre ca
 cambian los precios. Las direcciones de cada ficha quedan fijas en herramientas/fichas.json
 para que los enlaces compartidos no se rompan si el nombre del equipo cambia.
 """
-import datetime, hashlib, html, json, os, re, statistics, subprocess, sys, unicodedata
+import datetime, hashlib, html, json, os, re, statistics, subprocess, sys, unicodedata, urllib.parse
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -465,6 +465,18 @@ def avisame(sin_stock):
     return f'<button type="button" class="avisa" data-avisame{" data-sin" if sin_stock else ""} hidden>{CAMPANA}<span>{txt}</span></button><p class="avisaMsg" aria-live="polite" hidden></p>'
 
 
+WSP = ('<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.43 15.1L2 22l5.03-1.58A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.3 14.96l-.3-.19-2.98.94.97-2.9-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.2 3.9c-.17 0-.45.06-.69.32-.24.26-.9.88-.9 2.15 0 1.26.92 2.49 1.05 2.66.13.17 1.8 2.86 4.45 3.9 2.2.87 2.65.7 3.13.65.48-.04 1.54-.63 1.76-1.24.22-.6.22-1.13.15-1.24-.06-.1-.24-.17-.5-.3-.27-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.59.13-.17.26-.68.85-.83 1.02-.15.18-.3.2-.57.07-.26-.13-1.1-.4-2.1-1.3-.78-.69-1.3-1.55-1.45-1.8-.15-.27-.02-.4.11-.53.12-.12.26-.3.4-.46.13-.15.17-.26.26-.44.09-.17.04-.33-.02-.46-.07-.13-.59-1.4-.8-1.92-.2-.5-.42-.43-.59-.44h-.5Z"/></svg>')
+
+
+def compartir(texto, ruta, titulo):
+    """Botón "Compartir por WhatsApp": enlace de wa.me (sirve sin JavaScript y sin número de la página).
+    En el celular assets/cmc.js abre el menú de compartir del teléfono si existe (WhatsApp, Instagram, etc.)."""
+    enlace = f'{SITIO}{ruta}?u=wsp'
+    href = 'https://wa.me/?text=' + urllib.parse.quote(f'{texto} {enlace}')
+    return (f'<a class="comp" href="{e(href)}" target="_blank" rel="noopener" data-compartir data-titulo="{e(titulo)}" data-texto="{e(texto)}" '
+            f'data-url="{e(enlace)}">{WSP}<span>Compartir por WhatsApp</span></a>')
+
+
 def comentarios(clave, nombre):
     """Sección de comentarios: se llena desde /api/comentarios con la dirección fija de la ficha."""
     return (f'<section class="bloque com" id="comentarios" aria-labelledby="t5" data-producto="{e(clave)}" data-nombre="{e(nombre)}">'
@@ -538,9 +550,11 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
         ahorro = (f'<p class="ah">Ahorras <b>{plata(w["p"] - b["p"])}</b> frente a {TIENDAS[w["s"]][0]}</p>' if w['p'] > b['p'] else
                   (f'<p class="ah neutro">Mismo precio en {len(os_)} tiendas</p>' if len(os_) > 1 else '<p class="ah neutro">Lo encontramos en una tienda</p>'))
         mh = (mins or {}).get(x['id'])
+        txt_comp = f'Mira este {nombre}: desde {plata(precio_tienda(x))} en {TIENDAS[de_tienda(x)["s"]][0]}. Compara las tiendas aquí:'
         mejor = (f'<div class="mejor">{sello_minimo(mh[1]) if mh and mh[0] >= b["p"] else ""}<p class="et">Precio más bajo hoy</p><p class="precio">{precio_html(b)}{pago(b)}</p>'
                  f'<p class="donde"><i style="background:{TIENDAS[b["s"]][1]}"></i>en {e(donde)}{(" · " + e(b["note"])) if b.get("note") else ""}</p>{next((c for c in map(cupon, os_) if c), "")}{ahorro}'
-                 f'<a class="ir" href="{e(b["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{b["s"]}">Ir a {TIENDAS[b["s"]][0]}</a>{avisame(False)}</div>')
+                 f'<a class="ir" href="{e(b["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{b["s"]}">Ir a {TIENDAS[b["s"]][0]}</a>{avisame(False)}'
+                 f'{compartir(txt_comp, url, nombre)}</div>')
     else:
         mejor = f'<div class="mejor sin"><p class="et">Sin stock hoy</p><p>No lo encontramos disponible en las tiendas que revisamos. Abajo tienes equipos parecidos.</p>{avisame(True)}</div>'
     ref_txt = ('<p class="aviso">Equipo reacondicionado: usado y revisado. Confirma garantía, estado y batería en la ficha de la tienda.</p>' if q.get('refurb') else '')
@@ -959,6 +973,84 @@ document.addEventListener('click', ev => {{
 # ---------------- Bloques escritos en las páginas que se arman en el navegador ----------------
 # La portada y las categorías muestran los equipos con JavaScript. Estos bloques dejan escritos en el HTML
 # los enlaces a cada ficha y a las guías, para que Google los encuentre sin esperar a que corra el código.
+def bajadas(todos, hist, hoy, urls):
+    """Equipos que hoy cuestan menos que en la revisión anterior (sin contar cupones), de mayor a menor porcentaje.
+    Al menos 3% y $3.000 menos; una caída de más de 60% suele ser un error de la tienda y no se publica."""
+    baj = []
+    for x in todos:
+        h = hist.get(x['id'], {})
+        previos = [d for d in h if d < hoy]
+        if not x['os'] or not previos:
+            continue
+        antes, ahora = h[max(previos)], precio_tienda(x)
+        if antes and ahora <= antes * 0.97 and antes - ahora >= 3000 and ahora >= antes * 0.4:
+            baj.append({'pct': (antes - ahora) / antes, 'ficha': urls[x['id']].lstrip('/'), 'antes': antes, 'ahora': ahora, 'x': x, 'desde': max(previos)})
+    baj.sort(key=lambda b: -b['pct'])
+    return baj
+
+
+def pagina_bajones(base, baj, urls, fotos, hoy_txt, hoy):
+    """Página /bajones: lo que bajó de precio desde la revisión anterior. Usa como plantilla el HTML de una guía (base)."""
+    url = '/bajones'
+    n = len(baj)
+    tit = f'Bajones de precio hoy en Chile: tecnología y electrodomésticos que bajaron | ¿Cuál me conviene?'
+    desc = (f'{n} equipos bajaron de precio desde la revisión anterior en Chile. Mira cuánto costaban antes y cuánto cuestan hoy en notebooks, celulares, televisores y más. Precios revisados el {hoy_txt}.'
+            if n else f'Los equipos que bajan de precio en Chile, con lo que costaban antes y lo que cuestan hoy. Precios revisados el {hoy_txt}.')
+
+    def fila(b):
+        x, u = b['x'], '/' + b['ficha']
+        o = de_tienda(x)
+        f, _ = foto_de(x['id'], fotos)
+        img = f'<img src="{e(f)}" alt="" width="480" height="480" loading="lazy" decoding="async" referrerpolicy="no-referrer">' if f else ''
+        tipo = CATS[x['k']][0]
+        return (f'<li class="rkI"><a class="rkF" href="{u}" tabindex="-1" aria-hidden="true">{img}</a>'
+                f'<div class="rkT"><h3><a href="{u}">{e(x["nombre"])}</a></h3><p class="sp">{e(tipo)} · {e(specs_cortas(x))}</p>'
+                f'<ul class="gRaz"><li>Antes: {plata(b["antes"])} (revisión del {fecha_larga(b["desde"])})</li>'
+                f'<li>Bajó {plata(b["antes"] - b["ahora"])}, un {round(b["pct"] * 100)}%</li></ul></div>'
+                f'<div class="rkP"><p class="precio">{plata(b["ahora"])}</p><p class="donde"><i style="background:{TIENDAS[o["s"]][1]}"></i>en {TIENDAS[o["s"]][0]}</p>'
+                f'<a class="tb" href="{u}">Ver precios</a></div></li>')
+
+    if baj:
+        lista = f'<ol class="rk">{"".join(fila(b) for b in baj[:40])}</ol>'
+        top = baj[0]
+        txt = (f'Hoy bajaron de precio {n} equipos en Chile. El mayor bajón: {top["x"]["nombre"]}, de {plata(top["antes"])} a {plata(top["ahora"])}. Míralos aquí:')
+        comp = f'<p class="gBtns">{compartir(txt, url, "Bajones de precio de hoy")}</p>'
+    else:
+        lista = ('<p>Hoy no hay equipos con una baja clara desde la revisión anterior. Vuelve mañana o mira los precios de referencia del '
+                 '<a href="/black-friday">Black Friday</a>.</p>')
+        comp = ''
+    cuerpo = (f'<h1>Bajones de precio de hoy</h1>'
+              f'<p class="sp">Equipos que cuestan menos que en nuestra revisión anterior. Precios revisados el {e(hoy_txt)}. '
+              'Contamos solo bajas de al menos 3% y $3.000, sin cupones, y dejamos fuera las caídas de más de 60%, que suelen ser errores de la tienda.</p>'
+              f'{comp}<section class="bloque"><h2>{n} equipos que bajaron</h2>{lista}</section>'
+              '<section class="bloque"><h2>Cómo leer esta lista</h2><ul class="gRaz">'
+              '<li><b>Comparamos contra la revisión anterior.</b> Es el precio más bajo en tienda, sin cupón ni tarjeta, de la última vez que lo revisamos.</li>'
+              '<li><b>Un bajón no siempre es una buena oferta.</b> Abre la ficha y mira el historial: te muestra si el precio ya estuvo más bajo antes.</li>'
+              '<li><b>Los precios cambian durante el día.</b> Confirma el total en la tienda antes de pagar.</li></ul></section>')
+    ld = {'@context': 'https://schema.org', '@graph': [
+        {'@type': 'ItemList', 'name': 'Equipos que bajaron de precio hoy', 'url': SITIO + url, 'numberOfItems': min(n, 40),
+         'itemListElement': [{'@type': 'ListItem', 'position': k, 'url': SITIO + '/' + b['ficha']} for k, b in enumerate(baj[:40], 1)]},
+        {'@type': 'BreadcrumbList', 'itemListElement': [
+            {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': SITIO + '/'},
+            {'@type': 'ListItem', 'position': 2, 'name': 'Bajones de precio', 'item': SITIO + url}]}]}
+    h = base
+    for patron, nuevo in [(r'<title>.*?</title>', f'<title>{e(tit)}</title>'),
+                          (r'<meta name="description" content=".*?">', f'<meta name="description" content="{e(desc)}">'),
+                          (r'<link rel="canonical" href=".*?">', f'<link rel="canonical" href="{SITIO}{url}">'),
+                          (r'<meta property="og:title" content=".*?">', f'<meta property="og:title" content="{e(tit)}">'),
+                          (r'<meta property="og:description" content=".*?">', f'<meta property="og:description" content="{e(desc)}">'),
+                          (r'<meta property="og:url" content=".*?">', f'<meta property="og:url" content="{SITIO}{url}">'),
+                          (r'<script type="application/ld\+json">.*?</script>', '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False).replace('</', '<\\/') + '</script>'),
+                          (r'(?s)(<main[^>]*>).*(</main>)', None)]:
+        if nuevo is None:
+            h, k = re.subn(patron, lambda m: m.group(1) + cuerpo + m.group(2), h, count=1)
+        else:
+            h, k = re.subn(patron, lambda m: nuevo, h, count=1, flags=re.S)
+        if not k:
+            raise ValueError('plantilla de guía sin ' + patron)
+    return _cabecera(h, '', None)
+
+
 def pagina_black_friday(base, todos, hist, urls, fotos, hoy_txt):
     """Página /black-friday: fechas y precios de referencia de cada día. Usa como plantilla el HTML de una guía (base)."""
     url = '/black-friday'
@@ -995,6 +1087,7 @@ def pagina_black_friday(base, todos, hist, urls, fotos, hoy_txt):
                  ('¿Conviene esperar al Black Friday?', 'Depende del equipo. Si hoy ya está cerca del precio más bajo que hemos visto, esperar puede no cambiar mucho. Si está sobre su precio habitual, conviene seguirlo y activar el aviso.')]
     cuerpo = (f'<h1>Black Friday 2026 en Chile: fechas y cómo saber si la oferta es real</h1>'
               f'<p class="sp">Parte el viernes 27 de noviembre y termina el lunes 30. Aquí tienes el precio habitual y el más bajo que hemos visto, para comparar antes de comprar. Precios revisados el {e(hoy_txt)}.</p>'
+              f'<p class="gBtns">{compartir("Black Friday 2026 en Chile es del 27 al 30 de noviembre. Mira el precio habitual de cada equipo para saber si la oferta es real:", url, "Black Friday 2026 en Chile")}</p>'
               '<section class="bloque"><h2>Cómo saber si un descuento es real</h2><ul class="gRaz">'
               + ''.join(f'<li><b>{e(a)}.</b> {e(b)}</li>' for a, b in consejos) + '</ul></section>' + grupos +
               '<section class="bloque"><h2>Preguntas frecuentes</h2>' + ''.join(f'<h3>{e(a)}</h3><p>{e(b)}</p>' for a, b in preguntas) + '</section>')
@@ -1398,6 +1491,9 @@ def bloque_portada(rankings, fotos, urls):
     tarjetas = ('<a class="guiaC" href="/black-friday"><span class="guiaF"><img src="/assets/puma-sello.webp" alt="" width="480" height="480" loading="lazy" decoding="async"></span>'
                 '<span class="guiaT"><small>Del 27 al 30 de noviembre</small><strong>Black Friday 2026: fechas y precios de referencia</strong>'
                 '<span>Mira el precio habitual y el más bajo que hemos visto antes de comprar.</span><b>Ver precios de referencia</b></span></a>')
+    tarjetas += ('<a class="guiaC" href="/bajones"><span class="guiaF"><img src="/assets/puma-sello.webp" alt="" width="480" height="480" loading="lazy" decoding="async"></span>'
+                 '<span class="guiaT"><small>Se actualiza cada día</small><strong>Bajones de precio de hoy</strong>'
+                 '<span>Los equipos que cuestan menos que ayer, con lo que valían antes.</span><b>Ver los bajones</b></span></a>')
     for g in GUIAS:
         r = rankings.get(g['slug'])
         if not r:
@@ -1487,6 +1583,10 @@ def main():
     ruta = os.path.join(RAIZ, 'black-friday.html')
     if bf != (open(ruta, encoding='utf-8').read() if os.path.exists(ruta) else ''):
         open(ruta, 'w', encoding='utf-8').write(bf); escritas += 1
+    bj = pagina_bajones(pagina_guia(g0, rankings[g0['slug']], fotos, urls, hoy_txt, hoy), bajadas(todos, hist, hoy, urls), urls, fotos, hoy_txt, hoy)
+    ruta = os.path.join(RAIZ, 'bajones.html')
+    if bj != (open(ruta, encoding='utf-8').read() if os.path.exists(ruta) else ''):
+        open(ruta, 'w', encoding='utf-8').write(bj); escritas += 1
     base_g = pagina_guia(g0, rankings[g0['slug']], fotos, urls, hoy_txt, hoy)
     for c in QUE_COMPRAR:
         ruta = os.path.join(RAIZ, 'guia', c['slug'] + '.html')
@@ -1520,18 +1620,8 @@ def main():
     # Los avisos siguen el precio de la tienda: un cupón no manda correos, porque el correo no explica el cupón
     eqs = {urls[x['id']].lstrip('/'): [precio_tienda(x) if x['os'] else None, x['nombre'], x['id'], TIENDAS[de_tienda(x)['s']][0] if x['os'] else '']
            for x in todos}
-    baj = []
-    for x in todos:
-        h = hist.get(x['id'], {})
-        previos = [d for d in h if d < hoy]
-        if not x['os'] or not previos:
-            continue
-        antes, ahora = h[max(previos)], precio_tienda(x)
-        # Al menos 3% y $3.000 menos que en la revisión anterior; una caída de más de 60% suele ser un error de la tienda
-        if antes and ahora <= antes * 0.97 and antes - ahora >= 3000 and ahora >= antes * 0.4:
-            baj.append(((antes - ahora) / antes, urls[x['id']].lstrip('/'), antes, ahora))
-    baj.sort(key=lambda b: -b[0])
-    av = {'dia': hoy.isoformat(), 'equipos': eqs, 'bajadas': [[c, a, n] for _, c, a, n in baj[:12]]}
+    baj = bajadas(todos, hist, hoy, urls)
+    av = {'dia': hoy.isoformat(), 'equipos': eqs, 'bajadas': [[b['ficha'], b['antes'], b['ahora']] for b in baj[:12]]}
     av = {'v': hashlib.md5(json.dumps(av, sort_keys=True).encode()).hexdigest()[:12], **av}
     open(os.path.join(RAIZ, 'assets', 'avisos.json'), 'w', encoding='utf-8').write(json.dumps(av, ensure_ascii=False, separators=(',', ':')))
     # Mapa del sitio para Google
@@ -1539,6 +1629,7 @@ def main():
     filas = [f'  <url><loc>{SITIO}/</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>',
             ] + [f'  <url><loc>{SITIO}/{c[1]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>' for c in CATS.values()]
     filas += [f'  <url><loc>{SITIO}{u}</loc><lastmod>{lm}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>' for _, u, _ in CALCULADORAS]
+    filas += [f'  <url><loc>{SITIO}/bajones</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>']
     filas += [f'  <url><loc>{SITIO}/black-friday</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>']
     filas += [f'  <url><loc>{SITIO}/guia/{c["slug"]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>' for c in QUE_COMPRAR]
     filas += [f'  <url><loc>{SITIO}/guia/{g["slug"]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>' for g in GUIAS]

@@ -330,3 +330,11 @@ img { display: block; max-width: 100%; }
 .gTips p { color: var(--gris); font-size: 15px; }
 .gOtras { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .gOtras a { color: var(--accent); font-weight: 600; }
+
+/* Botón "Compartir por WhatsApp" (fichas, Black Friday y bajones) */
+.comp { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; min-height: 48px; padding: 0 16px; border-radius: 14px;
+  border: 1.5px solid var(--borde); background: var(--blanco); color: var(--tinta, inherit); font-weight: 700; font-size: 16px; text-decoration: none; }
+.comp svg { color: #1FA855; flex: none; }
+.comp:hover { background: var(--surface-2); }
+.comp:active { transform: scale(.98); }
+.gBtns .comp { display: inline-flex; margin-top: 0; }
