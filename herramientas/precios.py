@@ -56,7 +56,8 @@ NOTA_ESTANDAR = re.compile(r'^(Con tarjeta CMR|Precio Internet|Con Tarjeta Cenco
 EXTRA = {'tb': ('tablets.html', 'tablet'), 'tv': ('televisores.html', 'televisor'), 'cs': ('consolas.html', 'consola'),
          'lv': ('lavadoras.html', 'lavadora'), 'as': ('aspiradoras.html', 'aspiradora'), 'bt': ('batidoras.html', 'batidora'),
          'cf': ('cafeteras.html', 'cafetera'), 'fr': ('freidoras-de-aire.html', 'freidora'), 'ac': ('aires-acondicionados.html', 'aire-acondicionado'),
-         'ck': ('cocinas-y-encimeras.html', 'cocina'), 'hm': ('hornos-y-microondas.html', 'horno')}
+         'ck': ('cocinas-y-encimeras.html', 'cocina'), 'hm': ('hornos-y-microondas.html', 'horno'),
+         'co': ('colchones.html', 'colchon')}
 
 
 def cargar_extra():
