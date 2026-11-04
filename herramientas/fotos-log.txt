@@ -1,14 +1,15 @@
-Fotos nuevas: 8 · con error: 5 · total en la carpeta: 860
+Fotos nuevas: 9 · con error: 5 · total en la carpeta: 869
 ERROR	lv53	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110007281_01/w=600,h=600,fit=pad
 ERROR	fr5	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000403271678/full_image-2000403271678
-ok	fr10	9 KB	cl-dam-resizer.ecomm.cencosud.com
-ok	fr11	8 KB	cl-dam-resizer.ecomm.cencosud.com
-ok	fr12	9 KB	cl-dam-resizer.ecomm.cencosud.com
-ok	fr15	5 KB	cl-dam-resizer.ecomm.cencosud.com
 ERROR	fr18	HTTP Error 403: Forbidden	https://home.ripley.cl/store/Attachment/WOP/D122/2000402621771/2000402621771_2.jpg
 ERROR	fr19	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000402621764/full_image-2000402621764
-ok	fr23	6 KB	cl-dam-resizer.ecomm.cencosud.com
 ERROR	fr24	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000401532269/full_image-2000401532269
-ok	fr25	7 KB	cl-dam-resizer.ecomm.cencosud.com
-ok	fr26	5 KB	cl-dam-resizer.ecomm.cencosud.com
-ok	fr27	6 KB	cl-dam-resizer.ecomm.cencosud.com
+ok	fr35	7 KB	media.falabella.com
+ok	fr36	6 KB	media.falabella.com
+ok	fr37	14 KB	media.falabella.com
+ok	fr38	8 KB	media.falabella.com
+ok	fr39	6 KB	media.falabella.com
+ok	fr40	10 KB	media.falabella.com
+ok	fr41	11 KB	media.falabella.com
+ok	fr42	17 KB	media.falabella.com
+ok	fr43	15 KB	media.falabella.com
