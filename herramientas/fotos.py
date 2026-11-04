@@ -21,7 +21,7 @@ MAPA = os.path.join(RAIZ, 'herramientas', 'fotos.json')
 CARPETA = os.path.join(RAIZ, 'assets', 'p')
 LOG = os.path.join(RAIZ, 'herramientas', 'fotos-log.txt')
 LADO, MARGEN = 480, 0.07
-PREFERENCIA = ['falabella', 'pcfactory', 'paris', 'ripley', 'entel', 'movistar', 'claro', 'wom']
+PREFERENCIA = ['falabella', 'pcfactory', 'paris', 'ripley', 'entel', 'movistar', 'claro', 'wom', 'sodimac', 'easy']
 REFERER = {'media.falabella.com': 'https://www.falabella.com/', 'rimage.ripley.cl': 'https://simple.ripley.cl/',
            'assets.pcfactory.cl': 'https://www.pcfactory.cl/', 'miportal.entel.cl': 'https://miportal.entel.cl/',
            'catalogo.movistar.cl': 'https://catalogo.movistar.cl/'}

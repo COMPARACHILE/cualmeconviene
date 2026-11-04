@@ -74,6 +74,21 @@ const LECTORES = {
     if (rip && rip < sale) return { p: rip, c: 1, x: sale, n: 'Con tarjeta Ripley · sin tarjeta ' + _fmt(sale), ...L(rip) };
     return sale ? { p: sale, c: 0, n: 'Precio Internet', ...L(sale) } : { e: 'sin precio' };
   },
+  /* Easy (04-11-2026): la ficha trae el JSON-LD con el precio de oferta y el stock; "brandPrice" es el precio con tarjeta Cencosud.
+     Solo cuentan las ofertas que vende Easy o la marca oficial: las ofertas de terceros del marketplace no se agregan. */
+  easy(h) {
+    const ld = [...h.matchAll(/<script[^>]+ld\+json[^>]*>([\s\S]*?)<\/script>/g)].map(x => { try { return JSON.parse(x[1]); } catch (e) { return null; } })
+      .filter(Boolean).flatMap(x => x['@graph'] || [x]).find(x => x['@type'] === 'Product');
+    const of = ld && [].concat(ld.offers || [])[0];
+    if (!of) return { e: 'sin precio' };
+    if (/OutOfStock|SoldOut/.test(of.availability || '')) return { e: 'sin stock' };
+    const sale = _num(of.price); if (!sale) return { e: 'sin precio' };
+    const pr = (h.match(/"prices":\{"currency":"CLP","normalPrice":(\d+),"offerPrice":(\w+),"brandPrice":(\w+)/) || []);
+    const normal = _num(pr[1]), tarj = _num(pr[3]) || 0;
+    const L = p => normal > p ? { l: normal } : {};
+    if (tarj && tarj < sale) return { p: tarj, c: 1, x: sale, n: 'Con Tarjeta Cencosud · sin tarjeta ' + _fmt(sale), ...L(tarj) };
+    return { p: sale, c: 0, n: '', ...L(sale) };
+  },
   entel(h) {
     // Respaldo: el "price" del JSON-LD a veces es el precio del equipo CON plan (ej. Moto G35 $59.990).
     // Usar leerEntel, que lee el "Precio oferta" que ve el comprador en la ficha.
@@ -153,7 +168,27 @@ async function _xiaomi(u) {
   if (!hay.length) return { e: 'sin stock' };
   return { p: Math.min(...hay.map(x => _precio(x.price)).filter(Boolean)), c: 0 };
 }
-const DIRECTOS = { xiaomi: _xiaomi };
+/* Sodimac (04-11-2026): sus fichas no se pueden leer con fetch (redirigen a la portada), pero el buscador sí entrega precio y stock
+   por código de producto: /sodimac-cl/search?Ntt=<código>. Si el producto no aparece, ya no se vende (sin stock).
+   Hay que correrlo en una pestaña de sodimac.cl. */
+async function _sodimac(u) {
+  const id = (u.match(/\/product\/(\w+)\//) || [])[1];
+  if (!id) return { e: 'ruta sin código' };
+  const r = await fetch('/sodimac-cl/search?Ntt=' + id);
+  if (!r.ok) return { e: 'error ' + r.status };
+  const m = (await r.text()).match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+  if (!m) return { e: 'sin datos' };
+  const sd = JSON.parse(m[1]).props.pageProps.searchProps;
+  const x = ((sd && sd.searchData && sd.searchData.results) || []).find(y => String(y.productId) === id);
+  if (!x) return { e: 'sin stock' };
+  const pr = Object.fromEntries((x.prices || []).map(p => [String(p.type).toUpperCase(), p.priceWithoutFormatting || _num(p.price)]));
+  const lista = pr.NORMAL || 0, L = p => lista > p ? { l: lista } : {};
+  const cmr = Object.keys(pr).find(k => /CMR/.test(k));
+  if (cmr) return { p: pr[cmr], c: 1, n: 'Con tarjeta CMR', ...L(pr[cmr]) };
+  const base = pr.EVENT || pr.INTERNET || pr.NORMAL;
+  return base ? { p: base, c: 0, n: 'Precio Internet', ...L(base) } : { e: 'sin precio' };
+}
+const DIRECTOS = { xiaomi: _xiaomi, sodimac: _sodimac };
 /* Samsung: algunas fichas de celulares no traen el precio en el HTML. Ahí se busca el modelo (sm-xxxx al final
    de la ruta) en el buscador de Samsung, que da el precio de oferta y el stock. Se pide una vez por pestaña. */
 let _samsungLista = null;
@@ -261,7 +296,7 @@ async function publicados(tienda, rutas) {
       const k = pos.get(_ruta(o.s, o.url));
       if (k == null || exp[k]) continue;
       const m = /(?:sin tarjeta|otros medios) \$([\d.]+)/.exec(o.note || '');
-      exp[k] = [o.p, o.c ? 1 : 0, m && (tienda === 'ripley' || tienda === 'pcfactory') ? _num(m[1]) : 0, o.x ? 1 : 0];
+      exp[k] = [o.p, o.c ? 1 : 0, m && (tienda === 'ripley' || tienda === 'pcfactory' || tienda === 'easy') ? _num(m[1]) : 0, o.x ? 1 : 0];
     }
   }
   return exp;

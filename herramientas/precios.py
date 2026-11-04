@@ -33,7 +33,7 @@ PORTADAS = {'falabella': 'https://www.falabella.com/falabella-cl', 'paris': 'htt
             'entel': 'https://miportal.entel.cl/personas/catalogo/celulares', 'movistar': 'https://catalogo.movistar.cl/tienda/',
             'samsung': 'https://www.samsung.com/cl/', 'lg': 'https://www.lg.com/cl/', 'xiaomi': 'https://www.mi.com/cl/',
             'apple': 'https://www.apple.com/cl/shop', 'hp': 'https://www.hp.com/cl-es/shop/', 'nespresso': 'https://www.nespresso.com/cl/es',
-            'dolcegusto': 'https://www.dolce-gusto.cl/'}
+            'dolcegusto': 'https://www.dolce-gusto.cl/', 'sodimac': 'https://www.sodimac.cl/sodimac-cl', 'easy': 'https://www.easy.cl/'}
 # Tiendas oficiales de cada marca (26-10-2026). fichas.py escribe assets/oficiales.js con esto y todas las páginas lo cargan.
 OFICIALES = {
     'samsung': {'name': 'Tienda Samsung', 'color': '#1428A0', 't': 'tienda'},
@@ -43,6 +43,9 @@ OFICIALES = {
     'hp': {'name': 'Tienda HP', 'color': '#0096D6', 't': 'tienda'},
     'nespresso': {'name': 'Nespresso', 'color': '#8C6A4A', 't': 'tienda'},
     'dolcegusto': {'name': 'Dolce Gusto', 'color': '#B5121B', 't': 'tienda'},
+    # Tiendas de hogar agregadas el 04-11-2026 (no son tiendas oficiales de una marca, pero comparten este mecanismo de nombre y color)
+    'sodimac': {'name': 'Sodimac', 'color': '#E8A200', 't': 'tienda'},
+    'easy': {'name': 'Easy', 'color': '#D6001C', 't': 'tienda'},
 }
 # Sin stock o ficha borrada: la oferta se oculta en la página (x:1) hasta que vuelva
 AGOTADO = {'sin stock', 'error 404', 'error 410'}
@@ -117,6 +120,8 @@ def nota(t, c, x):
     if t == 'falabella': return 'Con tarjeta CMR' if c else 'Precio Internet'
     if t == 'paris': return 'Con Tarjeta Cencosud Scotiabank' if c else ''
     if t == 'ripley': return ('Con tarjeta Ripley · sin tarjeta $' + f'{x:,}'.replace(',', '.')) if c and x else 'Precio Internet'
+    if t == 'sodimac': return 'Con tarjeta CMR' if c else 'Precio Internet'
+    if t == 'easy': return ('Con Tarjeta Cencosud · sin tarjeta $' + f'{x:,}'.replace(',', '.')) if c and x else ''
     if t == 'pcfactory': return ('Transferencia o débito · otros medios $' + f'{x:,}'.replace(',', '.')) if x else None
     return None
 
@@ -234,7 +239,7 @@ def aplicar(carpeta):
                 # Precio de lista que tacha la tienda: solo se guarda si es mayor al precio; sirve para ver si el descuento es real
                 if r.get('l') and int(r['l']) > nuevo: o['l'] = int(r['l'])
                 else: o.pop('l', None)
-                if r['c'] or o['s'] in ('falabella', 'paris', 'ripley', 'pcfactory'):
+                if r['c'] or o['s'] in ('falabella', 'paris', 'ripley', 'pcfactory', 'sodimac', 'easy'):
                     if r['c']: o['c'] = 1
                     else: o.pop('c', None)
                 if r['n'] is not None:
