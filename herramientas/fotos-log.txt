@@ -1,36 +1,14 @@
-Fotos nuevas: 22 · con error: 13 · total en la carpeta: 852
+Fotos nuevas: 8 · con error: 5 · total en la carpeta: 860
 ERROR	lv53	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110007281_01/w=600,h=600,fit=pad
-ok	fr1	11 KB	media.falabella.com
-ok	fr2	11 KB	media.falabella.com
-ok	fr3	8 KB	media.falabella.com
-ok	fr4	7 KB	media.falabella.com
 ERROR	fr5	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000403271678/full_image-2000403271678
-ok	fr6	14 KB	media.falabella.com
-ok	fr7	9 KB	media.falabella.com
-ok	fr8	4 KB	media.falabella.com
-ok	fr9	13 KB	media.falabella.com
-ERROR	fr10	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/561549999/variant/6a70eef051fd804294969681/images/46e3de14-4e4a-4c08-98e5-5695596fdc9f/561549999-0000-001.jpg
-ERROR	fr11	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/558540999/variant/6a6cd27748b6b796d4768653/images/0868dd3b-06ac-42b8-b0f1-4ebbcd89c4f9/558540999-0000-001.jpg
-ERROR	fr12	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/547797999/variant/6a5a3bd1cb28a2be123cb379/images/9fac28ad-4379-4bf2-b2f4-aaa62ecb0f60/547797999-0000-001.jpg
-ok	fr13	8 KB	media.falabella.com
-ok	fr14	6 KB	media.falabella.com
-ERROR	fr15	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/101701999/variant/6812bf3b3ea1067f036a1b94/images/5bf3cbda-81cc-400d-abb7-0670c177fffc/101701999-0000-001.jpg
-ok	fr16	5 KB	media.falabella.com
-ok	fr17	9 KB	media.falabella.com
+ok	fr10	9 KB	cl-dam-resizer.ecomm.cencosud.com
+ok	fr11	8 KB	cl-dam-resizer.ecomm.cencosud.com
+ok	fr12	9 KB	cl-dam-resizer.ecomm.cencosud.com
+ok	fr15	5 KB	cl-dam-resizer.ecomm.cencosud.com
 ERROR	fr18	HTTP Error 403: Forbidden	https://home.ripley.cl/store/Attachment/WOP/D122/2000402621771/2000402621771_2.jpg
 ERROR	fr19	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000402621764/full_image-2000402621764
-ok	fr20	13 KB	media.falabella.com
-ok	fr21	7 KB	media.falabella.com
-ok	fr22	8 KB	media.falabella.com
-ERROR	fr23	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/215303999/variant/68655a7c227ff5bcb16e11c7/images/4168801f-2125-4466-b5d0-4d56c3261ec3/215303999-0000-001.jpg
+ok	fr23	6 KB	cl-dam-resizer.ecomm.cencosud.com
 ERROR	fr24	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000401532269/full_image-2000401532269
-ERROR	fr25	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/215302999/variant/68655a81378ebad75e2a3509/images/404b4940-2709-4966-b818-7d5a1124a206/215302999-0000-001.jpg
-ERROR	fr26	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/682779999/variant/67ec154a56093ead497588aa/images/d33c2dcf-c4a3-45e7-8825-d9ee002be727/682779999-0000-001.jpg
-ERROR	fr27	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/715689999/variant/682205f1dbbe7270c5b5b79c/images/87185823-278b-4a5f-bd4c-8312aa2b1836/715689999-0000-001.jpg
-ok	fr28	8 KB	media.falabella.com
-ok	fr29	5 KB	media.falabella.com
-ok	fr30	4 KB	media.falabella.com
-ok	fr31	7 KB	media.falabella.com
-ok	fr32	8 KB	media.falabella.com
-ok	fr33	8 KB	media.falabella.com
-ok	fr34	5 KB	media.falabella.com
+ok	fr25	7 KB	cl-dam-resizer.ecomm.cencosud.com
+ok	fr26	5 KB	cl-dam-resizer.ecomm.cencosud.com
+ok	fr27	6 KB	cl-dam-resizer.ecomm.cencosud.com
