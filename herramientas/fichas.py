@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Fichas de equipos de ¿Cuál me conviene?: una página por notebook, celular, tablet, televisor, consola,
-lavadora o secadora, aspiradora, batidora, cafetera y freidora de aire.
+lavadora o secadora, aspiradora, batidora, cafetera, freidora de aire, aire acondicionado y colchón.
 
   python3 herramientas/fichas.py
       Crea o actualiza notebook/<nombre>.html y celular/<nombre>.html con los precios de
@@ -37,6 +37,7 @@ CATS = {
     'cf': ('Cafeteras', 'cafeteras', 'cafetera', 'Cafeteras', True),
     'fr': ('Freidoras de aire', 'freidoras-de-aire', 'freidora', 'Freidoras', True),
     'ac': ('Aires acondicionados', 'aires-acondicionados', 'aire-acondicionado', 'Aires', False),
+    'co': ('Colchones', 'colchones', 'colchon', 'Colchones', False),
 }
 
 
@@ -53,6 +54,8 @@ TIPO_AS = {'robot': 'Aspiradora robot', 'vertical': 'Aspiradora vertical', 'arra
 TIPO_BT = {'pedestal': 'Batidora de pedestal', 'mano': 'Batidora de mano', 'inmersion': 'Batidora de inmersión'}
 TIPO_FR = {'Canasta': 'Freidora de aire de una canasta', 'Doble canasta': 'Freidora de aire de doble canasta', 'Horno': 'Horno freidora de aire'}
 TIPO_AC = {'split': 'Aire acondicionado split muro', 'portatil': 'Aire acondicionado portátil'}
+TIPO_CO = {'resorte': 'Colchón de resortes', 'espuma': 'Colchón de espuma', 'hibrido': 'Colchón híbrido'}
+TAM_CO = {'1.5': '1,5 plazas', '2': '2 plazas', 'K': 'King'}
 EF_AC = {'A+++': 15, 'A++': 15, 'A+': 15, 'A': 12, 'B': 8, 'C': 5, 'D': 2, 'E': 2, 'F': 2, 'G': 2}
 
 
@@ -176,7 +179,7 @@ def equipos():
         out.append(dict(k='tv', eq=p, id=p['id'], marca=p['brand'], nombre=p['name']))
     for p in extra.get('cs', (None, None, []))[2]:
         out.append(dict(k='cs', eq=p, id=p['id'], marca=p['plat'], nombre=p['name']))
-    for k in ('lv', 'as', 'bt', 'cf', 'fr', 'ac'):
+    for k in ('lv', 'as', 'bt', 'cf', 'fr', 'ac', 'co'):
         for p in extra.get(k, (None, None, []))[2]:
             out.append(dict(k=k, eq=p, id=p['id'], marca=p['brand'], nombre=p['name']))
     for x in out:
@@ -270,6 +273,7 @@ def categoria(x):
     if x['k'] == 'cf': return 'Cafetera de cápsulas ' + q.get('sis', '')
     if x['k'] == 'fr': return TIPO_FR.get(q.get('tipo'), 'Freidora de aire')
     if x['k'] == 'ac': return TIPO_AC.get(q.get('tipo'), 'Aire acondicionado')
+    if x['k'] == 'co': return 'Colchón de ' + TAM_CO.get(q.get('tam'), '')
     if q.get('refurb'): return 'Reacondicionado'
     p = precio_tienda(x) if x['os'] else 0
     return 'Gama de entrada' if p <= 250000 else 'Gama media' if p <= 600000 else 'Gama alta'
@@ -294,6 +298,9 @@ def specs_cortas(x):
         return ', '.join(t for t in [f"{miles(q['w'])} W" if q.get('w') else None, f"{q['vel']} velocidades" if q.get('vel') else None,
                                      (('vaso ' if q.get('tipo') == 'inmersion' else 'bol ') + num(q['bowl']) + ' L') if q.get('bowl') else None,
                                      'bol de acero' if q.get('metal') else None] if t)
+    if x['k'] == 'co':
+        return ', '.join(t for t in [TAM_CO.get(q.get('tam')) + f" ({q['ancho']} cm)", TIPO_CO.get(q.get('tipo'), 'Colchón').replace('Colchón de ', '').replace('Colchón ', '') + (f" {q['sistema']}" if q.get('sistema') else ''),
+                                     f"firmeza {q['firmeza'].lower()}" if q.get('firmeza') else None] if t)
     if x['k'] == 'ac':
         return ', '.join(t for t in [btu(q['btu']), 'inverter' if q.get('inv') else 'sin inverter', 'frío y calor' if q.get('calor') else 'solo frío',
                                      f"eficiencia {q['ef']}" if q.get('ef') else None, 'Wi-Fi' if q.get('wifi') else None] if t)
@@ -346,6 +353,9 @@ def tabla_tecnica(x):
         filas += [('Tipo', TIPO_BT.get(q.get('tipo'))), ('Potencia', f"{miles(q['w'])} W" if q.get('w') else None),
                   ('Velocidades', q.get('vel')), ('Bol o vaso', f"{num(q['bowl'])} L" if q.get('bowl') else None),
                   ('Bol de acero', 'Sí' if q.get('metal') else None), ('Turbo', 'Sí' if q.get('turbo') else None), ('Modelo', q.get('model'))]
+    elif x['k'] == 'co':
+        filas += [('Tamaño', f"{TAM_CO.get(q.get('tam'))} ({q['ancho']} cm de ancho)"), ('Tipo', TIPO_CO.get(q.get('tipo'))),
+                  ('Tipo de resortes', q.get('sistema')), ('Firmeza', q.get('firmeza')), ('Marca', x['marca']), ('Modelo', q.get('model'))]
     elif x['k'] == 'ac':
         filas += [('Tipo', TIPO_AC.get(q.get('tipo'))), ('Puntaje del puma', f"{puntaje_ac(q)} de 100"),
                   ('Capacidad', btu(q['btu'])), ('Para una pieza de', f"unos {round(q['btu'] / 480 / 5) * 5} m² (techo de 2,4 m)"),
@@ -550,7 +560,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
         cands = [y for y in cands if bool(y['eq'].get('refurb')) == bool(q.get('refurb'))]
     elif x['k'] == 'cs':
         cands = [y for y in cands if (y['eq'].get('tipo') == 'tv') == (q.get('tipo') == 'tv')] or cands
-    elif x['k'] in ('lv', 'as', 'bt', 'cf', 'fr'):
+    elif x['k'] in ('lv', 'as', 'bt', 'cf', 'fr', 'co'):
         cands = [y for y in cands if categoria(y) == categoria(x)] or cands
     elif x['k'] == 'ac':
         cands = [y for y in cands if categoria(y) == categoria(x) and abs(y['eq']['btu'] - q['btu']) <= 3000] or [y for y in cands if categoria(y) == categoria(x)] or cands
