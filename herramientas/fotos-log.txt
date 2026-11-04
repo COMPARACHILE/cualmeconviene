@@ -1,12 +1,8 @@
-Fotos nuevas: 44 · con error: 45 · total en la carpeta: 946
+Fotos nuevas: 0 · con error: 45 · total en la carpeta: 946
 ERROR	lv53	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110007281_01/w=600,h=600,fit=pad
 ERROR	fr18	HTTP Error 403: Forbidden	https://home.ripley.cl/store/Attachment/WOP/D122/2000402621771/2000402621771_2.jpg
 ERROR	co1	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110050411_1/w=600,h=600,fit=pad
 ERROR	co2	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110055257_1/w=600,h=600,fit=pad
-ok	co3	3 KB	media.falabella.com
-ok	co4	3 KB	media.falabella.com
-ok	co5	3 KB	media.falabella.com
-ok	co6	3 KB	media.falabella.com
 ERROR	co7	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110056514_1/w=600,h=600,fit=pad
 ERROR	co8	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110043748_1/w=600,h=600,fit=pad
 ERROR	co9	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110034942_1/w=600,h=600,fit=pad
@@ -14,65 +10,29 @@ ERROR	co10	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/139
 ERROR	co11	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/139812764_1/w=600,h=600,fit=pad
 ERROR	co12	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/124279115_1/w=600,h=600,fit=pad
 ERROR	co13	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110051002_1/w=600,h=600,fit=pad
-ok	co14	3 KB	media.falabella.com
-ok	co15	3 KB	media.falabella.com
 ERROR	co16	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110050328_1/w=600,h=600,fit=pad
-ok	co17	3 KB	media.falabella.com
-ok	co18	3 KB	media.falabella.com
 ERROR	co19	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110056269_1/w=600,h=600,fit=pad
-ok	co20	3 KB	media.falabella.com
-ok	co21	3 KB	media.falabella.com
 ERROR	co22	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110041481_1/w=600,h=600,fit=pad
-ok	co23	4 KB	media.falabella.com
-ok	co24	4 KB	media.falabella.com
-ok	co25	3 KB	media.falabella.com
 ERROR	co26	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110030251_1/w=600,h=600,fit=pad
-ok	co27	6 KB	media.falabella.com
-ok	co28	6 KB	media.falabella.com
-ok	co29	2 KB	media.falabella.com
-ok	co30	2 KB	media.falabella.com
 ERROR	co31	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/113357013_1/w=600,h=600,fit=pad
 ERROR	co32	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/113357974_1/w=600,h=600,fit=pad
-ok	co33	2 KB	media.falabella.com
 ERROR	co34	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/141477243_1/w=600,h=600,fit=pad
-ok	co35	2 KB	media.falabella.com
 ERROR	co36	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/141477234_1/w=600,h=600,fit=pad
 ERROR	co37	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/122955111_1/w=600,h=600,fit=pad
 ERROR	co38	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/133258603_1/w=600,h=600,fit=pad
 ERROR	co39	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/132403463_1/w=600,h=600,fit=pad
 ERROR	co40	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110030230_1/w=600,h=600,fit=pad
 ERROR	co41	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110055478_1/w=600,h=600,fit=pad
-ok	co42	3 KB	media.falabella.com
-ok	co43	4 KB	media.falabella.com
 ERROR	co44	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110051584_1/w=600,h=600,fit=pad
-ok	co45	4 KB	media.falabella.com
 ERROR	co46	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110061108_1/w=600,h=600,fit=pad
 ERROR	co47	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110040860_1/w=600,h=600,fit=pad
-ok	co48	7 KB	media.falabella.com
 ERROR	co49	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/122955610_1/w=600,h=600,fit=pad
 ERROR	co50	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/122955119_1/w=600,h=600,fit=pad
-ok	co51	3 KB	media.falabella.com
-ok	co52	6 KB	media.falabella.com
 ERROR	co53	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110055466_1/w=600,h=600,fit=pad
 ERROR	co54	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110042526_1/w=600,h=600,fit=pad
 ERROR	co55	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110054674_1/w=600,h=600,fit=pad
-ok	co56	3 KB	media.falabella.com
-ok	co57	3 KB	media.falabella.com
-ok	co58	6 KB	media.falabella.com
-ok	co59	5 KB	media.falabella.com
-ok	co60	4 KB	media.falabella.com
-ok	co61	4 KB	media.falabella.com
 ERROR	co62	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/139701493_1/w=600,h=600,fit=pad
-ok	co63	4 KB	media.falabella.com
-ok	co64	4 KB	media.falabella.com
-ok	co65	9 KB	media.falabella.com
 ERROR	co66	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110382926_1/w=600,h=600,fit=pad
-ok	co67	6 KB	media.falabella.com
-ok	co68	13 KB	media.falabella.com
-ok	co69	7 KB	media.falabella.com
-ok	co70	7 KB	media.falabella.com
-ok	co71	9 KB	media.falabella.com
-ok	co72	5 KB	media.falabella.com
 ERROR	co73	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/143691876_1/w=600,h=600,fit=pad
 ERROR	co74	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/143649129_1/w=600,h=600,fit=pad
 ERROR	co75	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/146701076_1/w=600,h=600,fit=pad
@@ -84,7 +44,3 @@ ERROR	co80	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/155
 ERROR	co82	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110052364_1/w=600,h=600,fit=pad
 ERROR	co83	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110059110_1/w=600,h=600,fit=pad
 ERROR	co84	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110030229_1/w=600,h=600,fit=pad
-ok	co85	3 KB	media.falabella.com
-ok	co86	5 KB	media.falabella.com
-ok	co87	7 KB	media.falabella.com
-ok	co88	7 KB	media.falabella.com
