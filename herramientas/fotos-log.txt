@@ -1,36 +1,3 @@
-Fotos nuevas: 33 · con error: 2 · total en la carpeta: 902
+Fotos nuevas: 0 · con error: 2 · total en la carpeta: 902
 ERROR	lv53	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110007281_01/w=600,h=600,fit=pad
-ok	fr5	9 KB	easycl.vteximg.com.br
 ERROR	fr18	HTTP Error 403: Forbidden	https://home.ripley.cl/store/Attachment/WOP/D122/2000402621771/2000402621771_2.jpg
-ok	fr19	6 KB	easycl.vteximg.com.br
-ok	fr24	4 KB	media.falabella.com
-ok	fr44	5 KB	media.falabella.com
-ok	fr45	9 KB	media.falabella.com
-ok	fr46	7 KB	media.falabella.com
-ok	fr47	6 KB	media.falabella.com
-ok	fr48	7 KB	easycl.vteximg.com.br
-ok	fr49	5 KB	easycl.vteximg.com.br
-ok	fr50	5 KB	easycl.vteximg.com.br
-ok	fr51	8 KB	easycl.vteximg.com.br
-ok	fr52	10 KB	easycl.vteximg.com.br
-ok	fr53	7 KB	easycl.vteximg.com.br
-ok	fr54	13 KB	easycl.vteximg.com.br
-ok	fr55	7 KB	easycl.vteximg.com.br
-ok	fr56	6 KB	easycl.vteximg.com.br
-ok	fr57	8 KB	easycl.vteximg.com.br
-ok	fr58	6 KB	easycl.vteximg.com.br
-ok	fr59	9 KB	easycl.vteximg.com.br
-ok	fr60	5 KB	easycl.vteximg.com.br
-ok	fr61	3 KB	easycl.vteximg.com.br
-ok	fr62	8 KB	easycl.vteximg.com.br
-ok	fr63	9 KB	easycl.vteximg.com.br
-ok	fr64	7 KB	easycl.vteximg.com.br
-ok	fr65	4 KB	easycl.vteximg.com.br
-ok	fr66	6 KB	easycl.vteximg.com.br
-ok	fr67	5 KB	easycl.vteximg.com.br
-ok	fr68	7 KB	easycl.vteximg.com.br
-ok	fr69	13 KB	easycl.vteximg.com.br
-ok	fr70	7 KB	easycl.vteximg.com.br
-ok	fr71	9 KB	easycl.vteximg.com.br
-ok	fr72	6 KB	easycl.vteximg.com.br
-ok	fr73	7 KB	easycl.vteximg.com.br
