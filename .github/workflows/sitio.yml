@@ -20,6 +20,8 @@ on:
       - 'cafeteras.html'
       - 'freidoras-de-aire.html'
       - 'aires-acondicionados.html'
+      - 'cocinas-y-encimeras.html'
+      - 'hornos-y-microondas.html'
       - 'herramientas/fotos.json'
       - 'herramientas/fotos.py'
       - 'herramientas/fichas.py'

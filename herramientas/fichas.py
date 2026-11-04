@@ -37,6 +37,8 @@ CATS = {
     'cf': ('Cafeteras', 'cafeteras', 'cafetera', 'Cafeteras', True),
     'fr': ('Freidoras de aire', 'freidoras-de-aire', 'freidora', 'Freidoras', True),
     'ac': ('Aires acondicionados', 'aires-acondicionados', 'aire-acondicionado', 'Aires', False),
+    'ck': ('Cocinas y encimeras', 'cocinas-y-encimeras', 'cocina', 'Cocinas', True),
+    'hm': ('Hornos y microondas', 'hornos-y-microondas', 'horno', 'Hornos', False),
 }
 
 
@@ -53,6 +55,10 @@ TIPO_AS = {'robot': 'Aspiradora robot', 'vertical': 'Aspiradora vertical', 'arra
 TIPO_BT = {'pedestal': 'Batidora de pedestal', 'mano': 'Batidora de mano', 'inmersion': 'Batidora de inmersión'}
 TIPO_FR = {'Canasta': 'Freidora de aire de una canasta', 'Doble canasta': 'Freidora de aire de doble canasta', 'Horno': 'Horno freidora de aire'}
 TIPO_AC = {'split': 'Aire acondicionado split muro', 'portatil': 'Aire acondicionado portátil'}
+TIPO_CK = {'cocina': 'Cocina con horno', 'encimera': 'Encimera'}
+TIPO_HM = {'horno': 'Horno empotrable', 'mesa': 'Horno de mesa', 'microondas': 'Microondas'}
+COMB_CK = {'gas': 'Gas', 'induccion': 'Inducción', 'vitro': 'Vitrocerámica'}
+EF_HM = {'A+++': 15, 'A++': 15, 'A+': 15, 'A': 12, 'B': 9, 'C': 7, 'D': 4, 'E': 2, 'F': 2, 'G': 2}
 EF_AC = {'A+++': 15, 'A++': 15, 'A+': 15, 'A': 12, 'B': 8, 'C': 5, 'D': 2, 'E': 2, 'F': 2, 'G': 2}
 
 
@@ -61,6 +67,42 @@ def puntaje_ac(q):
     inverter 35, split 25, frío y calor 15, etiqueta de eficiencia hasta 15 (sin dato 6) y Wi-Fi 10."""
     return ((35 if q.get('inv') else 0) + (25 if q.get('tipo') == 'split' else 0) + (15 if q.get('calor') else 0)
             + EF_AC.get(q.get('ef') or '', 6) + (10 if q.get('wifi') else 0))
+
+
+def comb_ck(q):
+    if q.get('comb') == 'mixta':
+        return 'Híbrida (gas y horno eléctrico)' if q.get('tipo') == 'cocina' else 'Gas e inducción'
+    return COMB_CK.get(q.get('comb'), '')
+
+
+def _r(v):
+    """Redondeo como Math.round de JavaScript (la mitad sube), para que el puntaje coincida con la página."""
+    return int(v + 0.5)
+
+
+def puntaje_ck(q):
+    """Puntaje del puma de una cocina o encimera (0 a 100), igual que en /cocinas-y-encimeras. Cada tipo tiene su propia fórmula."""
+    n = q.get('q') or 0
+    if q.get('tipo') == 'cocina':
+        return (_r(min(q.get('hl') or 0, 100) / 100 * 30) + (20 if n >= 5 else 12 if n >= 4 else 6) + (15 if q.get('grill') else 0)
+                + (15 if q.get('tmp') else 0) + (10 if q.get('inox') else 0) + (10 if q.get('comb') == 'mixta' else 0))
+    return ({'induccion': 30, 'mixta': 25, 'gas': 12, 'vitro': 8}.get(q.get('comb'), 0) + min(n, 5) * 5 + (15 if q.get('seg') else 0)
+            + (10 if q.get('hf') or q.get('vid') else 0) + (10 if q.get('ench') or q.get('comb') != 'gas' else 0)
+            + (5 if q.get('inox') else 0) + (5 if (q.get('a') or 0) >= 58 else 0))
+
+
+def puntaje_hm(q):
+    """Puntaje del puma de un horno o microondas (0 a 100), igual que en /hornos-y-microondas. Cada tipo tiene su propia fórmula."""
+    l, w, t = q.get('l') or 0, q.get('w'), q.get('tipo')
+    if t == 'horno':
+        return (_r(min(l, 80) / 80 * 25) + (20 if q.get('conv') else 0) + (10 if q.get('grill') else 0) + (10 if q.get('tmp') else 0)
+                + (10 if q.get('dig') else 0) + (EF_HM.get(q['ef'], 4) if q.get('ef') else 5) + _r(min(q.get('pg') or 0, 14) / 14 * 5)
+                + (5 if q.get('micro') else 0))
+    if t == 'mesa':
+        return (_r(min(l, 48) / 48 * 30) + (25 if q.get('conv') else 0) + (15 if q.get('grill') else 0) + (15 if q.get('tmp') else 0)
+                + (10 if q.get('spiedo') else 0) + (5 if (w or 0) >= 1500 else 0))
+    return (_r(min(l, 30) / 30 * 25) + (_r(min(w, 1400) / 1400 * 20) if w else 10) + (20 if q.get('dig') else 0)
+            + (20 if q.get('grill') else 0) + (5 if q.get('inox') else 0) + _r(min(q.get('pg') or 0, 10) / 10 * 10))
 
 
 def btu(v):
@@ -176,7 +218,7 @@ def equipos():
         out.append(dict(k='tv', eq=p, id=p['id'], marca=p['brand'], nombre=p['name']))
     for p in extra.get('cs', (None, None, []))[2]:
         out.append(dict(k='cs', eq=p, id=p['id'], marca=p['plat'], nombre=p['name']))
-    for k in ('lv', 'as', 'bt', 'cf', 'fr', 'ac'):
+    for k in ('lv', 'as', 'bt', 'cf', 'fr', 'ac', 'ck', 'hm'):
         for p in extra.get(k, (None, None, []))[2]:
             out.append(dict(k=k, eq=p, id=p['id'], marca=p['brand'], nombre=p['name']))
     for x in out:
@@ -270,6 +312,8 @@ def categoria(x):
     if x['k'] == 'cf': return 'Cafetera de cápsulas ' + q.get('sis', '')
     if x['k'] == 'fr': return TIPO_FR.get(q.get('tipo'), 'Freidora de aire')
     if x['k'] == 'ac': return TIPO_AC.get(q.get('tipo'), 'Aire acondicionado')
+    if x['k'] == 'ck': return TIPO_CK.get(q.get('tipo'), 'Cocina')
+    if x['k'] == 'hm': return TIPO_HM.get(q.get('tipo'), 'Horno')
     if q.get('refurb'): return 'Reacondicionado'
     p = precio_tienda(x) if x['os'] else 0
     return 'Gama de entrada' if p <= 250000 else 'Gama media' if p <= 600000 else 'Gama alta'
@@ -297,6 +341,14 @@ def specs_cortas(x):
     if x['k'] == 'ac':
         return ', '.join(t for t in [btu(q['btu']), 'inverter' if q.get('inv') else 'sin inverter', 'frío y calor' if q.get('calor') else 'solo frío',
                                      f"eficiencia {q['ef']}" if q.get('ef') else None, 'Wi-Fi' if q.get('wifi') else None] if t)
+    if x['k'] == 'ck':
+        z = 'quemadores' if q.get('comb') == 'gas' or q.get('tipo') == 'cocina' else 'zonas'
+        return ', '.join(t for t in [comb_ck(q).lower(), f"{q['q']} {z}" if q.get('q') else None, f"horno de {q['hl']} L" if q.get('hl') else None,
+                                     f"{q['a']} cm de ancho" if q.get('a') else None, 'válvula de seguridad' if q.get('seg') else None] if t)
+    if x['k'] == 'hm':
+        return ', '.join(t for t in [f"{num(q['l'])} litros" if q.get('l') else None, f"{miles(q['w'])} W" if q.get('w') else None,
+                                     'convección' if q.get('conv') else None, 'grill' if q.get('grill') else None,
+                                     f"eficiencia {q['ef']}" if q.get('ef') else None] if t)
     if x['k'] == 'fr':
         return ', '.join(t for t in [f"{num(q['l'])} litros", f"{miles(q['w'])} W" if q.get('w') else None, 'panel digital' if q.get('dig') else 'manual',
                                      'con visor' if q.get('vis') else None] if t)
@@ -354,6 +406,26 @@ def tabla_tecnica(x):
                   ('Frío y calor', 'Sí' if q.get('calor') else 'Solo frío'),
                   ('Eficiencia energética', f"Clase {q['ef']}" if q.get('ef') else 'La tienda no la informa'),
                   ('Wi-Fi', 'Sí' if q.get('wifi') else 'No'), ('Modelo', q.get('model'))]
+    elif x['k'] == 'ck':
+        z = 'quemadores' if q.get('comb') == 'gas' or q.get('tipo') == 'cocina' else 'zonas'
+        filas += [('Tipo', TIPO_CK.get(q.get('tipo'))), ('Puntaje del puma', f"{puntaje_ck(q)} de 100"), ('Tecnología', comb_ck(q)),
+                  (z.capitalize(), q.get('q')), ('Ancho', f"{q['a']} cm" if q.get('a') else None),
+                  ('Horno', f"{q['hl']} litros" if q.get('hl') else None),
+                  ('Precio por quemador o zona', plata(x['os'][0]['p'] / q['q']) if x['os'] and q.get('q') else None),
+                  ('Válvula de seguridad', 'Sí' if q.get('seg') else None), ('Encendido eléctrico', 'Sí' if q.get('ench') else None),
+                  ('Parrillas de hierro fundido', 'Sí' if q.get('hf') else None), ('Vidrio', 'Sí' if q.get('vid') else None),
+                  ('Grill en el horno', 'Sí' if q.get('grill') else None), ('Temporizador', 'Sí' if q.get('tmp') else None),
+                  ('Acero inoxidable', 'Sí' if q.get('inox') else None), ('Modelo', q.get('model'))]
+    elif x['k'] == 'hm':
+        filas += [('Tipo', TIPO_HM.get(q.get('tipo'))), ('Puntaje del puma', f"{puntaje_hm(q)} de 100"),
+                  ('Capacidad', f"{num(q['l'])} litros" if q.get('l') else None),
+                  ('Precio por litro', plata(x['os'][0]['p'] / q['l']) if x['os'] and q.get('l') else None),
+                  ('Potencia', f"{miles(q['w'])} W" if q.get('w') else None), ('Ancho', f"{q['a']} cm" if q.get('a') else None),
+                  ('Energía', 'Gas' if q.get('comb') == 'gas' else 'Eléctrico' if q.get('tipo') != 'microondas' else None),
+                  ('Convección', 'Sí' if q.get('conv') else None), ('Grill', 'Sí' if q.get('grill') else None),
+                  ('Temporizador', 'Sí' if q.get('tmp') else None), ('Panel digital', 'Sí' if q.get('dig') else None),
+                  ('Spiedo (asador)', 'Sí' if q.get('spiedo') else None), ('Con microondas', 'Sí' if q.get('micro') else None),
+                  ('Eficiencia energética', f"Clase {q['ef']}" if q.get('ef') else None), ('Modelo', q.get('model'))]
     elif x['k'] == 'fr':
         filas += [('Tipo', TIPO_FR.get(q.get('tipo'))), ('Capacidad', f"{num(q['l'])} litros"),
                   ('Precio por litro', plata(x['os'][0]['p'] / q['l']) if x['os'] and q.get('l') else None),
@@ -550,7 +622,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
         cands = [y for y in cands if bool(y['eq'].get('refurb')) == bool(q.get('refurb'))]
     elif x['k'] == 'cs':
         cands = [y for y in cands if (y['eq'].get('tipo') == 'tv') == (q.get('tipo') == 'tv')] or cands
-    elif x['k'] in ('lv', 'as', 'bt', 'cf', 'fr'):
+    elif x['k'] in ('lv', 'as', 'bt', 'cf', 'fr', 'ck', 'hm'):
         cands = [y for y in cands if categoria(y) == categoria(x)] or cands
     elif x['k'] == 'ac':
         cands = [y for y in cands if categoria(y) == categoria(x) and abs(y['eq']['btu'] - q['btu']) <= 3000] or [y for y in cands if categoria(y) == categoria(x)] or cands
