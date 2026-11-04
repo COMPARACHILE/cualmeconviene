@@ -96,7 +96,7 @@ const LECTORES = {
     return p ? { p, c: 0, n: 'Precio oferta online Entel (solo equipo)' } : { e: 'sin precio' };
   },
   // Tiendas oficiales de cada marca (26-10-2026): precio público de la ficha, sin tarjeta
-  samsung: (h, u) => _samsung(h, u), lg: h => _oficial(h), hp: h => _oficial(h), nespresso: h => _oficial(h), dolcegusto: h => _oficial(h),
+  samsung: (h, u) => _samsung(h, u), lg: h => _oficial(h), hp: h => _oficial(h), nespresso: h => _oficial(h), sindelen: h => _oficial(h), dolcegusto: h => _oficial(h),
   apple: (h, u) => _apple(h, u),
   movistar(h) {
     if (/schema.org\/OutOfStock/.test(h)) return { e: 'sin stock' };

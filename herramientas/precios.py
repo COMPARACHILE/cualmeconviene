@@ -33,7 +33,7 @@ PORTADAS = {'falabella': 'https://www.falabella.com/falabella-cl', 'paris': 'htt
             'entel': 'https://miportal.entel.cl/personas/catalogo/celulares', 'movistar': 'https://catalogo.movistar.cl/tienda/',
             'samsung': 'https://www.samsung.com/cl/', 'lg': 'https://www.lg.com/cl/', 'xiaomi': 'https://www.mi.com/cl/',
             'apple': 'https://www.apple.com/cl/shop', 'hp': 'https://www.hp.com/cl-es/shop/', 'nespresso': 'https://www.nespresso.com/cl/es',
-            'dolcegusto': 'https://www.dolce-gusto.cl/', 'sodimac': 'https://www.sodimac.cl/sodimac-cl', 'easy': 'https://www.easy.cl/'}
+            'dolcegusto': 'https://www.dolce-gusto.cl/', 'sodimac': 'https://www.sodimac.cl/sodimac-cl', 'easy': 'https://www.easy.cl/', 'sindelen': 'https://www.sindelen.cl/'}
 # Tiendas oficiales de cada marca (26-10-2026). fichas.py escribe assets/oficiales.js con esto y todas las páginas lo cargan.
 OFICIALES = {
     'samsung': {'name': 'Tienda Samsung', 'color': '#1428A0', 't': 'tienda'},
@@ -46,6 +46,7 @@ OFICIALES = {
     # Tiendas de hogar agregadas el 04-11-2026 (no son tiendas oficiales de una marca, pero comparten este mecanismo de nombre y color)
     'sodimac': {'name': 'Sodimac', 'color': '#E8A200', 't': 'tienda'},
     'easy': {'name': 'Easy', 'color': '#D6001C', 't': 'tienda'},
+    'sindelen': {'name': 'Tienda Sindelen', 'color': '#C8102E', 't': 'tienda'},
 }
 # Sin stock o ficha borrada: la oferta se oculta en la página (x:1) hasta que vuelva
 AGOTADO = {'sin stock', 'error 404', 'error 410'}
@@ -241,7 +242,7 @@ def aplicar(carpeta):
                 # Precio de lista que tacha la tienda: solo se guarda si es mayor al precio; sirve para ver si el descuento es real
                 if r.get('l') and int(r['l']) > nuevo: o['l'] = int(r['l'])
                 else: o.pop('l', None)
-                if r['c'] or o['s'] in ('falabella', 'paris', 'ripley', 'pcfactory', 'sodimac', 'easy'):
+                if r['c'] or o['s'] in ('falabella', 'paris', 'ripley', 'pcfactory', 'sodimac', 'easy', 'sindelen'):
                     if r['c']: o['c'] = 1
                     else: o.pop('c', None)
                 if r['n'] is not None:
