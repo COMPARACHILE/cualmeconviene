@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Fichas de equipos de ¿Cuál me conviene?: una página por notebook, celular, tablet, televisor, consola,
-lavadora o secadora, aspiradora, batidora y cafetera.
+lavadora o secadora, aspiradora, batidora, cafetera y freidora de aire.
 
   python3 herramientas/fichas.py
       Crea o actualiza notebook/<nombre>.html y celular/<nombre>.html con los precios de
@@ -35,6 +35,7 @@ CATS = {
     'cs': ('Consolas', 'consolas', 'consola', 'Consolas', True), 'lv': ('Lavadoras y secadoras', 'lavadoras', 'lavadora', 'Lavado', True),
     'as': ('Aspiradoras', 'aspiradoras', 'aspiradora', 'Aspiradoras', True), 'bt': ('Batidoras', 'batidoras', 'batidora', 'Batidoras', True),
     'cf': ('Cafeteras', 'cafeteras', 'cafetera', 'Cafeteras', True),
+    'fr': ('Freidoras de aire', 'freidoras-de-aire', 'freidora', 'Freidoras', True),
     'ac': ('Aires acondicionados', 'aires-acondicionados', 'aire-acondicionado', 'Aires', False),
 }
 
@@ -50,6 +51,7 @@ TIPO_LV = {'superior': 'Lavadora de carga superior', 'frontal': 'Lavadora de car
            'torre': 'Lavadora-secadora en torre', 'secadora': 'Secadora'}
 TIPO_AS = {'robot': 'Aspiradora robot', 'vertical': 'Aspiradora vertical', 'arrastre': 'Aspiradora de arrastre'}
 TIPO_BT = {'pedestal': 'Batidora de pedestal', 'mano': 'Batidora de mano', 'inmersion': 'Batidora de inmersión'}
+TIPO_FR = {'Canasta': 'Freidora de aire de una canasta', 'Doble canasta': 'Freidora de aire de doble canasta', 'Horno': 'Horno freidora de aire'}
 TIPO_AC = {'split': 'Aire acondicionado split muro', 'portatil': 'Aire acondicionado portátil'}
 EF_AC = {'A+++': 15, 'A++': 15, 'A+': 15, 'A': 12, 'B': 8, 'C': 5, 'D': 2, 'E': 2, 'F': 2, 'G': 2}
 
@@ -174,7 +176,7 @@ def equipos():
         out.append(dict(k='tv', eq=p, id=p['id'], marca=p['brand'], nombre=p['name']))
     for p in extra.get('cs', (None, None, []))[2]:
         out.append(dict(k='cs', eq=p, id=p['id'], marca=p['plat'], nombre=p['name']))
-    for k in ('lv', 'as', 'bt', 'cf', 'ac'):
+    for k in ('lv', 'as', 'bt', 'cf', 'fr', 'ac'):
         for p in extra.get(k, (None, None, []))[2]:
             out.append(dict(k=k, eq=p, id=p['id'], marca=p['brand'], nombre=p['name']))
     for x in out:
@@ -266,6 +268,7 @@ def categoria(x):
     if x['k'] == 'as': return TIPO_AS.get(q.get('tipo'), 'Aspiradora')
     if x['k'] == 'bt': return TIPO_BT.get(q.get('tipo'), 'Batidora')
     if x['k'] == 'cf': return 'Cafetera de cápsulas ' + q.get('sis', '')
+    if x['k'] == 'fr': return TIPO_FR.get(q.get('tipo'), 'Freidora de aire')
     if x['k'] == 'ac': return TIPO_AC.get(q.get('tipo'), 'Aire acondicionado')
     if q.get('refurb'): return 'Reacondicionado'
     p = precio_tienda(x) if x['os'] else 0
@@ -294,6 +297,9 @@ def specs_cortas(x):
     if x['k'] == 'ac':
         return ', '.join(t for t in [btu(q['btu']), 'inverter' if q.get('inv') else 'sin inverter', 'frío y calor' if q.get('calor') else 'solo frío',
                                      f"eficiencia {q['ef']}" if q.get('ef') else None, 'Wi-Fi' if q.get('wifi') else None] if t)
+    if x['k'] == 'fr':
+        return ', '.join(t for t in [f"{num(q['l'])} litros", f"{miles(q['w'])} W" if q.get('w') else None, 'panel digital' if q.get('dig') else 'manual',
+                                     'con visor' if q.get('vis') else None] if t)
     if x['k'] == 'cf':
         return ', '.join(t for t in [ext_cf(q), f"tazas de hasta {q['ml']} ml" if q.get('ml') else 'tamaño según la cápsula',
                                      f"estanque {num(q['dep'])} L" if q.get('dep') else None, q.get('leche')] if t)
@@ -348,6 +354,11 @@ def tabla_tecnica(x):
                   ('Frío y calor', 'Sí' if q.get('calor') else 'Solo frío'),
                   ('Eficiencia energética', f"Clase {q['ef']}" if q.get('ef') else 'La tienda no la informa'),
                   ('Wi-Fi', 'Sí' if q.get('wifi') else 'No'), ('Modelo', q.get('model'))]
+    elif x['k'] == 'fr':
+        filas += [('Tipo', TIPO_FR.get(q.get('tipo'))), ('Capacidad', f"{num(q['l'])} litros"),
+                  ('Precio por litro', plata(x['os'][0]['p'] / q['l']) if x['os'] and q.get('l') else None),
+                  ('Potencia', f"{miles(q['w'])} W" if q.get('w') else None), ('Panel', 'Digital' if q.get('dig') else 'Manual'),
+                  ('Visor', 'Sí' if q.get('vis') else None), ('Modelo', q.get('model'))]
     elif x['k'] == 'cf':
         filas += [('Sistema', q.get('sis')), ('Cómo extrae el café', ext_cf(q)),
                   ('Taza más grande', f"{q['ml']} ml" if q.get('ml') else 'Según la cápsula'), ('Tamaños de taza', q.get('tam')),
@@ -539,7 +550,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
         cands = [y for y in cands if bool(y['eq'].get('refurb')) == bool(q.get('refurb'))]
     elif x['k'] == 'cs':
         cands = [y for y in cands if (y['eq'].get('tipo') == 'tv') == (q.get('tipo') == 'tv')] or cands
-    elif x['k'] in ('lv', 'as', 'bt', 'cf'):
+    elif x['k'] in ('lv', 'as', 'bt', 'cf', 'fr'):
         cands = [y for y in cands if categoria(y) == categoria(x)] or cands
     elif x['k'] == 'ac':
         cands = [y for y in cands if categoria(y) == categoria(x) and abs(y['eq']['btu'] - q['btu']) <= 3000] or [y for y in cands if categoria(y) == categoria(x)] or cands

@@ -250,7 +250,7 @@ const _ruta = (s, url) => {
 async function publicados(tienda, rutas) {
   const hojas = [['notebooks.html', 'const NOTEBOOKS = ', '\n];'], ['celulares.html', 'const PHONES = ', ';\n'],
     ['tablets.html', 'const EQUIPOS = ', ';\n'], ['televisores.html', 'const EQUIPOS = ', ';\n'], ['consolas.html', 'const EQUIPOS = ', ';\n'],
-    ['lavadoras.html', 'const EQUIPOS = ', ';\n'], ['aspiradoras.html', 'const EQUIPOS = ', ';\n'], ['batidoras.html', 'const EQUIPOS = ', ';\n'], ['cafeteras.html', 'const EQUIPOS = ', ';\n'],
+    ['lavadoras.html', 'const EQUIPOS = ', ';\n'], ['aspiradoras.html', 'const EQUIPOS = ', ';\n'], ['batidoras.html', 'const EQUIPOS = ', ';\n'], ['freidoras-de-aire.html', 'const EQUIPOS = ', ';\n'], ['cafeteras.html', 'const EQUIPOS = ', ';\n'],
     ['aires-acondicionados.html', 'const EQUIPOS = ', ';\n']];
   const pos = new Map(rutas.map((u, i) => [u, i])), exp = rutas.map(() => null);
   for (const [f, a, b] of hojas) {
