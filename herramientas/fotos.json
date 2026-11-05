@@ -3847,7 +3847,10 @@
  "fr15": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/101701999/variant/6812bf3b3ea1067f036a1b94/images/5bf3cbda-81cc-400d-abb7-0670c177fffc/101701999-0000-001.jpg",
  "fr16": "https://media.falabella.com/falabellaCL/155202180_01/public",
  "fr17": "https://media.falabella.com/falabellaCL/17370407_1/public",
- "fr18": "https://home.ripley.cl/store/Attachment/WOP/D122/2000402621771/2000402621771_2.jpg",
+ "fr18": [
+  "https://rimage.ripley.cl/home.ripley/Attachment/WOP/D122/2000402621771/2000402621771_2.jpg",
+  "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000402621771/full_image-2000402621771"
+ ],
  "fr19": "https://easycl.vteximg.com.br/arquivos/ids/5262032/na120-00-5-7a6bda46-7043-420c-bae6-872d6cc5c3de.jpg",
  "fr20": "https://media.falabella.com/falabellaCL/17370408_1/public",
  "fr21": "https://media.falabella.com/falabellaCL/17249082_1/public",
@@ -4346,5 +4349,5 @@
  "hm88": "https://media.falabella.com/falabellaCL/16777653_1/w=600,h=600,fit=pad",
  "hm93": "https://media.falabella.com/falabellaCL/16777657_1/w=600,h=600,fit=pad",
  "hm103": "https://media.falabella.com/falabellaCL/15515501_1/w=600,h=600,fit=pad",
- "co81": "https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/546007999/variant/6821f9e980ce0c5e5d49d2c3/images/4ce9f087-154e-4a28-ad4b-4d8b048d3c54/546007999-0000-001.jpg"
+ "co81": "https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000398314336/full_image-2000398314336"
 }
