@@ -3175,7 +3175,10 @@
   "https://media.falabella.com/falabellaCL/80874884_1/w=600,h=600,fit=pad",
   "https://media.falabella.com/falabellaCL/80874884_1/public"
  ],
- "lv53": "https://cl-cenco-pim-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/prd-cl/product-medias/95f6497b-31de-42c7-8da2-83961438c740/MK4APVOOPI/MK4APVOOPI-1/1792690933970-MK4APVOOPI-1-1.jpg",
+ "lv53": [
+  "https://media.falabella.com/sodimacCL/4267621_01/w=600,h=600,fit=pad",
+  "https://media.falabella.com/sodimacCL/4267621_01/public"
+ ],
  "as1": [
   "https://media.falabella.com/falabellaCL/80648937_1/w=600,h=600,fit=pad",
   "https://media.falabella.com/falabellaCL/80648937_1/public"
