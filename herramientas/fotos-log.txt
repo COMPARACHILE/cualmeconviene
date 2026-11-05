@@ -1,2 +1,29 @@
-Fotos nuevas: 0 · con error: 1 · total en la carpeta: 1218
+Fotos nuevas: 27 · con error: 1 · total en la carpeta: 1245
 ERROR	fr18	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/D122/2000402621771/2000402621771_2.jpg
+ok	co89	2 KB	media.falabella.com
+ok	co90	3 KB	media.falabella.com
+ok	co91	3 KB	media.falabella.com
+ok	co92	9 KB	media.falabella.com
+ok	co93	4 KB	media.falabella.com
+ok	co94	2 KB	media.falabella.com
+ok	co95	4 KB	media.falabella.com
+ok	co96	5 KB	media.falabella.com
+ok	co97	2 KB	media.falabella.com
+ok	co98	3 KB	media.falabella.com
+ok	co99	3 KB	media.falabella.com
+ok	co100	3 KB	media.falabella.com
+ok	co101	3 KB	media.falabella.com
+ok	co102	5 KB	media.falabella.com
+ok	co104	3 KB	media.falabella.com
+ok	co105	3 KB	media.falabella.com
+ok	co106	4 KB	media.falabella.com
+ok	co107	3 KB	media.falabella.com
+ok	co108	7 KB	media.falabella.com
+ok	co109	7 KB	media.falabella.com
+ok	co110	8 KB	media.falabella.com
+ok	co111	4 KB	media.falabella.com
+ok	co112	4 KB	media.falabella.com
+ok	co113	3 KB	media.falabella.com
+ok	co114	5 KB	media.falabella.com
+ok	co115	5 KB	media.falabella.com
+ok	co103	5 KB	media.falabella.com
