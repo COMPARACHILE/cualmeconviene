@@ -1,4 +1,2 @@
-Fotos nuevas: 2 · con error: 1 · total en la carpeta: 1218
-ok	lv53	2 KB	media.falabella.com
+Fotos nuevas: 0 · con error: 1 · total en la carpeta: 1218
 ERROR	fr18	HTTP Error 403: Forbidden	https://home.ripley.cl/store/Attachment/WOP/D122/2000402621771/2000402621771_2.jpg
-ok	co81	3 KB	cl-dam-resizer.ecomm.cencosud.com
