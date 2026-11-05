@@ -372,7 +372,7 @@ button, input { font: inherit; color: inherit; }
 <script src="/assets/cmc-ui.js?v=dcb2679b"></script>
 <script defer src="/assets/fotos.js?v=a155b2e2"></script>
 <script defer src="/assets/oficiales.js?v=dc0e0525"></script>
-<script defer src="/assets/fichas.js?v=2af4f1e0"></script>
+<script defer src="/assets/fichas.js?v=2b285ce2"></script>
 <script defer src="/assets/cmc.js?v=792cbda1"></script>
 </head>
 <body>
@@ -635,9 +635,9 @@ button, input { font: inherit; color: inherit; }
       <div class="cat">
         <div>
           <h3><a href="/colchones">Colchones</a></h3>
-          <p class="cuenta" id="cuentaCo">1,5 plazas, 2 plazas y King, de resortes y de espuma.</p>
+          <p class="cuenta" id="cuentaCo">1 plaza, 1,5 plazas, 2 plazas y King, de resortes y de espuma.</p>
           <ul>
-            <li><a href="/colchones?uso=t15">1,5 plazas</a></li>
+            <li><a href="/colchones?uso=t1">1 plaza</a></li><li><a href="/colchones?uso=t15">1,5 plazas</a></li>
             <li><a href="/colchones?uso=t2">2 plazas</a></li>
             <li><a href="/colchones?uso=tk">King</a></li>
             <li><a href="/colchones?uso=pocket">Resortes Pocket</a></li>
@@ -793,7 +793,7 @@ function prepara(e, k) {
         : k === 'fr' ? [e.tipo, n1(e.l) + ' L', e.w ? e.w.toLocaleString('es-CL') + ' W' : null, e.dig ? 'panel digital' : 'manual'].filter(Boolean).join(', ')
         : k === 'ac' ? [e.tipo === 'portatil' ? 'Portátil' : 'Split muro', e.btu.toLocaleString('es-CL') + ' BTU', e.inv ? 'inverter' : 'sin inverter', e.calor ? 'frío y calor' : 'solo frío'].join(', ')
         : k === 'ck' ? [e.tipo === 'cocina' ? 'Cocina con horno' : 'Encimera', { gas: 'gas', induccion: 'inducción', vitro: 'vitrocerámica', mixta: e.tipo === 'cocina' ? 'híbrida' : 'gas e inducción' }[e.comb], e.q ? e.q + (e.comb === 'gas' || e.tipo === 'cocina' ? ' quemadores' : ' zonas') : null, e.hl ? 'horno de ' + e.hl + ' L' : null].filter(Boolean).join(', ')
-        : k === 'co' ? [{ '1.5': '1,5 plazas', '2': '2 plazas', K: 'King' }[e.tam], { resorte: 'resortes', espuma: 'espuma', hibrido: 'híbrido' }[e.tipo], e.sistema, e.firmeza ? 'firmeza ' + e.firmeza.toLowerCase() : null].filter(Boolean).join(', ')
+        : k === 'co' ? [{ '1': '1 plaza', '1.5': '1,5 plazas', '2': '2 plazas', K: 'King' }[e.tam], { resorte: 'resortes', espuma: 'espuma', hibrido: 'híbrido' }[e.tipo], e.sistema, e.firmeza ? 'firmeza ' + e.firmeza.toLowerCase() : null].filter(Boolean).join(', ')
         : k === 'hm' ? [{ horno: 'Horno empotrable', mesa: 'Horno de mesa', microondas: 'Microondas' }[e.tipo], e.l ? e.l + ' L' : null, e.w ? e.w.toLocaleString('es-CL') + ' W' : null, e.conv ? 'convección' : null].filter(Boolean).join(', ')
         : [e.chip, e.ram ? e.ram + ' GB RAM' : null, e.size ? e.size + '"' : null].filter(Boolean).join(', '),
     href: (window.CMC_FICHAS && CMC_FICHAS[e.id]) || LISTA[k] + '?ver=' + encodeURIComponent(e.id)
@@ -921,7 +921,7 @@ fetch('/assets/portada.json', { cache: 'no-cache' }).then(r => r.json()).catch((
   if (CF.length) $('cuentaCf').innerHTML = `<b>${CF.length}</b> cafeteras de cápsulas, desde <b>${desde(CF)}</b>`;
   if (AC.length) $('cuentaAc').innerHTML = `<b>${AC.length}</b> aires split y portátiles, desde <b>${desde(AC)}</b>`;
   if (CK.length) $('cuentaCk').innerHTML = `<b>${CK.length}</b> cocinas y encimeras, desde <b>${desde(CK)}</b>`;
-  if (CO.length) $('cuentaCo').innerHTML = `<b>${CO.length}</b> colchones de 1,5 plazas, 2 plazas y King, desde <b>${desde(CO)}</b>`;
+  if (CO.length) $('cuentaCo').innerHTML = `<b>${CO.length}</b> colchones de 1 plaza, 1,5 plazas, 2 plazas y King, desde <b>${desde(CO)}</b>`;
   if (HM.length) $('cuentaHm').innerHTML = `<b>${HM.length}</b> hornos y microondas, desde <b>${desde(HM)}</b>`;
   if (TV.length) $('cuentaTv').innerHTML = `<b>${TV.length}</b> televisores de ${Math.min(...TV.map(e => e.raw.size))}" a ${Math.max(...TV.map(e => e.raw.size))}", desde <b>${desde(TV)}</b>`;
 

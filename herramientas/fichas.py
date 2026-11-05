@@ -61,7 +61,7 @@ TIPO_HM = {'horno': 'Horno empotrable', 'mesa': 'Horno de mesa', 'microondas': '
 COMB_CK = {'gas': 'Gas', 'induccion': 'Inducción', 'vitro': 'Vitrocerámica'}
 EF_HM = {'A+++': 15, 'A++': 15, 'A+': 15, 'A': 12, 'B': 9, 'C': 7, 'D': 4, 'E': 2, 'F': 2, 'G': 2}
 TIPO_CO = {'resorte': 'Colchón de resortes', 'espuma': 'Colchón de espuma', 'hibrido': 'Colchón híbrido'}
-TAM_CO = {'1.5': '1,5 plazas', '2': '2 plazas', 'K': 'King'}
+TAM_CO = {'1': '1 plaza', '1.5': '1,5 plazas', '2': '2 plazas', 'K': 'King'}
 EF_AC = {'A+++': 15, 'A++': 15, 'A+': 15, 'A': 12, 'B': 8, 'C': 5, 'D': 2, 'E': 2, 'F': 2, 'G': 2}
 
 
