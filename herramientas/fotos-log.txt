@@ -1,46 +1,47 @@
-Fotos nuevas: 0 · con error: 45 · total en la carpeta: 1173
-ERROR	lv53	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110007281_01/w=600,h=600,fit=pad
+Fotos nuevas: 43 · con error: 3 · total en la carpeta: 1216
+ERROR	lv53	HTTP Error 400: Bad Request	https://cl-cenco-pim-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/prd-cl/product-medias/95f6497b-31de-42c7-8da2-83961438c740/MK4APVOOPI/MK4APVOOPI-1/1792690933970-MK4APVOOPI-1-1.jpg
 ERROR	fr18	HTTP Error 403: Forbidden	https://home.ripley.cl/store/Attachment/WOP/D122/2000402621771/2000402621771_2.jpg
-ERROR	co1	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110050411_1/w=600,h=600,fit=pad
-ERROR	co2	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110055257_1/w=600,h=600,fit=pad
-ERROR	co7	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110056514_1/w=600,h=600,fit=pad
-ERROR	co8	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110043748_1/w=600,h=600,fit=pad
-ERROR	co9	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110034942_1/w=600,h=600,fit=pad
-ERROR	co10	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/139812768_1/w=600,h=600,fit=pad
-ERROR	co11	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/139812764_1/w=600,h=600,fit=pad
-ERROR	co12	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/124279115_1/w=600,h=600,fit=pad
-ERROR	co13	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110051002_1/w=600,h=600,fit=pad
-ERROR	co16	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110050328_1/w=600,h=600,fit=pad
-ERROR	co19	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110056269_1/w=600,h=600,fit=pad
-ERROR	co22	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110041481_1/w=600,h=600,fit=pad
-ERROR	co26	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110030251_1/w=600,h=600,fit=pad
-ERROR	co31	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/113357013_1/w=600,h=600,fit=pad
-ERROR	co32	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/113357974_1/w=600,h=600,fit=pad
-ERROR	co34	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/141477243_1/w=600,h=600,fit=pad
-ERROR	co36	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/141477234_1/w=600,h=600,fit=pad
-ERROR	co37	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/122955111_1/w=600,h=600,fit=pad
-ERROR	co38	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/133258603_1/w=600,h=600,fit=pad
-ERROR	co39	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/132403463_1/w=600,h=600,fit=pad
-ERROR	co40	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110030230_1/w=600,h=600,fit=pad
-ERROR	co41	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110055478_1/w=600,h=600,fit=pad
-ERROR	co44	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110051584_1/w=600,h=600,fit=pad
-ERROR	co46	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110061108_1/w=600,h=600,fit=pad
-ERROR	co47	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110040860_1/w=600,h=600,fit=pad
-ERROR	co49	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/122955610_1/w=600,h=600,fit=pad
-ERROR	co50	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/122955119_1/w=600,h=600,fit=pad
-ERROR	co53	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110055466_1/w=600,h=600,fit=pad
-ERROR	co54	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110042526_1/w=600,h=600,fit=pad
-ERROR	co55	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110054674_1/w=600,h=600,fit=pad
-ERROR	co62	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/139701493_1/w=600,h=600,fit=pad
-ERROR	co66	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110382926_1/w=600,h=600,fit=pad
-ERROR	co73	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/143691876_1/w=600,h=600,fit=pad
-ERROR	co74	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/143649129_1/w=600,h=600,fit=pad
-ERROR	co75	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/146701076_1/w=600,h=600,fit=pad
-ERROR	co76	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/146701078_1/w=600,h=600,fit=pad
-ERROR	co77	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/146701080_1/w=600,h=600,fit=pad
-ERROR	co78	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110030244_1/w=600,h=600,fit=pad
-ERROR	co79	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/112851135_1/w=600,h=600,fit=pad
-ERROR	co80	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/155005663_1/w=600,h=600,fit=pad
-ERROR	co82	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110052364_1/w=600,h=600,fit=pad
-ERROR	co83	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110059110_1/w=600,h=600,fit=pad
-ERROR	co84	HTTP Error 404: Not Found	https://media.falabella.com/falabellaCL/110030229_1/w=600,h=600,fit=pad
+ok	co1	2 KB	media.falabella.com
+ok	co2	1 KB	media.falabella.com
+ok	co7	2 KB	media.falabella.com
+ok	co8	3 KB	media.falabella.com
+ok	co9	2 KB	media.falabella.com
+ok	co10	8 KB	media.falabella.com
+ok	co11	7 KB	media.falabella.com
+ok	co12	6 KB	media.falabella.com
+ok	co13	2 KB	media.falabella.com
+ok	co16	3 KB	media.falabella.com
+ok	co19	4 KB	media.falabella.com
+ok	co22	5 KB	media.falabella.com
+ok	co26	5 KB	media.falabella.com
+ok	co31	3 KB	media.falabella.com
+ok	co32	3 KB	media.falabella.com
+ok	co34	3 KB	media.falabella.com
+ok	co36	2 KB	media.falabella.com
+ok	co37	3 KB	media.falabella.com
+ok	co38	3 KB	media.falabella.com
+ok	co39	3 KB	media.falabella.com
+ok	co40	3 KB	media.falabella.com
+ok	co41	3 KB	media.falabella.com
+ok	co44	4 KB	media.falabella.com
+ok	co46	9 KB	media.falabella.com
+ok	co47	5 KB	media.falabella.com
+ok	co49	6 KB	media.falabella.com
+ok	co50	4 KB	media.falabella.com
+ok	co53	7 KB	media.falabella.com
+ok	co54	8 KB	media.falabella.com
+ok	co55	8 KB	media.falabella.com
+ok	co62	4 KB	media.falabella.com
+ok	co66	6 KB	media.falabella.com
+ok	co73	7 KB	media.falabella.com
+ok	co74	4 KB	media.falabella.com
+ok	co75	3 KB	media.falabella.com
+ok	co76	2 KB	media.falabella.com
+ok	co77	2 KB	media.falabella.com
+ok	co78	5 KB	media.falabella.com
+ok	co79	5 KB	media.falabella.com
+ok	co80	4 KB	media.falabella.com
+ok	co82	4 KB	media.falabella.com
+ok	co83	4 KB	media.falabella.com
+ok	co84	3 KB	media.falabella.com
+ERROR	co81	HTTP Error 400: Bad Request	https://cl-dam-resizer.ecomm.cencosud.com/unsafe/adaptive-fit-in/792x1068/cl/paris/546007999/variant/6821f9e980ce0c5e5d49d2c3/images/4ce9f087-154e-4a28-ad4b-4d8b048d3c54/546007999-0000-001.jpg
