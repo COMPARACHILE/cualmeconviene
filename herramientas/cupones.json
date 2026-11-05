@@ -1,9 +1,8 @@
 {
   "paris": {
     "tag-marketplace-dscto-electrohogar-dp-1": {
-      "c": "CUPON10",
-      "l": "Cupón 10%",
-      "v": "2026-11-05T09:00:00Z"
+      "c": null,
+      "revisado": "05-11-2026: CUPON10 venció y dos fichas ya no muestran cupón"
     },
     "tag-electro-dscto-adicional-tv-dp-1": {
       "c": null,
@@ -12,9 +11,8 @@
     "tag-tecno-dscto-adicional-lenovo-dp-1": {
       "c": "LENOVO10",
       "l": "Cupón 10%",
-      "v": "2026-11-05T03:00:00Z",
-      "sf": 1,
-      "revisado": "03-11-2026: la ficha muestra \"Cupón APP\" sin \"Expira\"; v es solo el límite interno (fin del 4 nov)"
+      "v": "2026-11-10T09:00:00Z",
+      "revisado": "05-11-2026: la ficha muestra \"Expira 10/11 a las 6:00 am\""
     },
     "tag-electro-dscto-adicional-samsung-dp-1": {
       "c": "SAMSUNG10",
@@ -23,11 +21,12 @@
       "revisado": "03-11-2026: en la ficha de escritorio Paris muestra \"Expira el 10/11 6:00 AM\" (09:00Z); en el celular no lo muestra"
     },
     "tag-linea-blanca-dscto-samsung-dp-1": {
-      "c": "SMS10",
-      "l": "Cupón 10%",
-      "v": "2026-11-05T03:00:00Z",
-      "sf": 1,
-      "revisado": "03-11-2026: la ficha muestra \"Cupón APP\" sin \"Expira\"; v es solo el límite interno (fin del 4 nov)"
+      "c": null,
+      "revisado": "05-11-2026: SMS10 venció; la ficha ya no muestra cupón propio (solo relacionados con SAMSUNG10)"
+    },
+    "tag-dormitorio-dscto-camas-dp-1": {
+      "c": null,
+      "revisado": "05-11-2026: la ficha de colchón no muestra cupón"
     }
   }
 }
