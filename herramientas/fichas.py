@@ -1088,6 +1088,124 @@ def bajadas(todos, hist, hoy, urls):
     return baj
 
 
+def _valor(x, nb):
+    """Rendimiento por plata con las fórmulas que ya usa la página: (puntaje, puntaje² / precio, nombre del puntaje).
+    None en las categorías que no tienen puntaje (TV, lavadoras, colchones...): ahí no se inventa uno."""
+    q, k = x['eq'], x['k']
+    if k == 'nb':
+        sc = puntaje_nb(q, potencia(q, nb)[0], nb, 'juegos' if categoria(x) == 'Gamer' else 'estudio')
+        nombre = 'puntaje del puma'
+    elif k in ('ph', 'tb') and q.get('antutu'):
+        sc, nombre = q['antutu'], 'AnTuTu'
+    elif k == 'ac':
+        sc, nombre = puntaje_ac(q), 'puntaje del puma'
+    elif k == 'ck':
+        sc, nombre = puntaje_ck(q), 'puntaje del puma'
+    elif k == 'hm':
+        sc, nombre = puntaje_hm(q), 'puntaje del puma'
+    else:
+        return None
+    return (sc, sc ** 2 / precio_tienda(x), nombre) if sc else None
+
+
+def _clase(x):
+    """Lo que tienen que compartir dos equipos para sugerir uno en el aviso del otro: categoría y tipo,
+    y además el tamaño cuando el tamaño manda (pulgadas del TV, BTU del aire, kilos o litros)."""
+    q, k = x['eq'], x['k']
+    cap = None
+    if k == 'tv':
+        cap = q.get('size')
+    elif k == 'ac':
+        cap = q.get('btu')
+    elif k in ('lv', 'fr', 'hm'):
+        cap = q.get('kg') or q.get('l')
+    # En celulares y tablets la "gama" sale del precio (el rango de precio ya la cubre), pero iPhone/iPad solo con Apple
+    if k in ('ph', 'tb'):
+        return (k, x['marca'] == 'Apple'), cap
+    if k == 'lv':  # una semiautomática no reemplaza a una automática
+        return (k, categoria(x), 'semiautom' in x['nombre'].lower()), cap
+    if k == 'co':  # mismo tamaño (va en la categoría) y mismo tipo: resortes, espuma o híbrido
+        return (k, categoria(x), q.get('tipo')), cap
+    if k == 'ck':  # gas, inducción o vitrocerámica cambian la instalación: no se mezclan
+        return (k, categoria(x), q.get('comb')), cap
+    return (k, categoria(x)), cap
+
+
+def _no_peor(x, y, val):
+    """La alternativa no puede ser peor que el equipo que la persona sigue en lo que se compara en esa categoría."""
+    qx, qy = x['eq'], y['eq']
+    vx, vy = val.get(x['id']), val.get(y['id'])
+    if vx and (not vy or vy[0] < vx[0] * 0.95):
+        return False
+    if x['k'] in ('ph', 'tb'):
+        return (qy.get('gb') or 0) >= (qx.get('gb') or 0)
+    if x['k'] == 'ck':
+        return (qy.get('q') or 0) >= (qx.get('q') or 0)
+    if x['k'] == 'lv':
+        return (qy.get('kg') or 0) >= (qx.get('kg') or 0) * 0.95 and (qy.get('inv') or not qx.get('inv'))
+    if x['k'] in ('fr', 'hm'):
+        return (qy.get('l') or 0) >= (qx.get('l') or 0) * 0.9
+    if x['k'] == 'as':
+        return (not qx.get('mopa') or qy.get('mopa')) and (not qx.get('pa') or (qy.get('pa') or 0) >= qx['pa'] * 0.9)
+    return True
+
+
+def _misma_clase(a, b):
+    (ga, ca), (gb_, cb) = a['_clase'], b['_clase']
+    if ga != gb_:
+        return False
+    if a['k'] == 'tv':
+        return ca == cb
+    if a['k'] == 'ac':
+        return not ca or not cb or abs(ca - cb) <= 2000
+    if a['k'] in ('lv', 'fr', 'hm'):
+        return not ca or not cb or abs(ca - cb) <= max(ca, cb) * 0.25
+    return True
+
+
+def sugeridos(todos, mins, hist, hoy, urls):
+    """Para cada ficha, hasta dos alternativas que el correo de aviso muestra junto al equipo que la persona sigue:
+    - 'min': un equipo de la misma clase y presupuesto (60% a 110% del precio) que hoy está en su mínimo histórico,
+      el que más bajó respecto de su precio habitual (al menos 5%). Dato: [precio habitual, primer día con precio].
+    Ninguna alternativa es peor que el equipo seguido en lo que importa en su categoría (_no_peor).
+    - 'valor': el que más rinde por su precio con la fórmula de la categoría, solo si rinde al menos 15% más por peso
+      que el equipo seguido y no cuesta más de 10% sobre él. Dato: [puntaje de la alternativa, puntaje del seguido, nombre del puntaje].
+    Se calcula aquí y no en el correo para usar las mismas fórmulas que las páginas."""
+    nb = datos_nb()
+    for x in todos:
+        x['_clase'] = _clase(x)
+    vivos = [x for x in todos if x['os'] and not x['eq'].get('refurb')]
+    por_grupo = {}
+    for y in vivos:
+        por_grupo.setdefault(y['_clase'][0], []).append(y)
+    val = {x['id']: _valor(x, nb) for x in vivos}
+    habitual = {}
+    for i in mins:
+        antes = [v for d, v in hist.get(i, {}).items() if d < hoy]
+        habitual[i] = statistics.median(antes) if antes else None
+    out = {}
+    for x in todos:
+        if not x['os']:
+            continue
+        p = precio_tienda(x)
+        pares = [y for y in por_grupo.get(x['_clase'][0], []) if y['id'] != x['id'] and slugify(y['nombre']) != slugify(x['nombre'])
+                 and p * 0.6 <= precio_tienda(y) <= p * 1.10 and _misma_clase(x, y) and _no_peor(x, y, val)]
+        lista = []
+        mm = [y for y in pares if y['id'] in mins and habitual.get(y['id']) and precio_tienda(y) <= habitual[y['id']] * 0.95]
+        if mm:
+            y = max(mm, key=lambda y: (habitual[y['id']] - precio_tienda(y)) / habitual[y['id']])
+            lista.append([urls[y['id']].lstrip('/'), 'min', [int(habitual[y['id']]), mins[y['id']][1].isoformat()]])
+        vx = val.get(x['id'])
+        if vx:
+            vv = [y for y in pares if val.get(y['id']) and val[y['id']][1] >= vx[1] * 1.15 and not (lista and urls[y['id']].lstrip('/') == lista[0][0])]
+            if vv:
+                y = max(vv, key=lambda y: val[y['id']][1])
+                lista.append([urls[y['id']].lstrip('/'), 'valor', [val[y['id']][0], vx[0], vx[2]]])
+        if lista:
+            out[x['id']] = lista
+    return out
+
+
 def ofertas_reales(todos, hist, hoy, urls, min_dias=6):
     """Compara el precio de hoy (sin cupones) con el historial de cada equipo nuevo.
     reales: hoy está en el precio más bajo que hemos visto y al menos 5% bajo su precio habitual (la mediana).
@@ -1851,7 +1969,10 @@ def main():
     # Precio de hoy de cada ficha y bajadas del día, para los avisos por correo (functions/api/revisar-avisos.js).
     # Se ordena por dirección de ficha: así los avisos y comentarios siguen al equipo aunque cambie su id.
     # Los avisos siguen el precio de la tienda: un cupón no manda correos, porque el correo no explica el cupón
+    # El quinto dato son las alternativas que el correo muestra junto al equipo (ver sugeridos()).
+    sug = sugeridos(todos, mins, hist, hoy, urls)
     eqs = {urls[x['id']].lstrip('/'): [precio_tienda(x) if x['os'] else None, x['nombre'], x['id'], TIENDAS[de_tienda(x)['s']][0] if x['os'] else '']
+           + ([sug[x['id']]] if x['id'] in sug else [])
            for x in todos}
     baj = bajadas(todos, hist, hoy, urls)
     av = {'dia': hoy.isoformat(), 'equipos': eqs, 'bajadas': [[b['ficha'], b['antes'], b['ahora']] for b in baj[:12]]}

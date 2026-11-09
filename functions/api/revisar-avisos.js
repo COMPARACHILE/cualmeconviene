@@ -8,7 +8,7 @@ import {
   json, preparar, usuarioActual, esAdmin, catalogo, leerAjuste, proveedor, limiteDiario, enviarCorreo, enlaceBaja,
   hoyChile, ahora, SITIO
 } from '../_comun.js';
-import { correoAviso, correoResumen } from '../_correos.js';
+import { correoAviso, correoResumen, alternativas } from '../_correos.js';
 
 const LOTE = 25;
 const ajuste = (env, clave, valor) =>
@@ -51,9 +51,13 @@ async function revisar(env, request, forzar) {
     porPersona.get(a.usuario).items.push({ clave: a.producto, nombre: e[1] || a.nombre, id: e[2], tienda: e[3], antes: a.precio, ahora: hoy, motivo });
     cambios.push(env.DB.prepare('UPDATE avisos SET precio = ?3, stock = 1, avisado = ?4 WHERE usuario = ?1 AND producto = ?2').bind(a.usuario, a.producto, hoy, dia));
   }
+  const sigue = new Map();
+  for (const a of filas) (sigue.get(a.usuario) || sigue.set(a.usuario, new Set()).get(a.usuario)).add(a.producto);
   for (const [uid, x] of porPersona) {
     const baja = await enlaceBaja(env, uid);
-    const c = correoAviso({ sitio, persona: x.persona, correo: x.correo, items: x.items.slice(0, 12), baja });
+    const items = x.items.slice(0, 12);
+    const extras = alternativas(eqs, items, sigue.get(uid));
+    const c = correoAviso({ sitio, persona: x.persona, correo: x.correo, items, extras, baja });
     cola.push(env.DB.prepare('INSERT INTO correos (usuario, para, tipo, asunto, html, texto, baja, creado) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)')
       .bind(uid, x.correo, 'aviso', c.asunto, c.html, c.texto, baja, t));
   }
