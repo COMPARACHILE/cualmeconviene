@@ -495,7 +495,10 @@ def grafico(hist, hoy_precio, hoy):
     else:
         frase = f'Se mantiene igual desde el {fecha_larga(pts[0][0])}.'
     pct = lambda v: (ys(v) / H * 100)
-    svg = (f'<figure class="graf"><div class="grafZona">'
+    # data-d y data-v: fecha y precio de cada punto, para el puntito que sigue al mouse (cmc.js, "Gráfico de precios")
+    datos = (f' data-d="{",".join(str(d)[:10] for d, _ in pts)}"'
+             f' data-v="{",".join(str(int(v)) for v in vals)}"')
+    svg = (f'<figure class="graf"><div class="grafZona"{datos}>'
            f'<svg viewBox="0 0 {W} {H}" preserveAspectRatio="none" role="img" aria-label="Precio más bajo por día. {e(frase)}">'
            f'<polygon class="area" points="{area}"/><polyline class="lin" points="{linea}"/></svg>'
            f'<span class="ult" style="top:{pct(ultimo):.1f}%"></span></div>'

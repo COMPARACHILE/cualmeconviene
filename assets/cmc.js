@@ -16,6 +16,97 @@
   const cat = document.querySelector('.hd-cats [aria-current]');
   if (cat && cat.parentElement.scrollWidth > cat.parentElement.clientWidth) cat.parentElement.scrollLeft = Math.max(0, cat.offsetLeft - cat.parentElement.offsetLeft - 24);
 
+  /* ---------- Gráfico de precios de la ficha: un puntito sigue la línea con el mouse o el dedo ----------
+     Lee fechas y precios de data-d / data-v (los escribe fichas.py) y la forma de la línea del polyline.
+     Muestra fecha, precio y cuánto más caro o barato estaba que hoy; marca el mínimo. Flechas del teclado también sirven. */
+  const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic'];
+  const DIA = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+  document.querySelectorAll('.grafZona[data-v]').forEach(z => {
+    const lin = z.querySelector('polyline'), svg = z.querySelector('svg');
+    if (!lin || !svg) return;
+    const vb = svg.viewBox.baseVal;
+    const xy = lin.getAttribute('points').trim().split(/\s+/).map(p => p.split(',').map(Number));
+    const vals = z.dataset.v.split(',').map(Number);
+    const dias = z.dataset.d.split(',').map(s => { const [a, m, d] = s.split('-').map(Number); return new Date(a, m - 1, d); });
+    const n = Math.min(xy.length, vals.length, dias.length);
+    if (n < 2) return;
+    const hoy = vals[n - 1], lo = Math.min(...vals.slice(0, n));
+    const iMin = vals.lastIndexOf(lo, n - 1);
+    const px = i => xy[i][0] / vb.width * 100, py = i => xy[i][1] / vb.height * 100;
+
+    // Mínimo siempre marcado (si no es hoy y hubo cambios)
+    if (iMin !== n - 1 && lo < Math.max(...vals.slice(0, n))) {
+      const m = document.createElement('span');
+      m.className = 'gMin'; m.style.left = px(iMin) + '%'; m.style.top = py(iMin) + '%';
+      m.title = 'Precio más bajo: ' + fmt(lo);
+      z.append(m);
+    }
+    const guia = Object.assign(document.createElement('span'), { className: 'gGuia' });
+    const pto = Object.assign(document.createElement('span'), { className: 'gPto' });
+    const tip = Object.assign(document.createElement('span'), { className: 'gTip' });
+    tip.setAttribute('aria-hidden', 'true');
+    const vivo = Object.assign(document.createElement('span'), { className: 'sr-only' });
+    vivo.setAttribute('aria-live', 'polite');
+    vivo.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)';
+    z.append(guia, pto, tip, vivo);
+    z.tabIndex = 0;
+    z.setAttribute('aria-label', 'Historial de precios: usa las flechas para recorrer los días');
+
+    let act = -1, raf = 0;
+    const mostrar = (i, anunciar) => {
+      if (i === act) return;
+      const primera = act < 0;
+      act = i;
+      const d = dias[i], v = vals[i], dif = v - hoy;
+      const x = px(i), y = py(i);
+      z.classList.add('gOn');
+      // Al aparecer no se desliza desde el último punto: llega directo
+      z.classList.toggle('gSalto', primera);
+      guia.style.left = x + '%';
+      pto.style.left = x + '%'; pto.style.top = y + '%';
+      pto.classList.toggle('esMin', v === lo && lo < Math.max(...vals.slice(0, n)));
+      const fecha = `${DIA[d.getDay()]} ${d.getDate()} ${MES[d.getMonth()]}` + (i === n - 1 ? ' · hoy' : '');
+      let nota = '';
+      if (i === n - 1) nota = v === lo && lo < Math.max(...vals.slice(0, n)) ? '<i class="b">El más bajo visto</i>' : '';
+      else if (dif > 0) nota = `<i class="s">${fmt(dif)} más caro que hoy</i>`;
+      else if (dif < 0) nota = `<i class="b">${fmt(-dif)} más barato que hoy</i>`;
+      else nota = '<i>Igual que hoy</i>';
+      if (i !== n - 1 && v === lo && lo < hoy) nota += '<i class="b">El más bajo visto</i>';
+      tip.innerHTML = `<small>${fecha}</small><b>${fmt(v)}</b>${nota}`;
+      // La burbuja va al lado del puntito (derecha, o izquierda en la segunda mitad) para no tapar la línea cercana
+      tip.style.left = x + '%';
+      tip.style.top = Math.max(22, Math.min(78, y)) + '%';
+      tip.classList.toggle('izq', x > 55);
+      if (anunciar) vivo.textContent = `${fecha}: ${fmt(v)}`;
+      if (primera) requestAnimationFrame(() => z.classList.remove('gSalto'));
+    };
+    const ocultar = () => { act = -1; z.classList.remove('gOn'); };
+    const cerca = clientX => {
+      const r = z.getBoundingClientRect();
+      const f = Math.max(0, Math.min(1, (clientX - r.left) / r.width)) * 100;
+      let best = 0, dist = Infinity;
+      for (let i = 0; i < n; i++) { const dd = Math.abs(px(i) - f); if (dd < dist) { dist = dd; best = i; } }
+      return best;
+    };
+    z.addEventListener('pointermove', e => {
+      const cx = e.clientX;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => mostrar(cerca(cx)));
+    });
+    z.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') mostrar(cerca(e.clientX)); });
+    z.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') ocultar(); });
+    // En el celular la burbuja queda al soltar el dedo; se va al tocar fuera del gráfico
+    document.addEventListener('pointerdown', e => { if (!z.contains(e.target)) ocultar(); }, { passive: true });
+    z.addEventListener('keydown', e => {
+      const k = { ArrowLeft: -1, ArrowRight: 1, Home: -n, End: n }[e.key];
+      if (k === undefined) { if (e.key === 'Escape') ocultar(); return; }
+      e.preventDefault();
+      mostrar(Math.max(0, Math.min(n - 1, (act < 0 ? n - 1 : act) + k)), true);
+    });
+    z.addEventListener('focus', () => { if (act < 0 && z.matches(':focus-visible')) mostrar(n - 1, true); });
+    z.addEventListener('blur', ocultar);
+  });
+
   /* ---------- Cupones: copiar el código; en las fichas (páginas fijas) quitar los vencidos ---------- */
   document.addEventListener('click', e => {
     const b = e.target.closest('.cupon[data-cupon]');

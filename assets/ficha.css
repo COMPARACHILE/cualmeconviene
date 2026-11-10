@@ -92,6 +92,32 @@ img { display: block; max-width: 100%; }
 .graf .lin { fill: none; stroke: var(--verde); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 .graf .area { fill: var(--verde); opacity: .08; }
 .graf .ult { position: absolute; right: -6px; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: var(--verde); box-shadow: 0 0 0 4px var(--verde-suave); }
+/* Puntito que sigue la línea (cmc.js). Se desliza de un día al otro; burbuja con fecha, precio y diferencia con hoy */
+.grafZona[data-v] { cursor: crosshair; touch-action: pan-y; outline: none; -webkit-tap-highlight-color: transparent; }
+.grafZona[data-v]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft); border-radius: 8px; }
+.gGuia, .gPto, .gTip { position: absolute; pointer-events: none; opacity: 0; transition: opacity .15s ease; }
+.gOn .gGuia, .gOn .gPto, .gOn .gTip { opacity: 1; }
+.gOn .ult { opacity: .35; }
+.graf .ult { transition: opacity .15s ease; }
+.gGuia { top: -6px; bottom: 0; width: 0; border-left: 1.5px dashed color-mix(in srgb, var(--gris) 55%, transparent); }
+.gPto { width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--verde); border: 2.5px solid var(--blanco);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--verde) 22%, transparent), 0 2px 6px rgba(16, 21, 43, .25); }
+.gPto.esMin { background: var(--amarillo); box-shadow: 0 0 0 5px color-mix(in srgb, var(--amarillo) 40%, transparent), 0 2px 6px rgba(16, 21, 43, .25); }
+.gTip { z-index: 2; display: flex; flex-direction: column; gap: 2px; min-width: 130px; padding: 8px 12px; border-radius: 12px;
+  background: var(--noche); color: #fff; border: 1px solid rgba(255,255,255,.08); font-size: 13px; line-height: 1.25; white-space: nowrap; box-shadow: 0 8px 24px rgba(16, 21, 43, .28);
+  transform: translate(18px, -50%); }
+.gTip.izq { transform: translate(calc(-100% - 18px), -50%); }
+.gTip small { color: #A5AFD6; font-size: 12px; }
+.gTip b { font: 700 1.15rem/1.1 var(--f-display); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.gTip i { font-style: normal; font-size: 12px; color: #D5DBF0; }
+.gTip i.b { color: #7EE2B8; }
+.gTip i.s { color: #FDBA8C; }
+/* Se desliza suave; al aparecer llega directo */
+.gGuia, .gPto, .gTip { transition: opacity .15s ease, left .18s var(--ease-out, ease-out), top .18s var(--ease-out, ease-out); }
+.gSalto .gGuia, .gSalto .gPto, .gSalto .gTip { transition: opacity .15s ease; }
+.gMin { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--blanco);
+  border: 2.5px solid var(--verde); pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .gGuia, .gPto, .gTip { transition: opacity .1s linear; } }
 .graf figcaption { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 10px; font-size: 14px; color: var(--gris); }
 .graf figcaption b { color: var(--tinta); font-family: var(--f-display); font-variant-numeric: tabular-nums; }
 .graf .rango { order: 3; width: 100%; }
