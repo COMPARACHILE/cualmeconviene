@@ -9,16 +9,12 @@
       "revisado": "03-11-2026: TV10 venció y la ficha ya no muestra cupón"
     },
     "tag-tecno-dscto-adicional-lenovo-dp-1": {
-      "c": "LENOVO10",
-      "l": "Cupón 10%",
-      "v": "2026-11-10T09:00:00Z",
-      "revisado": "05-11-2026: la ficha muestra \"Expira 10/11 a las 6:00 am\""
+      "c": null,
+      "revisado": "11-11-2026: LENOVO10 venció el 10/11 y la ficha (Lenovo LOQ) ya no muestra cupón"
     },
     "tag-electro-dscto-adicional-samsung-dp-1": {
-      "c": "SAMSUNG10",
-      "l": "Cupón 10%",
-      "v": "2026-11-10T09:00:00Z",
-      "revisado": "03-11-2026: en la ficha de escritorio Paris muestra \"Expira el 10/11 6:00 AM\" (09:00Z); en el celular no lo muestra"
+      "c": null,
+      "revisado": "11-11-2026: SAMSUNG10 venció el 10/11 y las fichas (Galaxy S25, U8000H 70\") ya no muestran cupón"
     },
     "tag-linea-blanca-dscto-samsung-dp-1": {
       "c": null,
