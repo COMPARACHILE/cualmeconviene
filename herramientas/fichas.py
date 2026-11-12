@@ -1631,7 +1631,7 @@ QUE_COMPRAR = [
     {'slug': 'que-lavadora-comprar', 'k': 'lv', 'picks': picks_lv, 'h1': '¿Qué lavadora comprar en Chile?', 'corto': 'lavadora',
      'intro': 'Antes de comparar marcas, decide el tipo y la capacidad. Después mira el motor y el consumo. Aquí tienes el más barato de cada tipo, con los precios de hoy.',
      'consejos': [('Carga superior o frontal', 'La superior es más barata y fácil de cargar. La frontal gasta menos agua y cuida más la ropa, pero cuesta más.'),
-                  ('Capacidad según cuántos son', '8 a 9 kg para 1 o 2 personas, 10 a 12 kg para familias de 3 o 4 y 15 kg o más para familias grandes.'),
+                  ('Capacidad según cuántos son', '7 a 10 kg para 1 o 2 personas, 11 a 15 kg para familias de 3 o 4 y 16 kg o más para familias de 5 o más.'),
                   ('Motor inverter', 'Es más silencioso, dura más y gasta menos electricidad. Vale la pena si la vas a usar a diario.'),
                   ('Lavadora-secadora', 'Ocupa un solo espacio, pero seca más lento que una secadora aparte. Sirve en departamentos chicos.'),
                   ('Eficiencia energética', 'En la etiqueta, A es la que menos gasta y G la que más. Con A o B ahorras en la cuenta.')],
