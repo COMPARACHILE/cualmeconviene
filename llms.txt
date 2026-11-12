@@ -1,0 +1,67 @@
+# ¿Cuál me conviene?
+
+> Comparador de precios independiente de Chile (cualmeconviene.cl). Revisa cada día el precio del mismo equipo en 18 tiendas y operadoras chilenas, guarda su historial y muestra dónde está más barato hoy. No vende equipos: enlaza a la tienda. Precios en pesos chilenos (CLP), revisados el 12-11-2026.
+
+Cubre 1222 equipos con precio hoy: tecnología (notebooks, celulares, tablets, televisores, consolas) y hogar (lavadoras, aires acondicionados, cocinas, hornos, freidoras de aire, aspiradoras, cafeteras, batidoras, colchones).
+
+Tiendas revisadas: Apple Store, Claro, Dolce Gusto, Easy, Entel, Falabella, Movistar, Nespresso, PCFactory, Paris, Ripley, Sodimac, Tienda HP, Tienda LG, Tienda Samsung, Tienda Sindelen, Tienda Xiaomi, WOM.
+
+## Cómo leer los precios
+
+- Precio más bajo hoy: el menor precio publicado entre las tiendas revisadas. Si exige tarjeta de la tienda o cupón, la página lo dice.
+- Precio habitual: la mediana del precio más bajo de cada día que hemos seguido el equipo, sin cupones.
+- Mínimo histórico: hoy está en su precio más bajo desde que lo seguimos y al menos 3% (y $3.000) bajo su precio habitual.
+- Puntaje del puma: nota de 0 a 100 que solo existe en categorías con una fórmula pública (notebooks, celulares y tablets por rendimiento, aires, cocinas y hornos por características). En televisores, lavadoras, colchones y otras se compara por precio y características, sin puntaje.
+- Cada ficha de equipo (por ejemplo /lavadora/<nombre>) tiene el precio en cada tienda, el historial y la frase "¿Es buen momento para comprar?".
+
+## Categorías
+
+- [Notebooks](https://cualmeconviene.cl/notebooks): 188 equipos con precio hoy
+- [Celulares](https://cualmeconviene.cl/celulares): 187 equipos con precio hoy
+- [Tablets](https://cualmeconviene.cl/tablets): 46 equipos con precio hoy
+- [Televisores](https://cualmeconviene.cl/televisores): 133 equipos con precio hoy
+- [Consolas](https://cualmeconviene.cl/consolas): 11 equipos con precio hoy
+- [Lavadoras y secadoras](https://cualmeconviene.cl/lavadoras): 53 equipos con precio hoy
+- [Aspiradoras](https://cualmeconviene.cl/aspiradoras): 52 equipos con precio hoy
+- [Batidoras](https://cualmeconviene.cl/batidoras): 29 equipos con precio hoy
+- [Cafeteras](https://cualmeconviene.cl/cafeteras): 22 equipos con precio hoy
+- [Freidoras de aire](https://cualmeconviene.cl/freidoras-de-aire): 73 equipos con precio hoy
+- [Aires acondicionados](https://cualmeconviene.cl/aires-acondicionados): 60 equipos con precio hoy
+- [Cocinas y encimeras](https://cualmeconviene.cl/cocinas-y-encimeras): 119 equipos con precio hoy
+- [Hornos y microondas](https://cualmeconviene.cl/hornos-y-microondas): 108 equipos con precio hoy
+- [Colchones](https://cualmeconviene.cl/colchones): 141 equipos con precio hoy
+
+## Guías de compra (se actualizan cada día con los precios del día)
+
+- [¿Qué notebook comprar en Chile?](https://cualmeconviene.cl/guia/que-notebook-comprar)
+- [¿Qué smart TV comprar en Chile?](https://cualmeconviene.cl/guia/que-smart-tv-comprar)
+- [¿Qué celular comprar en Chile?](https://cualmeconviene.cl/guia/que-celular-comprar)
+- [¿Qué consola comprar en Chile?](https://cualmeconviene.cl/guia/que-consola-comprar)
+- [¿Qué lavadora comprar en Chile?](https://cualmeconviene.cl/guia/que-lavadora-comprar)
+- [¿Qué aspiradora robot comprar en Chile?](https://cualmeconviene.cl/guia/que-aspiradora-robot-comprar)
+- [Mejor notebook gamer hasta $1.000.000 en Chile](https://cualmeconviene.cl/guia/mejor-notebook-gamer-hasta-1-millon)
+- [Mejor celular hasta $200.000 en Chile](https://cualmeconviene.cl/guia/mejor-celular-hasta-200-mil)
+- [Mejor celular hasta $400.000 en Chile](https://cualmeconviene.cl/guia/mejor-celular-hasta-400-mil)
+- [Mejor smart TV de 55 pulgadas en Chile](https://cualmeconviene.cl/guia/mejor-smart-tv-55-pulgadas)
+- [Mejor smart TV de 65 pulgadas en Chile](https://cualmeconviene.cl/guia/mejor-smart-tv-65-pulgadas)
+- [Mejor lavadora hasta $250.000 en Chile](https://cualmeconviene.cl/guia/mejor-lavadora-hasta-250-mil)
+- [Mejor aspiradora robot hasta $200.000 en Chile](https://cualmeconviene.cl/guia/mejor-aspiradora-robot-hasta-200-mil)
+- [¿OLED, QLED o Mini LED? Cuál conviene en un smart TV](https://cualmeconviene.cl/guia/oled-qled-o-mini-led)
+- [PS5 o Nintendo Switch 2: cuál conviene comprar](https://cualmeconviene.cl/guia/ps5-o-switch-2)
+- [¿Lavadora-secadora o lavadora y secadora por separado?](https://cualmeconviene.cl/guia/lavadora-secadora-o-por-separado)
+- [¿Qué aire acondicionado comprar para tu pieza?](https://cualmeconviene.cl/guia/que-aire-acondicionado-comprar)
+- [¿Qué freidora de aire comprar en Chile?](https://cualmeconviene.cl/guia/que-freidora-de-aire-comprar)
+- [¿Qué cocina o encimera comprar en Chile?](https://cualmeconviene.cl/guia/que-cocina-o-encimera-comprar)
+- [Mejor notebook para estudiar hasta $500.000](https://cualmeconviene.cl/guia/mejor-notebook-para-estudiar-hasta-500-mil)
+
+## Páginas útiles
+
+- [Bajones de precio de hoy](https://cualmeconviene.cl/bajones): equipos que bajaron de precio desde la última revisión.
+- [Ofertas reales](https://cualmeconviene.cl/ofertas-reales): equipos que hoy están en su precio más bajo y al menos 5% bajo su precio habitual.
+- [Black Friday 2026](https://cualmeconviene.cl/black-friday): fechas (27 al 30 de noviembre) y precios de referencia para comprobar descuentos.
+- [¿Cuántos BTU necesito?](https://cualmeconviene.cl/calculadora-btu)
+- [¿Qué tamaño de TV me sirve?](https://cualmeconviene.cl/calculadora-tamano-tv)
+
+## Opcional
+
+- [Mapa del sitio con todas las fichas](https://cualmeconviene.cl/sitemap.xml)
