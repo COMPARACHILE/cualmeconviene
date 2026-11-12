@@ -1768,7 +1768,7 @@ QUE_COMPRAR += [
 def _tabla(cab, filas, pie=''):
     th = ''.join(f'<th scope="col">{e(c)}</th>' for c in cab)
     tr = ''.join('<tr>' + ''.join(f'<td>{c}</td>' for c in f) + '</tr>' for f in filas)
-    return f'<div class="gTabW"><table class="gTab"><thead><tr>{th}</tr></thead><tbody>{tr}</tbody></table></div>' + (f'<p class="nota">{pie}</p>' if pie else '')
+    return f'<div class="gTabW"><table class="gTab"><thead><tr>{th}</tr></thead><tbody>{tr}</tbody></table></div>' + (f'<p class="gPie">{pie}</p>' if pie else '')
 
 
 def _sel(pares):

@@ -389,4 +389,6 @@ img { display: block; max-width: 100%; }
 .gTab th { font-size: 13px; font-weight: 700; color: var(--gris); background: var(--papel); }
 .gTab tr:last-child td { border-bottom: 0; }
 .gTab td a { font-weight: 700; color: var(--verde); white-space: nowrap; }
-.bloque > p { max-width: 70ch; }
+.bloque > p:not(.nota) { max-width: 70ch; }
+.gPie { margin: 8px 0 0; font-size: 14px; color: var(--gris); max-width: 80ch; }
+.gPie a { color: var(--verde); font-weight: 700; }
