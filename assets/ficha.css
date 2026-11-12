@@ -370,3 +370,23 @@ img { display: block; max-width: 100%; }
 .tabla th, .tabla td { padding: 10px 8px; text-align: right; border-bottom: 1px solid var(--borde); }
 .tabla th:first-child, .tabla td:first-child { text-align: left; }
 .tabla th { font-weight: 700; color: var(--gris); font-size: 13px; }
+
+/* ¿Es buen momento para comprar? (ficha, 12-11-2026) */
+.ver { margin-top: 12px; border: 1px solid var(--borde); border-left: 4px solid var(--gris); border-radius: 14px; padding: 12px 16px; background: var(--blanco); font-size: 15px; }
+.ver p { margin: 0; }
+.ver .verT { font: 800 1rem/1.3 var(--f-display); margin-bottom: 4px; }
+.ver .verN { margin-top: 6px; font-size: 13px; color: var(--gris); }
+.ver a { color: inherit; }
+.ver-1 { border-left-color: var(--verde); background: var(--verde-suave); }
+.ver-1 .verT { color: var(--verde); }
+.ver-3 { border-left-color: var(--mas); }
+.ver-3 .verT { color: var(--mas); }
+
+/* Tablas para decidir en las guías del hogar */
+.gTabW { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0 0; border: 1px solid var(--borde); border-radius: 14px; background: var(--blanco); }
+.gTab { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 520px; }
+.gTab th, .gTab td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--borde); }
+.gTab th { font-size: 13px; font-weight: 700; color: var(--gris); background: var(--papel); }
+.gTab tr:last-child td { border-bottom: 0; }
+.gTab td a { font-weight: 700; color: var(--verde); white-space: nowrap; }
+.bloque > p { max-width: 70ch; }

@@ -506,6 +506,36 @@ def grafico(hist, hoy_precio, hoy):
     return svg, frase
 
 
+
+def veredicto(h, ahora, hoy):
+    """"¿Es buen momento para comprar?": compara el precio de hoy con el habitual (mediana de los días anteriores)
+    y con el más bajo que hemos visto. Devuelve HTML (o '' si no hay precio hoy)."""
+    if not ahora:
+        return ''
+    previos = [v for d, v in h.items() if d < hoy]
+    bf = datetime.date(hoy.year, 11, 27)
+    falta = (bf - hoy).days
+    nota_bf = (f' Faltan {falta} días para el Black Friday (27 al 30 de noviembre): '
+               '<a href="/black-friday">mira los precios de referencia</a>.') if 0 < falta <= 25 else ''
+    if len(previos) < 5:
+        return (f'<div class="ver ver-0"><p class="verT">¿Es buen momento para comprar?</p><p>Llevamos pocos días siguiendo este precio. '
+                f'Activa «Avísame si baja de precio» y te escribimos cuando baje.{nota_bf}</p></div>')
+    med, mn = statistics.median(previos), min(previos)
+    pct = (ahora - med) / med
+    if ahora <= mn and med - ahora >= max(med * 0.03, 3000):
+        c, t, txt = 'ver-1', 'Buen momento: precio más bajo', f'Hoy cuesta {round(-pct * 100)}% menos que su precio habitual ({plata(med)}) y es lo más bajo que hemos visto.'
+        nota_bf = ''
+    elif pct <= -0.05:
+        c, t, txt = 'ver-1', 'Buen precio', f'Hoy cuesta {round(-pct * 100)}% menos que su precio habitual ({plata(med)}). El más bajo que vimos fue {plata(mn)}.'
+        nota_bf = ''
+    elif pct >= 0.05:
+        c, t, txt = 'ver-3', 'Está más caro que lo habitual', (f'Hoy cuesta {round(pct * 100)}% más que su precio habitual ({plata(med)}). '
+                                                              'Si no te urge, activa «Avísame si baja de precio».')
+    else:
+        c, t, txt = 'ver-2', 'Precio normal', f'Está cerca de su precio habitual ({plata(med)}). El más bajo que vimos fue {plata(mn)}.'
+    return (f'<div class="ver {c}"><p class="verT">{t}</p><p>{txt}{nota_bf}</p>'
+            f'<p class="verN">Precio habitual: la mediana del precio más bajo de cada día, en {len(previos)} días revisados, sin cupones.</p></div>')
+
 def cupon(o):
     """Línea del cupón de la oferta (mismo texto que CMC.cupon de assets/cmc-ui.js). cmc.js la quita al vencer."""
     q = o.get('cup')
@@ -607,6 +637,8 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
         {'@type': 'Product', 'name': nombre, 'brand': {'@type': 'Brand', 'name': x['marca']}, 'category': {'nb': 'Notebook', 'ph': 'Celular', 'tb': 'Tablet', 'tv': 'Televisor', 'cs': 'Consola de videojuegos'}.get(x['k']) or categoria(x),
          'description': f'{nombre}: {specs}.', 'url': SITIO + url, **({'image': f_abs} if f_abs else {}),
          **({'offers': {'@type': 'AggregateOffer', 'priceCurrency': 'CLP', 'lowPrice': os_[0]['p'], 'highPrice': os_[-1]['p'], 'offerCount': len(os_),
+                        'offers': [{'@type': 'Offer', 'price': o['p'], 'priceCurrency': 'CLP', 'url': o['url'], 'availability': 'https://schema.org/InStock',
+                                    'seller': {'@type': 'Organization', 'name': TIENDAS[o['s']][0]}} for o in os_],
                         'availability': 'https://schema.org/InStock', **({'itemCondition': 'https://schema.org/RefurbishedCondition'} if q.get('refurb') else {'itemCondition': 'https://schema.org/NewCondition'})}} if os_ else {})},
         {'@type': 'BreadcrumbList', 'itemListElement': [
             {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': SITIO + '/'},
@@ -624,6 +656,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
                   f'<span class="tp">{precio_html(o)}{pago(o)}{etiqueta}</span>'
                   f'<a class="tb" href="{e(o["url"])}" target="_blank" rel="nofollow sponsored noopener" data-id="{("" if x["k"] == "nb" else "c-") + x["id"]}" data-store="{o["s"]}">Ver en {nom}</a></li>')
     svg, frase = grafico(hist.get(x['id'], {}), precio_tienda(x) if os_ else None, hoy)
+    ver = veredicto(hist.get(x['id'], {}), precio_tienda(x) if os_ else None, hoy)
     if os_ and os_[0].get('p0'):
         frase += ' El gráfico no incluye cupones.'
     # Parecidos: misma familia y precio cercano
@@ -705,6 +738,7 @@ def pagina(x, url, fotos, hist, todos, urls, hoy_txt, hoy, mins=None):
       <p class="sp">{e(specs)}</p>
       {ref_txt}
       {mejor}
+      {ver}
     </div>
   </div>
   <section class="bloque" aria-labelledby="t1">
@@ -1726,6 +1760,272 @@ QUE_COMPRAR += [
 ]
 
 
+
+# ---------------- Guías del hogar (12-11-2026) ----------------
+# Aires, lavadoras, freidoras y cocinas: además de los equipos, cada guía trae una tabla para decidir ('extra'),
+# armada con los precios del día. Sin puntajes inventados: aires y cocinas usan el puntaje del puma de su página.
+
+def _tabla(cab, filas, pie=''):
+    th = ''.join(f'<th scope="col">{e(c)}</th>' for c in cab)
+    tr = ''.join('<tr>' + ''.join(f'<td>{c}</td>' for c in f) + '</tr>' for f in filas)
+    return f'<div class="gTabW"><table class="gTab"><thead><tr>{th}</tr></thead><tbody>{tr}</tbody></table></div>' + (f'<p class="nota">{pie}</p>' if pie else '')
+
+
+def _sel(pares):
+    """Quita los vacíos y los equipos repetidos de una lista [(etiqueta, equipo)]."""
+    out, vistos = [], set()
+    for et, x in pares:
+        if x and x['id'] not in vistos:
+            vistos.add(x['id']); out.append((et, x))
+    return out
+
+
+def _med(xs):
+    return int(statistics.median(xs)) if xs else None
+
+
+def _desde(x, urls):
+    return f'<a href="{urls[x["id"]]}">{plata(_p(x))}</a>' if x else '—'
+
+
+# Aires acondicionados: grupos por tamaño de pieza. Metros: misma fórmula que /calculadora-btu
+# (600 BTU por m², 2 personas, sin equipos que calienten; x1,1 con sol normal y x1,2 con mucho sol).
+GRUPOS_AC = [('9.000 BTU', 'pieza o dormitorio', 0, 10000), ('12.000 BTU', 'pieza grande o living chico', 10000, 14500),
+             ('18.000 BTU', 'living o comedor', 14500, 20000), ('22.000 a 24.000 BTU', 'living grande o espacio abierto', 20000, 30000)]
+
+
+def _m2(btu_, factor):
+    return int(btu_ / (600 * factor))
+
+
+def _rango_m2(a, b, factor):
+    """Metros cuadrados que cubre el tamaño nominal del grupo (9.000, 12.000, 18.000 o 24.000 BTU), desde donde termina el anterior."""
+    nom = {10000: 9000, 14500: 12000, 20000: 18000, 30000: 24000}
+    hi = _m2(nom[b], factor)
+    return f'hasta {hi} m²' if not a else f'{_m2(nom[a], factor) + 1} a {hi} m²'
+
+
+def _ac_valor(x):
+    return puntaje_ac(x['eq']) * x['eq']['btu'] / _p(x)
+
+
+def picks_ac(todos):
+    ac = _nuevos(todos, 'ac')
+    sp = [x for x in ac if x['eq'].get('tipo') == 'split']
+    g = []
+    for t, uso, a, b in GRUPOS_AC:
+        xs = [x for x in sp if a < x['eq']['btu'] <= b]
+        pares = _sel([('El que más conviene: mejor puntaje del puma por su precio', max(xs, key=_ac_valor, default=None)),
+                      ('El split inverter más barato', _barato([x for x in xs if x['eq'].get('inv')])),
+                      ('El más barato con inverter y Wi-Fi (lo controlas desde el celular)', _barato([x for x in xs if x['eq'].get('inv') and x['eq'].get('wifi')]))])
+        if pares:
+            g.append((f'{t}: {uso}, {_rango_m2(a, b, 1.1)}', pares))
+    pt = [x for x in ac if x['eq'].get('tipo') == 'portatil']
+    pares = _sel([('El portátil más barato', _barato(pt)), ('El portátil inverter más barato', _barato([x for x in pt if x['eq'].get('inv')])),
+                  ('El portátil más barato de 12.000 BTU o más', _barato([x for x in pt if x['eq']['btu'] >= 12000]))])
+    if pares:
+        g.append(('Portátiles: sin instalación, para arriendos', pares))
+    return g
+
+
+def extra_ac(todos, urls):
+    ac = _nuevos(todos, 'ac')
+    sp = [x for x in ac if x['eq'].get('tipo') == 'split' and x['eq'].get('inv')]
+    filas = []
+    for t, uso, a, b in GRUPOS_AC:
+        filas.append([f'<b>{e(t)}</b>', e(uso), _rango_m2(a, b, 1.1), _rango_m2(a, b, 1.2),
+                      _desde(_barato([x for x in sp if a < x['eq']['btu'] <= b]), urls)])
+    h = ('<section class="bloque"><h2>¿Cuántos BTU necesita tu pieza?</h2>'
+         '<p>Mide el largo y el ancho de la pieza y multiplícalos: ese número son los metros cuadrados. Busca tu fila:</p>'
+         + _tabla(['Potencia', 'Para', 'Con sol normal', 'Con mucho sol o último piso', 'Split inverter desde'], filas,
+                  'Cuenta 2 personas y techo de 2,4 m. Si son más personas, hay computador o cocina en el mismo ambiente, '
+                  'o el techo es más alto, sube un tamaño. Para un cálculo exacto usa la <a href="/calculadora-btu">calculadora de BTU</a>. '
+                  'Un equipo más grande de lo necesario no enfría mejor: prende y apaga más y gasta más.')
+         + '</section>')
+    s12 = [_p(x) for x in ac if x['eq'].get('tipo') == 'split' and 10000 < x['eq']['btu'] <= 14500]
+    p12 = [_p(x) for x in ac if x['eq'].get('tipo') == 'portatil' and 10000 < x['eq']['btu'] <= 14500]
+    if s12 and p12:
+        ms, mp = _med(s12), _med(p12)
+        comp = ('cuesta más que' if mp > ms else 'cuesta casi lo mismo que' if mp >= ms * 0.9 else 'cuesta menos que')
+        h += ('<section class="bloque"><h2>Split o portátil: lo que cuesta de verdad</h2>'
+              + _tabla(['', 'Split (muro)', 'Portátil'],
+                       [['Precio típico hoy, 12.000 BTU (mediana)', plata(ms), plata(mp)],
+                        ['Instalación', 'Aprox. $70.000 a $120.000', 'No necesita: va en la ventana'],
+                        ['Ruido en la pieza', 'Bajo: el compresor queda afuera', 'Alto: el compresor está adentro'],
+                        ['Consumo de luz', 'Menor, sobre todo si es inverter', 'Mayor para enfriar lo mismo'],
+                        ['Sirve si arriendas', 'Necesitas permiso para perforar el muro', 'Sí, te lo llevas al cambiarte']],
+                       'Instalación: rango referencial de instaladores en Chile; sube si la unidad exterior va lejos, en altura o necesita más cañería.')
+              + f'<p>Hoy un portátil de 12.000 BTU {comp} un split del mismo tamaño. Si la casa es tuya y lo vas a usar todos los veranos, '
+                'el split termina siendo la mejor compra aun pagando la instalación. El portátil conviene si arriendas o lo necesitas solo unas semanas.</p></section>')
+    return h
+
+
+# Lavadoras: grupos por cuántos viven en la casa
+GRUPOS_LV = [('1 o 2 personas: 7 a 10 kg', 0, 10.5), ('3 o 4 personas: 11 a 15 kg', 10.5, 15.5), ('5 personas o más, o lavas frazadas: 16 kg o más', 15.5, 99)]
+
+
+def picks_lv2(todos):
+    lv = [x for x in _nuevos(todos, 'lv') if x['eq'].get('kg') and 'semiautom' not in x['nombre'].lower()]
+    g = []
+    for t, a, b in GRUPOS_LV:
+        xs = [x for x in lv if x['eq']['tipo'] == 'lavadora' and a < x['eq']['kg'] <= b]
+        pares = _sel([('La más barata', _barato(xs)), ('La más barata con motor inverter', _barato([x for x in xs if x['eq'].get('inv')])),
+                      ('La que más kilos lava por cada peso', max(xs, key=lambda x: (x['eq']['kg'] / _p(x)), default=None)),
+                      ('La más barata de carga frontal', _barato([x for x in xs if x['eq'].get('carga') == 'frontal']))])
+        if pares:
+            g.append((t, pares))
+    ls = [x for x in lv if x['eq']['tipo'] == 'lavaseca']
+    pares = _sel([('La lavadora-secadora más barata', _barato(ls)),
+                  ('La que más kilos lava por cada peso', max(ls, key=lambda x: x['eq']['kg'] / _p(x), default=None))])
+    if pares:
+        g.append(('Lavadoras-secadoras (lavan y secan en el mismo equipo)', pares))
+    return g
+
+
+def extra_lv(todos, urls):
+    lv = [x for x in _nuevos(todos, 'lv') if x['eq'].get('kg') and x['eq']['tipo'] == 'lavadora' and 'semiautom' not in x['nombre'].lower()]
+    filas = []
+    for t, a, b in GRUPOS_LV:
+        xs = [x for x in lv if a < x['eq']['kg'] <= b]
+        filas.append([f'<b>{e(t.split(":")[0])}</b>', e(t.split(': ')[1]), _desde(_barato([x for x in xs if x['eq'].get('carga') == 'superior']), urls),
+                      _desde(_barato([x for x in xs if x['eq'].get('carga') == 'frontal']), urls)])
+    h = ('<section class="bloque"><h2>¿Cuántos kilos necesitas?</h2>'
+         + _tabla(['Hogar', 'Capacidad', 'Carga superior desde', 'Carga frontal desde'], filas,
+                  'Los kilos son de ropa seca. Si lavas frazadas o plumones en casa, sube un tamaño.') + '</section>')
+    pk = lambda xs: _med([_p(x) / x['eq']['kg'] for x in xs])
+    sup0 = pk([x for x in lv if x['eq'].get('carga') == 'superior' and not x['eq'].get('inv')])
+    sup1 = pk([x for x in lv if x['eq'].get('carga') == 'superior' and x['eq'].get('inv')])
+    fro = pk([x for x in lv if x['eq'].get('carga') == 'frontal'])
+    if sup0 and sup1:
+        filas = [['Carga superior sin inverter', plata(sup0), '—'], ['Carga superior con inverter', plata(sup1), f'{round((sup1 / sup0 - 1) * 100):+d}%']]
+        if fro:
+            filas.append(['Carga frontal (casi todas inverter)', plata(fro), f'{round((fro / sup0 - 1) * 100):+d}%'])
+        h += ('<section class="bloque"><h2>¿Cuánto cuesta cada mejora?</h2>'
+              '<p>Para comparar lavadoras de distinto tamaño, mira el precio por cada kilo de capacidad. Esto cuesta hoy cada tipo (mediana de las que revisamos):</p>'
+              + _tabla(['Tipo', 'Precio por kilo', 'Diferencia'], filas,
+                       'El motor inverter es más silencioso y gasta menos luz; la carga frontal gasta menos agua y cuida más la ropa. '
+                       'Si la usas casi a diario, la mejora vale más la pena.') + '</section>')
+    return h
+
+
+# Freidoras de aire
+GRUPOS_FR = [('1 o 2 personas: hasta 4,5 litros', 0, 4.5), ('3 o 4 personas: 5 a 7 litros', 4.5, 7.4), ('Familia o para cocinar de todo: más de 7 litros', 7.4, 99)]
+
+
+def picks_fr(todos):
+    fr = [x for x in _nuevos(todos, 'fr') if x['eq'].get('l')]
+    g = []
+    for t, a, b in GRUPOS_FR:
+        xs = [x for x in fr if x['eq'].get('tipo') == 'Canasta' and a < x['eq']['l'] <= b]
+        pares = _sel([('La más barata', _barato(xs)), ('La más barata con panel digital', _barato([x for x in xs if x['eq'].get('dig')])),
+                      ('La que más litros da por cada peso', max(xs, key=lambda x: x['eq']['l'] / _p(x), default=None))])
+        if pares:
+            g.append((t, pares))
+    pares = _sel([('Doble canasta más barata (dos comidas a la vez)', _barato([x for x in fr if x['eq'].get('tipo') == 'Doble canasta'])),
+                  ('Tipo horno más barata (con bandejas y vista)', _barato([x for x in fr if x['eq'].get('tipo') == 'Horno']))])
+    if pares:
+        g.append(('Otros formatos', pares))
+    return g
+
+
+def extra_fr(todos, urls):
+    fr = [x for x in _nuevos(todos, 'fr') if x['eq'].get('l')]
+    filas = [[f'<b>{e(t.split(":")[0])}</b>', e(t.split(': ')[1]), _desde(_barato([x for x in fr if x['eq'].get('tipo') == 'Canasta' and a < x['eq']['l'] <= b]), urls),
+              plata(_med([_p(x) for x in fr if x['eq'].get('tipo') == 'Canasta' and a < x['eq']['l'] <= b]) or 0)] for t, a, b in GRUPOS_FR]
+    return ('<section class="bloque"><h2>¿De qué tamaño?</h2>'
+            + _tabla(['Hogar', 'Capacidad', 'Desde', 'Precio típico'], filas,
+                     'Los litros son de la canasta. Una papa frita sale crujiente cuando no se amontona: si cocinas para más gente de la que cabe, '
+                     'tendrás que hacer dos tandas.') + '</section>')
+
+
+# Cocinas y encimeras
+GRUPOS_CK = [('Encimeras a gas', lambda q: q['tipo'] == 'encimera' and q.get('comb') == 'gas'),
+             ('Encimeras vitrocerámicas (eléctricas)', lambda q: q['tipo'] == 'encimera' and q.get('comb') == 'vitro'),
+             ('Encimeras de inducción', lambda q: q['tipo'] == 'encimera' and q.get('comb') == 'induccion'),
+             ('Cocinas con horno', lambda q: q['tipo'] == 'cocina')]
+
+
+def picks_ck(todos):
+    ck = _nuevos(todos, 'ck')
+    g = []
+    for t, f in GRUPOS_CK:
+        xs = [x for x in ck if f(x['eq'])]
+        pares = _sel([('La que más conviene: mejor puntaje del puma por su precio', max(xs, key=lambda x: puntaje_ck(x['eq']) ** 2 / _p(x), default=None)),
+                      ('La más barata', _barato(xs)), ('La de 4 platos o más más barata', _barato([x for x in xs if (x['eq'].get('q') or 0) >= 4]))])
+        if pares:
+            g.append((t, pares))
+    return g
+
+
+def extra_ck(todos, urls):
+    ck = _nuevos(todos, 'ck')
+    uso = {'Encimeras a gas': ('Cocción rápida y control fino de la llama', 'Balón o red de gas. Confirma si es gas licuado o natural'),
+           'Encimeras vitrocerámicas (eléctricas)': ('Fácil de limpiar, sirve cualquier olla plana', 'Enchufe o circuito eléctrico propio; calienta más lento'),
+           'Encimeras de inducción': ('La más rápida y segura: la superficie casi no se calienta', 'Ollas con base magnética y circuito eléctrico propio'),
+           'Cocinas con horno': ('Todo en un mueble, sin obras', 'Espacio de 50 a 60 cm de ancho y gas para quemadores y horno')}
+    filas = []
+    for t, f in GRUPOS_CK:
+        xs = [x for x in ck if f(x['eq'])]
+        filas.append([f'<b>{e(t)}</b>', e(uso[t][0]), e(uso[t][1]), _desde(_barato(xs), urls), plata(_med([_p(x) for x in xs]) or 0)])
+    return ('<section class="bloque"><h2>Gas, vitrocerámica o inducción</h2>'
+            + _tabla(['Tipo', 'Lo mejor', 'Qué necesitas', 'Desde', 'Precio típico'], filas,
+                     'Prueba rápida para saber si tus ollas sirven en inducción: si un imán se pega a la base, funcionan. '
+                     'Antes de comprar una encimera, mide el hueco del mueble: el ancho para empotrar viene en la ficha de cada equipo.') + '</section>')
+
+
+QUE_COMPRAR += [
+    {'slug': 'que-aire-acondicionado-comprar', 'k': 'ac', 'picks': picks_ac, 'extra': extra_ac,
+     'h1': '¿Qué aire acondicionado comprar para tu pieza?', 'corto': 'aire acondicionado',
+     'intro': 'Primero calcula cuántos BTU necesita tu pieza, después decide entre split y portátil, y recién ahí compara marcas. '
+              'Aquí tienes los tres pasos y el que más conviene de cada tamaño con los precios de hoy.',
+     'consejos': [('Tamaño (BTU) según los metros', 'Hasta 13 m² basta con 9.000 BTU; de 14 a 18 m², 12.000 BTU; de 19 a 27 m², 18.000 BTU. Si le da mucho sol o es el último piso, sube un tamaño.'),
+                  ('Inverter, casi siempre', 'Un equipo inverter baja su potencia en vez de prender y apagar. Gasta menos luz, hace menos ruido y mantiene la temperatura pareja.'),
+                  ('Frío y calor', 'Casi todos los split que se venden enfrían y calientan. En invierno son una de las formas más baratas de calefaccionar una pieza con electricidad.'),
+                  ('Split o portátil', 'El split se instala en el muro y es más silencioso y eficiente. El portátil no necesita instalación, pero hace más ruido y gasta más.'),
+                  ('Suma la instalación', 'Un split necesita instalador: calcula entre $70.000 y $120.000 más, según la distancia y la altura de la unidad exterior.'),
+                  ('Etiqueta de eficiencia', 'En la etiqueta energética, A o A+ es lo que menos gasta. Muchos equipos traen A; si la tienda no la informa, pregúntala.')],
+     'preguntas': [('¿Cuántos BTU necesito para una pieza de 12 m²?', 'Para 12 m² con sol normal basta un equipo de 9.000 BTU. Si la pieza es muy soleada, está en el último piso o hay computador encendido todo el día, conviene uno de 12.000 BTU.'),
+                   ('¿Cuánto gasta un aire acondicionado al mes?', 'Depende de las horas de uso y del precio de la luz en tu comuna. Como referencia, un equipo de 12.000 BTU usado varias horas al día en verano puede sumar decenas de miles de pesos a la cuenta. Un inverter con etiqueta A gasta menos que uno normal, y cada grado más alto en el control ahorra.'),
+                   ('¿Vale la pena un aire portátil?', 'Solo si arriendas o lo necesitas pocas semanas. Hoy un portátil cuesta casi lo mismo o más que un split del mismo tamaño, hace más ruido y gasta más luz.'),
+                   ('¿Sirve para calefacción en invierno?', 'Sí, si es de frío y calor. Un split inverter calienta una pieza con menos electricidad que una estufa eléctrica, aunque rinde menos en días bajo cero.'),
+                   ('¿Qué incluye la instalación?', 'Suele incluir la perforación del muro, unos 3 metros de cañería, el soporte de la unidad exterior y la puesta en marcha. Si se necesitan más metros o trabajo en altura, cobran aparte.')]},
+    {'slug': 'que-freidora-de-aire-comprar', 'k': 'fr', 'picks': picks_fr, 'extra': extra_fr,
+     'h1': '¿Qué freidora de aire comprar en Chile?', 'corto': 'freidora de aire',
+     'intro': 'La capacidad es lo que más importa: una freidora chica obliga a cocinar en tandas. Aquí tienes qué tamaño necesitas y la que más conviene de cada uno, con los precios de hoy.',
+     'consejos': [('Capacidad según cuántos son', 'Hasta 4,5 litros para 1 o 2 personas, 5 a 7 litros para 3 o 4, y más de 7 litros para familias o para cocinar un pollo entero.'),
+                  ('Canasta, doble canasta u horno', 'La de canasta es la más común y fácil de limpiar. La de doble canasta cocina dos cosas a la vez. La tipo horno trae bandejas y deja ver la comida.'),
+                  ('Panel digital o perillas', 'El panel digital trae programas listos y es más preciso. Las de perillas son más baratas y igual de buenas para lo básico.'),
+                  ('Potencia', 'Entre 1.400 y 1.800 W es lo normal. Más potencia calienta más rápido, pero revisa que tu enchufe no comparta circuito con el hervidor o el microondas.'),
+                  ('Espacio en la cocina', 'Las grandes ocupan bastante mesón y necesitan unos centímetros libres atrás para que salga el aire caliente.')],
+     'preguntas': [('¿Qué tamaño de freidora de aire necesito para 4 personas?', 'Entre 5 y 7 litros. Con 4 litros alcanza para dos porciones de papas fritas; para cuatro tendrías que hacer dos tandas.'),
+                   ('¿Gasta mucha luz una freidora de aire?', 'Poco: una de 1.500 W usada 20 minutos consume alrededor de medio kWh. Gasta menos que encender el horno eléctrico para lo mismo.'),
+                   ('¿Conviene la de doble canasta?', 'Si cocinas proteína y acompañamiento al mismo tiempo, sí. Si cocinas una sola cosa, una de canasta grande rinde igual y cuesta menos.')]},
+    {'slug': 'que-cocina-o-encimera-comprar', 'k': 'ck', 'picks': picks_ck, 'extra': extra_ck,
+     'h1': '¿Qué cocina o encimera comprar en Chile?', 'corto': 'cocina o encimera',
+     'intro': 'Lo primero es decidir entre gas, vitrocerámica e inducción, porque cambia lo que necesitas en tu casa. Aquí tienes cómo elegir y la que más conviene de cada tipo, con los precios de hoy.',
+     'consejos': [('Gas, vitro o inducción', 'La de gas es la más barata y rápida de instalar. La vitrocerámica se limpia fácil. La inducción es la más rápida y segura, pero pide ollas magnéticas y un circuito eléctrico propio.'),
+                  ('Gas licuado o natural', 'Una encimera a gas viene preparada para un tipo. Confirma si en tu casa hay balón (licuado) o red (natural) antes de comprar.'),
+                  ('Cuántos platos', 'Cuatro platos alcanzan para casi todas las familias. Cinco sirven si cocinas mucho o tienes ollas grandes.'),
+                  ('Válvula de seguridad', 'Corta el gas si la llama se apaga. Es la característica de seguridad más importante en una encimera a gas.'),
+                  ('Mide el hueco', 'Las encimeras se empotran: revisa el ancho y el largo del corte del mueble antes de elegir.')],
+     'preguntas': [('¿Qué es mejor, inducción o vitrocerámica?', 'La inducción calienta más rápido, gasta menos y la superficie casi no se calienta, pero necesita ollas magnéticas. La vitrocerámica acepta cualquier olla plana y cuesta menos.'),
+                   ('¿Qué necesito para instalar una encimera de inducción?', 'Un circuito eléctrico propio con su protección en el tablero, porque consume mucho al usar varias zonas. Pide a un electricista que lo revise antes.'),
+                   ('¿Cocina con horno o encimera y horno por separado?', 'La cocina con horno es más barata y no necesita obras. La encimera con horno empotrado ocupa mejor el espacio y se ve integrada, pero cuesta más e implica muebles a medida.')]},
+]
+
+# La guía de lavadoras se arma por cuántos viven en la casa y suma la tabla de kilos y de cuánto cuesta cada mejora
+_lv = next(c for c in QUE_COMPRAR if c['slug'] == 'que-lavadora-comprar')
+_lv.update({
+    'picks': picks_lv2, 'extra': extra_lv,
+    'intro': 'Antes de comparar marcas, decide cuántos kilos necesitas según cuántos viven en tu casa. Después elige entre carga superior y frontal, '
+             'y mira si vale la pena pagar por el motor inverter. Aquí tienes los tres pasos y la que más conviene en cada caso, con los precios de hoy.',
+    'consejos': _lv['consejos'] + [('Medidas y lugar', 'Mide el espacio con la puerta o tapa abierta. Las de carga superior necesitan altura libre arriba; las frontales, espacio adelante.'),
+                                   ('Programas que sí usarás', 'Rápido, delicado, ropa de cama y enjuague extra cubren casi todo. No pagues más por programas que no vas a usar.')],
+    'preguntas': _lv['preguntas'] + [('¿Cuántos kilos de lavadora necesito para 4 personas?', 'Entre 11 y 15 kg. Si lavas frazadas o plumones en casa, apunta a 15 kg o más.'),
+                                     ('¿Vale la pena el motor inverter?', 'Si lavas casi todos los días, sí: es más silencioso, gasta menos luz y suele tener más garantía en el motor. Hoy cuesta algo más por kilo que uno normal.'),
+                                     ('¿Carga superior o frontal?', 'La superior es más barata y cómoda para cargar sin agacharse. La frontal gasta menos agua, centrifuga mejor y cuida más la ropa, y puede ir bajo el mesón.')]})
+
+
 def _cabecera(h, lista_slug, tipo):
     """Las guías nuevas parten del HTML de la guía de notebooks: ajusta buscador y menú a la categoría de cada una (tipo=None: sin categoría)."""
     t = tipo.lower() if tipo else 'equipos'
@@ -1762,6 +2062,7 @@ def pagina_que_comprar(base, c, todos, urls, fotos, hoy_txt, hoy):
     otras = ''.join(f'<li><a href="/guia/{o["slug"]}">{e(o["h1"])}</a></li>' for o in QUE_COMPRAR if o['slug'] != c['slug'])
     cuerpo = (f'<p class="mc">Guía del puma · Actualizada el {fecha_larga(hoy)} de {hoy.year}</p><h1>{e(c["h1"])}</h1><p class="sp">{e(c["intro"])}</p>'
               f'<section class="bloque"><h2>Qué mirar antes de comprar</h2><ul class="gRaz">{consejos}</ul></section>'
+              + (c['extra'](todos, urls) if c.get('extra') else '')
               + secciones
               + (f'<section class="bloque"><h2>Preguntas frecuentes</h2>{preguntas}</section>' if preguntas else '')
               + f'<section class="bloque"><h2>Cómo armamos esta guía</h2><p class="nota">Los equipos salen de las {len(nuevos)} opciones nuevas que hoy revisamos en las tiendas de Chile. Mostramos el precio más bajo publicado en cada una, que a veces exige tarjeta de la tienda o cupón. No es una prueba de laboratorio ni asesoría profesional: confirma siempre el precio y el stock en la tienda antes de pagar. Precios revisados el {e(hoy_txt)}.</p>'
@@ -1994,6 +2295,33 @@ def main():
     filas += [f'  <url><loc>{SITIO}{urls[x["id"]]}</loc><lastmod>{lm}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>' for x in todos if x['os']]
     open(os.path.join(RAIZ, 'sitemap.xml'), 'w', encoding='utf-8').write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + '\n'.join(filas) + '\n</urlset>\n')
+    # llms.txt: resumen del sitio para asistentes de IA (ChatGPT, Claude, Gemini, Perplexity). Formato de llmstxt.org.
+    tiendas_txt = ', '.join(sorted({TIENDAS[o['s']][0] for x in todos for o in x['os']}))
+    cats_txt = '\n'.join(f'- [{c[0]}]({SITIO}/{c[1]}): {sum(1 for x in todos if x["k"] == k and x["os"])} equipos con precio hoy'
+                         for k, c in CATS.items())
+    guias_txt = '\n'.join([f'- [{c["h1"]}]({SITIO}/guia/{c["slug"]})' for c in QUE_COMPRAR] + [f'- [{g["titulo"]}]({SITIO}/guia/{g["slug"]})' for g in GUIAS])
+    llms = (f'# ¿Cuál me conviene?\n\n'
+            f'> Comparador de precios independiente de Chile (cualmeconviene.cl). Revisa cada día el precio del mismo equipo en '
+            f'{len({o["s"] for x in todos for o in x["os"]})} tiendas y operadoras chilenas, guarda su historial y muestra dónde está más barato hoy. '
+            f'No vende equipos: enlaza a la tienda. Precios en pesos chilenos (CLP), revisados el {hoy_txt}.\n\n'
+            f'Cubre {sum(1 for x in todos if x["os"])} equipos con precio hoy: tecnología (notebooks, celulares, tablets, televisores, consolas) '
+            f'y hogar (lavadoras, aires acondicionados, cocinas, hornos, freidoras de aire, aspiradoras, cafeteras, batidoras, colchones).\n\n'
+            f'Tiendas revisadas: {tiendas_txt}.\n\n'
+            '## Cómo leer los precios\n\n'
+            '- Precio más bajo hoy: el menor precio publicado entre las tiendas revisadas. Si exige tarjeta de la tienda o cupón, la página lo dice.\n'
+            '- Precio habitual: la mediana del precio más bajo de cada día que hemos seguido el equipo, sin cupones.\n'
+            '- Mínimo histórico: hoy está en su precio más bajo desde que lo seguimos y al menos 3% (y $3.000) bajo su precio habitual.\n'
+            '- Puntaje del puma: nota de 0 a 100 que solo existe en categorías con una fórmula pública (notebooks, celulares y tablets por rendimiento, aires, cocinas y hornos por características). En televisores, lavadoras, colchones y otras se compara por precio y características, sin puntaje.\n'
+            '- Cada ficha de equipo (por ejemplo /lavadora/<nombre>) tiene el precio en cada tienda, el historial y la frase "¿Es buen momento para comprar?".\n\n'
+            f'## Categorías\n\n{cats_txt}\n\n'
+            f'## Guías de compra (se actualizan cada día con los precios del día)\n\n{guias_txt}\n\n'
+            '## Páginas útiles\n\n'
+            f'- [Bajones de precio de hoy]({SITIO}/bajones): equipos que bajaron de precio desde la última revisión.\n'
+            f'- [Ofertas reales]({SITIO}/ofertas-reales): equipos que hoy están en su precio más bajo y al menos 5% bajo su precio habitual.\n'
+            f'- [Black Friday 2026]({SITIO}/black-friday): fechas (27 al 30 de noviembre) y precios de referencia para comprobar descuentos.\n'
+            + ''.join(f'- [{t}]({SITIO}{u})\n' for _, u, t in CALCULADORAS)
+            + f'\n## Opcional\n\n- [Mapa del sitio con todas las fichas]({SITIO}/sitemap.xml)\n')
+    open(os.path.join(RAIZ, 'llms.txt'), 'w', encoding='utf-8').write(llms)
     print(f'Fichas: {len(todos)} equipos, {escritas} páginas nuevas o cambiadas. Imágenes para compartir nuevas: {n_og}. Historial: {len(hist)} equipos con datos. Bajadas del día: {len(baj)}. Mínimos históricos: {len(mins)}.')
 
 
