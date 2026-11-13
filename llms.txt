@@ -1,8 +1,8 @@
 # ¿Cuál me conviene?
 
-> Comparador de precios independiente de Chile (cualmeconviene.cl). Revisa cada día el precio del mismo equipo en 18 tiendas y operadoras chilenas, guarda su historial y muestra dónde está más barato hoy. No vende equipos: enlaza a la tienda. Precios en pesos chilenos (CLP), revisados el 12-11-2026.
+> Comparador de precios independiente de Chile (cualmeconviene.cl). Revisa cada día el precio del mismo equipo en 18 tiendas y operadoras chilenas, guarda su historial y muestra dónde está más barato hoy. No vende equipos: enlaza a la tienda. Precios en pesos chilenos (CLP), revisados el 13-11-2026.
 
-Cubre 1222 equipos con precio hoy: tecnología (notebooks, celulares, tablets, televisores, consolas) y hogar (lavadoras, aires acondicionados, cocinas, hornos, freidoras de aire, aspiradoras, cafeteras, batidoras, colchones).
+Cubre 1214 equipos con precio hoy: tecnología (notebooks, celulares, tablets, televisores, consolas) y hogar (lavadoras, aires acondicionados, cocinas, hornos, freidoras de aire, aspiradoras, cafeteras, batidoras, colchones).
 
 Tiendas revisadas: Apple Store, Claro, Dolce Gusto, Easy, Entel, Falabella, Movistar, Nespresso, PCFactory, Paris, Ripley, Sodimac, Tienda HP, Tienda LG, Tienda Samsung, Tienda Sindelen, Tienda Xiaomi, WOM.
 
@@ -16,10 +16,10 @@ Tiendas revisadas: Apple Store, Claro, Dolce Gusto, Easy, Entel, Falabella, Movi
 
 ## Categorías
 
-- [Notebooks](https://cualmeconviene.cl/notebooks): 188 equipos con precio hoy
-- [Celulares](https://cualmeconviene.cl/celulares): 187 equipos con precio hoy
+- [Notebooks](https://cualmeconviene.cl/notebooks): 183 equipos con precio hoy
+- [Celulares](https://cualmeconviene.cl/celulares): 185 equipos con precio hoy
 - [Tablets](https://cualmeconviene.cl/tablets): 46 equipos con precio hoy
-- [Televisores](https://cualmeconviene.cl/televisores): 133 equipos con precio hoy
+- [Televisores](https://cualmeconviene.cl/televisores): 132 equipos con precio hoy
 - [Consolas](https://cualmeconviene.cl/consolas): 11 equipos con precio hoy
 - [Lavadoras y secadoras](https://cualmeconviene.cl/lavadoras): 53 equipos con precio hoy
 - [Aspiradoras](https://cualmeconviene.cl/aspiradoras): 52 equipos con precio hoy
