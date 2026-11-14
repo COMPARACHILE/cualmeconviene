@@ -3,7 +3,7 @@
 # 2) Suma lo que leyó el PC del dueño (Falabella, Paris, Ripley, Easy, LG, Xiaomi, HP, Nespresso, Dolce Gusto) en la rama
 #    lecturas-pc, carpeta pc/<dd-mm-aaaa>/, si llegó y aún no se aplicó.
 # 3) Descarta tiendas que no trajeron ningún precio (lectura fallida: mantienen el precio de ayer).
-# 4) Aplica (precios.py aplicar), publica en main, rehace fichas y envía el resumen por correo.
+# 4) Aplica (precios.py aplicar), publica en main, rehace fichas y envía el resumen por correo (a adictosdigitalesla@gmail.com).
 # Si el PC sube su lectura después, este flujo corre de nuevo solo con esas tiendas.
 name: Precios diarios
 on:

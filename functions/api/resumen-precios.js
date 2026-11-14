@@ -12,8 +12,12 @@ export async function onRequestPost({ request, env }) {
   if (!res.v) return json({ enviado: false, motivo: 'resumen sin versión' });
   if ((await leerAjuste(env, 'resumen_precios_v')) === res.v) return json({ enviado: false, motivo: 'ya enviado' });
   if (!proveedor(env)) return json({ enviado: false, motivo: 'falta configurar el envío de correos' });
-  await guardarAjuste(env, 'resumen_precios_v', res.v);
   const para = String(env.RESUMEN_PARA || CONTACTO).split(',').map(s => s.trim()).filter(Boolean);
-  for (const p of para) await enviarCorreo(env, { para: p, asunto: res.asunto, html: res.html, texto: res.texto });
+  try {
+    for (const p of para) await enviarCorreo(env, { para: p, asunto: res.asunto, html: res.html, texto: res.texto });
+  } catch (e) {
+    return json({ enviado: false, motivo: String(e && e.message || e).slice(0, 300) });
+  }
+  await guardarAjuste(env, 'resumen_precios_v', res.v);  // solo después de enviar: si falla, se reintenta
   return json({ enviado: true, v: res.v });
 }

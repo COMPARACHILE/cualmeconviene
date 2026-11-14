@@ -54,7 +54,16 @@ cup = next((v for k, v in secciones.items() if k.startswith('Cupones')), [])
 
 def lista(lineas, enlaces=True):
     t, h = [], []
+    # "no apareció en la lectura" = tienda que no se leyó en esta vuelta: se resume en una línea por tienda
+    faltan = {}
     for x in lineas[1:]:
+        m = re.match(r'\s+.+ · ([\w-]+): no apareció en la lectura', x)
+        if m: faltan[m[1]] = faltan.get(m[1], 0) + 1
+    if faltan:
+        s = 'No leídas en esta vuelta: ' + ', '.join(f'{k} ({v})' for k, v in sorted(faltan.items()))
+        t.append('- ' + s); h.append('<li>' + html.escape(s) + '</li>')
+    for x in lineas[1:]:
+        if 'no apareció en la lectura' in x: continue
         s, u = con_enlace(x) if enlaces else (x.strip(), None)
         t.append('- ' + s + (f'\n  {u}' if u else ''))
         h.append('<li>' + html.escape(s) + (f' · <a href="{html.escape(u)}">ver</a>' if u else '') + '</li>')
@@ -76,8 +85,8 @@ if cup:
 for titulo, lineas, e in partes:
     if len(lineas) > 1:
         t, h = lista(lineas, e)
-        texto.append(f'\n{titulo} ({len(lineas) - 1}):\n{t}')
-        cuerpo.append(f'<h3>{titulo} ({len(lineas) - 1})</h3>{h}')
+        texto.append(f'\n{titulo}:\n{t}')
+        cuerpo.append(f'<h3>{titulo}</h3>{h}')
 
 res = {'dia': dia, 'v': dia + '-' + hashlib.md5('\n'.join(L).encode()).hexdigest()[:8] + '-' + origen,
        'asunto': f'Precios del {dia}{" (" + origen + ")" if origen else ""}: {n_camb} cambios' + (f', {len(bajas) - 1} bajas fuertes' if len(bajas) > 1 else ''),
