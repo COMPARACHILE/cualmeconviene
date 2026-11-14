@@ -231,7 +231,7 @@ export async function enviarCorreo(env, c) {
       method: 'POST',
       headers: { 'api-key': env.BREVO_API_KEY, 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({ sender: { name: nombre, email: desde }, to: [{ email: c.para }], replyTo: { email: CONTACTO },
-        subject: c.asunto, htmlContent: c.html, textContent: c.texto, headers })
+        subject: c.asunto, htmlContent: c.html, textContent: c.texto, ...(Object.keys(headers).length ? { headers } : {}) })
     });
     if (!r.ok) throw new Error(`Brevo ${r.status}: ${(await r.text()).slice(0, 180)}`);
   } else if (p === 'resend') {

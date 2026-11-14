@@ -1,4 +1,4 @@
-# Actualización diaria de precios sin Claude (14-11-2026).
+# Actualización diaria de precios sin Claude (14-11-2026; correo probado el 14-11).
 # 1) Lee con Playwright, desde GitHub, las tiendas que lo permiten (una por máquina).
 # 2) Suma lo que leyó el PC del dueño (Falabella, Paris, Ripley, Easy, LG, Xiaomi, HP, Nespresso, Dolce Gusto) en la rama
 #    lecturas-pc, carpeta pc/<dd-mm-aaaa>/, si llegó y aún no se aplicó.
