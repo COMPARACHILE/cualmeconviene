@@ -1,0 +1,126 @@
+# Actualización diaria de precios sin Claude (14-11-2026).
+# 1) Lee con Playwright, desde GitHub, las tiendas que lo permiten (una por máquina).
+# 2) Suma lo que leyó el PC del dueño (Falabella, Paris, Ripley, Easy, LG, Xiaomi, HP, Nespresso, Dolce Gusto) en la rama
+#    lecturas-pc, carpeta pc/<dd-mm-aaaa>/, si llegó y aún no se aplicó.
+# 3) Descarta tiendas que no trajeron ningún precio (lectura fallida: mantienen el precio de ayer).
+# 4) Aplica (precios.py aplicar), publica en main, rehace fichas y envía el resumen por correo.
+# Si el PC sube su lectura después, este flujo corre de nuevo solo con esas tiendas.
+name: Precios diarios
+on:
+  schedule:
+    - cron: '41 11 * * *'   # 8:41 de Chile en horario de verano (7:41 en invierno)
+  push:
+    branches: [lecturas-pc]
+    paths: ['pc/**/informe.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: precios-diarios
+  cancel-in-progress: false
+jobs:
+  leer:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        tienda: [sodimac, movistar, entel, apple, sindelen, samsung, pcfactory, wom, claro]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Instalar Playwright
+        run: |
+          npm i --no-save playwright@1
+          npx playwright install --with-deps chromium
+      - name: Leer ${{ matrix.tienda }}
+        run: node herramientas/playwright/leer.mjs salida ${{ matrix.tienda }} && mv salida/informe.json salida/informe-${{ matrix.tienda }}.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: precios-${{ matrix.tienda }}
+          path: salida/
+
+  aplicar:
+    needs: leer
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/download-artifact@v4
+        if: github.event_name != 'push'
+        with:
+          path: lectura
+          merge-multiple: true
+      - name: Sumar la lectura del PC de hoy (si llegó y no se aplicó)
+        run: |
+          mkdir -p lectura
+          DIA=$(TZ=America/Santiago date +%d-%m-%Y)
+          echo "DIA=$DIA" >> $GITHUB_ENV
+          if git fetch -q --depth=1 origin lecturas-pc 2>/dev/null && git cat-file -e origin/lecturas-pc:pc/$DIA/informe.json 2>/dev/null; then
+            if git cat-file -e origin/lecturas-pc:pc/$DIA/aplicado 2>/dev/null; then echo "La lectura del PC de hoy ya se aplicó"; else
+              git archive origin/lecturas-pc pc/$DIA | tar -x -C /tmp && cp /tmp/pc/$DIA/*.txt /tmp/pc/$DIA/*.cup lectura/ 2>/dev/null || true
+              cp /tmp/pc/$DIA/informe.json lectura/informe-pc.json; echo "PC=1" >> $GITHUB_ENV
+            fi
+          else echo "El PC no ha subido lectura hoy"; fi
+          ls lectura
+      - name: Descartar tiendas sin ningún precio
+        run: |
+          python3 - <<'E'
+          import json, glob, os
+          out = []
+          for f in glob.glob('lectura/informe*.json'):
+              for r in json.load(open(f)):
+                  t, s = r['t'], r.get('resumen') or {}
+                  if r.get('err') or (s.get('total') and not s.get('conPrecio')):
+                      for ext in ('.txt', '.cup', '.json'):
+                          if os.path.exists('lectura/' + t + ext): os.remove('lectura/' + t + ext)
+                      if not r.get('err'): out.append(f"{t}: {s['total']} rutas y ninguna con precio (lectura descartada)")
+          open('lectura/descartadas.txt', 'w').write('\n'.join(out))
+          print('\n'.join(out) or 'ninguna descartada')
+          E
+          mkdir -p informes && mv lectura/informe*.json lectura/descartadas.txt informes/
+      - name: Aplicar precios
+        run: |
+          if ! ls lectura/*.txt lectura/*.json >/dev/null 2>&1; then echo "Nada que aplicar"; echo "NADA=1" >> $GITHUB_ENV; exit 0; fi
+          python3 herramientas/precios.py aplicar lectura | tee aplicar.txt
+          python3 herramientas/resumen.py aplicar.txt informes "${{ github.event_name == 'push' && 'tiendas leídas en el PC' || '' }}"
+      - name: Publicar
+        if: env.NADA != '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "Precios automáticos"
+          git config user.email "adictosdigitalesla@gmail.com"
+          git add -A -- ':!lectura' ':!informes' ':!aplicar.txt'
+          git commit -q -m "$(head -1 aplicar.txt | sed 's/^Fecha: //') (automático)" || { echo "Sin cambios"; exit 0; }
+          for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; sleep 10; done
+          gh workflow run sitio.yml --ref main
+      - name: Marcar la lectura del PC como aplicada
+        if: env.PC == '1' && env.NADA != '1'
+        run: |
+          git fetch -q origin lecturas-pc && git checkout -q -B lecturas-pc origin/lecturas-pc
+          date > pc/$DIA/aplicado && git add pc/$DIA/aplicado && git commit -q -m "Lectura del PC del $DIA aplicada" && git push -q origin lecturas-pc
+      - name: Enviar el resumen por correo (cuando Cloudflare ya publicó)
+        if: env.NADA != '1'
+        run: |
+          sleep 240
+          for i in 1 2 3 4 5; do
+            r=$(curl -sS -X POST --max-time 60 -H 'User-Agent: cualmeconviene-precios/1.0' https://cualmeconviene.cl/api/resumen-precios || echo '{}')
+            echo "$r"; echo "$r" | grep -q '"enviado":true\|ya enviado' && break; sleep 60
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: resumen
+          path: |
+            aplicar.txt
+            informes/
