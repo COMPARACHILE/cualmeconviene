@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tienda: [hp, samsung, xiaomi, lg, apple, nespresso, dolcegusto, sindelen, sodimac, easy, movistar, entel, falabella, paris, ripley]
+        tienda: [falabella, sodimac, movistar, entel, apple, sindelen, samsung, pcfactory, wom, claro]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
