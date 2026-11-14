@@ -1,0 +1,36 @@
+# PRUEBA (13-11-2026): ¿las tiendas dejan leer precios desde los servidores de GitHub con Playwright?
+# Solo lee: no cambia precios ni publica nada. Deja los <tienda>.txt / .cup y un informe como artefacto.
+name: Prueba Playwright
+on:
+  workflow_dispatch:
+  push:
+    branches: [prueba-playwright]
+    paths:
+      - 'herramientas/playwright/**'
+      - '.github/workflows/prueba-playwright.yml'
+permissions:
+  contents: read
+jobs:
+  leer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        tienda: [hp, samsung, xiaomi, lg, apple, nespresso, dolcegusto, sindelen, sodimac, easy, movistar, entel, falabella, paris, ripley]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Instalar Playwright
+        run: |
+          npm i --no-save playwright@1
+          npx playwright install --with-deps chromium
+      - name: Leer ${{ matrix.tienda }}
+        run: node herramientas/playwright/leer.mjs salida ${{ matrix.tienda }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: precios-${{ matrix.tienda }}
+          path: salida/
