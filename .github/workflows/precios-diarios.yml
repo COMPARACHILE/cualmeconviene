@@ -10,8 +10,8 @@ on:
   schedule:
     - cron: '41 11 * * *'   # 8:41 de Chile en horario de verano (7:41 en invierno)
   push:
-    branches: [lecturas-pc]
-    paths: ['pc/**/informe.json']
+    branches: [lecturas-pc, main]
+    paths: ['pc/**/informe.json', '.github/workflows/precios-diarios.yml']   # en main: al cambiar este flujo corre completo (sirve de prueba)
   workflow_dispatch:
 permissions:
   contents: write
@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   leer:
-    if: github.event_name != 'push'
+    if: github.ref != 'refs/heads/lecturas-pc'
     runs-on: ubuntu-latest
     timeout-minutes: 50
     strategy:
@@ -56,7 +56,7 @@ jobs:
           ref: main
           fetch-depth: 1
       - uses: actions/download-artifact@v4
-        if: github.event_name != 'push'
+        if: github.ref != 'refs/heads/lecturas-pc'
         with:
           path: lectura
           merge-multiple: true
@@ -92,7 +92,7 @@ jobs:
         run: |
           if ! ls lectura/*.txt lectura/*.json >/dev/null 2>&1; then echo "Nada que aplicar"; echo "NADA=1" >> $GITHUB_ENV; exit 0; fi
           python3 herramientas/precios.py aplicar lectura | tee aplicar.txt
-          python3 herramientas/resumen.py aplicar.txt informes "${{ github.event_name == 'push' && 'tiendas leídas en el PC' || '' }}"
+          python3 herramientas/resumen.py aplicar.txt informes "${{ github.ref == 'refs/heads/lecturas-pc' && 'tiendas leídas en el PC' || '' }}"
       - name: Publicar
         if: env.NADA != '1'
         env:
