@@ -5,7 +5,7 @@
 
    Uso:  node herramientas/playwright/leer.mjs <carpeta> tienda1 tienda2 ...
          (sin tiendas: todas las de PARTIDA)
-   Requiere: npm i playwright  y  npx playwright install chromium */
+   Requiere: npm i playwright  y  npx playwright install chromium (o CMC_CANAL=chrome para usar el Chrome instalado) */
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -45,7 +45,8 @@ if (!carpeta) { console.error('Uso: node leer.mjs <carpeta> [tiendas...]'); proc
 fs.mkdirSync(carpeta, { recursive: true });
 const tiendas = (pedidas.length ? pedidas : Object.keys(PARTIDA)).flatMap(t => t === 'pcfactory' ? PCF : [t]);
 
-const browser = await chromium.launch({ headless: process.env.CMC_VER ? false : true });
+// En el PC del dueño se usa su Google Chrome instalado (CMC_CANAL=chrome): Windows bloquea el navegador que baja Playwright.
+const browser = await chromium.launch({ headless: process.env.CMC_VER ? false : true, ...(process.env.CMC_CANAL ? { channel: process.env.CMC_CANAL } : {}) });
 const ctx = await browser.newContext({
   bypassCSP: true,  // algunas tiendas no dejan cargar scripts de GitHub
   locale: 'es-CL', timezoneId: 'America/Santiago', viewport: { width: 1366, height: 900 },

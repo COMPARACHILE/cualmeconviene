@@ -4,7 +4,7 @@
 #    lecturas-pc, carpeta pc/<dd-mm-aaaa>/, si llegó y aún no se aplicó.
 # 3) Descarta tiendas que no trajeron ningún precio (lectura fallida: mantienen el precio de ayer).
 # 4) Aplica (precios.py aplicar), publica en main, rehace fichas y envía el resumen por correo (a adictosdigitalesla@gmail.com).
-# Si el PC sube su lectura después, este flujo corre de nuevo solo con esas tiendas.
+# Si el PC sube su lectura después, avisar-pc.yml (rama lecturas-pc) lanza este flujo con solo_pc=true.
 name: Precios diarios
 on:
   schedule:
@@ -12,10 +12,12 @@ on:
     # Respaldo: GitHub a veces atrasa o se salta un horario. Si ya se actualizó hoy, estas vueltas no hacen nada.
     - cron: '23 13 * * *'
     - cron: '7 16 * * *'
-  push:
-    branches: [lecturas-pc]
-    paths: ['pc/**/informe.json']
   workflow_dispatch:
+    inputs:
+      solo_pc:
+        description: 'Aplicar solo la lectura que subió el PC (lo lanza avisar-pc.yml de la rama lecturas-pc)'
+        type: boolean
+        default: false
 permissions:
   contents: write
   actions: write
@@ -36,7 +38,7 @@ jobs:
           if [ "${{ github.event_name }}" = schedule ] && echo "$R" | grep -q "\"v\": *\"$DIA-[0-9a-f]*-\""; then echo "listo=1" >> $GITHUB_OUTPUT; echo "Ya actualizado hoy"; else echo "listo=0" >> $GITHUB_OUTPUT; fi
   leer:
     needs: hoy
-    if: github.ref != 'refs/heads/lecturas-pc' && needs.hoy.outputs.listo != '1'
+    if: ${{ !inputs.solo_pc && needs.hoy.outputs.listo != '1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 50
     strategy:
@@ -71,7 +73,7 @@ jobs:
           ref: main
           fetch-depth: 1
       - uses: actions/download-artifact@v4
-        if: github.ref != 'refs/heads/lecturas-pc'
+        if: ${{ !inputs.solo_pc }}
         with:
           path: lectura
           merge-multiple: true
@@ -107,7 +109,7 @@ jobs:
         run: |
           if ! ls lectura/*.txt lectura/*.json >/dev/null 2>&1; then echo "Nada que aplicar"; echo "NADA=1" >> $GITHUB_ENV; exit 0; fi
           python3 herramientas/precios.py aplicar lectura | tee aplicar.txt
-          python3 herramientas/resumen.py aplicar.txt informes "${{ github.ref == 'refs/heads/lecturas-pc' && 'tiendas leídas en el PC' || '' }}"
+          python3 herramientas/resumen.py aplicar.txt informes "${{ inputs.solo_pc && 'tiendas leídas en el PC' || '' }}"
       - name: Publicar
         if: env.NADA != '1'
         env:

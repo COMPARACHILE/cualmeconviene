@@ -1,21 +1,34 @@
-# Lectura diaria de las tiendas que bloquean a GitHub, desde el PC del dueño (14-11-2026).
+# Lectura diaria de las tiendas que bloquean a GitHub, desde el PC del dueño (sin Git, 15-11-2026).
 # La corre sola la tarea programada "Precios cualmeconviene" (8:00 y al iniciar sesión). No usa Claude.
-# Lee con Playwright, sube el resultado a la rama lecturas-pc y GitHub lo aplica y publica solo.
+# Baja el lector desde GitHub, lee con Playwright usando el Google Chrome instalado y sube el resultado
+# a la rama lecturas-pc por la API de GitHub. Allí avisar-pc.yml lanza la aplicación y publicación.
 $ErrorActionPreference = 'Continue'
-$repo = Join-Path $env:USERPROFILE 'cualmeconviene-pc'
+$ProgressPreference = 'SilentlyContinue'
+$base = Join-Path $env:USERPROFILE 'cualmeconviene-pc'
 $dia = Get-Date -Format 'dd-MM-yyyy'
-$log = Join-Path $repo "lectura-pc.log"
-Set-Location $repo
-Start-Transcript -Path $log -Append | Out-Null
+Set-Location $base
+Start-Transcript -Path (Join-Path $base 'lectura-pc.log') -Append | Out-Null
 try {
-  git fetch -q origin main
-  git fetch -q origin lecturas-pc 2>$null
-  if ($LASTEXITCODE -eq 0) { git checkout -q -B lecturas-pc origin/lecturas-pc } else { git checkout -q -B lecturas-pc origin/main }
-  if (Test-Path "pc/$dia/informe.json") { Write-Output "Ya se leyó hoy ($dia)."; exit 0 }
-  # Herramientas y flujo al día con main
-  git checkout -q origin/main -- herramientas .github/workflows/precios-diarios.yml
-  node herramientas/playwright/leer.mjs "pc/$dia" falabella paris hp lg easy xiaomi nespresso dolcegusto ripley
-  git add "pc/$dia" herramientas .github/workflows/precios-diarios.yml
-  git commit -q -m "Lectura del PC $dia"
-  for ($i = 0; $i -lt 3; $i++) { git push -q origin lecturas-pc; if ($LASTEXITCODE -eq 0) { break }; Start-Sleep 20 }
+  $token = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR((Get-Content (Join-Path $base 'clave.txt') | ConvertTo-SecureString)))
+  $H = @{ Authorization = "Bearer $token"; 'User-Agent' = 'cualmeconviene-pc'; Accept = 'application/vnd.github+json' }
+  $api = 'https://api.github.com/repos/COMPARACHILE/cualmeconviene/contents'
+  # ¿Ya se subió hoy?
+  try { Invoke-RestMethod -Headers $H "$api/pc/$dia/informe.json?ref=lecturas-pc" | Out-Null; Write-Output "Ya se leyó hoy ($dia)."; exit 0 } catch {}
+  # Lector al día
+  $raw = 'https://raw.githubusercontent.com/COMPARACHILE/cualmeconviene/main/herramientas'
+  New-Item -ItemType Directory -Force -Path 'herramientas\playwright' | Out-Null
+  Invoke-WebRequest "$raw/playwright/leer.mjs" -OutFile 'herramientas\playwright\leer.mjs'
+  Invoke-WebRequest "$raw/rutas.json" -OutFile 'herramientas\rutas.json'
+  $env:CMC_CANAL = 'chrome'
+  node herramientas\playwright\leer.mjs "pc\$dia" falabella paris hp lg easy xiaomi nespresso dolcegusto ripley
+  # Subir: primero las tiendas, al final informe.json (ese es el que avisa a GitHub)
+  $archivos = Get-ChildItem "pc\$dia" -File | Sort-Object { $_.Name -eq 'informe.json' }
+  foreach ($f in $archivos) {
+    $b64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($f.FullName))
+    $body = @{ message = "Lectura del PC $dia ($($f.Name))"; content = $b64; branch = 'lecturas-pc' } | ConvertTo-Json
+    for ($i = 0; $i -lt 3; $i++) {
+      try { Invoke-RestMethod -Method Put -Headers $H -Body $body -ContentType 'application/json' "$api/pc/$dia/$($f.Name)" | Out-Null; Write-Output "Subido $($f.Name)"; break }
+      catch { Write-Output "Error subiendo $($f.Name): $($_.Exception.Message)"; Start-Sleep 15 }
+    }
+  }
 } finally { Stop-Transcript | Out-Null }
