@@ -1,0 +1,1 @@
+Lecturas diarias del PC (herramientas/playwright/pc/leer-pc.ps1).

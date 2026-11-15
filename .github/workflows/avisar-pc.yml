@@ -1,0 +1,16 @@
+# Rama lecturas-pc: aquí el PC del dueño sube cada día pc/<dd-mm-aaaa>/ (tiendas que bloquean a GitHub).
+# Al llegar informe.json, lanza "Precios diarios" en main solo con esa lectura (aplica, publica y envía el resumen).
+name: Avisar lectura del PC
+on:
+  push:
+    branches: [lecturas-pc]
+    paths: ['pc/**/informe.json']
+permissions:
+  actions: write
+jobs:
+  avisar:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run precios-diarios.yml --repo ${{ github.repository }} --ref main -f solo_pc=true
+        env:
+          GH_TOKEN: ${{ github.token }}
