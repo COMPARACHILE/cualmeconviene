@@ -10,8 +10,8 @@ on:
   schedule:
     - cron: '41 11 * * *'   # 8:41 de Chile en horario de verano (7:41 en invierno)
   push:
-    branches: [lecturas-pc, main]
-    paths: ['pc/**/informe.json', '.github/workflows/precios-diarios.yml']   # en main: al cambiar este flujo corre completo (sirve de prueba)
+    branches: [lecturas-pc]
+    paths: ['pc/**/informe.json']
   workflow_dispatch:
 permissions:
   contents: write
@@ -87,7 +87,7 @@ jobs:
           open('lectura/descartadas.txt', 'w').write('\n'.join(out))
           print('\n'.join(out) or 'ninguna descartada')
           E
-          mkdir -p informes && mv lectura/informe*.json lectura/descartadas.txt informes/
+          mkdir -p informes && mv lectura/descartadas.txt informes/ && (mv lectura/informe*.json informes/ 2>/dev/null || true)
       - name: Aplicar precios
         run: |
           if ! ls lectura/*.txt lectura/*.json >/dev/null 2>&1; then echo "Nada que aplicar"; echo "NADA=1" >> $GITHUB_ENV; exit 0; fi
