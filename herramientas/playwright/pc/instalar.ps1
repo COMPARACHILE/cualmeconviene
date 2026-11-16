@@ -3,6 +3,7 @@
 #   irm https://raw.githubusercontent.com/COMPARACHILE/cualmeconviene/main/herramientas/playwright/pc/instalar.ps1 | iex
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
+Set-ExecutionPolicy -Scope Process Bypass -Force
 $base = Join-Path $env:USERPROFILE 'cualmeconviene-pc'
 New-Item -ItemType Directory -Force -Path $base | Out-Null
 Set-Location $base
@@ -17,7 +18,7 @@ node --version
 Write-Host "2/4 Instalando Playwright (usará tu Google Chrome)..." -ForegroundColor Cyan
 $env:PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = '1'
 if (-not (Test-Path 'package.json')) { '{"name":"cualmeconviene-pc","private":true,"type":"module"}' | Set-Content 'package.json' }
-npm i playwright@1 --no-audit --no-fund --loglevel=error
+npm.cmd i playwright@1 --no-audit --no-fund --loglevel=error
 
 Write-Host "3/4 Clave de GitHub para subir las lecturas" -ForegroundColor Cyan
 if (-not (Test-Path 'clave.txt')) {
