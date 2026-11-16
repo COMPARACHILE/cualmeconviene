@@ -9,7 +9,9 @@ on:
     workflows: ["Fotos y fichas"]
     types: [completed]
   schedule:
-    - cron: '20 14 * * *'   # respaldo diario a las 11:20 de Chile (horario de verano)
+    - cron: '2 13 * * *'    # 10:02 de Chile (verano): sale el resumen diario a los suscritos (no sale antes de las 10:00)
+    - cron: '20 14 * * *'   # respaldo a las 11:20 de Chile (GitHub a veces atrasa los horarios)
+    - cron: '40 16 * * *'   # respaldo a las 13:40 de Chile
   workflow_dispatch:
 permissions: {}
 concurrency:

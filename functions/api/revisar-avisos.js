@@ -18,13 +18,38 @@ async function enLotes(env, sentencias) {
   for (let i = 0; i < sentencias.length; i += 50) await env.DB.batch(sentencias.slice(i, i + 50));
 }
 
+// Resumen diario a los suscritos: una vez al día, desde las 10:00 de Chile (pedido del dueño, 16-11-2026),
+// para que salga con las dos lecturas del día ya aplicadas (GitHub y el PC). Solo con los precios de hoy y si hubo bajadas.
+const horaChile = () => +new Intl.DateTimeFormat('en-GB', { timeZone: 'America/Santiago', hour: '2-digit', hourCycle: 'h23' }).format(new Date());
+async function resumenDiario(env, cat, eqs, sitio, t, cola) {
+  const bajadas = (cat.bajadas || []).map(([clave, antes, ahoraP]) => {
+    const e = eqs[clave];
+    return e && e[0] && { clave, nombre: e[1], id: e[2], tienda: e[3], antes, ahora: e[0], motivo: 'bajo' };
+  }).filter(x => x && x.ahora < x.antes).slice(0, 10);
+  if (!bajadas.length || cat.dia !== hoyChile() || horaChile() < 10 || (await leerAjuste(env, 'resumen_dia')) === cat.dia)
+    return { resumenes: 0, bajadas };
+  const subs = (await env.DB.prepare('SELECT id, correo, nombre FROM usuarios WHERE resumen = 1 AND bloqueado = 0').all()).results;
+  for (const s of subs) {
+    const baja = await enlaceBaja(env, s.id);
+    const c = correoResumen({ sitio, persona: s.nombre, correo: s.correo, items: bajadas, baja, dia: cat.dia });
+    cola.push(env.DB.prepare('INSERT INTO correos (usuario, para, tipo, asunto, html, texto, baja, creado) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)')
+      .bind(s.id, s.correo, 'resumen', c.asunto, c.html, c.texto, baja, t));
+  }
+  return { resumenes: subs.length, bajadas, marca: ajuste(env, 'resumen_dia', cat.dia) };
+}
+
 async function revisar(env, request, forzar) {
   const cat = await catalogo(env, request, true);
   if (!cat.v) return { motivo: 'sin catálogo de precios' };
   // Se "toma" la versión de precios de una sola vez, para que dos llamadas seguidas no dupliquen los correos
   const toma = await env.DB.prepare(`INSERT INTO ajustes (clave, valor) VALUES ('revision_v', ?1)
     ON CONFLICT (clave) DO UPDATE SET valor = excluded.valor WHERE ajustes.valor != excluded.valor`).bind(cat.v).run();
-  if (!toma.meta.changes && !forzar) return { motivo: 'los precios no han cambiado desde la última revisión' };
+  if (!toma.meta.changes && !forzar) {
+    // Aunque los precios no hayan cambiado, el resumen diario puede tocar ahora (sale desde las 10:00 de Chile)
+    const cola = [], r = await resumenDiario(env, cat, cat.equipos || {}, env.SITIO || SITIO, ahora(), cola);
+    if (r.marca) await enLotes(env, [r.marca, ...cola]);
+    return { motivo: 'los precios no han cambiado desde la última revisión', resumenes: r.resumenes, bajadas_del_dia: r.bajadas.length };
+  }
   const sitio = env.SITIO || SITIO, dia = hoyChile(), t = ahora();
   const eqs = cat.equipos || {};
   const cambios = [], cola = [];
@@ -62,24 +87,10 @@ async function revisar(env, request, forzar) {
       .bind(uid, x.correo, 'aviso', c.asunto, c.html, c.texto, baja, t));
   }
 
-  // 2) Resumen diario: una vez por revisión de precios, solo si hubo bajadas y la revisión es reciente
-  let resumenes = 0;
-  const bajadas = (cat.bajadas || []).map(([clave, antes, ahoraP]) => {
-    const e = eqs[clave];
-    return e && e[0] && { clave, nombre: e[1], id: e[2], tienda: e[3], antes, ahora: e[0], motivo: 'bajo' };
-  }).filter(x => x && x.ahora < x.antes).slice(0, 10);
-  const reciente = cat.dia && Date.now() - Date.parse(cat.dia + 'T12:00:00-03:00') < 2.5 * 864e5;
-  if (bajadas.length && reciente && (await leerAjuste(env, 'resumen_dia')) !== cat.dia) {
-    const subs = (await env.DB.prepare('SELECT id, correo, nombre FROM usuarios WHERE resumen = 1 AND bloqueado = 0').all()).results;
-    for (const s of subs) {
-      const baja = await enlaceBaja(env, s.id);
-      const c = correoResumen({ sitio, persona: s.nombre, correo: s.correo, items: bajadas, baja, dia: cat.dia });
-      cola.push(env.DB.prepare('INSERT INTO correos (usuario, para, tipo, asunto, html, texto, baja, creado) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)')
-        .bind(s.id, s.correo, 'resumen', c.asunto, c.html, c.texto, baja, t));
-    }
-    cambios.push(ajuste(env, 'resumen_dia', cat.dia));
-    resumenes = subs.length;
-  }
+  // 2) Resumen diario (ver resumenDiario)
+  const r = await resumenDiario(env, cat, eqs, sitio, t, cola);
+  if (r.marca) cambios.push(r.marca);
+  const resumenes = r.resumenes, bajadas = r.bajadas;
 
   // 3) Limpieza: correos enviados hace más de 30 días y contadores viejos
   cambios.push(env.DB.prepare("DELETE FROM correos WHERE enviado != '' AND creado < ?1").bind(new Date(Date.now() - 30 * 864e5).toISOString()));
