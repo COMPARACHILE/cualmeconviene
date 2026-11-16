@@ -107,7 +107,7 @@ jobs:
           mkdir -p informes && mv lectura/descartadas.txt informes/ && (mv lectura/informe*.json informes/ 2>/dev/null || true)
       - name: Aplicar precios
         run: |
-          if ! ls lectura/*.txt lectura/*.json >/dev/null 2>&1; then echo "Nada que aplicar"; echo "NADA=1" >> $GITHUB_ENV; exit 0; fi
+          if [ -z "$(ls lectura/*.txt lectura/*.json 2>/dev/null)" ]; then echo "Nada que aplicar"; echo "NADA=1" >> $GITHUB_ENV; exit 0; fi
           python3 herramientas/precios.py aplicar lectura | tee aplicar.txt
           python3 herramientas/resumen.py aplicar.txt informes "${{ inputs.solo_pc && 'tiendas leídas en el PC' || '' }}"
       - name: Publicar
