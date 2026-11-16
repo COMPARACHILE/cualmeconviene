@@ -1,0 +1,112 @@
+[
+ {
+  "t": "paris",
+  "seg": 112,
+  "resumen": {
+   "total": 479,
+   "conPrecio": 476,
+   "errores": {
+    "error 404": 3
+   }
+  },
+  "cambios": 19
+ },
+ {
+  "t": "lg",
+  "seg": 16,
+  "resumen": {
+   "total": 47,
+   "conPrecio": 28,
+   "errores": {
+    "sin stock": 19
+   }
+  },
+  "cambios": 0
+ },
+ {
+  "t": "falabella",
+  "seg": 170,
+  "resumen": {
+   "total": 904,
+   "conPrecio": 899,
+   "errores": {
+    "sin stock": 5
+   }
+  },
+  "cambios": 7
+ },
+ {
+  "t": "xiaomi",
+  "seg": 14,
+  "resumen": {
+   "total": 29,
+   "conPrecio": 28,
+   "errores": {
+    "sin stock": 1
+   }
+  },
+  "cambios": 4
+ },
+ {
+  "t": "easy",
+  "seg": 53,
+  "resumen": {
+   "total": 184,
+   "conPrecio": 158,
+   "errores": {
+    "error 404": 25,
+    "sin stock": 1
+   }
+  },
+  "cambios": 1
+ },
+ {
+  "t": "dolcegusto",
+  "seg": 117,
+  "resumen": {
+   "total": 4,
+   "conPrecio": 1,
+   "errores": {
+    "error 403": 3
+   }
+  },
+  "cambios": 3
+ },
+ {
+  "t": "hp",
+  "seg": 363,
+  "resumen": {
+   "total": 27,
+   "conPrecio": 3,
+   "errores": {
+    "error 403": 24
+   }
+  },
+  "cambios": 24
+ },
+ {
+  "t": "nespresso",
+  "seg": 229,
+  "resumen": {
+   "total": 12,
+   "conPrecio": 0,
+   "errores": {
+    "TypeError: Failed to fetch": 12
+   }
+  },
+  "cambios": 12
+ },
+ {
+  "t": "ripley",
+  "seg": 554,
+  "resumen": {
+   "total": 554,
+   "conPrecio": 477,
+   "errores": {
+    "error 404": 13,
+    "sin stock": 64
+   }
+  },
+  "cambios": 2
+ }
+]
