@@ -6,7 +6,9 @@ name: Fotos y fichas
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 */3 * * *'   # cada 3 horas: un cupón vencido no debe seguir como precio principal en fichas y guías
+    # De noche y de madrugada (de día lo lanza cada vuelta de precios, cada 2 horas): un cupón vencido no debe seguir como
+    # precio principal en fichas y guías. Menos vueltas = menos despliegues de Cloudflare (el plan gratis da 500 al mes).
+    - cron: '17 3,6,9 * * *'   # 0:17, 3:17 y 6:17 de Chile (verano)
   push:
     paths:
       - 'notebooks.html'
@@ -59,8 +61,12 @@ jobs:
         run: |
           git config user.name "sitio-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add *.html assets/p assets/og assets/fotos.js assets/fichas.js assets/oficiales.js assets/portada.json assets/avisos.json herramientas/fotos-log.txt herramientas/fichas.json herramientas/rutas.json notebook celular tablet televisor consola lavadora aspiradora batidora cafetera freidora aire-acondicionado cocina horno colchon guia sitemap.xml llms.txt
-          if git diff --cached --quiet; then echo "Sin cambios"; exit 0; fi
-          git commit -m "Fotos y fichas actualizadas (automático)"
+          git add *.html assets/p assets/og assets/fotos.js assets/fichas.js assets/oficiales.js assets/portada.json assets/avisos.json herramientas/fotos-log.txt herramientas/fichas.json herramientas/rutas.json herramientas/nombres.json notebook celular tablet televisor consola lavadora aspiradora batidora cafetera freidora aire-acondicionado cocina horno colchon guia sitemap.xml llms.txt
+          if git diff --cached --quiet; then
+            # Los precios se guardan con [CF-Pages-Skip]: si las fichas no cambiaron, igual hay que publicar una vez
+            if git log -1 --format=%s | grep -q 'CF-Pages-Skip'; then git commit -q --allow-empty -m "Publicar precios (automático)"; else echo "Sin cambios"; exit 0; fi
+          else
+            git commit -m "Fotos y fichas actualizadas (automático)"
+          fi
           for i in 1 2 3; do git pull --rebase origin "${GITHUB_REF_NAME}" && git push && exit 0; sleep 5; done
           exit 1

@@ -1,21 +1,22 @@
-# Actualización diaria de precios sin Claude (14-11-2026; correo probado el 14-11).
+# Lectura de precios sin Claude, cada 2 horas de 8:00 a 22:00 (desde el 17-11-2026; antes una vez al día).
 # 1) Lee con Playwright, desde GitHub, las tiendas que lo permiten (una por máquina).
 # 2) Suma lo que leyó el PC del dueño (Falabella, Paris, Ripley, Easy, LG, Xiaomi, HP, Nespresso, Dolce Gusto) en la rama
-#    lecturas-pc, carpeta pc/<dd-mm-aaaa>/, si llegó y aún no se aplicó.
-# 3) Descarta tiendas que no trajeron ningún precio (lectura fallida: mantienen el precio de ayer).
-# 4) Aplica (precios.py aplicar), publica en main, rehace fichas y envía el resumen por correo (a adictosdigitalesla@gmail.com).
-# Si el PC sube su lectura después, avisar-pc.yml (rama lecturas-pc) lanza este flujo con solo_pc=true.
+#    lecturas-pc, carpeta pc/<dd-mm-aaaa>-<HH>h/ (la vuelta más reciente de hoy que no se haya aplicado).
+# 3) Descarta tiendas que no trajeron ningún precio (lectura fallida: mantienen el precio anterior).
+# 4) Aplica (precios.py aplicar, incluye los enlaces nuevos que encontró leer.mjs para fichas que ya no existen),
+#    guarda sin publicar ([CF-Pages-Skip]) y lanza "Fotos y fichas", que rehace las fichas y publica una sola vez.
+# 5) Correo de resumen al dueño: la primera vuelta del día siempre; las demás solo si hubo bajas fuertes.
+# Cuando el PC sube su lectura, avisar-pc.yml (rama lecturas-pc) lanza este flujo completo. El horario de abajo es el
+# respaldo para cuando el PC está apagado: si esa vuelta ya se hizo, no hace nada.
 name: Precios diarios
 on:
   schedule:
-    - cron: '41 11 * * *'   # 8:41 de Chile en horario de verano (7:41 en invierno)
-    # Respaldo: GitHub a veces atrasa o se salta un horario. Si ya se actualizó hoy, estas vueltas no hacen nada.
-    - cron: '23 13 * * *'
-    - cron: '7 16 * * *'
+    # hora y media después del inicio de cada vuelta par de Chile (verano, UTC-3): 9:35 → vuelta de las 8, ..., 23:35 → vuelta de las 22
+    - cron: '35 0,2,12,14,16,18,20,22 * * *'
   workflow_dispatch:
     inputs:
       solo_pc:
-        description: 'Aplicar solo la lectura que subió el PC (lo lanza avisar-pc.yml de la rama lecturas-pc)'
+        description: 'Aplicar solo la lectura que subió el PC, sin leer las tiendas de GitHub'
         type: boolean
         default: false
 permissions:
@@ -29,13 +30,16 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       listo: ${{ steps.r.outputs.listo }}
+      vuelta: ${{ steps.r.outputs.vuelta }}
     steps:
       - id: r
-        name: ¿Ya se actualizó hoy desde GitHub?
+        name: ¿Ya se hizo esta vuelta?
         run: |
-          DIA=$(TZ=America/Santiago date +%d-%m-%Y)
+          H=$(TZ=America/Santiago date +%-H); H=$(( H - H % 2 ))
+          V="$(TZ=America/Santiago date +%d-%m-%Y) $(printf %02d $H)h"
+          echo "vuelta=$V" >> $GITHUB_OUTPUT
           R=$(curl -sS "https://raw.githubusercontent.com/${{ github.repository }}/main/assets/resumen-precios.json?$(date +%s)" || echo '{}')
-          if [ "${{ github.event_name }}" = schedule ] && echo "$R" | grep -q "\"v\": *\"$DIA-[0-9a-f]*-\""; then echo "listo=1" >> $GITHUB_OUTPUT; echo "Ya actualizado hoy"; else echo "listo=0" >> $GITHUB_OUTPUT; fi
+          if [ "${{ github.event_name }}" = schedule ] && echo "$R" | grep -q "\"vuelta\": *\"$V\""; then echo "listo=1" >> $GITHUB_OUTPUT; echo "Vuelta $V ya hecha"; else echo "listo=0" >> $GITHUB_OUTPUT; fi
   leer:
     needs: hoy
     if: ${{ !inputs.solo_pc && needs.hoy.outputs.listo != '1' }}
@@ -77,17 +81,26 @@ jobs:
         with:
           path: lectura
           merge-multiple: true
-      - name: Sumar la lectura del PC de hoy (si llegó y no se aplicó)
+      - name: Sumar la lectura del PC (la vuelta más reciente de hoy que no se haya aplicado)
         run: |
           mkdir -p lectura
           DIA=$(TZ=America/Santiago date +%d-%m-%Y)
           echo "DIA=$DIA" >> $GITHUB_ENV
-          if git fetch -q --depth=1 origin lecturas-pc 2>/dev/null && git cat-file -e origin/lecturas-pc:pc/$DIA/informe.json 2>/dev/null; then
-            if git cat-file -e origin/lecturas-pc:pc/$DIA/aplicado 2>/dev/null; then echo "La lectura del PC de hoy ya se aplicó"; else
-              git archive origin/lecturas-pc pc/$DIA | tar -x -C /tmp && cp /tmp/pc/$DIA/*.txt /tmp/pc/$DIA/*.cup lectura/ 2>/dev/null || true
-              cp /tmp/pc/$DIA/informe.json lectura/informe-pc.json; echo "PC=1" >> $GITHUB_ENV
-            fi
-          else echo "El PC no ha subido lectura hoy"; fi
+          PEND=""
+          if git fetch -q --depth=1 origin lecturas-pc 2>/dev/null; then
+            for d in $(git ls-tree --name-only origin/lecturas-pc pc/ | grep "^pc/$DIA" | sort); do
+              git cat-file -e origin/lecturas-pc:$d/informe.json 2>/dev/null || continue
+              git cat-file -e origin/lecturas-pc:$d/aplicado 2>/dev/null && continue
+              PEND="$PEND $d"
+            done
+          fi
+          if [ -n "$PEND" ]; then
+            ULT=$(echo $PEND | tr ' ' '\n' | tail -1)
+            git archive origin/lecturas-pc $ULT | tar -x -C /tmp
+            cp /tmp/$ULT/*.txt /tmp/$ULT/*.cup /tmp/$ULT/*.nuevas lectura/ 2>/dev/null || true
+            cp /tmp/$ULT/informe.json lectura/informe-pc.json
+            echo "PC=1" >> $GITHUB_ENV; echo "PEND=$PEND" >> $GITHUB_ENV; echo "Lectura del PC: $ULT (pendientes:$PEND)"
+          else echo "No hay lectura nueva del PC"; fi
           ls lectura
       - name: Descartar tiendas sin ningún precio
         run: |
@@ -98,7 +111,7 @@ jobs:
               for r in json.load(open(f)):
                   t, s = r['t'], r.get('resumen') or {}
                   if r.get('err') or (s.get('total') and not s.get('conPrecio')):
-                      for ext in ('.txt', '.cup', '.json'):
+                      for ext in ('.txt', '.cup', '.json', '.nuevas'):
                           if os.path.exists('lectura/' + t + ext): os.remove('lectura/' + t + ext)
                       if not r.get('err'): out.append(f"{t}: {s['total']} rutas y ninguna con precio (lectura descartada)")
           open('lectura/descartadas.txt', 'w').write('\n'.join(out))
@@ -106,10 +119,16 @@ jobs:
           E
           mkdir -p informes && mv lectura/descartadas.txt informes/ && (mv lectura/informe*.json informes/ 2>/dev/null || true)
       - name: Aplicar precios
+        env:
+          VUELTA: ${{ needs.hoy.outputs.vuelta }}
         run: |
           if [ -z "$(ls lectura/*.txt lectura/*.json 2>/dev/null)" ]; then echo "Nada que aplicar"; echo "NADA=1" >> $GITHUB_ENV; exit 0; fi
+          ANTES=$(python3 -c "import json;print(json.load(open('assets/resumen-precios.json')).get('dia',''))" 2>/dev/null || true)
           python3 herramientas/precios.py aplicar lectura | tee aplicar.txt
           python3 herramientas/resumen.py aplicar.txt informes "${{ inputs.solo_pc && 'tiendas leídas en el PC' || '' }}"
+          BAJAS=$(python3 -c "import json;print(json.load(open('assets/resumen-precios.json')).get('bajas',0))")
+          # Correo al dueño: la primera vuelta del día siempre; las demás solo si hubo bajas fuertes (precios a revisar)
+          if [ "$ANTES" != "$DIA" ] || [ "$BAJAS" != "0" ]; then echo "ENVIAR=1" >> $GITHUB_ENV; fi
       - name: Publicar
         if: env.NADA != '1'
         env:
@@ -118,19 +137,26 @@ jobs:
           git config user.name "Precios automáticos"
           git config user.email "adictosdigitalesla@gmail.com"
           git add -A -- ':!lectura' ':!informes' ':!aplicar.txt'
-          git commit -q -m "$(head -1 aplicar.txt | sed 's/^Fecha: //') (automático)" || { echo "Sin cambios"; exit 0; }
+          # [CF-Pages-Skip]: Cloudflare no publica este paso; publica "Fotos y fichas" (un solo despliegue por vuelta)
+          git commit -q -m "$(head -1 aplicar.txt | sed 's/^Fecha: //') · vuelta ${{ needs.hoy.outputs.vuelta }} (automático) [CF-Pages-Skip]" || { echo "Sin cambios"; exit 0; }
           for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; sleep 10; done
           gh workflow run sitio.yml --ref main
       - name: Marcar la lectura del PC como aplicada
         if: env.PC == '1' && env.NADA != '1'
         run: |
           git fetch -q origin lecturas-pc && git checkout -q -B lecturas-pc origin/lecturas-pc
-          date > pc/$DIA/aplicado && git add pc/$DIA/aplicado && git commit -q -m "Lectura del PC del $DIA aplicada" && git push -q origin lecturas-pc
-      - name: Enviar el resumen por correo (cuando Cloudflare ya publicó)
-        if: env.NADA != '1'
+          for d in $PEND; do date > $d/aplicado; git add $d/aplicado; done
+          git commit -q -m "Lectura del PC aplicada:$PEND" && git push -q origin lecturas-pc
+      - name: Enviar el resumen por correo (cuando Cloudflare ya publicó esta versión)
+        if: env.NADA != '1' && env.ENVIAR == '1'
         run: |
-          sleep 240
-          for i in 1 2 3 4 5; do
+          V=$(python3 -c "import json;print(json.load(open('assets/resumen-precios.json'))['v'])")
+          for i in $(seq 1 20); do
+            sleep 60
+            curl -sS "https://cualmeconviene.cl/assets/resumen-precios.json?$(date +%s)" | grep -qF "\"$V\"" && break
+            echo "Cloudflare aún no publica $V"
+          done
+          for i in 1 2 3; do
             r=$(curl -sS -X POST --max-time 60 -H 'User-Agent: cualmeconviene-precios/1.0' https://cualmeconviene.cl/api/resumen-precios || echo '{}')
             echo "$r"; echo "$r" | grep -q '"enviado":true\|ya enviado' && break; sleep 60
           done

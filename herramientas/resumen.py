@@ -51,6 +51,7 @@ minimos = next((v for k, v in secciones.items() if k.startswith('Mínimos histó
 ocultos = next((v for k, v in secciones.items() if k.startswith('Ocultos')), [])
 norev = next((v for k, v in secciones.items() if k.startswith('No revisados')), [])
 cup = next((v for k, v in secciones.items() if k.startswith('Cupones')), [])
+nuevos = next((v for k, v in secciones.items() if k.startswith('Enlaces reemplazados')), [])
 
 def lista(lineas, enlaces=True):
     t, h = [], []
@@ -73,6 +74,7 @@ partes = [
     ('Bajaron bastante (revisar)', bajas, True),
     ('Mínimos históricos', minimos, True),
     ('Ocultos por falta de stock', ocultos, False),
+    ('Enlaces nuevos (la ficha anterior ya no existía; se buscó el mismo modelo en la tienda)', nuevos, False),
     ('No revisados', norev, False),
 ]
 texto = [f'Precios del {dia}{" · " + origen if origen else ""}: {n_camb} cambios.']
@@ -90,6 +92,8 @@ for titulo, lineas, e in partes:
 
 res = {'dia': dia, 'v': dia + '-' + hashlib.md5('\n'.join(L).encode()).hexdigest()[:8] + '-' + origen,
        'asunto': f'Precios del {dia}{" (" + origen + ")" if origen else ""}: {n_camb} cambios' + (f', {len(bajas) - 1} bajas fuertes' if len(bajas) > 1 else ''),
-       'texto': '\n'.join(texto), 'html': '\n'.join(cuerpo)}
+       'texto': '\n'.join(texto), 'html': '\n'.join(cuerpo),
+       # vuelta: lectura de cada 2 horas ("17-11-2026 10h"); bajas: cuántas bajas fuertes hubo (el flujo decide si manda el correo)
+       'vuelta': os.environ.get('VUELTA', ''), 'bajas': max(len(bajas) - 1, 0)}
 json.dump(res, open(os.path.join(os.path.dirname(__file__), '..', 'assets', 'resumen-precios.json'), 'w', encoding='utf-8'), ensure_ascii=False)
 print(res['asunto'])

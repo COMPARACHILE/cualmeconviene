@@ -91,6 +91,35 @@ def ruta(o):
     return u.path
 
 
+def nombres_por_tienda():
+    """{tienda: {ruta: nombre del equipo}}: leer.mjs lo usa para buscar en la tienda un enlace nuevo cuando la ficha ya no existe."""
+    _, _, nbs, _, _, phs = cargar()
+    out = {}
+    grupos = [('notebook', nbs), ('celular', phs)] + [(EXTRA[k][1], l) for k, (_, _, l) in cargar_extra().items()]
+    for g, lst in grupos:
+        for eq in lst:
+            n = eq['name'] + (f" {eq['gb']}GB" if g in ('celular', 'tablet') and eq.get('gb') else '')
+            for o in eq['offers']:
+                out.setdefault(o['s'], {}).setdefault(ruta(o), n)
+    return out
+
+
+def reemplazar_enlaces(carpeta, grupos):
+    """<tienda>.nuevas (lo deja leer.mjs): [[ruta vieja, url nueva, texto encontrado], ...] para fichas que ya no existen (error 404).
+    Cambia la url de esas ofertas; quedan ocultas hasta que la próxima lectura traiga el precio de la ficha nueva."""
+    out = []
+    for f in sorted(glob.glob(os.path.join(carpeta, '*.nuevas'))):
+        t = os.path.basename(f)[:-7]
+        for vieja, nueva, texto in json.load(open(f, encoding='utf-8')):
+            for _, lst in grupos:
+                for eq in lst:
+                    for o in eq['offers']:
+                        if o['s'] == t and ruta(o) == vieja and o['url'] != nueva:
+                            o['url'] = nueva; o['x'] = 1
+                            out.append(f"{eq['name']} · {t}: enlace nuevo {nueva}")
+    return out
+
+
 def rutas_por_tienda():
     _, _, nbs, _, _, phs = cargar()
     por = {}
@@ -255,6 +284,7 @@ def aplicar(carpeta):
             else:
                 eq['offers'].sort(key=lambda x: x['p'])
     resumen_cupones = aplicar_cupones(carpeta, grupos, RT)
+    nuevos = reemplazar_enlaces(carpeta, grupos)
     nb_txt = '[\n' + ',\n'.join('  ' + json.dumps(n, ensure_ascii=False) for n in nbs) + '\n]'
     nb_h = nb_h[:s] + nb_txt + nb_h[e:]
     nb_h = re.sub(r"const SEEN_GAMER = '[\d-]+', SEEN_OTHER = '[\d-]+';", f"const SEEN_GAMER = '{hoy}', SEEN_OTHER = '{hoy}';", nb_h)
@@ -276,6 +306,7 @@ def aplicar(carpeta):
     print(f'Ocultos por falta de stock ({len(ocultos)}):\n  ' + '\n  '.join(ocultos))
     print(f'No revisados ({len(sin)}):\n  ' + '\n  '.join(sin))
     print('\n'.join(resumen_cupones))
+    print(f'Enlaces reemplazados ({len(nuevos)}):' + ('\n  ' + '\n  '.join(nuevos) if nuevos else ' ninguno'))
     minimos_historicos()
 
 
@@ -317,6 +348,7 @@ def minimos_historicos():
 
 def escribir_rutas():
     json.dump(rutas_por_tienda(), open(os.path.join(RAIZ, 'herramientas', 'rutas.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+    json.dump(nombres_por_tienda(), open(os.path.join(RAIZ, 'herramientas', 'nombres.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
 
 
 if __name__ == '__main__':

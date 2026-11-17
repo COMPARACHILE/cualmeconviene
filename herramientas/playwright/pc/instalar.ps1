@@ -1,4 +1,4 @@
-# Instalación (una sola vez) de la lectura automática de precios en el PC Windows del dueño. No usa Git.
+# Instalación (una sola vez; volver a correrla el 17-11-2026 para pasar a cada 2 horas) de la lectura automática de precios en el PC Windows del dueño. No usa Git.
 # Abrir PowerShell y pegar:
 #   irm https://raw.githubusercontent.com/COMPARACHILE/cualmeconviene/main/herramientas/playwright/pc/instalar.ps1 | iex
 $ErrorActionPreference = 'Stop'
@@ -31,13 +31,15 @@ if (-not (Test-Path 'clave.txt')) {
   $s | ConvertFrom-SecureString | Set-Content 'clave.txt'
 }
 
-Write-Host "4/4 Programando la lectura diaria (8:00 y al iniciar sesión)..." -ForegroundColor Cyan
+Write-Host "4/4 Programando la lectura (cada 2 horas de 8:00 a 22:00, y al iniciar sesión)..." -ForegroundColor Cyan
 Invoke-WebRequest 'https://raw.githubusercontent.com/COMPARACHILE/cualmeconviene/main/herramientas/playwright/pc/leer-pc.ps1' -OutFile (Join-Path $base 'leer-pc.ps1')
 $accion = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$base\leer-pc.ps1`""
-$cuando = @((New-ScheduledTaskTrigger -Daily -At 8:00am), (New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME))
+$diaria = New-ScheduledTaskTrigger -Daily -At 8:00am
+$diaria.Repetition = (New-ScheduledTaskTrigger -Once -At 8:00am -RepetitionInterval (New-TimeSpan -Hours 2) -RepetitionDuration (New-TimeSpan -Hours 14) -ErrorAction SilentlyContinue).Repetition
+$cuando = @($diaria, (New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME))
 $ajustes = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Hours 2)
 Register-ScheduledTask -TaskName 'Precios cualmeconviene' -Action $accion -Trigger $cuando -Settings $ajustes -Force | Out-Null
 
 Write-Host "Primera lectura (30 a 60 minutos; no cierres esta ventana)..." -ForegroundColor Cyan
 & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $base 'leer-pc.ps1')
-Write-Host "Listo. Desde mañana se lee solo. Registro: $base\lectura-pc.log" -ForegroundColor Green
+Write-Host "Listo. Se lee solo cada 2 horas (8:00 a 22:00) mientras el PC esté encendido. Registro: $base\lectura-pc.log" -ForegroundColor Green
