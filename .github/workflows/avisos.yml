@@ -1,18 +1,22 @@
 # Avisos de precio por correo de ¿Cuál me conviene?
-# Después de cada actualización de precios (cuando termina "Fotos y fichas") espera a que Cloudflare publique
+# Después de cada actualización de precios lo lanza "Fotos y fichas" (sitio.yml) con esperar=true: espera a que Cloudflare publique
 # la página nueva y llama a /api/revisar-avisos. Esa función compara los precios, arma los avisos de quienes
 # siguen un equipo y el resumen diario, y envía los correos de a 25 por llamada.
 # Si no hubo cambios de precios, la función no hace nada (es seguro llamarla de más).
 name: Avisos de precio
 on:
-  workflow_run:
-    workflows: ["Fotos y fichas"]
-    types: [completed]
+  # Antes se usaba workflow_run, pero GitHub no lo dispara cuando "Fotos y fichas" fue lanzado por otro flujo
+  # (vueltas de precios cada 2 horas): el 17-11-2026 el resumen no salió por eso. Ahora sitio.yml lo lanza directo.
   schedule:
     - cron: '2 13 * * *'    # 10:02 de Chile (verano): sale el resumen diario a los suscritos (no sale antes de las 10:00)
     - cron: '20 14 * * *'   # respaldo a las 11:20 de Chile (GitHub a veces atrasa los horarios)
     - cron: '40 16 * * *'   # respaldo a las 13:40 de Chile
   workflow_dispatch:
+    inputs:
+      esperar:
+        description: 'Esperar a que Cloudflare publique los precios nuevos (lo usa Fotos y fichas)'
+        type: boolean
+        default: false
 permissions: {}
 concurrency:
   group: avisos
@@ -23,7 +27,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Esperar a que Cloudflare publique los precios nuevos
-        if: github.event_name == 'workflow_run'
+        if: inputs.esperar
         run: sleep 210
       - name: Revisar avisos y enviar correos
         run: |

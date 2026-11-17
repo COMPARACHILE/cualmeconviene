@@ -21,12 +21,29 @@ async function enLotes(env, sentencias) {
 // Resumen diario a los suscritos: una vez al día, desde las 10:00 de Chile (pedido del dueño, 16-11-2026),
 // para que salga con las dos lecturas del día ya aplicadas (GitHub y el PC). Solo con los precios de hoy y si hubo bajadas.
 const horaChile = () => +new Intl.DateTimeFormat('en-GB', { timeZone: 'America/Santiago', hour: '2-digit', hourCycle: 'h23' }).format(new Date());
+// Precio de cada ficha en el momento del resumen (los equipos sin stock no se guardan)
+const fotoPrecios = (env, eqs) => ajuste(env, 'resumen_precios',
+  JSON.stringify(Object.fromEntries(Object.entries(eqs).filter(([, e]) => e && e[0]).map(([clave, e]) => [clave, e[0]]))));
+// Desde el 17-11-2026 (precios cada 2 horas) compara con los precios del último resumen enviado, no con los de ayer:
+// así entra todo lo que bajó en las 24 horas entre un resumen y el siguiente, también lo que bajó en la tarde.
+// La primera vez (sin foto guardada) usa las bajadas del día de assets/avisos.json.
 async function resumenDiario(env, cat, eqs, sitio, t, cola) {
-  const bajadas = (cat.bajadas || []).map(([clave, antes, ahoraP]) => {
+  const fotoTxt = await leerAjuste(env, 'resumen_precios');
+  let foto = null;
+  try { foto = fotoTxt ? JSON.parse(fotoTxt) : null; } catch (_) { foto = null; }
+  const pares = foto
+    ? Object.entries(foto).map(([clave, antes]) => [clave, antes, eqs[clave] && eqs[clave][0]])
+      .filter(([, antes, ahoraP]) => antes && ahoraP && ahoraP <= antes * 0.97 && antes - ahoraP >= 3000 && ahoraP >= antes * 0.4)
+      .sort((a, b) => (b[1] - b[2]) / b[1] - (a[1] - a[2]) / a[1])
+    : (cat.bajadas || []);
+  const bajadas = pares.map(([clave, antes]) => {
     const e = eqs[clave];
     return e && e[0] && { clave, nombre: e[1], id: e[2], tienda: e[3], antes, ahora: e[0], motivo: 'bajo' };
   }).filter(x => x && x.ahora < x.antes).slice(0, 10);
-  if (!bajadas.length || cat.dia !== hoyChile() || horaChile() < 10 || (await leerAjuste(env, 'resumen_dia')) === cat.dia)
+  const yaSalio = (await leerAjuste(env, 'resumen_dia')) === cat.dia;
+  // Sin foto y con el resumen de hoy ya enviado (el primer día con este cambio): se guarda la foto ahora
+  if (yaSalio && !foto && cat.dia === hoyChile()) return { resumenes: 0, bajadas, foto: fotoPrecios(env, eqs) };
+  if (!bajadas.length || cat.dia !== hoyChile() || horaChile() < 10 || yaSalio)
     return { resumenes: 0, bajadas };
   const subs = (await env.DB.prepare('SELECT id, correo, nombre FROM usuarios WHERE resumen = 1 AND bloqueado = 0').all()).results;
   for (const s of subs) {
@@ -35,7 +52,7 @@ async function resumenDiario(env, cat, eqs, sitio, t, cola) {
     cola.push(env.DB.prepare('INSERT INTO correos (usuario, para, tipo, asunto, html, texto, baja, creado) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)')
       .bind(s.id, s.correo, 'resumen', c.asunto, c.html, c.texto, baja, t));
   }
-  return { resumenes: subs.length, bajadas, marca: ajuste(env, 'resumen_dia', cat.dia) };
+  return { resumenes: subs.length, bajadas, marca: ajuste(env, 'resumen_dia', cat.dia), foto: fotoPrecios(env, eqs) };
 }
 
 async function revisar(env, request, forzar) {
@@ -47,7 +64,8 @@ async function revisar(env, request, forzar) {
   if (!toma.meta.changes && !forzar) {
     // Aunque los precios no hayan cambiado, el resumen diario puede tocar ahora (sale desde las 10:00 de Chile)
     const cola = [], r = await resumenDiario(env, cat, cat.equipos || {}, env.SITIO || SITIO, ahora(), cola);
-    if (r.marca) await enLotes(env, [r.marca, ...cola]);
+    const extra = [r.marca, r.foto].filter(Boolean);
+    if (extra.length) await enLotes(env, [...extra, ...cola]);
     return { motivo: 'los precios no han cambiado desde la última revisión', resumenes: r.resumenes, bajadas_del_dia: r.bajadas.length };
   }
   const sitio = env.SITIO || SITIO, dia = hoyChile(), t = ahora();
@@ -90,6 +108,7 @@ async function revisar(env, request, forzar) {
   // 2) Resumen diario (ver resumenDiario)
   const r = await resumenDiario(env, cat, eqs, sitio, t, cola);
   if (r.marca) cambios.push(r.marca);
+  if (r.foto) cambios.push(r.foto);
   const resumenes = r.resumenes, bajadas = r.bajadas;
 
   // 3) Limpieza: correos enviados hace más de 30 días y contadores viejos
