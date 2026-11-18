@@ -233,6 +233,7 @@ async function leerTienda(t) {
       const muertas = await page.evaluate(() => (JOB.res || []).filter(r => !r[1] && /error 40[14]|error 410/.test(String(r[3]))).map(r => r[0]));
       const orden = muertas.sort(() => Math.random() - 0.5).slice(0, MAX_BUSQUEDAS);  // al azar: en cada vuelta se prueban otras
       for (const i of orden) {
+        if (Date.now() - ini > MAX_MIN * 60000) { console.log(`[${t}] búsquedas cortadas a los ${MAX_MIN} min`); break; }
         const n = await buscarNuevo(base, RUTAS[base][i]);
         console.log(`[${t}] buscar ${i}: ${n ? n[1] : 'sin resultado seguro (queda sin stock)'}`);
         if (n) nuevas.push(n);
@@ -252,11 +253,16 @@ async function leerTienda(t) {
 }
 
 // Máximo 3 tiendas a la vez (más que eso se caen las grandes)
+// Tope por tienda (lectura + reintentos + búsquedas): si una página se cuelga, esa tienda queda como "falló" y las demás se suben igual.
+// El 18-11-2026 Paris quedó colgada más de una hora y la vuelta del PC no subió nada (la tarea de Windows corta a las 2 horas).
+const TOPE_TIENDA = Number(process.env.CMC_TOPE_TIENDA_MIN || 50);
+const conTope = t => Promise.race([leerTienda(t),
+  new Promise(r => setTimeout(() => r({ t, err: `sin terminar a los ${TOPE_TIENDA} min (tope por tienda)` }), TOPE_TIENDA * 60000).unref())]);
 const cola = [...tiendas], resultados = [];
 await Promise.all([1, 2, 3].map(async () => {
-  while (cola.length) resultados.push(await leerTienda(cola.shift()));
+  while (cola.length) resultados.push(await conTope(cola.shift()));
 }));
-await browser.close();
+await Promise.race([browser.close(), new Promise(r => setTimeout(r, 30000))]).catch(() => {});
 
 fs.writeFileSync(path.join(carpeta, 'informe.json'), JSON.stringify(resultados, null, 1));
 console.log('\n=== Informe ===');
@@ -266,3 +272,5 @@ for (const r of resultados) {
   console.log(`${r.t}: ${conPrecio}/${total} con precio, ${r.cambios} cambios, ${r.seg}s` +
     (Object.keys(errores).length ? ' | sin precio: ' + JSON.stringify(errores) : ''));
 }
+// Una página colgada puede dejar vivo a Chrome: se termina igual, con el informe ya escrito
+process.exit(0);
