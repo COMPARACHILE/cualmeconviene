@@ -1,0 +1,47 @@
+[
+ {
+  "t": "falabella",
+  "err": "page.evaluate: Target crashed "
+ },
+ {
+  "t": "lg",
+  "err": "page.evaluate: Target crashed "
+ },
+ {
+  "t": "hp",
+  "err": "page.evaluate: Target crashed "
+ },
+ {
+  "t": "paris",
+  "err": "sin terminar a los 50 min (tope por tienda)"
+ },
+ {
+  "t": "nespresso",
+  "err": "page.goto: Timeout 60000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://www.nespresso.com/cl/es\", waiting until \"domcontentloaded\"\u001b[22m\n"
+ },
+ {
+  "t": "easy",
+  "err": "sin terminar a los 50 min (tope por tienda)"
+ },
+ {
+  "t": "xiaomi",
+  "err": "sin terminar a los 50 min (tope por tienda)"
+ },
+ {
+  "t": "dolcegusto",
+  "seg": 118,
+  "resumen": {
+   "total": 4,
+   "conPrecio": 1,
+   "errores": {
+    "sin precio": 2,
+    "error 403": 1
+   }
+  },
+  "cambios": 3
+ },
+ {
+  "t": "ripley",
+  "err": "sin terminar a los 50 min (tope por tienda)"
+ }
+]
