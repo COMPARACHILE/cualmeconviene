@@ -14,18 +14,25 @@ Set-Location $base
 Start-Transcript -Path (Join-Path $base 'lectura-pc.log') -Append | Out-Null
 try {
   $raw = 'https://raw.githubusercontent.com/COMPARACHILE/cualmeconviene/main/herramientas'
+  # Esperar internet hasta 15 minutos: al prender el PC la red tarda en conectarse
+  # (el 18-11-2026 la vuelta de las 8 se perdió por "No se puede resolver el nombre remoto").
+  for ($n = 0; $n -lt 30; $n++) {
+    try { [Net.Dns]::GetHostEntry('api.github.com') | Out-Null; break } catch { if ($n -eq 0) { Write-Output 'Sin internet todavía: espero hasta 15 minutos.' }; Start-Sleep 30 }
+  }
   # Este mismo script al día (vale desde la próxima vuelta)
   try {
     $nuevo = (Invoke-WebRequest "$raw/playwright/pc/leer-pc.ps1?$(Get-Random)" -UseBasicParsing).Content
     $actual = Get-Content (Join-Path $base 'leer-pc.ps1') -Raw
-    if ($nuevo -and $nuevo.Length -gt 500 -and $nuevo -ne $actual) { Set-Content (Join-Path $base 'leer-pc.ps1') $nuevo -Encoding UTF8; Write-Output 'leer-pc.ps1 actualizado' }
+    # Se compara sin la marca BOM ni saltos de línea finales, para no reescribirlo en cada vuelta
+    if ($nuevo -and $nuevo.Length -gt 500 -and $nuevo.TrimStart([char]0xFEFF).TrimEnd() -ne ($actual -replace "`r`n", "`n").TrimStart([char]0xFEFF).TrimEnd()) { Set-Content (Join-Path $base 'leer-pc.ps1') $nuevo -Encoding UTF8; Write-Output 'leer-pc.ps1 actualizado' }
   } catch {}
   if ($hora -lt 8 -or $hora -gt 22) { Write-Output "Fuera del horario de lectura ($vuelta)."; exit 0 }
   $token = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR((Get-Content (Join-Path $base 'clave.txt') | ConvertTo-SecureString)))
   $H = @{ Authorization = "Bearer $token"; 'User-Agent' = 'cualmeconviene-pc'; Accept = 'application/vnd.github+json' }
   $api = 'https://api.github.com/repos/COMPARACHILE/cualmeconviene/contents'
   # ¿Ya se subió esta vuelta?
-  try { Invoke-RestMethod -Headers $H "$api/pc/$vuelta/informe.json?ref=lecturas-pc" | Out-Null; Write-Output "Ya se leyó esta vuelta ($vuelta)."; exit 0 } catch {}
+  # (un 404 aquí es lo normal: quiere decir que falta leerla)
+  try { Invoke-RestMethod -Headers $H "$api/pc/$vuelta/informe.json?ref=lecturas-pc" | Out-Null; Write-Output "Ya se leyó esta vuelta ($vuelta)."; exit 0 } catch { Write-Output "Leyendo la vuelta $vuelta" }
   # Lector al día
   New-Item -ItemType Directory -Force -Path 'herramientas\playwright' | Out-Null
   Invoke-WebRequest "$raw/playwright/leer.mjs" -OutFile 'herramientas\playwright\leer.mjs'
