@@ -1,6 +1,6 @@
 # ¿Cuál me conviene?
 
-> Comparador de precios independiente de Chile (cualmeconviene.cl). Revisa cada día el precio del mismo equipo en 18 tiendas y operadoras chilenas, guarda su historial y muestra dónde está más barato hoy. No vende equipos: enlaza a la tienda. Precios en pesos chilenos (CLP), revisados el 17-11-2026.
+> Comparador de precios independiente de Chile (cualmeconviene.cl). Revisa cada día el precio del mismo equipo en 18 tiendas y operadoras chilenas, guarda su historial y muestra dónde está más barato hoy. No vende equipos: enlaza a la tienda. Precios en pesos chilenos (CLP), revisados el 18-11-2026.
 
 Cubre 1209 equipos con precio hoy: tecnología (notebooks, celulares, tablets, televisores, consolas) y hogar (lavadoras, aires acondicionados, cocinas, hornos, freidoras de aire, aspiradoras, cafeteras, batidoras, colchones).
 
