@@ -5,12 +5,8 @@
 # Si no hubo cambios de precios, la función no hace nada (es seguro llamarla de más).
 name: Avisos de precio
 on:
-  # Antes se usaba workflow_run, pero GitHub no lo dispara cuando "Fotos y fichas" fue lanzado por otro flujo
-  # (vueltas de precios cada 2 horas): el 17-11-2026 el resumen no salió por eso. Ahora sitio.yml lo lanza directo.
-  schedule:
-    - cron: '2 13 * * *'    # 10:02 de Chile (verano): sale el resumen diario a los suscritos (no sale antes de las 10:00)
-    - cron: '20 14 * * *'   # respaldo a las 11:20 de Chile (GitHub a veces atrasa los horarios)
-    - cron: '40 16 * * *'   # respaldo a las 13:40 de Chile
+  # Desde el 19-11-2026 no tiene horario: lo lanza "Fotos y fichas" (sitio.yml) al publicar la revisión de precios,
+  # y el resumen diario a los suscritos sale en ese momento.
   workflow_dispatch:
     inputs:
       esperar:

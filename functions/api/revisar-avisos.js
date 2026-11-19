@@ -18,9 +18,8 @@ async function enLotes(env, sentencias) {
   for (let i = 0; i < sentencias.length; i += 50) await env.DB.batch(sentencias.slice(i, i + 50));
 }
 
-// Resumen diario a los suscritos: una vez al día, desde las 10:00 de Chile (pedido del dueño, 16-11-2026),
-// para que salga con las dos lecturas del día ya aplicadas (GitHub y el PC). Solo con los precios de hoy y si hubo bajadas.
-const horaChile = () => +new Intl.DateTimeFormat('en-GB', { timeZone: 'America/Santiago', hour: '2-digit', hourCycle: 'h23' }).format(new Date());
+// Resumen diario a los suscritos: una vez al día, apenas se publica la revisión de precios que hace Claude
+// (pedido del dueño, 19-11-2026; antes salía desde las 10:00). Solo con los precios de hoy y si hubo bajadas.
 // Precio de cada ficha en el momento del resumen (los equipos sin stock no se guardan)
 const fotoPrecios = (env, eqs) => ajuste(env, 'resumen_precios',
   JSON.stringify(Object.fromEntries(Object.entries(eqs).filter(([, e]) => e && e[0]).map(([clave, e]) => [clave, e[0]]))));
@@ -43,7 +42,7 @@ async function resumenDiario(env, cat, eqs, sitio, t, cola) {
   const yaSalio = (await leerAjuste(env, 'resumen_dia')) === cat.dia;
   // Sin foto y con el resumen de hoy ya enviado (el primer día con este cambio): se guarda la foto ahora
   if (yaSalio && !foto && cat.dia === hoyChile()) return { resumenes: 0, bajadas, foto: fotoPrecios(env, eqs) };
-  if (!bajadas.length || cat.dia !== hoyChile() || horaChile() < 10 || yaSalio)
+  if (!bajadas.length || cat.dia !== hoyChile() || yaSalio)
     return { resumenes: 0, bajadas };
   const subs = (await env.DB.prepare('SELECT id, correo, nombre FROM usuarios WHERE resumen = 1 AND bloqueado = 0').all()).results;
   for (const s of subs) {
