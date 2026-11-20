@@ -1,2 +1,27 @@
-Fotos nuevas: 0 · con error: 1 · total en la carpeta: 1271
+Fotos nuevas: 19 · con error: 7 · total en la carpeta: 1290
 ERROR	fr18	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/D122/2000402621771/2000402621771_2.jpg
+ok	tv500101	26 KB	media.falabella.com
+ERROR	tv500102	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000410810020/full_image-2000410810020
+ok	tv500103	27 KB	media.falabella.com
+ok	tv500104	25 KB	media.falabella.com
+ok	tv500105	25 KB	media.falabella.com
+ok	tv500106	21 KB	media.falabella.com
+ok	tv500107	20 KB	media.falabella.com
+ok	tv500108	21 KB	media.falabella.com
+ok	tv500109	23 KB	media.falabella.com
+ok	tv500110	23 KB	media.falabella.com
+ok	tv500111	23 KB	media.falabella.com
+ok	tv500112	18 KB	media.falabella.com
+ok	tv500113	18 KB	media.falabella.com
+ok	tv500114	18 KB	media.falabella.com
+ok	tv500115	15 KB	media.falabella.com
+ok	tv500116	15 KB	media.falabella.com
+ok	tv500117	15 KB	media.falabella.com
+ok	tv500118	26 KB	media.falabella.com
+ERROR	tv500119	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000405425109/full_image-2000405425109
+ok	tv500120	26 KB	media.falabella.com
+ok	tv500121	25 KB	media.falabella.com
+ERROR	tv500122	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000406504520/full_image-2000406504520
+ERROR	tv500123	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000406504551/full_image-2000406504551
+ERROR	tv500124	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000407481714/full_image-2000407481714
+ERROR	tv500125	HTTP Error 403: Forbidden	https://rimage.ripley.cl/home.ripley/Attachment/WOP/1/2000405858235/full_image-2000405858235
